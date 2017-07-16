@@ -1,0 +1,56 @@
+sceKernelDcacheWritebackAll: 00000000
+sceKernelDcacheWritebackInvalidateAll: 00000000
+sceKernelDcacheWritebackRange NULL: 00000000
+sceKernelDcacheWritebackRange UINT_MAX: 80000104
+sceKernelDcacheWritebackRange INT_MAX: 00000000
+sceKernelDcacheWritebackRange 0x8FFFFFFF: 80000104
+sceKernelDcacheWritebackRange w/address: 00000000
+sceKernelDcacheWritebackRange w/address INT_MAX: 00000000
+sceKernelDcacheWritebackRange w/address -4: 80000104
+sceKernelDcacheWritebackRange w/address 4: 00000000
+sceKernelDcacheWritebackInvalidateRange NULL: 00000000
+sceKernelDcacheWritebackInvalidateRange UINT_MAX: 80000104
+sceKernelDcacheWritebackInvalidateRange INT_MAX: 00000000
+sceKernelDcacheWritebackInvalidateRange w/address: 00000000
+sceKernelDcacheWritebackInvalidateRange w/address INT_MAX: 00000000
+sceKernelDcacheWritebackInvalidateRange w/address -4: 80000104
+sceKernelDcacheWritebackInvalidateRange w/address 4: 00000000
+sceKernelDcacheInvalidateRange NULL: 00000000
+sceKernelDcacheInvalidateRange UINT_MAX: 800200d3
+sceKernelDcacheInvalidateRange INT_MAX: 8002044c
+sceKernelDcacheInvalidateRange w/address: 00000000
+sceKernelDcacheInvalidateRange w/address INT_MAX: 800200d3
+sceKernelDcacheInvalidateRange w/address 24MB: 8002044c
+sceKernelDcacheInvalidateRange w/address -4: 800200d3
+sceKernelDcacheInvalidateRange w/address 4: 8002044c
+sceKernelDcacheInvalidateRange w/address 64: 8002044c
+sceKernelDcacheInvalidateRange w/aligned: 00000000
+sceKernelDcacheInvalidateRange w/aligned INT_MAX - 255: 800200d3
+sceKernelDcacheInvalidateRange w/aligned -64: 800200d3
+sceKernelDcacheInvalidateRange w/aligned 4: 8002044c
+sceKernelDcacheInvalidateRange w/aligned 8: 8002044c
+sceKernelDcacheInvalidateRange w/aligned 16: 8002044c
+sceKernelDcacheInvalidateRange w/aligned 32: 8002044c
+sceKernelDcacheInvalidateRange w/aligned 64: 00000000
+sceKernelDcacheInvalidateRange w/aligned 96: 8002044c
+sceKernelDcacheInvalidateRange w/off aligned 32: 8002044c
+sceKernelDcacheInvalidateRange @00000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @10000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @20000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @30000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @40000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @50000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @60000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @70000000 + 64: 00000000
+sceKernelDcacheInvalidateRange @80000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @90000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @a0000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @b0000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @c0000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @d0000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @e0000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @f0000000 + 64: 800200d3
+sceKernelDcacheInvalidateRange @7cffff80 + 64: 00000000
+sceKernelDcacheInvalidateRange @7fffffbf + 64: 8002044c
+sceKernelDcacheInvalidateRange @7fffffff + 64: 800200d3
+myfunc: dead0000

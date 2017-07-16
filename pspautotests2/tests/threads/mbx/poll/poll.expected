@@ -1,0 +1,59 @@
+For attr 00000000:
+Empty no ptr: Failed (800201B2, ptr=DEAD)
+Empty standard: Failed (800201B2, ptr=DEAD)
+Single standard: OK (ptr=OTHER) GOT: "hi 0" (next=ITSELF, prio=01) Messagebox: OK (size=52,name='poll1',attr=0,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 1" (next=FIRST, prio=15) Messagebox: OK (size=52,name='poll1',attr=0,wait=0,count=2,first=OTHER)
+  hi 2 prio=05 next=OTHER  hi 3 prio=10 next=FIRST
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 2" (next=FIRST, prio=05) Messagebox: OK (size=52,name='poll1',attr=0,wait=0,count=1,first=OTHER)
+  hi 3 prio=10 next=ITSELF
+Multiple standard #3: OK (ptr=OTHER) GOT: "hi 3" (next=ITSELF, prio=10) Messagebox: OK (size=52,name='poll1',attr=0,wait=0,count=0,first=NULL)
+Multiple standard #4: Failed (800201B2, ptr=DEAD)
+For attr 00000100:
+Empty no ptr: Failed (800201B2, ptr=DEAD)
+Empty standard: Failed (800201B2, ptr=DEAD)
+Single standard: OK (ptr=OTHER) GOT: "hi 4" (next=ITSELF, prio=01) Messagebox: OK (size=52,name='poll1',attr=256,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 5" (next=FIRST, prio=15) Messagebox: OK (size=52,name='poll1',attr=256,wait=0,count=2,first=OTHER)
+  hi 6 prio=05 next=OTHER  hi 7 prio=10 next=FIRST
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 6" (next=FIRST, prio=05) Messagebox: OK (size=52,name='poll1',attr=256,wait=0,count=1,first=OTHER)
+  hi 7 prio=10 next=ITSELF
+Multiple standard #3: OK (ptr=OTHER) GOT: "hi 7" (next=ITSELF, prio=10) Messagebox: OK (size=52,name='poll1',attr=256,wait=0,count=0,first=NULL)
+Multiple standard #4: Failed (800201B2, ptr=DEAD)
+For attr 00000400:
+Empty no ptr: Failed (800201B2, ptr=DEAD)
+Empty standard: Failed (800201B2, ptr=DEAD)
+Single standard: OK (ptr=OTHER) GOT: "hi 8" (next=ITSELF, prio=01) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 10" (next=FIRST, prio=05) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=2,first=OTHER)
+  hi 11 prio=10 next=OTHER  hi 9 prio=15 next=FIRST
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 11" (next=FIRST, prio=10) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=1,first=OTHER)
+  hi 9 prio=15 next=ITSELF
+Multiple standard #3: OK (ptr=OTHER) GOT: "hi 9" (next=ITSELF, prio=15) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=0,first=NULL)
+Multiple standard #4: Failed (800201B2, ptr=DEAD)
+For attr 00000500:
+Empty no ptr: Failed (800201B2, ptr=DEAD)
+Empty standard: Failed (800201B2, ptr=DEAD)
+Single standard: OK (ptr=OTHER) GOT: "hi 12" (next=ITSELF, prio=01) Messagebox: OK (size=52,name='poll1',attr=1280,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 14" (next=FIRST, prio=05) Messagebox: OK (size=52,name='poll1',attr=1280,wait=0,count=2,first=OTHER)
+  hi 15 prio=10 next=OTHER  hi 13 prio=15 next=FIRST
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 15" (next=FIRST, prio=10) Messagebox: OK (size=52,name='poll1',attr=1280,wait=0,count=1,first=OTHER)
+  hi 13 prio=15 next=ITSELF
+Multiple standard #3: OK (ptr=OTHER) GOT: "hi 13" (next=ITSELF, prio=15) Messagebox: OK (size=52,name='poll1',attr=1280,wait=0,count=0,first=NULL)
+Multiple standard #4: Failed (800201B2, ptr=DEAD)
+Modified text: OK (ptr=OTHER) GOT: "modify" (next=ITSELF, prio=15) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=0,first=NULL)
+Modified priority #1: OK (ptr=OTHER) GOT: "hi 18" (next=FIRST, prio=05) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=2,first=OTHER)
+  hi 19 prio=15 next=OTHER  hi 17 prio=10 next=FIRST
+Modified priority #2: OK (ptr=OTHER) GOT: "hi 19" (next=FIRST, prio=15) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=1,first=OTHER)
+  hi 17 prio=10 next=ITSELF
+Modified priority #3: OK (ptr=OTHER) GOT: "hi 17" (next=ITSELF, prio=10) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=0,first=NULL)
+Modified priority #4: Failed (800201B2, ptr=DEAD)
+uint16 priority #1: OK (ptr=OTHER) GOT: "hi 20" (next=FIRST, prio=10) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=2,first=OTHER)
+  hi 21 prio=10 next=OTHER  hi 22 prio=10 next=FIRST
+uint16 priority #2: OK (ptr=OTHER) GOT: "hi 21" (next=FIRST, prio=10) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=1,first=OTHER)
+  hi 22 prio=10 next=ITSELF
+uint16 priority #3: OK (ptr=OTHER) GOT: "hi 22" (next=ITSELF, prio=10) Messagebox: OK (size=52,name='poll1',attr=1024,wait=0,count=0,first=NULL)
+uint16 priority #4: Failed (800201B2, ptr=DEAD)
+NULL: Failed (8002019B, ptr=DEAD)
+Invalid: Failed (8002019B, ptr=DEAD)
+Deleted: Failed (8002019B, ptr=DEAD)
+NULL: A1B1C2E1D1F2 (thread=800201B5, main=8002019B)
+Other: A1B1C2E1D1F2 (thread=800201B5, main=800201B2)
+Same: A1B1C2E1D1F2 (thread=800201B5, main=800201B2)

@@ -1,0 +1,16 @@
+Negative: Failed (80020193)
+Zero: OK
+Small: Failed (80020193)
+Priority 0x07: Failed (80020193)
+Priority 0x08: OK
+Priority 0x77: OK
+Priority 0x78: Failed (80020193)
+main: starting spinThread
+main: spinThread ready (0)
+main: starting spinThread2
+main: spinThread2 ready (0)
+spinThread: start
+spinThread2: start
+main: rotated ready queue: 00000000 (0, 0)
+spinThread: end
+spinThread2: end

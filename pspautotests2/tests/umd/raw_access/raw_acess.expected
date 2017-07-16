@@ -1,0 +1,7 @@
+sceIoGetstat: 0
+Size: 420
+LBN: 25
+HandleNormal: Ok
+memcmp_Normal: 0
+HandleRaw: Ok
+memcmp_Raw: 0

@@ -1,0 +1,11 @@
+[x] Objects:
+[x]   Normal: Failed (800201b6) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000007,wait=0)
+[x]   NULL: Failed (8002019d) FPL: Failed (00000000)
+[x]   Invalid: Failed (8002019d) FPL: Failed (deadbeef)
+[x]   Deleted: Failed (8002019d) FPL: Invalid (8002019d)
+
+[x] Pointers:
+[x]   Normal: OK FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000008,wait=0)
+[x]   NULL: Failed (800201b6) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000008,wait=0)
+[x]   Invalid: Failed (800200d3) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000008,wait=0)
+[x]   Already free: Failed (800201b6) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000008,wait=0)

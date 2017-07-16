@@ -1,0 +1,23 @@
+[x] sceGeEdramGetAddr: 04000000
+[x] sceGeEdramGetSize: 00200000
+
+[x] sceGeEdramSetAddrTranslation:
+[x]   Zero: 00000400
+[x]   Zero again: 00000000
+[x]   ffffffff: 800001fe
+[x]   1: 800001fe
+[x]   10: 800001fe
+[x]   20: 800001fe
+[x]   40: 800001fe
+[x]   80: 800001fe
+[x]   c0: 800001fe
+[x]   1ff: 800001fe
+[x]   100: 800001fe
+[x]   200: 00000000
+[x]   400: 00000200
+[x]   800: 00000400
+[x]   c00: 800001fe
+[x]   1000: 00000800
+[x]   1800: 800001fe
+[x]   1fff: 800001fe
+[x]   2000: 800001fe

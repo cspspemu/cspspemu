@@ -1,0 +1,27 @@
+[x] Current thread:
+[x]   Free: OK
+[x]   Check: OK
+
+[x] Stack values:
+[x]     No usage w/o stack fill (free): 00000000
+[x]     No usage w/o stack fill (check): 00000eb0
+[x]     1k FFs w/o stack fill (free): 00000000
+[x]     1k FFs w/o stack fill (check): 00000ab0
+[x]     1k 00s w/o stack fill (free): 00000000
+[x]     1k 00s w/o stack fill (check): 00000ab0
+[x]     No usage (free): 00000ea0
+[x]     No usage (check): 00000eb0
+[x]     1k FFs (free): 00000ea0
+[x]     1k FFs (check): 00000ab0
+[x]     1k 00s (free): 00000aa0
+[x]     1k 00s (check): 00000ab0
+
+[x] Threads:
+[x]   -1: 80020198
+[x]   Invalid: 80020198
+[x]   Created: OK
+[x]   Ready: OK
+[x]   Finished: OK
+[x]   Deleted: 80020198
+[x]   Suspended: OK
+[x] Current: OK

@@ -1,0 +1,13 @@
+Zero timer (hits=0): Alarm: OK (size=20,schedule=0##,handler=1,common=0)
+100 timer (hits=0): Alarm: OK (size=20,schedule=1##,handler=1,common=0)
+INT_MAX timer (hits=0): Alarm: OK (size=20,schedule=21474836##,handler=1,common=0)
+NULL handler (hits=0): Alarm: Failed (800200D3)
+Zero sys timer (hits=0): Alarm: OK (size=20,schedule=0##,handler=1,common=0)
+100 sys timer (hits=0): Alarm: OK (size=20,schedule=1##,handler=1,common=0)
+INT_MAX sys timer (hits=0): Alarm: OK (size=20,schedule=21474836##,handler=1,common=0)
+NULL handler sys (hits=0): Alarm: Failed (800200D3)
+Frequency: 10 hits, Alarm: OK (size=20,schedule=110##,handler=1,common=1)
+SysClock frequency: 10 hits, Alarm: OK (size=20,schedule=110##,handler=1,common=1)
+Created 1024 alarms: OK
+Normal: A1B1C2E1D1F2 (thread=800201B5, main=00000001)
+NULL handler: A1B1C2E1D1F2 (thread=800201B5, main=800200D3)

@@ -1,0 +1,33 @@
+[x] sceAtracReinit ID usage:
+[x]   Initial ids:
+[x]     ATRAC3+: 0 1, ATRAC3: 2 3
+[x]   sceAtracReinit(2, 2): 00000000
+[x]     ATRAC3+: 0 1, ATRAC3: 2 3
+[x]   sceAtracReinit(3, 1): 00000000
+[x]     ATRAC3+: 0, ATRAC3: 1 2 3
+[x]   sceAtracReinit(999, 0): 80000022
+[x]     ATRAC3+:, ATRAC3: 0 1 2 3 4 5
+[x]   sceAtracReinit(0, 999): 80000022
+[x]     ATRAC3+: 0 1 2, ATRAC3:
+[x]   sceAtracReinit(999, 999): 80000022
+[x]     ATRAC3+: 0 1 2, ATRAC3:
+[r]   sceAtracReinit(0, 0): 00000000
+[x]     ATRAC3+:, ATRAC3:
+[r]   sceAtracReinit(0, 0): 00000000
+[x]     ATRAC3+:, ATRAC3:
+[x]   sceAtracReinit(0, -1): 00000000
+[x]     ATRAC3+:, ATRAC3:
+[x]   sceAtracReinit(0, -1): 00000000
+[x]     ATRAC3+:, ATRAC3:
+
+[x] sceAtracReinit while open:
+[x]   Reset: 00000000
+[x]   With allocated, just one: 80000021
+[x]   With allocated, free: 80000021
+
+[x] ID reuse:
+[x]   Reset: 00000000
+[x]     ATRAC3+:, ATRAC3: 0 1 2 3 4 5
+[x]   Allocated #0-#4 (#5 still free)
+[x]   Release #3: 00000000
+[x]   Allocate new: #3

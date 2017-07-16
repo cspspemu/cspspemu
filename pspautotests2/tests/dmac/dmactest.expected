@@ -1,0 +1,38 @@
+[x] sceDmacMemcpy normal operation:
+[x]   Source: Hello World. This is a test to check if sceDmacMemcpy works.
+[x]   Before copy: 
+[x]   After copy: Hello World. This is a test to check if sceDmacMemcpy works.
+[x] sceDmacMemcpy errors:
+[x]   Normal: 00000000
+[x]   NULL, 0 length: 80000104
+[x]   NULL, with length: 80000103
+[x]   0 length: 80000104
+
+[x] sceDmacTryMemcpy normal operation:
+[x]   Source: Hello World. This is a test to check if sceDmacMemcpy works.
+[x]   Before copy: 
+[x]   After copy: Hello World. This is a test to check if sceDmacMemcpy works.
+[x] sceDmacTryMemcpy errors:
+[x]   Normal: 00000000
+[x]   NULL, 0 length: 80000104
+[x]   NULL, with length: 80000103
+[x]   0 length: 80000104
+
+[x] Size of copy:
+[r]   sceDmacMemcpy 1MB: 00000000
+[r]   sceDmacTryMemcpy 1MB: 00000000
+[r]   sceDmacMemcpy 1KB: 00000000
+[r]   sceDmacMemcpy 512B: 00000000
+[r]   sceDmacMemcpy 272B: 00000000
+[x]   sceDmacMemcpy 271B: 00000000
+[x]   sceDmacMemcpy 257B: 00000000
+[x]   sceDmacMemcpy 256B: 00000000
+
+[x] Concurrent copies:
+[x]   sceDmacTryMemcpy 1MB: 80000021
+[r]   * thread: 00000000
+[r]   sceDmacMemcpy 1MB: 00000000
+
+[x] memalign:
+[x] 0
+[x] 0

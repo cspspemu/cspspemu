@@ -1,0 +1,9 @@
+4, 0
+4, 1
+-1
+Threads.EndedExpected - start status: 1110
+Thread1.Ended
+Thread2.Ended
+Thread3.GoingToEnd
+Thread3.Ended
+Thread4.NotStartedSoEnded

@@ -1,0 +1,41 @@
+WARNING: Test cannot run without a UMD in the PSP.
+
+sceUmdRegisterUMDCallBack: 00000000 preempt:0
+sceUmdRegisterUMDCallBack: 00000000 preempt:0
+sceUmdUnRegisterUMDCallBack: 80010016 preempt:0
+sceUmdCheckMedium: 00000001 preempt:0
+sceUmdActivate: 00000000 preempt:0
+sceUmdWaitDriveStat: 00000000 preempt:0
+sceUmdDeactivate: 00000000 preempt:0
+umdHandler2 called: 00000002, 00000012, 00001234
+otherHandler called: 00000008, 00000001, 00001234
+sceKernelCheckCallback: 00000001 preempt:0
+sceUmdDeactivate: 00000000 preempt:0
+umdHandler2 called: 00000001, 00000012, 00001234
+otherHandler called: 00000002, 00000001, 00001234
+sceUmdWaitDriveStatCB: 800201A8 preempt:1
+sceUmdDeactivate: 00000000 preempt:0
+sceUmdWaitDriveStatWithTimer: 800201A8 preempt:1
+sceUmdActivate: 00000000 preempt:0
+sceUmdWaitDriveStatWithTimer: 00000000 preempt:1
+umdHandler2 called: 00000002, 00000022, 00001234
+otherHandler called: 00000005, 00000001, 00001234
+sceKernelCheckCallback: 00000001 preempt:0
+sceUmdUnRegisterUMDCallBack: 80010016 preempt:0
+sceUmdUnRegisterUMDCallBack: OK
+sceUmdUnRegisterUMDCallBack: 80010016 preempt:0
+sceUmdDeactivate: 00000000 preempt:0
+otherHandler called: 00000004, 00000001, 00001234
+sceUmdWaitDriveStatCB: 800201A8 preempt:1
+otherHandler called: 00000001, 00000001, 00001234
+sceUmdWaitDriveStatCB: 00000000 preempt:0
+otherHandler called: 00000001, 00000001, 00001234
+sceUmdWaitDriveStatCB: 00000000 preempt:0
+otherHandler called: 00000001, 00000001, 00001234
+sceUmdWaitDriveStatCB: 00000000 preempt:0
+otherHandler called: 00000001, 00000001, 00001234
+sceUmdWaitDriveStatCB: 00000000 preempt:0
+otherHandler called: 00000001, 00000001, 00001234
+sceUmdWaitDriveStatCB: 00000000 preempt:0
+sceUmdCancelWaitDriveStat: 00000000
+sceUmdWaitDriveStat: 800201A9 preempt:1

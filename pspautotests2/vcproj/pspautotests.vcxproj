@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C22CBF03-3248-4139-975D-0BF500FD812F}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>pspautotests</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:/pspsdk/psp/sdk/include/libc;C:/pspsdk/psp/sdk/include;C:/pspsdk/psp/include</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../common;C:/pspsdk/psp/sdk/include;C:/pspsdk/lib/gcc/psp/4.3.5/include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\common\common.c" />
+    <ClCompile Include="..\tests\threads\alarm\alarm.c" />
+    <ClCompile Include="..\tests\video\pmf_simple\pmf_simple.c" />
+    <ClCompile Include="..\tests\video\pmf\pmf.c" />
+    <ClCompile Include="..\tests\utility\systemparam\systemparam.c" />
+    <ClCompile Include="..\tests\umd\wait\wait.c" />
+    <ClCompile Include="..\tests\umd\umd.c" />
+    <ClCompile Include="..\tests\umd\raw_access\raw_access.c" />
+    <ClCompile Include="..\tests\umd\io\umd_io.c" />
+    <ClCompile Include="..\tests\umd\callbacks\umd.c" />
+    <ClCompile Include="..\tests\threads\wakeup\wakeup.c" />
+    <ClCompile Include="..\tests\threads\vtimers\vtimer.c" />
+    <ClCompile Include="..\tests\threads\vpl\vpl.c" />
+    <ClCompile Include="..\tests\threads\threads\thread_state.c" />
+    <ClCompile Include="..\tests\threads\threads\threads.c" />
+    <ClCompile Include="..\tests\threads\semaphores\wait\wait.c" />
+    <ClCompile Include="..\tests\threads\semaphores\signal\signal.c" />
+    <ClCompile Include="..\tests\threads\semaphores\semaphore_greater_than_zero\semaphore_greater_than_zero.c" />
+    <ClCompile Include="..\tests\threads\semaphores\semaphores.c" />
+    <ClCompile Include="..\tests\threads\semaphores\refer\refer.c" />
+    <ClCompile Include="..\tests\threads\semaphores\priority\priority.c" />
+    <ClCompile Include="..\tests\threads\semaphores\poll\poll.c" />
+    <ClCompile Include="..\tests\threads\semaphores\delete\delete.c" />
+    <ClCompile Include="..\tests\threads\semaphores\create\create.c" />
+    <ClCompile Include="..\tests\threads\semaphores\cancel\cancel.c" />
+    <ClCompile Include="..\tests\threads\scheduling\scheduling.c" />
+    <ClCompile Include="..\tests\threads\mutex\unlock\unlock.c" />
+    <ClCompile Include="..\tests\threads\mutex\try\try.c" />
+    <ClCompile Include="..\tests\threads\mutex\priority\priority.c" />
+    <ClCompile Include="..\tests\threads\mutex\mutex.c" />
+    <ClCompile Include="..\tests\threads\mutex\mutex-imports.S" />
+    <ClCompile Include="..\tests\threads\mutex\lock\lock.c" />
+    <ClCompile Include="..\tests\threads\mutex\delete\delete.c" />
+    <ClCompile Include="..\tests\threads\mutex\create\create.c" />
+    <ClCompile Include="..\tests\threads\msgpipe\msgpipe.c" />
+    <ClCompile Include="..\tests\threads\lwmutex\unlock\unlock.c" />
+    <ClCompile Include="..\tests\threads\lwmutex\try600\try600.c" />
+    <ClCompile Include="..\tests\threads\lwmutex\try\try.c" />
+    <ClCompile Include="..\tests\threads\lwmutex\priority\priority.c" />
+    <ClCompile Include="..\tests\threads\lwmutex\lwmutex-imports.S" />
+    <ClCompile Include="..\tests\threads\lwmutex\lock\lock.c" />
+    <ClCompile Include="..\tests\threads\lwmutex\delete\delete.c" />
+    <ClCompile Include="..\tests\threads\lwmutex\create\create.c" />
+    <ClCompile Include="..\tests\threads\k0\k0.c" />
+    <ClCompile Include="..\tests\threads\fpl\fpl.c" />
+    <ClCompile Include="..\tests\threads\callbacks\callbacks.c" />
+    <ClCompile Include="..\tests\sysmem\sysmem.c" />
+    <ClCompile Include="..\tests\string\string.c" />
+    <ClCompile Include="..\tests\rtc\rtc.c" />
+    <ClCompile Include="..\tests\power\power.c" />
+    <ClCompile Include="..\tests\mstick\mstick.c" />
+    <ClCompile Include="..\tests\modules\prxloader.c" />
+    <ClCompile Include="..\tests\modules\mymodule_exports.c" />
+    <ClCompile Include="..\tests\modules\mymodule.c" />
+    <ClCompile Include="..\tests\modules\MyLib.S" />
+    <ClCompile Include="..\tests\modules\loadexec\simple.c" />
+    <ClCompile Include="..\tests\modules\loadexec\loader.c" />
+    <ClCompile Include="..\tests\misc\testgp.c" />
+    <ClCompile Include="..\tests\me\me.S" />
+    <ClCompile Include="..\tests\me\main.c" />
+    <ClCompile Include="..\tests\malloc\malloc.c" />
+    <ClCompile Include="..\tests\loader\bss\bss.c" />
+    <ClCompile Include="..\tests\libs\xlib\xtime.c" />
+    <ClCompile Include="..\tests\libs\xlib\xtexture.c" />
+    <ClCompile Include="..\tests\libs\xlib\xtext.c" />
+    <ClCompile Include="..\tests\libs\xlib\xsound.c" />
+    <ClCompile Include="..\tests\libs\xlib\xparticle.c" />
+    <ClCompile Include="..\tests\libs\xlib\xobj.c" />
+    <ClCompile Include="..\tests\libs\xlib\xmem.c" />
+    <ClCompile Include="..\tests\libs\xlib\xmath.c" />
+    <ClCompile Include="..\tests\libs\xlib\xlog.c" />
+    <ClCompile Include="..\tests\libs\xlib\xlib.c" />
+    <ClCompile Include="..\tests\libs\xlib\xini.c" />
+    <ClCompile Include="..\tests\libs\xlib\xheightmap.c" />
+    <ClCompile Include="..\tests\libs\xlib\xgraphics.c" />
+    <ClCompile Include="..\tests\libs\xlib\xctrl.c" />
+    <ClCompile Include="..\tests\libs\xlib\xbuffer.c" />
+    <ClCompile Include="..\tests\kirk\kirk.c" />
+    <ClCompile Include="..\tests\kirk\kirk-imports.S" />
+    <ClCompile Include="..\tests\io\iodrv\iodrv.c" />
+    <ClCompile Include="..\tests\io\io\io.c" />
+    <ClCompile Include="..\tests\io\directory\directory.c" />
+    <ClCompile Include="..\tests\io\cwd\cwd.c" />
+    <ClCompile Include="..\tests\intr\vblank\vblank.c" />
+    <ClCompile Include="..\tests\intr\intr.c" />
+    <ClCompile Include="..\tests\intr\check_sceKernelCpuSuspendIntr.c" />
+    <ClCompile Include="..\tests\hle\check_not_used_uids.c" />
+    <ClCompile Include="..\tests\gpu\triangle\triangle.c" />
+    <ClCompile Include="..\tests\gpu\simple\simple.c" />
+    <ClCompile Include="..\tests\gpu\rendertarget\rendertarget.c" />
+    <ClCompile Include="..\tests\gpu\reflection\reflection.c" />
+    <ClCompile Include="..\tests\gpu\complex\complex.c" />
+    <ClCompile Include="..\tests\gpu\callbacks\ge_callbacks.c" />
+    <ClCompile Include="..\tests\font\libfont-imports.S" />
+    <ClCompile Include="..\tests\font\fonttest.c" />
+    <ClCompile Include="..\tests\dmac\dmactest.c" />
+    <ClCompile Include="..\tests\dmac\dmac-imports.S" />
+    <ClCompile Include="..\tests\display\display.c" />
+    <ClCompile Include="..\tests\ctrl\sampling\sampling.c" />
+    <ClCompile Include="..\tests\ctrl\ctrl.c" />
+    <ClCompile Include="..\tests\cpu\vfpu\prefixes\vfpu_prefixes.c" />
+    <ClCompile Include="..\tests\cpu\vfpu\convert\vfpu_convert_asm.S" />
+    <ClCompile Include="..\tests\cpu\vfpu\convert\vfpu_convert.c" />
+    <ClCompile Include="..\tests\cpu\vfpu\colors\vfpu_colors_asm.S" />
+    <ClCompile Include="..\tests\cpu\vfpu\colors\vfpu_colors.c" />
+    <ClCompile Include="..\tests\cpu\vfpu\base\vfpu.c" />
+    <ClCompile Include="..\tests\cpu\lsu\lsu.c" />
+    <ClCompile Include="..\tests\cpu\icache\icache.c" />
+    <ClCompile Include="..\tests\cpu\fpu\fpu.c" />
+    <ClCompile Include="..\tests\cpu\cpu_alu\cpu_alu.c" />
+    <ClCompile Include="..\tests\audio\sascore\sascore.c" />
+    <ClCompile Include="..\tests\audio\sascore\sascore-imports.S" />
+    <ClCompile Include="..\tests\audio\atrac\atractest.c" />
+    <ClCompile Include="..\tests\threads\mbx\mbx.c" />
+    <ClCompile Include="..\tests\threads\events\wait\wait.c" />
+    <ClCompile Include="..\tests\threads\events\set\set.c" />
+    <ClCompile Include="..\tests\threads\events\refer\refer.c" />
+    <ClCompile Include="..\tests\threads\events\poll\poll.c" />
+    <ClCompile Include="..\tests\threads\events\events.c" />
+    <ClCompile Include="..\tests\threads\events\delete\delete.c" />
+    <ClCompile Include="..\tests\threads\events\create\create.c" />
+    <ClCompile Include="..\tests\threads\events\clear\clear.c" />
+    <ClCompile Include="..\tests\threads\events\cancel\cancel.c" />
+    <ClCompile Include="..\tests\threads\mbx\poll\poll.c" />
+    <ClCompile Include="..\tests\threads\mbx\refer\refer.c" />
+    <ClCompile Include="..\tests\threads\mbx\create\create.c" />
+    <ClCompile Include="..\tests\threads\mbx\delete\delete.c" />
+    <ClCompile Include="..\tests\threads\mbx\cancel\cancel.c" />
+    <ClCompile Include="..\tests\threads\mbx\receive\receive.c" />
+    <ClCompile Include="..\tests\threads\mbx\priority\priority.c" />
+    <ClCompile Include="..\tests\threads\mbx\send\send.c" />
+    <ClCompile Include="..\tests\threads\alarm\set\set.c" />
+    <ClCompile Include="..\tests\threads\alarm\refer\refer.c" />
+    <ClCompile Include="..\tests\threads\alarm\cancel\cancel.c" />
+    <ClCompile Include="..\tests\ctrl\idle\idle.c" />
+    <ClCompile Include="..\tests\ctrl\sampling2\sampling2.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\gentest.py" />
+    <None Include="..\tests\video\pmf_simple\readme.txt" />
+    <None Include="..\tests\video\pmf_simple\pmf_simple.expected" />
+    <None Include="..\tests\video\pmf\test.info" />
+    <None Include="..\tests\video\pmf\readme.txt" />
+    <None Include="..\tests\video\pmf\pmf.expected" />
+    <None Include="..\tests\utility\systemparam\systemparam.expected" />
+    <None Include="..\tests\umd\wait\wait.expected" />
+    <None Include="..\tests\umd\umd.expected" />
+    <None Include="..\tests\umd\raw_access\raw_acess.expected" />
+    <None Include="..\tests\umd\raw_access\raw_access.expected" />
+    <None Include="..\tests\umd\io\umd_io.expected" />
+    <None Include="..\tests\umd\callbacks\umd.expected" />
+    <None Include="..\tests\threads\wakeup\wakeup.expected" />
+    <None Include="..\tests\threads\vtimers\vtimer.expected" />
+    <None Include="..\tests\threads\vpl\vpl.expected" />
+    <None Include="..\tests\threads\threads\threads.expected" />
+    <None Include="..\tests\threads\semaphores\wait\wait.expected" />
+    <None Include="..\tests\threads\semaphores\signal\signal.expected" />
+    <None Include="..\tests\threads\semaphores\semaphore_greater_than_zero\semaphore_greater_than_zero.expected" />
+    <None Include="..\tests\threads\semaphores\semaphores.expected" />
+    <None Include="..\tests\threads\semaphores\refer\refer.expected" />
+    <None Include="..\tests\threads\semaphores\priority\priority.expected" />
+    <None Include="..\tests\threads\semaphores\poll\poll.expected" />
+    <None Include="..\tests\threads\semaphores\delete\delete.expected" />
+    <None Include="..\tests\threads\semaphores\create\create.expected" />
+    <None Include="..\tests\threads\semaphores\cancel\cancel.expected" />
+    <None Include="..\tests\threads\scheduling\scheduling.expected" />
+    <None Include="..\tests\threads\mutex\unlock\unlock.expected" />
+    <None Include="..\tests\threads\mutex\try\try.expected" />
+    <None Include="..\tests\threads\mutex\priority\priority.expected" />
+    <None Include="..\tests\threads\mutex\mutex.expected" />
+    <None Include="..\tests\threads\mutex\lock\lock.expected" />
+    <None Include="..\tests\threads\mutex\delete\delete.expected" />
+    <None Include="..\tests\threads\mutex\create\create.expected" />
+    <None Include="..\tests\threads\msgpipe\msgpipe.expected" />
+    <None Include="..\tests\threads\lwmutex\unlock\unlock.expected" />
+    <None Include="..\tests\threads\lwmutex\try600\try600.expected" />
+    <None Include="..\tests\threads\lwmutex\try\try.expected" />
+    <None Include="..\tests\threads\lwmutex\priority\priority.expected" />
+    <None Include="..\tests\threads\lwmutex\lock\lock.expected" />
+    <None Include="..\tests\threads\lwmutex\delete\delete.expected" />
+    <None Include="..\tests\threads\lwmutex\create\create.expected" />
+    <None Include="..\tests\threads\k0\k0.expected" />
+    <None Include="..\tests\threads\fpl\fpl.expected" />
+    <None Include="..\tests\threads\callbacks\callbacks.expected" />
+    <None Include="..\tests\sysmem\sysmem.expected" />
+    <None Include="..\tests\string\string.expected" />
+    <None Include="..\tests\rtc\rtc.expected" />
+    <None Include="..\tests\power\power.expected" />
+    <None Include="..\tests\not_working_on_real_psp.txt" />
+    <None Include="..\tests\mstick\mstick.expected" />
+    <None Include="..\tests\modules\loadexec\loader.expected" />
+    <None Include="..\tests\misc\testgp.expected" />
+    <None Include="..\tests\malloc\malloc.expected" />
+    <None Include="..\tests\loader\bss\bss.expected" />
+    <None Include="..\tests\kirk\kirk.expected" />
+    <None Include="..\tests\io\iodrv\iodrv.expected" />
+    <None Include="..\tests\io\io\io.expected" />
+    <None Include="..\tests\io\directory\folder\test.txt" />
+    <None Include="..\tests\io\directory\folder\subfolder\subtext.txt" />
+    <None Include="..\tests\io\directory\folder\2.txt" />
+    <None Include="..\tests\io\directory\folder\1.txt" />
+    <None Include="..\tests\io\directory\directory.expected" />
+    <None Include="..\tests\io\cwd\cwd.expected" />
+    <None Include="..\tests\intr\vblank\vblank.expected" />
+    <None Include="..\tests\intr\intr.expected" />
+    <None Include="..\tests\hle\check_not_used_uids.expected" />
+    <None Include="..\tests\gpu\triangle\triangle.expected" />
+    <None Include="..\tests\gpu\simple\simple.expected" />
+    <None Include="..\tests\gpu\rendertarget\rendertarget.expected" />
+    <None Include="..\tests\gpu\reflection\reflection.expected" />
+    <None Include="..\tests\gpu\complex\complex.expected" />
+    <None Include="..\tests\gpu\callbacks\ge_callbacks.expected" />
+    <None Include="..\tests\font\fonttest.expected" />
+    <None Include="..\tests\dmac\dmactest.expected" />
+    <None Include="..\tests\display\display.expected" />
+    <None Include="..\tests\ctrl\sampling\sampling.expected" />
+    <None Include="..\tests\ctrl\ctrl.expected" />
+    <None Include="..\tests\cpu\vfpu\prefixes\vfpu_prefixes.expected" />
+    <None Include="..\tests\cpu\vfpu\convert\vfpu_convert.expected" />
+    <None Include="..\tests\cpu\vfpu\colors\vfpu_colors.expected" />
+    <None Include="..\tests\cpu\vfpu\base\vfpu.expected" />
+    <None Include="..\tests\cpu\lsu\lsu.expected" />
+    <None Include="..\tests\cpu\icache\icache.expected" />
+    <None Include="..\tests\cpu\fpu\fpu.expected" />
+    <None Include="..\tests\cpu\cpu_alu\cpu_alu.expected" />
+    <None Include="..\tests\audio\sascore\sascore.expected" />
+    <None Include="..\tests\audio\atrac\atractest.expected" />
+    <None Include="..\tests\threads\mbx\mbx.expected" />
+    <None Include="..\tests\threads\events\wait\wait.expected" />
+    <None Include="..\tests\threads\events\set\set.expected" />
+    <None Include="..\tests\threads\events\refer\refer.expected" />
+    <None Include="..\tests\threads\events\poll\poll.expected" />
+    <None Include="..\tests\threads\events\events.expected" />
+    <None Include="..\tests\threads\events\delete\delete.expected" />
+    <None Include="..\tests\threads\events\create\create.expected" />
+    <None Include="..\tests\threads\events\clear\clear.expected" />
+    <None Include="..\tests\threads\events\cancel\cancel.expected" />
+    <None Include="..\tests\threads\mbx\poll\poll.expected" />
+    <None Include="..\tests\threads\mbx\refer\refer.expected" />
+    <None Include="..\tests\threads\mbx\cancel\cancel.expected" />
+    <None Include="..\tests\threads\mbx\create\create.expected" />
+    <None Include="..\tests\threads\mbx\delete\delete.expected" />
+    <None Include="..\tests\threads\mbx\receive\receive.expected" />
+    <None Include="..\tests\threads\mbx\priority\priority.expected" />
+    <None Include="..\tests\threads\mbx\send\send.expected" />
+    <None Include="..\tests\threads\alarm\alarm.expected" />
+    <None Include="..\tests\threads\alarm\set\set.expected" />
+    <None Include="..\tests\threads\alarm\refer\refer.expected" />
+    <None Include="..\tests\threads\alarm\cancel\cancel.expected" />
+    <None Include="..\tests\ctrl\idle\idle.expected" />
+    <None Include="..\tests\ctrl\sampling2\sampling2.expected" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\common.h" />
+    <ClInclude Include="..\tests\video\pmf\pmf_video.h" />
+    <ClInclude Include="..\tests\video\pmf\pmf_reader.h" />
+    <ClInclude Include="..\tests\video\pmf\pmf_decoder.h" />
+    <ClInclude Include="..\tests\video\pmf\pmf_audio.h" />
+    <ClInclude Include="..\tests\threads\semaphores\sub_shared.h" />
+    <ClInclude Include="..\tests\threads\mutex\sub_shared.h" />
+    <ClInclude Include="..\tests\threads\lwmutex\sub_shared.h" />
+    <ClInclude Include="..\tests\libs\xlib\xtime.h" />
+    <ClInclude Include="..\tests\libs\xlib\xtexture.h" />
+    <ClInclude Include="..\tests\libs\xlib\xtext.h" />
+    <ClInclude Include="..\tests\libs\xlib\xsound.h" />
+    <ClInclude Include="..\tests\libs\xlib\xparticle.h" />
+    <ClInclude Include="..\tests\libs\xlib\xobj.h" />
+    <ClInclude Include="..\tests\libs\xlib\xmem.h" />
+    <ClInclude Include="..\tests\libs\xlib\xmath.h" />
+    <ClInclude Include="..\tests\libs\xlib\xlog.h" />
+    <ClInclude Include="..\tests\libs\xlib\xlib.h" />
+    <ClInclude Include="..\tests\libs\xlib\xini.h" />
+    <ClInclude Include="..\tests\libs\xlib\xheightmap.h" />
+    <ClInclude Include="..\tests\libs\xlib\xgraphics.h" />
+    <ClInclude Include="..\tests\libs\xlib\xctrl.h" />
+    <ClInclude Include="..\tests\libs\xlib\xconfig.h" />
+    <ClInclude Include="..\tests\libs\xlib\xbuffer.h" />
+    <ClInclude Include="..\tests\kirk\kirk_engine.h" />
+    <ClInclude Include="..\tests\font\libfont.h" />
+    <ClInclude Include="..\tests\audio\sascore\sascore.h" />
+    <ClInclude Include="..\tests\threads\events\sub_shared.h" />
+    <ClInclude Include="..\tests\threads\mbx\sub_shared.h" />
+    <ClInclude Include="..\tests\threads\alarm\sub_shared.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

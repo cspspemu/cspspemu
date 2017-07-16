@@ -1,0 +1,8 @@
+main
+init()
+/init()
+ge_signal(id=00000000, arg=00000000, addr=00000000)
+ge_finish(id=00000000, arg=00000000, addr=00000000)
+ge_signal(id=00000000, arg=00000001, addr=00000000)
+ge_finish(id=00000000, arg=00000001, addr=00000000)
+

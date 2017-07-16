@@ -1,0 +1,12 @@
+[x] IDs:
+[r]   Normal: 00000000 (count=690, ended=0, remaining=ffffffff)
+[x]   Unallocated (1): 80630005 (count=1337, ended=1337, remaining=1337)
+[x]   Unallocated (4): 80630005 (count=1337, ended=1337, remaining=1337)
+[x]   -1: 80630005 (count=1337, ended=1337, remaining=1337)
+
+[x] Missing parameters:
+[r]   NULL output: 00000000 (count=800, ended=0, remaining=ffffffff)
+[r]   Normal: 00000000 (count=690, ended=0, remaining=ffffffff)
+
+[x] Drain:
+[r]   Drained in 121 calls: 80630024

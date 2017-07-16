@@ -1,0 +1,29 @@
+[x] Normal (FIFO):
+[r]   ** started waiting thread 1
+[r]   ** started waiting thread 2
+[r]   ** started waiting thread 3
+FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000100,numBlocks=00000001,freeBlocks=00000000,wait=2)
+[r]   ** waiting thread 1 got result: 00000000, received = ptr
+[r]   ** waiting thread 1 delayed: 00000000
+[r]   ** waiting thread 1 freed: 00000000
+[r]   ** waiting thread 2 got result: 00000000, received = ptr
+[r]   ** waiting thread 2 delayed: 00000000
+[r]   ** waiting thread 3 got result: 00000000, received = ptr
+[r]   ** waiting thread 2 freed: 00000000
+[r]   ** waiting thread 3 delayed: 00000000
+[r]   ** waiting thread 3 freed: 00000000
+
+[x] Priority:
+[r]   ** started waiting thread 1
+[r]   ** started waiting thread 2
+[r]   ** started waiting thread 3
+FPL: OK (size=56,name=fpl,attr=00000100,blockSize=00000100,numBlocks=00000001,freeBlocks=00000000,wait=2)
+[r]   ** waiting thread 1 got result: 00000000, received = ptr
+[r]   ** waiting thread 1 delayed: 00000000
+[r]   ** waiting thread 1 freed: 00000000
+[r]   ** waiting thread 3 got result: 00000000, received = ptr
+[r]   ** waiting thread 3 delayed: 00000000
+[r]   ** waiting thread 3 freed: 00000000
+[r]   ** waiting thread 2 got result: 00000000, received = ptr
+[r]   ** waiting thread 2 delayed: 00000000
+[r]   ** waiting thread 2 freed: 00000000

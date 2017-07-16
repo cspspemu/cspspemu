@@ -1,0 +1,2701 @@
+powerHandler called: 00000001, 00000080, 00001234
+scePowerSetCpuClockFrequency -1: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 0: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 1: 00000000
+cpu: 0 / 0 / 0.868885
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 2: 00000000
+cpu: 1 / 1 / 1.737769
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 3: 00000000
+cpu: 2 / 2 / 2.606654
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 4: 00000000
+cpu: 3 / 3 / 3.909981
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 5: 00000000
+cpu: 4 / 4 / 4.778865
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 6: 00000000
+cpu: 5 / 5 / 5.647749
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 7: 00000000
+cpu: 6 / 6 / 6.951077
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 8: 00000000
+cpu: 7 / 7 / 7.819961
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 9: 00000000
+cpu: 8 / 8 / 8.688846
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 10: 00000000
+cpu: 9 / 9 / 9.992172
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 11: 00000000
+cpu: 10 / 10 / 10.861056
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 12: 00000000
+cpu: 11 / 11 / 11.729941
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 13: 00000000
+cpu: 12 / 12 / 12.598825
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 14: 00000000
+cpu: 13 / 13 / 13.902153
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 15: 00000000
+cpu: 14 / 14 / 14.771037
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 16: 00000000
+cpu: 15 / 15 / 15.639922
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 17: 00000000
+cpu: 16 / 16 / 16.943249
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 18: 00000000
+cpu: 17 / 17 / 17.812134
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 19: 00000000
+cpu: 18 / 18 / 18.681017
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 20: 00000000
+cpu: 19 / 19 / 19.984344
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 21: 00000000
+cpu: 20 / 20 / 20.853230
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 22: 00000000
+cpu: 21 / 21 / 21.722113
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 23: 00000000
+cpu: 22 / 22 / 22.590998
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 24: 00000000
+cpu: 23 / 23 / 23.894325
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 25: 00000000
+cpu: 24 / 24 / 24.763210
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 26: 00000000
+cpu: 25 / 25 / 25.632093
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 27: 00000000
+cpu: 26 / 26 / 26.935421
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 28: 00000000
+cpu: 27 / 27 / 27.804306
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 29: 00000000
+cpu: 28 / 28 / 28.673189
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 30: 00000000
+cpu: 29 / 29 / 29.976517
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 31: 00000000
+cpu: 30 / 30 / 30.845402
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 32: 00000000
+cpu: 31 / 31 / 31.714285
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 33: 00000000
+cpu: 32 / 32 / 32.583172
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 34: 00000000
+cpu: 33 / 33 / 33.886497
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 35: 00000000
+cpu: 34 / 34 / 34.755383
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 36: 00000000
+cpu: 35 / 35 / 35.624268
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 37: 00000000
+cpu: 36 / 36 / 36.927593
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 38: 00000000
+cpu: 37 / 37 / 37.796478
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 39: 00000000
+cpu: 38 / 38 / 38.665363
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 40: 00000000
+cpu: 39 / 39 / 39.968689
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 41: 00000000
+cpu: 40 / 40 / 40.837574
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 42: 00000000
+cpu: 41 / 41 / 41.706459
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 43: 00000000
+cpu: 42 / 42 / 42.575344
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 44: 00000000
+cpu: 43 / 43 / 43.878670
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 45: 00000000
+cpu: 44 / 44 / 44.747555
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 46: 00000000
+cpu: 45 / 45 / 45.616440
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 47: 00000000
+cpu: 46 / 46 / 46.919765
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 48: 00000000
+cpu: 47 / 47 / 47.788651
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 49: 00000000
+cpu: 48 / 48 / 48.657536
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 50: 00000000
+cpu: 49 / 49 / 49.960861
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 51: 00000000
+cpu: 50 / 50 / 50.829746
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 52: 00000000
+cpu: 51 / 51 / 51.698631
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 53: 00000000
+cpu: 52 / 52 / 52.567516
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 54: 00000000
+cpu: 53 / 53 / 53.870842
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 55: 00000000
+cpu: 54 / 54 / 54.739727
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 56: 00000000
+cpu: 55 / 55 / 55.608612
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 57: 00000000
+cpu: 56 / 56 / 56.911938
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 58: 00000000
+cpu: 57 / 57 / 57.780823
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 59: 00000000
+cpu: 58 / 58 / 58.649708
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 60: 00000000
+cpu: 59 / 59 / 59.953033
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 61: 00000000
+cpu: 60 / 60 / 60.821918
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 62: 00000000
+cpu: 61 / 61 / 61.690804
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 63: 00000000
+cpu: 62 / 62 / 62.994129
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 64: 00000000
+cpu: 63 / 63 / 63.863014
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 65: 00000000
+cpu: 64 / 64 / 64.731895
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 66: 00000000
+cpu: 65 / 65 / 65.600784
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 67: 00000000
+cpu: 66 / 66 / 66.904106
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 68: 00000000
+cpu: 67 / 67 / 67.772995
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 69: 00000000
+cpu: 68 / 68 / 68.641876
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 70: 00000000
+cpu: 69 / 69 / 69.945206
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 71: 00000000
+cpu: 70 / 70 / 70.814087
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 72: 00000000
+cpu: 71 / 71 / 71.682976
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 73: 00000000
+cpu: 72 / 72 / 72.986298
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 74: 00000000
+cpu: 73 / 73 / 73.855186
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 75: 00000000
+cpu: 74 / 74 / 74.724068
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 76: 00000000
+cpu: 75 / 75 / 75.592957
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 77: 00000000
+cpu: 76 / 76 / 76.896278
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 78: 00000000
+cpu: 77 / 77 / 77.765167
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 79: 00000000
+cpu: 78 / 78 / 78.634048
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 80: 00000000
+cpu: 79 / 79 / 79.937378
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 81: 00000000
+cpu: 80 / 80 / 80.806259
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 82: 00000000
+cpu: 81 / 81 / 81.675148
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 83: 00000000
+cpu: 82 / 82 / 82.978470
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 84: 00000000
+cpu: 83 / 83 / 83.847359
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 85: 00000000
+cpu: 84 / 84 / 84.716240
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 86: 00000000
+cpu: 85 / 85 / 85.585129
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 87: 00000000
+cpu: 86 / 86 / 86.888451
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 88: 00000000
+cpu: 87 / 87 / 87.757339
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 89: 00000000
+cpu: 88 / 88 / 88.626221
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 90: 00000000
+cpu: 89 / 89 / 89.929550
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 91: 00000000
+cpu: 90 / 90 / 90.798431
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 92: 00000000
+cpu: 91 / 91 / 91.667320
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 93: 00000000
+cpu: 92 / 92 / 92.970642
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 94: 00000000
+cpu: 93 / 93 / 93.839531
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 95: 00000000
+cpu: 94 / 94 / 94.708412
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 96: 00000000
+cpu: 95 / 95 / 95.577301
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 97: 00000000
+cpu: 96 / 96 / 96.880623
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 98: 00000000
+cpu: 97 / 97 / 97.749512
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 99: 00000000
+cpu: 98 / 98 / 98.618393
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 100: 00000000
+cpu: 99 / 99 / 99.921722
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 101: 00000000
+cpu: 100 / 100 / 100.790604
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 102: 00000000
+cpu: 101 / 101 / 101.659492
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 103: 00000000
+cpu: 102 / 102 / 102.962814
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 104: 00000000
+cpu: 103 / 103 / 103.831703
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 105: 00000000
+cpu: 104 / 104 / 104.700584
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 106: 00000000
+cpu: 105 / 105 / 105.569473
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 107: 00000000
+cpu: 106 / 106 / 106.872795
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 108: 00000000
+cpu: 107 / 107 / 107.741684
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 109: 00000000
+cpu: 108 / 108 / 108.610565
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 110: 00000000
+cpu: 109 / 109 / 109.913895
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 111: 00000000
+cpu: 110 / 110 / 110.782776
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 112: 00000000
+cpu: 111 / 111 / 111.651665
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 113: 00000000
+cpu: 112 / 112 / 112.954987
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 114: 00000000
+cpu: 113 / 113 / 113.823875
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 115: 00000000
+cpu: 114 / 114 / 114.692757
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 116: 00000000
+cpu: 115 / 115 / 115.996086
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 117: 00000000
+cpu: 116 / 116 / 116.864967
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 118: 00000000
+cpu: 117 / 117 / 117.733856
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 119: 00000000
+cpu: 118 / 118 / 118.602737
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 120: 00000000
+cpu: 119 / 119 / 119.906067
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 121: 00000000
+cpu: 120 / 120 / 120.774948
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 122: 00000000
+cpu: 121 / 121 / 121.643837
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 123: 00000000
+cpu: 122 / 122 / 122.947159
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 124: 00000000
+cpu: 123 / 123 / 123.816048
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 125: 00000000
+cpu: 124 / 124 / 124.684929
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 126: 00000000
+cpu: 125 / 125 / 125.988258
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 127: 00000000
+cpu: 126 / 126 / 126.857140
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 128: 00000000
+cpu: 127 / 127 / 127.726028
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 129: 00000000
+cpu: 128 / 128 / 128.594910
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 130: 00000000
+cpu: 129 / 129 / 129.898239
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 131: 00000000
+cpu: 130 / 130 / 130.767120
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 132: 00000000
+cpu: 131 / 131 / 131.636002
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 133: 00000000
+cpu: 132 / 132 / 132.939331
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 134: 00000000
+cpu: 133 / 133 / 133.808212
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 135: 00000000
+cpu: 134 / 134 / 134.677109
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 136: 00000000
+cpu: 135 / 135 / 135.980423
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 137: 00000000
+cpu: 136 / 136 / 136.849319
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 138: 00000000
+cpu: 137 / 137 / 137.718201
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 139: 00000000
+cpu: 138 / 138 / 138.587082
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 140: 00000000
+cpu: 139 / 139 / 139.890411
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 141: 00000000
+cpu: 140 / 140 / 140.759293
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 142: 00000000
+cpu: 141 / 141 / 141.628174
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 143: 00000000
+cpu: 142 / 142 / 142.931503
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 144: 00000000
+cpu: 143 / 143 / 143.800385
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 145: 00000000
+cpu: 144 / 144 / 144.669281
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 146: 00000000
+cpu: 145 / 145 / 145.972595
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 147: 00000000
+cpu: 146 / 146 / 146.841492
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 148: 00000000
+cpu: 147 / 147 / 147.710373
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 149: 00000000
+cpu: 148 / 148 / 148.579254
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 150: 00000000
+cpu: 149 / 149 / 149.882584
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 151: 00000000
+cpu: 150 / 150 / 150.751465
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 152: 00000000
+cpu: 151 / 151 / 151.620346
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 153: 00000000
+cpu: 152 / 152 / 152.923676
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 154: 00000000
+cpu: 153 / 153 / 153.792557
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 155: 00000000
+cpu: 154 / 154 / 154.661453
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 156: 00000000
+cpu: 155 / 155 / 155.964767
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 157: 00000000
+cpu: 156 / 156 / 156.833664
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 158: 00000000
+cpu: 157 / 157 / 157.702545
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 159: 00000000
+cpu: 158 / 158 / 158.571426
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 160: 00000000
+cpu: 159 / 159 / 159.874756
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 161: 00000000
+cpu: 160 / 160 / 160.743637
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 162: 00000000
+cpu: 161 / 161 / 161.612518
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 163: 00000000
+cpu: 162 / 162 / 162.915848
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 164: 00000000
+cpu: 163 / 163 / 163.784729
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 165: 00000000
+cpu: 164 / 164 / 164.653625
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 166: 00000000
+cpu: 165 / 165 / 165.956940
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 167: 00000000
+cpu: 166 / 166 / 166.825836
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 168: 00000000
+cpu: 167 / 167 / 167.694717
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 169: 00000000
+cpu: 168 / 168 / 168.998047
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 170: 00000000
+cpu: 169 / 169 / 169.866928
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 171: 00000000
+cpu: 170 / 170 / 170.735809
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 172: 00000000
+cpu: 171 / 171 / 171.604691
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 173: 00000000
+cpu: 172 / 172 / 172.908020
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 174: 00000000
+cpu: 173 / 173 / 173.776901
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 175: 00000000
+cpu: 174 / 174 / 174.645798
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 176: 00000000
+cpu: 175 / 175 / 175.949112
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 177: 00000000
+cpu: 176 / 176 / 176.818008
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 178: 00000000
+cpu: 177 / 177 / 177.686890
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 179: 00000000
+cpu: 178 / 178 / 178.990219
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 180: 00000000
+cpu: 179 / 179 / 179.859100
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 181: 00000000
+cpu: 180 / 180 / 180.727982
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 182: 00000000
+cpu: 181 / 181 / 181.596863
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 183: 00000000
+cpu: 182 / 182 / 182.900192
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 184: 00000000
+cpu: 183 / 183 / 183.769073
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 185: 00000000
+cpu: 184 / 184 / 184.637970
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 186: 00000000
+cpu: 185 / 185 / 185.941284
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 187: 00000000
+cpu: 186 / 186 / 186.810181
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 188: 00000000
+cpu: 187 / 187 / 187.679062
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 189: 00000000
+cpu: 188 / 188 / 188.982391
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 190: 00000000
+cpu: 189 / 189 / 189.851273
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 191: 00000000
+cpu: 190 / 190 / 190.720154
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 192: 00000000
+cpu: 191 / 191 / 191.589035
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 193: 00000000
+cpu: 192 / 192 / 192.892365
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 194: 00000000
+cpu: 193 / 193 / 193.761246
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 195: 00000000
+cpu: 194 / 194 / 194.630142
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 196: 00000000
+cpu: 195 / 195 / 195.933456
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 197: 00000000
+cpu: 196 / 196 / 196.802353
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 198: 00000000
+cpu: 197 / 197 / 197.671234
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 199: 00000000
+cpu: 198 / 198 / 198.974564
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 200: 00000000
+cpu: 199 / 199 / 199.843445
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 201: 00000000
+cpu: 200 / 200 / 200.712326
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 202: 00000000
+cpu: 201 / 201 / 201.581207
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 203: 00000000
+cpu: 202 / 202 / 202.884537
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 204: 00000000
+cpu: 203 / 203 / 203.753418
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 205: 00000000
+cpu: 204 / 204 / 204.622314
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 206: 00000000
+cpu: 205 / 205 / 205.925629
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 207: 00000000
+cpu: 206 / 206 / 206.794525
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 208: 00000000
+cpu: 207 / 207 / 207.663406
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 209: 00000000
+cpu: 208 / 208 / 208.966736
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 210: 00000000
+cpu: 209 / 209 / 209.835617
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 211: 00000000
+cpu: 210 / 210 / 210.704498
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 212: 00000000
+cpu: 211 / 211 / 211.573380
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 213: 00000000
+cpu: 212 / 212 / 212.876709
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 214: 00000000
+cpu: 213 / 213 / 213.745590
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 215: 00000000
+cpu: 214 / 214 / 214.614487
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 216: 00000000
+cpu: 215 / 215 / 215.917801
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 217: 00000000
+cpu: 216 / 216 / 216.786697
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 218: 00000000
+cpu: 217 / 217 / 217.655579
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 219: 00000000
+cpu: 218 / 218 / 218.958908
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 220: 00000000
+cpu: 219 / 219 / 219.827789
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 221: 00000000
+cpu: 220 / 220 / 220.696671
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 222: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetCpuClockFrequency 223: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency -1: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 0: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 1: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 2: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 3: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 4: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 5: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 6: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 7: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 8: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 9: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 10: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 11: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 12: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 13: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 14: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 15: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 16: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 17: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 18: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 19: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 20: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 21: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 22: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 23: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 24: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 25: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 26: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 27: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 28: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 29: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 30: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 31: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 32: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 33: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 34: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 35: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 36: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 37: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 38: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 39: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 40: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 41: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 42: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 43: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 44: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 45: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 46: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 47: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 48: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 49: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 50: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 51: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 52: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 53: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 54: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 55: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 56: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 57: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 58: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 59: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 60: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 61: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 62: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 63: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 64: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 65: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 66: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 67: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 68: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 69: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 70: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 71: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 72: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 73: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 74: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 75: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 76: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 77: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 78: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 79: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 80: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 81: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 82: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 83: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 84: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 85: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 86: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 87: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 88: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 89: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 90: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 91: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 92: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 93: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 94: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 95: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 96: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 97: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 98: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 99: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 100: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 101: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 102: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 103: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 104: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 105: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 106: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 107: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 108: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 109: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 110: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 111: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetBusClockFrequency 112: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency -1: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 0: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 1: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 2: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 3: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 4: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 5: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 6: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 7: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 8: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 9: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 10: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 11: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 12: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 13: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 14: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 15: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 16: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 17: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 18: 800001fe
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 19: 00000000
+cpu: 18 / 18 / 18.991333
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 20: 00000000
+cpu: 19 / 19 / 19.736094
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 21: 00000000
+cpu: 20 / 20 / 20.853230
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 22: 00000000
+cpu: 21 / 21 / 21.970367
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 23: 00000000
+cpu: 22 / 22 / 22.715124
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 24: 00000000
+cpu: 23 / 23 / 23.832262
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 25: 00000000
+cpu: 24 / 24 / 24.949400
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 26: 00000000
+cpu: 25 / 25 / 25.694159
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 27: 00000000
+cpu: 26 / 26 / 26.811296
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 28: 00000000
+cpu: 27 / 27 / 27.928432
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 29: 00000000
+cpu: 28 / 28 / 28.673191
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 30: 00000000
+cpu: 29 / 29 / 29.790327
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 31: 00000000
+cpu: 30 / 30 / 30.907465
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 32: 00000000
+cpu: 31 / 31 / 31.652224
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 33: 00000000
+cpu: 32 / 32 / 32.769360
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 34: 00000000
+cpu: 33 / 33 / 33.886497
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 35: 00000000
+cpu: 34 / 34 / 34.631256
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 36: 00000000
+cpu: 35 / 35 / 35.748394
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 37: 00000000
+cpu: 36 / 36 / 36.865532
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 38: 00000000
+cpu: 37 / 37 / 37.982666
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 39: 00000000
+cpu: 38 / 38 / 38.727425
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 40: 00000000
+cpu: 39 / 39 / 39.844563
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 41: 00000000
+cpu: 40 / 40 / 40.961700
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 42: 00000000
+cpu: 41 / 41 / 41.706459
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 43: 00000000
+cpu: 42 / 42 / 42.823597
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 44: 00000000
+cpu: 43 / 43 / 43.940735
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 45: 00000000
+cpu: 44 / 44 / 44.685493
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 46: 00000000
+cpu: 45 / 45 / 45.802631
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 47: 00000000
+cpu: 46 / 46 / 46.919765
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 48: 00000000
+cpu: 47 / 47 / 47.664524
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 49: 00000000
+cpu: 48 / 48 / 48.781662
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 50: 00000000
+cpu: 49 / 49 / 49.898800
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 51: 00000000
+cpu: 50 / 50 / 50.643559
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 52: 00000000
+cpu: 51 / 51 / 51.760693
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 53: 00000000
+cpu: 52 / 52 / 52.877831
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 54: 00000000
+cpu: 53 / 53 / 53.994968
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 55: 00000000
+cpu: 54 / 54 / 54.739727
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 56: 00000000
+cpu: 55 / 55 / 55.856865
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 57: 00000000
+cpu: 56 / 56 / 56.974003
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 58: 00000000
+cpu: 57 / 57 / 57.718761
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 59: 00000000
+cpu: 58 / 58 / 58.835899
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 60: 00000000
+cpu: 59 / 59 / 59.953037
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 61: 00000000
+cpu: 60 / 60 / 60.697792
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 62: 00000000
+cpu: 61 / 61 / 61.814930
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 63: 00000000
+cpu: 62 / 62 / 62.932068
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 64: 00000000
+cpu: 63 / 63 / 63.676826
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 65: 00000000
+cpu: 64 / 64 / 64.793961
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 66: 00000000
+cpu: 65 / 65 / 65.911102
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 67: 00000000
+cpu: 66 / 66 / 66.655861
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 68: 00000000
+cpu: 67 / 67 / 67.772995
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 69: 00000000
+cpu: 68 / 68 / 68.890137
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 70: 00000000
+cpu: 69 / 69 / 69.634895
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 71: 00000000
+cpu: 70 / 70 / 70.752029
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 72: 00000000
+cpu: 71 / 71 / 71.869171
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 73: 00000000
+cpu: 72 / 72 / 72.986298
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 74: 00000000
+cpu: 73 / 73 / 73.731064
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 75: 00000000
+cpu: 74 / 74 / 74.848198
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 76: 00000000
+cpu: 75 / 75 / 75.965332
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 77: 00000000
+cpu: 76 / 76 / 76.710098
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 78: 00000000
+cpu: 77 / 77 / 77.827232
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 79: 00000000
+cpu: 78 / 78 / 78.944374
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 80: 00000000
+cpu: 79 / 79 / 79.689125
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 81: 00000000
+cpu: 80 / 80 / 80.806259
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 82: 00000000
+cpu: 81 / 81 / 81.923401
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 83: 00000000
+cpu: 82 / 82 / 82.668159
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 84: 00000000
+cpu: 83 / 83 / 83.785301
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 85: 00000000
+cpu: 84 / 84 / 84.902435
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 86: 00000000
+cpu: 85 / 85 / 85.647194
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 87: 00000000
+cpu: 86 / 86 / 86.764336
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 88: 00000000
+cpu: 87 / 87 / 87.881470
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 89: 00000000
+cpu: 88 / 88 / 88.998611
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 90: 00000000
+cpu: 89 / 89 / 89.743362
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 91: 00000000
+cpu: 90 / 90 / 90.860497
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 92: 00000000
+cpu: 91 / 91 / 91.977638
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 93: 00000000
+cpu: 92 / 92 / 92.722397
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 94: 00000000
+cpu: 93 / 93 / 93.839531
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 95: 00000000
+cpu: 94 / 94 / 94.956673
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 96: 00000000
+cpu: 95 / 95 / 95.701431
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 97: 00000000
+cpu: 96 / 96 / 96.818573
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 98: 00000000
+cpu: 97 / 97 / 97.935707
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 99: 00000000
+cpu: 98 / 98 / 98.680458
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 100: 00000000
+cpu: 99 / 99 / 99.797600
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 101: 00000000
+cpu: 100 / 100 / 100.914734
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 102: 00000000
+cpu: 101 / 101 / 101.659492
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 103: 00000000
+cpu: 102 / 102 / 102.776634
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 104: 00000000
+cpu: 103 / 103 / 103.893768
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 105: 00000000
+cpu: 104 / 104 / 104.638527
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 106: 00000000
+cpu: 105 / 105 / 105.755661
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 107: 00000000
+cpu: 106 / 106 / 106.872795
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 108: 00000000
+cpu: 107 / 107 / 107.989937
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 109: 00000000
+cpu: 108 / 108 / 108.734695
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 110: 00000000
+cpu: 109 / 109 / 109.851837
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 111: 00000000
+cpu: 110 / 110 / 110.968971
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 112: 00000000
+cpu: 111 / 111 / 111.713730
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 113: 00000000
+cpu: 112 / 112 / 112.830872
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 114: 00000000
+cpu: 113 / 113 / 113.948006
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 115: 00000000
+cpu: 114 / 114 / 114.692764
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 116: 00000000
+cpu: 115 / 115 / 115.809898
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 117: 00000000
+cpu: 116 / 116 / 116.927032
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 118: 00000000
+cpu: 117 / 117 / 117.671799
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 119: 00000000
+cpu: 118 / 118 / 118.788933
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 120: 00000000
+cpu: 119 / 119 / 119.906075
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 121: 00000000
+cpu: 120 / 120 / 120.650833
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 122: 00000000
+cpu: 121 / 121 / 121.767967
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 123: 00000000
+cpu: 122 / 122 / 122.885109
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 124: 00000000
+cpu: 123 / 123 / 123.629860
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 125: 00000000
+cpu: 124 / 124 / 124.746994
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 126: 00000000
+cpu: 125 / 125 / 125.864136
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 127: 00000000
+cpu: 126 / 126 / 126.981270
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 128: 00000000
+cpu: 127 / 127 / 127.726036
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 129: 00000000
+cpu: 128 / 128 / 128.843170
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 130: 00000000
+cpu: 129 / 129 / 129.960312
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 131: 00000000
+cpu: 130 / 130 / 130.705063
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 132: 00000000
+cpu: 131 / 131 / 131.822205
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 133: 00000000
+cpu: 132 / 132 / 132.939331
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 134: 00000000
+cpu: 133 / 133 / 133.684097
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 135: 00000000
+cpu: 134 / 134 / 134.801239
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 136: 00000000
+cpu: 135 / 135 / 135.918381
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 137: 00000000
+cpu: 136 / 136 / 136.663132
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 138: 00000000
+cpu: 137 / 137 / 137.780273
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 139: 00000000
+cpu: 138 / 138 / 138.897400
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 140: 00000000
+cpu: 139 / 139 / 139.642166
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 141: 00000000
+cpu: 140 / 140 / 140.759293
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 142: 00000000
+cpu: 141 / 141 / 141.876434
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 143: 00000000
+cpu: 142 / 142 / 142.993576
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 144: 00000000
+cpu: 143 / 143 / 143.738342
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 145: 00000000
+cpu: 144 / 144 / 144.855484
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 146: 00000000
+cpu: 145 / 145 / 145.972595
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 147: 00000000
+cpu: 146 / 146 / 146.717361
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 148: 00000000
+cpu: 147 / 147 / 147.834503
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 149: 00000000
+cpu: 148 / 148 / 148.951645
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 150: 00000000
+cpu: 149 / 149 / 149.696396
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 151: 00000000
+cpu: 150 / 150 / 150.813538
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 152: 00000000
+cpu: 151 / 151 / 151.930664
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 153: 00000000
+cpu: 152 / 152 / 152.675430
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 154: 00000000
+cpu: 153 / 153 / 153.792557
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 155: 00000000
+cpu: 154 / 154 / 154.909698
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 156: 00000000
+cpu: 155 / 155 / 155.654465
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 157: 00000000
+cpu: 156 / 156 / 156.771606
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 158: 00000000
+cpu: 157 / 157 / 157.888748
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 159: 00000000
+cpu: 158 / 158 / 158.633499
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 160: 00000000
+cpu: 159 / 159 / 159.750641
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 161: 00000000
+cpu: 160 / 160 / 160.867767
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 162: 00000000
+cpu: 161 / 161 / 161.984909
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 163: 00000000
+cpu: 162 / 162 / 162.729660
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 164: 00000000
+cpu: 163 / 163 / 163.846802
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 165: 00000000
+cpu: 164 / 164 / 164.963943
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 166: 00000000
+cpu: 165 / 165 / 165.708710
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 167: 00000000
+cpu: 166 / 166 / 166.825836
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 168: 00000000
+cpu: 167 / 167 / 167.942978
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 169: 00000000
+cpu: 168 / 168 / 168.687729
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 170: 00000000
+cpu: 169 / 169 / 169.804871
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 171: 00000000
+cpu: 170 / 170 / 170.922012
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 172: 00000000
+cpu: 171 / 171 / 171.666763
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 173: 00000000
+cpu: 172 / 172 / 172.783905
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 174: 00000000
+cpu: 173 / 173 / 173.901031
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 175: 00000000
+cpu: 174 / 174 / 174.645798
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 176: 00000000
+cpu: 175 / 175 / 175.762939
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 177: 00000000
+cpu: 176 / 176 / 176.880081
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 178: 00000000
+cpu: 177 / 177 / 177.997223
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 179: 00000000
+cpu: 178 / 178 / 178.741974
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 180: 00000000
+cpu: 179 / 179 / 179.859100
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 181: 00000000
+cpu: 180 / 180 / 180.976242
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 182: 00000000
+cpu: 181 / 181 / 181.720993
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 183: 00000000
+cpu: 182 / 182 / 182.838135
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 184: 00000000
+cpu: 183 / 183 / 183.955276
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 185: 00000000
+cpu: 184 / 184 / 184.700043
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 186: 00000000
+cpu: 185 / 185 / 185.817184
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 187: 00000000
+cpu: 186 / 186 / 186.934311
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 188: 00000000
+cpu: 187 / 187 / 187.679062
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 189: 00000000
+cpu: 188 / 188 / 188.796204
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 190: 00000000
+cpu: 189 / 189 / 189.913345
+bus: 95 / 95 / 95.142860
+pll: 190 / 190.2857
+scePowerSetClockFrequency 191: 00000000
+cpu: 190 / 190 / 190.720154
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 192: 00000000
+cpu: 191 / 191 / 191.589035
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 193: 00000000
+cpu: 192 / 192 / 192.892365
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 194: 00000000
+cpu: 193 / 193 / 193.761246
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 195: 00000000
+cpu: 194 / 194 / 194.630142
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 196: 00000000
+cpu: 195 / 195 / 195.933456
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 197: 00000000
+cpu: 196 / 196 / 196.802353
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 198: 00000000
+cpu: 197 / 197 / 197.671234
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 199: 00000000
+cpu: 198 / 198 / 198.974564
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 200: 00000000
+cpu: 199 / 199 / 199.843445
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 201: 00000000
+cpu: 200 / 200 / 200.712326
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 202: 00000000
+cpu: 201 / 201 / 201.581207
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 203: 00000000
+cpu: 202 / 202 / 202.884537
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 204: 00000000
+cpu: 203 / 203 / 203.753418
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 205: 00000000
+cpu: 204 / 204 / 204.622314
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 206: 00000000
+cpu: 205 / 205 / 205.925629
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 207: 00000000
+cpu: 206 / 206 / 206.794525
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 208: 00000000
+cpu: 207 / 207 / 207.663406
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 209: 00000000
+cpu: 208 / 208 / 208.966736
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 210: 00000000
+cpu: 209 / 209 / 209.835617
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 211: 00000000
+cpu: 210 / 210 / 210.704498
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 212: 00000000
+cpu: 211 / 211 / 211.573380
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 213: 00000000
+cpu: 212 / 212 / 212.876709
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 214: 00000000
+cpu: 213 / 213 / 213.745590
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 215: 00000000
+cpu: 214 / 214 / 214.614487
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 216: 00000000
+cpu: 215 / 215 / 215.917801
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 217: 00000000
+cpu: 216 / 216 / 216.786697
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 218: 00000000
+cpu: 217 / 217 / 217.655579
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 219: 00000000
+cpu: 218 / 218 / 218.958908
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 220: 00000000
+cpu: 219 / 219 / 219.827789
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 221: 00000000
+cpu: 220 / 220 / 220.696671
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 222: 00000000
+cpu: 222 / 222 / 222.000000
+bus: 111 / 111 / 111.000000
+pll: 222 / 222.0000
+scePowerSetClockFrequency 223: 00000000
+cpu: 222 / 222 / 222.608215
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 224: 00000000
+cpu: 223 / 223 / 223.650864
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 225: 00000000
+cpu: 224 / 224 / 224.693542
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 226: 00000000
+cpu: 225 / 225 / 225.736191
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 227: 00000000
+cpu: 226 / 226 / 226.778870
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 228: 00000000
+cpu: 227 / 227 / 227.821518
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 229: 00000000
+cpu: 228 / 228 / 228.864182
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 230: 00000000
+cpu: 229 / 229 / 229.906845
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 231: 00000000
+cpu: 230 / 230 / 230.949509
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 232: 00000000
+cpu: 231 / 231 / 231.992172
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 233: 00000000
+cpu: 232 / 232 / 232.513504
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 234: 00000000
+cpu: 233 / 233 / 233.556152
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 235: 00000000
+cpu: 234 / 234 / 234.598831
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 236: 00000000
+cpu: 235 / 235 / 235.641479
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 237: 00000000
+cpu: 236 / 236 / 236.684143
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 238: 00000000
+cpu: 237 / 237 / 237.726807
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 239: 00000000
+cpu: 238 / 238 / 238.769455
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 240: 00000000
+cpu: 239 / 239 / 239.812134
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 241: 00000000
+cpu: 240 / 240 / 240.854782
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 242: 00000000
+cpu: 241 / 241 / 241.897446
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 243: 00000000
+cpu: 242 / 242 / 242.940109
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 244: 00000000
+cpu: 243 / 243 / 243.982773
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 245: 00000000
+cpu: 244 / 244 / 244.504105
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 246: 00000000
+cpu: 245 / 245 / 245.546768
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 247: 00000000
+cpu: 246 / 246 / 246.589417
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 248: 00000000
+cpu: 247 / 247 / 247.632095
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 249: 00000000
+cpu: 248 / 248 / 248.674744
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 250: 00000000
+cpu: 249 / 249 / 249.717407
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 251: 00000000
+cpu: 250 / 250 / 250.760071
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 252: 00000000
+cpu: 251 / 251 / 251.802734
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 253: 00000000
+cpu: 252 / 252 / 252.845398
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 254: 00000000
+cpu: 253 / 253 / 253.888062
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 255: 00000000
+cpu: 254 / 254 / 254.930710
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 256: 00000000
+cpu: 255 / 255 / 255.973389
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 257: 00000000
+cpu: 256 / 256 / 256.494720
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 258: 00000000
+cpu: 257 / 257 / 257.537354
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 259: 00000000
+cpu: 258 / 258 / 258.580017
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 260: 00000000
+cpu: 259 / 259 / 259.622711
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 261: 00000000
+cpu: 260 / 260 / 260.665375
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 262: 00000000
+cpu: 261 / 261 / 261.708008
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 263: 00000000
+cpu: 262 / 262 / 262.750671
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 264: 00000000
+cpu: 263 / 263 / 263.793335
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 265: 00000000
+cpu: 264 / 264 / 264.836029
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 266: 00000000
+cpu: 265 / 265 / 265.878662
+bus: 133 / 133 / 133.199997
+pll: 266 / 266.4000
+scePowerSetClockFrequency 267: 00000000
+cpu: 266 / 266 / 266.530334
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 268: 00000000
+cpu: 267 / 267 / 267.833649
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 269: 00000000
+cpu: 268 / 268 / 268.485321
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 270: 00000000
+cpu: 269 / 269 / 269.788635
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 271: 00000000
+cpu: 270 / 270 / 270.440308
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 272: 00000000
+cpu: 271 / 271 / 271.743652
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 273: 00000000
+cpu: 272 / 272 / 272.395294
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 274: 00000000
+cpu: 273 / 273 / 273.698639
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 275: 00000000
+cpu: 274 / 274 / 274.350281
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 276: 00000000
+cpu: 275 / 275 / 275.653625
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 277: 00000000
+cpu: 276 / 276 / 276.956940
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 278: 00000000
+cpu: 277 / 277 / 277.608612
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 279: 00000000
+cpu: 278 / 278 / 278.911926
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 280: 00000000
+cpu: 279 / 279 / 279.563599
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 281: 00000000
+cpu: 280 / 280 / 280.866913
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 282: 00000000
+cpu: 281 / 281 / 281.518585
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 283: 00000000
+cpu: 282 / 282 / 282.821930
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 284: 00000000
+cpu: 283 / 283 / 283.473572
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 285: 00000000
+cpu: 284 / 284 / 284.776917
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 286: 00000000
+cpu: 285 / 285 / 285.428558
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 287: 00000000
+cpu: 286 / 286 / 286.731903
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 288: 00000000
+cpu: 287 / 287 / 287.383575
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 289: 00000000
+cpu: 288 / 288 / 288.686890
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 290: 00000000
+cpu: 289 / 289 / 289.990204
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 291: 00000000
+cpu: 290 / 290 / 290.641876
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 292: 00000000
+cpu: 291 / 291 / 291.945190
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 293: 00000000
+cpu: 292 / 292 / 292.596863
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 294: 00000000
+cpu: 293 / 293 / 293.900208
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 295: 00000000
+cpu: 294 / 294 / 294.551849
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 296: 00000000
+cpu: 295 / 295 / 295.855194
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 297: 00000000
+cpu: 296 / 296 / 296.506836
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 298: 00000000
+cpu: 297 / 297 / 297.810181
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 299: 00000000
+cpu: 298 / 298 / 298.461853
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 300: 00000000
+cpu: 299 / 299 / 299.765167
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 301: 00000000
+cpu: 300 / 300 / 300.416840
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 302: 00000000
+cpu: 301 / 301 / 301.720154
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 303: 00000000
+cpu: 302 / 302 / 302.371826
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 304: 00000000
+cpu: 303 / 303 / 303.675140
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 305: 00000000
+cpu: 304 / 304 / 304.978485
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 306: 00000000
+cpu: 305 / 305 / 305.630127
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 307: 00000000
+cpu: 306 / 306 / 306.933472
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 308: 00000000
+cpu: 307 / 307 / 307.585114
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 309: 00000000
+cpu: 308 / 308 / 308.888458
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 310: 00000000
+cpu: 309 / 309 / 309.540131
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 311: 00000000
+cpu: 310 / 310 / 310.843445
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 312: 00000000
+cpu: 311 / 311 / 311.495117
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 313: 00000000
+cpu: 312 / 312 / 312.798431
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 314: 00000000
+cpu: 313 / 313 / 313.450104
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 315: 00000000
+cpu: 314 / 314 / 314.753418
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 316: 00000000
+cpu: 315 / 315 / 315.405090
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 317: 00000000
+cpu: 316 / 316 / 316.708405
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 318: 00000000
+cpu: 317 / 317 / 317.360077
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 319: 00000000
+cpu: 318 / 318 / 318.663391
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 320: 00000000
+cpu: 319 / 319 / 319.966736
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 321: 00000000
+cpu: 320 / 320 / 320.618408
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 322: 00000000
+cpu: 321 / 321 / 321.921722
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 323: 00000000
+cpu: 322 / 322 / 322.573395
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 324: 00000000
+cpu: 323 / 323 / 323.876709
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 325: 00000000
+cpu: 324 / 324 / 324.528381
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 326: 00000000
+cpu: 325 / 325 / 325.831696
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 327: 00000000
+cpu: 326 / 326 / 326.483368
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 328: 00000000
+cpu: 327 / 327 / 327.786682
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 329: 00000000
+cpu: 328 / 328 / 328.438354
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 330: 00000000
+cpu: 329 / 329 / 329.741669
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 331: 00000000
+cpu: 330 / 330 / 330.393341
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 332: 00000000
+cpu: 331 / 331 / 331.696686
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 333: 00000000
+cpu: 333 / 333 / 333.000000
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000
+scePowerSetClockFrequency 334: 800001fe
+cpu: 333 / 333 / 333.000000
+bus: 166 / 166 / 166.500000
+pll: 333 / 333.0000

@@ -1,0 +1,5 @@
+sceKernelPollMbx: 800201B2
+send:'Hello World'
+sceKernelSendMbx: 00000000
+sceKernelReceiveMbx: 00000000
+recv:'Hello World'

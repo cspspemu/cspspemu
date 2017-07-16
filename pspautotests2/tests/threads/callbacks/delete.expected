@@ -1,0 +1,31 @@
+[x] Objects:
+[x]   Normal: OK
+[x]   NULL: Failed (800201a1)
+[x]   Invalid: Failed (800201a1)
+[x]   Deleted: Failed (800201a1)
+
+[x] Different thread:
+[x]   ** started deleting thread
+[r]   Delete on different thread: OK
+
+[x] Deleting during wait:
+[x]   Beginning sleep on better priority sleeping thread
+[x]   ** started better priority sleeping thread
+[x]   ** started worse priority sleeping thread
+[r]   Beginning sleep on worse priority sleeping thread
+[r]   Delete better priority cb: OK
+[x]   Delete worse priority cb: OK
+[r]   ** stopped worse priority sleeping thread
+[r]   ** stopped better priority sleeping thread
+
+[x] Associated with a deleted thread:
+[x]   ** started sleeping thread
+[r]   Beginning sleep on sleeping thread
+[r]   Woke from sleep: 00000000
+[r]   ** stopped sleeping thread
+[r]   Delete after thread delete: Failed (800201a1)
+[r]   ** stopped sleeping thread
+
+[x] Delete while notified:
+[x]   Notify: 00000000
+[x]   Delete: OK

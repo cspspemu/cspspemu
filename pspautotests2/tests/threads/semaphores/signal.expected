@@ -1,0 +1,28 @@
+Sema: OK (size=56,name='signal',attr=0,init=0,cur=0,max=1,wait=0)
+Basic +2: Failed (800201AE)
+Sema: OK (size=56,name='signal',attr=0,init=0,cur=0,max=1,wait=0)
+Basic +1: OK
+Sema: OK (size=56,name='signal',attr=0,init=0,cur=1,max=1,wait=0)
+Negative - 1: OK
+Sema: OK (size=56,name='signal',attr=0,init=0,cur=0,max=1,wait=0)
+Negative - 2: OK
+Sema: OK (size=56,name='signal',attr=0,init=0,cur=-2,max=1,wait=0)
+Zero: OK
+Sema: OK (size=56,name='signal',attr=0,init=0,cur=-2,max=1,wait=0)
+Sema: OK (size=56,name='signal',attr=0,init=-3,cur=-3,max=3,wait=0)
+Start negative: OK
+Sema: OK (size=56,name='signal',attr=0,init=-3,cur=-2,max=3,wait=0)
+NULL: Failed (80020199)
+Sema: Failed (00000000)
+Invalid: Failed (80020199)
+Sema: Invalid (80020199)
+Deleted: Failed (80020199)
+Sema: Invalid (80020199)
+Signal other then same: A1B1C2E1D1F2 (thread=00000000, main=00000000)
+NULL: A1B1C2E1D1F2 (thread=800201B5, main=80020199)
+Other + 2: A1B1C2E1D1F2 (thread=800201B5, main=800201AE)
+Other + 1: A1B1C2E1D1F2 (thread=800201B5, main=800201AE)
+Other - 1: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Same + 2: A1B1C2D1E2F1 (thread=00000000, main=00000000)
+Same + 1: A1B1C2D1E2F1 (thread=00000000, main=00000000)
+Same - 1: A1B1C2E1D1F2 (thread=800201B5, main=00000000)

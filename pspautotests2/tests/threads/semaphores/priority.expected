@@ -1,0 +1,45 @@
+Sema: OK (size=56,name='sema0',attr=0,init=0,cur=0,max=2,wait=0)
+Sema: OK (size=56,name='sema1',attr=0,init=0,cur=0,max=2,wait=0)
+A1
+A2
+A3
+A4
+A5
+---
+Sema: OK (size=56,name='sema1',attr=0,init=0,cur=0,max=2,wait=5)
+---
+B1
+---
+Sema: OK (size=56,name='sema1',attr=0,init=0,cur=0,max=2,wait=4)
+---
+B3
+B2
+---
+Sema: OK (size=56,name='sema1',attr=0,init=0,cur=0,max=2,wait=2)
+---
+B5
+B4
+
+
+Sema: OK (size=56,name='sema1',attr=256,init=0,cur=0,max=2,wait=0)
+A1
+A2
+A3
+A4
+A5
+---
+Sema: OK (size=56,name='sema1',attr=256,init=0,cur=0,max=2,wait=5)
+---
+B5
+---
+Sema: OK (size=56,name='sema1',attr=256,init=0,cur=0,max=2,wait=4)
+---
+B4
+B3
+---
+Sema: OK (size=56,name='sema1',attr=256,init=0,cur=0,max=2,wait=2)
+---
+B2
+B1
+
+

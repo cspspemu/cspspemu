@@ -1,0 +1,35 @@
+[x] Objects:
+[x]   Normal: 00000000
+[x]   NULL: 00000000
+[x]   Invalid: 00000000
+[x]   Deleted: 00000000
+
+[x] Objects (SDK 3.95+):
+[x]   Normal: 00000000
+[x]   NULL: 800200d2
+[x]   Invalid: 800200d2
+[x]   Deleted: 800200d2
+
+[x] LoadExecForUser_362A956B:
+[x]   With invalid CB: 800201a1, 12, 4919, 4919
+[x]   Register without arg: 00000000
+[x]   Without arg: 800200d3, 12, 4919, 4919
+[x]   Register invalid: 800200d2
+[x]   With invalid again: 800200d3, 12, 4919, 4919
+[x]   Register valid: 00000000
+[x]   arg.unknown1 = -1: 800200d2, 12, 4919, 4919
+[x]   arg.unknown1 = 0: 00000000, 12, 0, -1
+[x]   arg.unknown1 = 1: 00000000, 12, 0, -1
+[x]   arg.unknown1 = 2: 00000000, 12, 0, -1
+[x]   arg.unknown1 = 3: 00000000, 12, 0, -1
+[x]   arg.unknown1 = 4: 800200d2, 12, 4919, 4919
+[x]   arg.param->size = -1: 00000000, -1, 0, -1
+[x]   arg.param->size = 0: 800201bc, 0, 4919, 4919
+[x]   arg.param->size = 1: 800201bc, 1, 4919, 4919
+[x]   arg.param->size = 2: 800201bc, 2, 4919, 4919
+[x]   arg.param->size = 3: 800201bc, 3, 4919, 4919
+[x]   arg.param->size = 4: 800201bc, 4, 4919, 4919
+[x]   arg.param->size = 11: 800201bc, 11, 4919, 4919
+[x]   arg.param->size = 12: 00000000, 12, 0, -1
+[x]   arg.param->size = 13: 00000000, 13, 0, -1
+[x]   arg.param->size = 16: 00000000, 16, 0, -1

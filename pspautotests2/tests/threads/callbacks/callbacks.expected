@@ -1,0 +1,17 @@
+thread2   cbHandler called: 00000001, 00000022, 00004567
+thread2   cbHandler called: 00000001, 00000023, 00004567
+thread1   -> awake
+thread1   Lock 0 => 5: 800201BD
+thread1   cbHandler called: 00000002, 00000011, 00001234
+thread1   Lock 0 => 1: 00000000
+thread1   Lock 1 => 1: 800201C8
+thread1   Forcing a resched...
+thread2   cbHandler called: 00000004, 00000021, 00004567
+thread3   cbHandler called: 00000003, 00000031, 00008901
+thread1   Forcing a CB resched...
+thread1   cbHandler called: 00000001, 00000011, 00001234
+thread1   Check callbacks on thread1 with pending on thread2...
+thread1   Forcing a CB resched...
+thread2   cbHandler called: 00000001, 00000021, 00004567
+thread2   -> awake
+thread3   -> awake

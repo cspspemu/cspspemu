@@ -1,0 +1,20 @@
+sceCtrlGetSamplingCycle:
+Normal: 00000000 (0)
+Zero: 00000000 (0) - OK
+1: 800001FE (1) - still 0
+Negative: 800001FE (-1) - still 0
+333: 800001FE (333) - still 0
+4444: 800001FE (4444) - still 0
+5554: 800001FE (5554) - still 0
+5555: 00000000 (5555) - OK
+5556: 000015B3 (5556) - OK
+6666: 000015B4 (6666) - OK
+19999: 00001A0A (19999) - OK
+20000: 00004E1F (20000) - OK
+20001: 800001FE (20001) - still 20000
+Zero: 00004E20 (0) - OK
+0 cycle: 1x
+5555 cycle: 3x
+9999 cycle: 2x
+16666 cycle: 1x
+20000 cycle: 1x

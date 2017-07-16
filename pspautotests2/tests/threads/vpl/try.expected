@@ -1,0 +1,40 @@
+More than free: Failed (800201B7) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+0 bytes: Failed (800201B7) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+1 byte: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFD0,wait=0)
+-1 bytes: Failed (800201B7) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFD0,wait=0)
+16 bytes: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFB8,wait=0)
+8 bytes: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFA8,wait=0)
+Most remaining: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=000000A0,wait=0)
+More than remaining: Failed (80020190) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=000000A0,wait=0)
+All remaining: Failed (80020190) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=000000A0,wait=0)
+All remaining - 7: Failed (80020190) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=000000A0,wait=0)
+All remaining - 8: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000000,wait=0)
+1 byte (none left): Failed (80020190) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000000,wait=0)
+NULL: Failed (8002019C) VPL: Failed (00000000)
+NULL with invalid: Failed (8002019C) VPL: Failed (00000000)
+Invalid: Failed (8002019C) VPL: Failed (DEADBEEF)
+Deleted: Failed (8002019C) VPL: Invalid (8002019C)
+Three 0x08s: diff=18, 10
+Attr 0:
+  Alloc 0x20 of 0x00/0xE0: L2 L1 Failed (thread=800201A8, main=80020190)
+  Alloc 0x20 of 0x20/0xE0: L1 L2 Failed (thread=00000000, main=80020190)
+  Alloc 0x20 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+Attr 100:
+  Alloc 0x20 of 0x00/0xE0: L2 L1 Failed (thread=800201A8, main=80020190)
+  Alloc 0x20 of 0x20/0xE0: L1 L2 Failed (thread=00000000, main=80020190)
+  Alloc 0x20 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+Attr 200:
+  Alloc 0x20 of 0x00/0xE0: L2 L1 Failed (thread=800201A8, main=80020190)
+  Alloc 0x20 of 0x20/0xE0: L1 L2 Failed (thread=00000000, main=80020190)
+  Alloc 0x20 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+Attr 4000:
+  Alloc 0x20 of 0x00/0xE0: L2 L1 Failed (thread=800201A8, main=80020190)
+  Alloc 0x20 of 0x20/0xE0: L1 L2 Failed (thread=00000000, main=80020190)
+  Alloc 0x20 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+Zero: A1B1C2E1D1F2 (thread=800201B5, main=800201B7)
+Alloc same: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Alloc other: A1B1C2E1D1F2 (thread=800201B5, main=00000000)

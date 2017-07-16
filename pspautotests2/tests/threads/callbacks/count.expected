@@ -1,0 +1,25 @@
+[x] Objects:
+[x]   Normal: OK (0) Callback: OK (size=56,name=count1,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+[x]   NULL: Failed (800201a1)
+[x]   Invalid: Failed (800201a1)
+[x]   Deleted: Failed (800201a1)
+
+[x] After notify:
+[x]   1 pending: OK (1) Callback: OK (size=56,name=count1,thread=1,callback=1,common=00000000,notifyCount=00000001,notifyArg=291)
+[x]   1 pending twice: OK (3) Callback: OK (size=56,name=count1,thread=1,callback=1,common=00000000,notifyCount=00000003,notifyArg=291)
+[x]   2 pending: OK (4) Callback: OK (size=56,name=count1,thread=1,callback=1,common=00000000,notifyCount=00000004,notifyArg=291)
+[x]  * cbFunc hit: 00000001, 00000123, 00000000
+[x]  * cbFunc hit: 00000004, 00000123, 00000000
+[r] sceKernelDelayThreadCB: 00000000
+
+[x] Different thread:
+[x]   Beginning sleep on better priority sleeping thread
+[x]   ** started better priority sleeping thread
+[x]   ** started worse priority sleeping thread
+[r]   Beginning sleep on worse priority sleeping thread
+[r]   Callback hit on better priority sleeping thread: 00000001, 00001337, returning 00000000
+[x]   Better: OK (0) Callback: OK (size=56,name=better priority sleeping thread,thread=1,callback=1,common=0babfdc0,notifyCount=00000000,notifyArg=0)
+[x]   Worse: OK (1) Callback: OK (size=56,name=worse priority sleeping thread,thread=1,callback=1,common=0babfdd4,notifyCount=00000001,notifyArg=4919)
+[r]   Callback hit on worse priority sleeping thread: 00000001, 00001337, returning 00000000
+[r]   ** stopped worse priority sleeping thread
+[r]   ** stopped better priority sleeping thread

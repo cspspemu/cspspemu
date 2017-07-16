@@ -1,0 +1,180 @@
+[x] sceAudioOutput:
+[x] Normal: 00000100
+[x] Twice: 80260002
+[r] Blocking: 00000100
+[x] Bad channel (blocking): 80260003
+[x] Unreserved channel (blocking): 80260001
+[r] NULL data (blocking): 00000100
+[x] NULL data (non blocking): 00000100
+
+[x] Volumes:
+[x]   Non-blocking -256: 00000100
+[x]   Blocking -256: 00000100
+[x]   Non-blocking -2: 00000100
+[x]   Blocking -2: 00000100
+[x]   Non-blocking -1: 00000100
+[x]   Blocking -1: 00000100
+[x]   Non-blocking 0: 00000100
+[x]   Blocking 0: 00000100
+[x]   Non-blocking 1: 00000100
+[x]   Blocking 1: 00000100
+[x]   Non-blocking 2: 00000100
+[x]   Blocking 2: 00000100
+[x]   Non-blocking 256: 00000100
+[x]   Blocking 256: 00000100
+[x]   Non-blocking 65534: 00000100
+[x]   Blocking 65534: 00000100
+[x]   Non-blocking 65535: 00000100
+[x]   Blocking 65535: 00000100
+[x]   Non-blocking 65536: 8026000b
+[x]   Blocking 65536: 8026000b
+[x]   Non-blocking 65537: 8026000b
+[x]   Blocking 65537: 8026000b
+[x]   Non-blocking 1048574: 8026000b
+[x]   Blocking 1048574: 8026000b
+[x]   Non-blocking 1048575: 8026000b
+[x]   Blocking 1048575: 8026000b
+[x]   Non-blocking 1048576: 8026000b
+[x]   Blocking 1048576: 8026000b
+[x]   Non-blocking 1048577: 8026000b
+[x]   Blocking 1048577: 8026000b
+[x]   Non-blocking -2147483648: 00000100
+[x]   Blocking -2147483648: 00000100
+[x]   Non-blocking 2147483647: 8026000b
+[x]   Blocking 2147483647: 8026000b
+
+[x] Panned volumes:
+[x]   Non-blocking -256: 00000100
+[x]   Blocking -256: 8026000b
+[x]   Non-blocking -2: 00000100
+[x]   Blocking -2: 8026000b
+[x]   Non-blocking -1: 00000100
+[x]   Blocking -1: 8026000b
+[x]   Non-blocking 0: 00000100
+[x]   Blocking 0: 00000100
+[x]   Non-blocking 1: 00000100
+[x]   Blocking 1: 00000100
+[x]   Non-blocking 2: 00000100
+[x]   Blocking 2: 00000100
+[x]   Non-blocking 256: 00000100
+[x]   Blocking 256: 00000100
+[x]   Non-blocking 65534: 00000100
+[x]   Blocking 65534: 00000100
+[x]   Non-blocking 65535: 00000100
+[x]   Blocking 65535: 00000100
+[x]   Non-blocking 65536: 8026000b
+[x]   Blocking 65536: 8026000b
+[x]   Non-blocking 65537: 8026000b
+[x]   Blocking 65537: 8026000b
+[x]   Non-blocking 1048574: 8026000b
+[x]   Blocking 1048574: 8026000b
+[x]   Non-blocking 1048575: 8026000b
+[x]   Blocking 1048575: 8026000b
+[x]   Non-blocking 1048576: 8026000b
+[x]   Blocking 1048576: 8026000b
+[x]   Non-blocking 1048577: 8026000b
+[x]   Blocking 1048577: 8026000b
+[x]   Non-blocking -2147483648: 00000100
+[x]   Blocking -2147483648: 8026000b
+[x]   Non-blocking 2147483647: 8026000b
+[x]   Blocking 2147483647: 8026000b
+
+[x] sceAudioOutput2OutputBlocking:
+[x] Normal: 00000100
+[r] NULL data: 00000000
+
+[x] Volumes:
+[x]   -256: 8026000b
+[x]   -2: 8026000b
+[x]   -1: 8026000b
+[x]   0: 00000100
+[r]   1: 00000100
+[r]   2: 00000100
+[r]   256: 00000100
+[r]   65534: 00000100
+[r]   65535: 00000100
+[r]   65536: 00000100
+[r]   65537: 00000100
+[r]   1048574: 00000100
+[r]   1048575: 00000100
+[x]   1048576: 8026000b
+[x]   1048577: 8026000b
+[x]   -2147483648: 8026000b
+[x]   2147483647: 8026000b
+
+[x] sceAudioSRCOutputBlocking:
+[x] Normal: 00000100
+[r] NULL data: 00000000
+
+[x] Volumes:
+[x]   -256: 8026000b
+[x]   -2: 8026000b
+[x]   -1: 8026000b
+[x]   0: 00000100
+[r]   1: 00000100
+[r]   2: 00000100
+[r]   256: 00000100
+[r]   65534: 00000100
+[r]   65535: 00000100
+[r]   65536: 00000100
+[r]   65537: 00000100
+[r]   1048574: 00000100
+[r]   1048575: 00000100
+[x]   1048576: 8026000b
+[x]   1048577: 8026000b
+[x]   -2147483648: 8026000b
+[x]   2147483647: 8026000b
+
+[x] sceAudioOutputBlocking:
+[x]   first: 0x1040 (took very little time, remaining: 0x1000 samples)
+[r]   second: 0x1040 (took about the right time for 44.1kHz, remaining: 0x1040 samples)
+[r]     after delay, before output - remaining: 0x0 samples
+[x]   after delay: 0x1040 (took very little time, remaining: 0x1040 samples)
+[r]   NULL: 0x1040 (took about the right time for 44.1kHz, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+
+[x] sceAudioOutputPannedBlocking:
+[x]   first: 0x1040 (took very little time, remaining: 0x1000 samples)
+[r]   second: 0x1040 (took about the right time for 44.1kHz, remaining: 0x1040 samples)
+[r]     after delay, before output - remaining: 0x0 samples
+[x]   after delay: 0x1040 (took very little time, remaining: 0x1040 samples)
+[r]   NULL: 0x1040 (took about the right time for 44.1kHz, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+
+[x] sceAudioOutputBlocking channel 0:
+[x]   first: 0x1040 (took very little time, remaining: 0x1000 samples)
+[r]   second: 0x1040 (took about the right time for 44.1kHz, remaining: 0x1040 samples)
+[r]     after delay, before output - remaining: 0x0 samples
+[x]   after delay: 0x1040 (took very little time, remaining: 0x1040 samples)
+[r]   NULL: 0x1040 (took about the right time for 44.1kHz, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+
+[x] sceAudioOutputPannedBlocking channel 0:
+[x]   first: 0x1040 (took very little time, remaining: 0x1000 samples)
+[r]   second: 0x1040 (took about the right time for 44.1kHz, remaining: 0x1040 samples)
+[r]     after delay, before output - remaining: 0x0 samples
+[x]   after delay: 0x1040 (took very little time, remaining: 0x1000 samples)
+[r]   NULL: 0x1040 (took about the right time for 44.1kHz, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+[x]   NULL: 0x1040 (took very little time, remaining: 0x0 samples)
+
+[x] sceAudioOutput2OutputBlocking:
+[x]   first: 0x1000 (took very little time, remaining: 0x1000 samples)
+[r]   second: 0x1000 (took about the right time for 44.1kHz, remaining: 0x1000 samples)
+[r]     after delay, before output - remaining: 0x0 samples
+[x]   after delay: 0x1000 (took very little time, remaining: 0x1000 samples)
+[r]   NULL: 0x0 (took about the right time for 44.1kHz, remaining: 0x0 samples)
+[r]   NULL: 0x0 (took very little time, remaining: 0x0 samples)
+[x]   NULL: 0x0 (took very little time, remaining: 0x0 samples)
+
+[x] sceAudioSRCOutputBlocking:
+[x]   first: 0x1000 (took very little time, remaining: 0x1000 samples)
+[r]   second: 0x1000 (took about the right time for 44.1kHz, remaining: 0x1000 samples)
+[r]     after delay, before output - remaining: 0x0 samples
+[x]   after delay: 0x1000 (took very little time, remaining: 0x1000 samples)
+[r]   NULL: 0x0 (took about the right time for 44.1kHz, remaining: 0x0 samples)
+[r]   NULL: 0x0 (took very little time, remaining: 0x0 samples)
+[x]   NULL: 0x0 (took very little time, remaining: 0x0 samples)

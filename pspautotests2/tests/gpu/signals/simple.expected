@@ -1,0 +1,216 @@
+Using default SDK version:
+
+Unknown (0x00):
+  LIST #	DRAWSTATE	INFO
+  List 1	          	Enqueued without stall...
+  List 1	2 DRAWING 	Sync 2 DRAWING
+  List 1	2 DRAWING 	Sync 2 DRAWING after continue (ffffffff)
+  List 2	          	Enqueued with late stall...
+  List 2	2 DRAWING 	Sync 1 QUEUED
+  List 2	2 DRAWING 	Sync 1 QUEUED after continue (ffffffff)
+  List 2	2 DRAWING 	Sync 1 QUEUED after unstall (00000000)
+  BREAK 	          	00000000
+
+Signal handler + wait (0x01):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(1234, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(1234, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Signal handler only (0x02):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(1234, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	3 STALL   	Signal(1234, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Signal handler + pause (0x03):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(1234, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	2 DRAWING 	Sync 4 PAUSED
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(1234, list+FF)
+  List 2	          	Enqueued with late stall...
+  List 2	2 DRAWING 	Sync 4 PAUSED
+  List 2	3 STALL   	Sync 3 STALL after continue (00000000)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Sync + continue (0x08):
+  LIST #	DRAWSTATE	INFO
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	          	Enqueued with late stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Breakpoint #1 (0xf0):
+  LIST #	DRAWSTATE	INFO
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Unknown (0xee):
+  LIST #	DRAWSTATE	INFO
+  List 1	          	Enqueued without stall...
+  List 1	2 DRAWING 	Sync 2 DRAWING
+  List 1	2 DRAWING 	Sync 2 DRAWING after continue (ffffffff)
+  List 2	          	Enqueued with late stall...
+  List 2	2 DRAWING 	Sync 1 QUEUED
+  List 2	2 DRAWING 	Sync 1 QUEUED after continue (ffffffff)
+  List 2	2 DRAWING 	Sync 1 QUEUED after unstall (00000000)
+  BREAK 	          	00000000
+
+Breakpoint #2 (0xff):
+  LIST #	DRAWSTATE	INFO
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+
+Using 6.60 SDK version:
+
+Unknown (0x00):
+  LIST #	DRAWSTATE	INFO
+  List 1	          	Enqueued without stall...
+  List 1	2 DRAWING 	Sync 2 DRAWING
+  List 1	2 DRAWING 	Sync 2 DRAWING after continue (80000020)
+  List 2	          	Enqueued with late stall...
+  List 2	2 DRAWING 	Sync 80000100 INVALID
+  List 2	2 DRAWING 	Sync 80000100 INVALID after continue (80000020)
+  List 2	2 DRAWING 	Sync 80000100 INVALID after unstall (80000100)
+  BREAK 	          	00000000
+
+Signal handler + wait (0x01):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(1234, list+03)
+  List 1	0 DONE    	Finish(0, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(1234, list+03)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	0 DONE    	Finish(0, list+0C)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Signal handler only (0x02):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(1234, list+03)
+  List 1	0 DONE    	Finish(0, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	3 STALL   	Signal(1234, list+03)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	0 DONE    	Finish(0, list+0C)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Signal handler + pause (0x03):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(1234, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	2 DRAWING 	Sync 4 PAUSED
+  List 1	0 DONE    	Finish(0, list+10)
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(1234, list+0C)
+  List 2	          	Enqueued with late stall...
+  List 2	2 DRAWING 	Sync 4 PAUSED
+  List 2	3 STALL   	Sync 3 STALL after continue (00000000)
+  List 2	0 DONE    	Finish(0, list+10)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Sync + continue (0x08):
+  LIST #	DRAWSTATE	INFO
+  List 1	0 DONE    	Finish(0, list+10)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	          	Enqueued with late stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	0 DONE    	Finish(0, list+10)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Breakpoint #1 (0xf0):
+  LIST #	DRAWSTATE	INFO
+  List 1	0 DONE    	Finish(0, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	0 DONE    	Finish(0, list+0C)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Unknown (0xee):
+  LIST #	DRAWSTATE	INFO
+  List 1	          	Enqueued without stall...
+  List 1	2 DRAWING 	Sync 2 DRAWING
+  List 1	2 DRAWING 	Sync 2 DRAWING after continue (80000020)
+  List 2	          	Enqueued with late stall...
+  List 2	2 DRAWING 	Sync 80000100 INVALID
+  List 2	2 DRAWING 	Sync 80000100 INVALID after continue (80000020)
+  List 2	2 DRAWING 	Sync 80000100 INVALID after unstall (80000100)
+  BREAK 	          	00000000
+
+Breakpoint #2 (0xff):
+  LIST #	DRAWSTATE	INFO
+  List 1	0 DONE    	Finish(0, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	0 DONE    	Finish(0, list+0C)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	

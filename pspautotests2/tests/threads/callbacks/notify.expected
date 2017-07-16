@@ -1,0 +1,57 @@
+[x] Objects:
+[x]   Normal: OK
+[x]   NULL: Failed (800201a1)
+[x]   Invalid: Failed (800201a1)
+[x]   Deleted: Failed (800201a1)
+
+[x] Values:
+[x]   Zero: OK
+[x]   DEADBEEF: OK
+
+[x] Notifies:
+[x]   10000 notifies: OK
+[x]  * cbFunc hit: 00002712, 00000001, 00000000
+[r] sceKernelDelayThreadCB: 00000000
+
+[x] Different thread:
+[x]   Beginning sleep on better priority sleeping thread
+[x]   ** started better priority sleeping thread
+[x]   ** started worse priority sleeping thread
+[r]   Beginning sleep on worse priority sleeping thread
+[r]   Callback hit on better priority sleeping thread: 00000001, 00001337, returning 00000000
+[r]   Callback hit on worse priority sleeping thread: 00000001, 00001337, returning 00000000
+[r]   ** stopped worse priority sleeping thread
+[r]   ** stopped better priority sleeping thread
+
+[x] Return value:
+[x]   ** started sleeping thread
+[r]   Beginning sleep on sleeping thread
+[r]   Notify #1: OK
+[r]   Callback hit on sleeping thread: 00000001, 00001337, returning 00001337
+[r]   Notify #2: Failed (800201a1)
+[r]   ** stopped sleeping thread
+
+[x] Recursion:
+[x]   ** started sleeping thread
+[r]   Beginning sleep on sleeping thread
+[r]   Notify #1: OK
+[r]   Callback hit 00000001, 00001337, returning 00000000
+[r]   Notifying self within callback: 00000000
+[r]   Callback hit 00000001, 0000abcd, returning 00000000
+[r]   sceKernelDelayThreadCB within callback: 00000000
+[r]   ** stopped sleeping thread
+
+[x] Mixing types:
+[x]   scePowerRegisterCallback (causes notify): 00000000
+[x]   Manual notify: OK
+[x]  * cbFunc hit: 00000002, 00001337, 00000000
+[r]   sceKernelDelayThreadCB: 00000000
+
+[x] Order:
+[x]   Notify cb #2: OK
+[x]   Notify cb #1: OK
+[x]   Notify cb #3: OK
+[x]  * cbFunc hit: 00000001, def00002, abc00001
+[x]  * cbFunc hit: 00000001, def00001, abc00002
+[x]  * cbFunc hit: 00000001, def00003, abc00003
+[x]   sceKernelCheckCallback: 00000001

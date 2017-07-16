@@ -1,0 +1,28 @@
+Basic alloc:
+  Normal: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+  Twice: Failed (800201B6) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+  NULL: Failed (800201B6) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+  Invalid: Failed (800200D3) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+  Stack: Failed (800201B6) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+
+Offset from alloc:
+  Offset +: Failed (800201B6) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFB8,wait=0)
+  Offset -: Failed (800201B6) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFB8,wait=0)
+
+Other VPL's ptr: Failed (800201B6) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFB8,wait=0)
+
+Bad VPLs:
+  NULL: Failed (8002019C) VPL: Failed (00000000)
+  Invalid: Failed (8002019C) VPL: Failed (DEADBEEF)
+  Deleted: Failed (8002019C) VPL: Invalid (8002019C)
+  NULL + Invalid: Failed (800200D3) VPL: Failed (00000000)
+
+Fragmented:
+  VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00010000,freeSize=00006000,wait=0)
+  Allocate small chunk: 00000000 top-0
+  Allocate large chunk: 80020190 top-ffffffff
+
+NULL: A1B1C2E1D1F2 (thread=800201B5, main=800201B6)
+Same: A1B1C2D1E2F1 (thread=00000000, main=00000000)
+Same not enough: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Other: A1B1C2E1D1F2 (thread=800201B5, main=00000000)

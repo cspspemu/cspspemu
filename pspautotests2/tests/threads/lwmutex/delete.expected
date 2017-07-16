@@ -1,0 +1,8 @@
+Normal: OK
+Invalid: Failed (800200D3)
+Deleted: Failed (800201CA)
+Copy: Failed (800201CA)
+Fake: Failed (800201CA)
+Delete other: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Delete same: A1B1C2D1E2F1 (thread=800201B5, main=00000000)
+Invalid: A1B1C2E1D1F2 (thread=800201B5, main=800200D3)

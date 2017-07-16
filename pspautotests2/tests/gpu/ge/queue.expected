@@ -1,0 +1,24 @@
+[x] List IDs usage:
+[x]   Out of IDs / dup: 80000022
+[x]   Reuse when full: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+[x]   Reuse when dequeuing: 1 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 15 15 15 15 15 15 15 15 15
+[x]   Out of IDs / dup: 80000021
+[x]   Reuse when full: 1
+[x]   Reuse when dequeuing: 1 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 15 15 15 15 15 15 15 15 15
+
+[x] Head with a stalled list:
+[x]   Enqueue 1: 00001337
+[x]   Enqueue 2: 800001fe
+
+[x] sceGeListDeQueue:
+[x]   Not enqueued: 80000021
+[x]   Bad ID: 80000100
+[x]   Enqueued: 00000000
+[x]   Completed: 80000021
+[x]   With context: 80000100
+
+[x] sceGeListUpdateStallAddr:
+[x]   Not Enqueued: 80000100
+[x]   Bad ID: 80000100
+[x]   Update: 00000000
+[x]   Completed: 80000020

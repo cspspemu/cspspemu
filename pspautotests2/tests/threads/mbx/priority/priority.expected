@@ -1,0 +1,171 @@
+For attr 00000000:
+Messagebox: OK (size=52,name='mbx1',attr=0,wait=0,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=0,wait=5,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=0,wait=4,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=0,wait=2,count=0,first=NULL)
+A1
+B1
+OK (ptr=OTHER) GOT: "hi 0" (next=FIRST, prio=20) 
+A2
+B2
+OK (ptr=OTHER) GOT: "hi 1" (next=ITSELF, prio=10) 
+A3
+A4
+A5
+A6
+A7
+---
+---
+B3
+OK (ptr=OTHER) GOT: "hi 2" (next=DEAD, prio=15) 
+---
+---
+B4
+OK (ptr=OTHER) GOT: "hi 3" (next=DEAD, prio=20) 
+B5
+OK (ptr=OTHER) GOT: "hi 4" (next=DEAD, prio=10) 
+---
+---
+B7
+Failed: 800201B5
+B6
+Failed: 800201B5
+
+
+For attr 00000100:
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=0,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=5,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=4,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=2,count=0,first=NULL)
+A1
+B1
+OK (ptr=OTHER) GOT: "hi 5" (next=FIRST, prio=20) 
+A2
+B2
+OK (ptr=OTHER) GOT: "hi 6" (next=ITSELF, prio=10) 
+A3
+A4
+A5
+A6
+A7
+---
+---
+B7
+OK (ptr=OTHER) GOT: "hi 7" (next=DEAD, prio=15) 
+---
+---
+B6
+OK (ptr=OTHER) GOT: "hi 8" (next=DEAD, prio=20) 
+B5
+OK (ptr=OTHER) GOT: "hi 9" (next=DEAD, prio=10) 
+---
+---
+B4
+Failed: 800201B5
+B3
+Failed: 800201B5
+
+
+For attr 00000400:
+Messagebox: OK (size=52,name='mbx1',attr=1024,wait=0,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=1024,wait=5,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=1024,wait=4,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=1024,wait=2,count=0,first=NULL)
+A1
+B1
+OK (ptr=OTHER) GOT: "hi 11" (next=FIRST, prio=10) 
+A2
+B2
+OK (ptr=OTHER) GOT: "hi 10" (next=ITSELF, prio=20) 
+A3
+A4
+A5
+A6
+A7
+---
+---
+B3
+OK (ptr=OTHER) GOT: "hi 12" (next=DEAD, prio=15) 
+---
+---
+B4
+OK (ptr=OTHER) GOT: "hi 13" (next=DEAD, prio=20) 
+B5
+OK (ptr=OTHER) GOT: "hi 14" (next=DEAD, prio=10) 
+---
+---
+B7
+Failed: 800201B5
+B6
+Failed: 800201B5
+
+
+For attr 00000500:
+Messagebox: OK (size=52,name='mbx1',attr=1280,wait=0,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=1280,wait=5,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=1280,wait=4,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=1280,wait=2,count=0,first=NULL)
+A1
+B1
+OK (ptr=OTHER) GOT: "hi 16" (next=FIRST, prio=10) 
+A2
+B2
+OK (ptr=OTHER) GOT: "hi 15" (next=ITSELF, prio=20) 
+A3
+A4
+A5
+A6
+A7
+---
+---
+B7
+OK (ptr=OTHER) GOT: "hi 17" (next=DEAD, prio=15) 
+---
+---
+B6
+OK (ptr=OTHER) GOT: "hi 18" (next=DEAD, prio=20) 
+B5
+OK (ptr=OTHER) GOT: "hi 19" (next=DEAD, prio=10) 
+---
+---
+B4
+Failed: 800201B5
+B3
+Failed: 800201B5
+
+
+For attr 00000100 and changed priorities:
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=0,count=0,first=NULL)
+Priorities reversed.  Have a nice day.
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=5,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=4,count=0,first=NULL)
+Messagebox: OK (size=52,name='mbx1',attr=256,wait=2,count=0,first=NULL)
+A1
+B1
+OK (ptr=OTHER) GOT: "hi 20" (next=FIRST, prio=20) 
+A2
+B2
+OK (ptr=OTHER) GOT: "hi 21" (next=ITSELF, prio=10) 
+A3
+A4
+A5
+A6
+A7
+---
+---
+B3
+OK (ptr=OTHER) GOT: "hi 22" (next=DEAD, prio=15) 
+---
+---
+B4
+OK (ptr=OTHER) GOT: "hi 23" (next=DEAD, prio=20) 
+B5
+OK (ptr=OTHER) GOT: "hi 24" (next=DEAD, prio=10) 
+---
+---
+B6
+Failed: 800201B5
+B7
+Failed: 800201B5
+
+

@@ -1,0 +1,15 @@
+Audio modules: OK
+at3: 00000001, 0000B508
+Header: RIFF
+sceAtracSetDataAndGetID: OK
+0=sceAtracGetBitrate: 64
+0=sceAtracGetChannel: 2
+sceAtracSetLoopNum: 80630021
+sceAtracGetMaxSample: 00000000, 2048
+sceAudioChReserve: 00000000
+sceAtracGetSecondBufferInfo: 80630022, 0, 0
+sceAtracGetNextSample(0): 1680
+sceAtracGetNextDecodePosition(0): 0
+sceAtracDecodeData: 00000000, at3_size: 46344, decode_size: 524288, samples: 1680, end: 0, remainFrame: -1
+
+sceAtracGetRemainFrame: 00000000

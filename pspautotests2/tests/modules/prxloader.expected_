@@ -1,0 +1,10 @@
+Start my module
+Module ID 00000001
+mod 0800049C
+Attr 0000, Version 0.0
+Name TESTPRX
+Text 00000000, Size 00000000, Data Size 00000000
+Entry Addr 088000AC
+Stub 00000000 00000000, Ent 00000000 00000000
+Hello from the PRX
+Module Info 088007C0

@@ -1,0 +1,32 @@
+[x] sceAudioSetChannelDataLen:
+[x]   Normal: 00000000
+[x]   Bad channel: 80260003
+[x]   Unreseved channel: 80260001
+[x]   -1 samples: 80260006
+[x]   0 samples: 80260006
+[x]   1 samples: 80260006
+[x]   32 samples: 80260006
+[x]   64 samples: 00000000
+[x]   96 samples: 80260006
+[x]   256 samples: 00000000
+[x]   1024 samples: 00000000
+[x]   4111 samples: 80260006
+[x]   4112 samples: 80260006
+[x]   65472 samples: 00000000
+[x]   65536 samples: 80260006
+
+[x] sceAudioOutput2ChangeLength:
+[x]   Reserve: 00000000
+[x]   -1 samples: 80260006
+[x]   0 samples: 80260006
+[x]   1 samples: 80260006
+[x]   32 samples: 00000000
+[x]   64 samples: 00000000
+[x]   96 samples: 00000000
+[x]   256 samples: 00000000
+[x]   1024 samples: 00000000
+[x]   4111 samples: 00000000
+[x]   4112 samples: 80260006
+[x]   65472 samples: 80260006
+[x]   65536 samples: 80260006
+[x]   Release: 00000000

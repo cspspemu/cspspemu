@@ -1,0 +1,62 @@
+Normal: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+
+Names:
+  NULL name: VPL: Failed (80020001)
+  Blank name: VPL: OK (size=52,name=,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Long name: VPL: OK (size=52,name=1234567890123456789012345678901,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+
+Partitions:
+  Partition -5: VPL: Failed (800200D2)
+  Partition -1: VPL: Failed (800200D2)
+  Partition 0: VPL: Failed (800200D2)
+  Partition 1: VPL: Failed (800200D1)
+  Partition 2: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Partition 3: VPL: Failed (800200D1)
+  Partition 4: VPL: Failed (800200D1)
+  Partition 6: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Partition 7: VPL: Failed (800200D2)
+  Partition 8: VPL: Failed (800200D1)
+  Partition 9: VPL: Failed (800200D1)
+  Partition 10: VPL: Failed (800200D2)
+
+Attributes:
+  0x1 attr: VPL: OK (size=52,name=vpl,attr=00000001,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  0x100 attr: VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  0x200 attr: VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  0x400 attr: VPL: Failed (80020191)
+  0x800 attr: VPL: Failed (80020191)
+  0x1000 attr: VPL: Failed (80020191)
+  0x2000 attr: VPL: Failed (80020191)
+  0x4000 attr: VPL: OK (size=52,name=vpl,attr=00004000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  0x8000 attr: VPL: Failed (80020191)
+  0x10000 attr: VPL: Failed (80020191)
+
+Sizes:
+  Size 0xFFFFFFFF: VPL: Failed (80020190)
+  Size 0x00000000: VPL: Failed (800201B7)
+  Size 0x00000001: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Size 0x00000010: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Size 0x00000020: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Size 0x0000002F: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Size 0x00000030: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Size 0x00000031: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000018,freeSize=00000018,wait=0)
+  Size 0x00000032: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000018,freeSize=00000018,wait=0)
+  Size 0x00000036: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000018,freeSize=00000018,wait=0)
+  Size 0x00000038: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000018,freeSize=00000018,wait=0)
+  Size 0x00000039: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000020,freeSize=00000020,wait=0)
+  Size 0x0000003A: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000020,freeSize=00000020,wait=0)
+  Size 0x00000131: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000118,freeSize=00000118,wait=0)
+  Size 0x00000136: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000118,freeSize=00000118,wait=0)
+  Size 0x00000139: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000120,freeSize=00000120,wait=0)
+  Size 0x00001000: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00000FE0,freeSize=00000FE0,wait=0)
+  Size 0x00010000: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+  Size 0x00100000: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=000FFFE0,freeSize=000FFFE0,wait=0)
+  Size 0x01000000: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00FFFFE0,freeSize=00FFFFE0,wait=0)
+  Size 0x10000000: VPL: Failed (80020190)
+  Size 0x01800000: VPL: OK (size=52,name=vpl,attr=00000000,poolSize=017FFFE0,freeSize=017FFFE0,wait=0)
+  Size 0x02000000: VPL: Failed (80020190)
+
+Two with same name: OK
+NULL name: A1B1C2E1D1F2 (thread=800201B5, main=80020001)
+Normal: A1B1C2E1D1F2 (thread=800201B5, main=00000001)
+Create 1024: OK

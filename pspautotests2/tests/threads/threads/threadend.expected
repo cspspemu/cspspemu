@@ -1,0 +1,43 @@
+[x] Statuses:
+[x]   Not started: 800201a2, timeout: 500
+[r]   Suspended: 800201a8, timeout: 0
+
+[x] Twice:
+[x]   * fiveFunc
+[x]   Already ended: 00000005, timeout: 500
+[x]   Already waited: 00000005, timeout: 500
+[x]   * delayFunc
+[x]   Terminated thread: 800201ac, timeout: 500
+
+[x] Status change:
+[x]   * before start exit=800201a2, status=00000010
+[x]   * after start exit=800201a4, status=00000004
+
+[x] Timeouts:
+[x]   * delayFunc
+[r]   Short timeout: 800201a8, timeout: 0
+[r]   Never wakes: 800201a8, timeout: 0
+[r]   * Delete thread: 00000000
+[x]   Thread deleted: 800201ac, timeout: -1
+
+[x] Callbacks:
+[x]   * fiveFunc
+[x]   Non-CB: 00000005, timeout: 500
+[x]   * cbFunc
+[x]   With CB, already ended: 00000005, timeout: 500
+[x]   * delayFunc
+[x]   * cbFunc
+[r]   With CB, short timeout: 800201a8, timeout: 0
+
+[x] Objects:
+[x]   Invalid: 80020198, timeout: 1000
+[x]   Zero: 80020197, timeout: 1000
+[x]   Self: 80020197, timeout: 1000
+[x]   -1: 80020198, timeout: 1000
+[x]   Terminated/deleted: 80020198, timeout: 1000
+[x]   Deleted: 80020198, timeout: 1000
+[r]   Exit deleted: 80020198, timeout: 1000
+
+[x] Scheduling
+Normal: A1B1C2E1D1F2 (thread=800201B5, main=00000005)
+Zero: A1B1C2E1D1F2 (thread=800201B5, main=80020197)

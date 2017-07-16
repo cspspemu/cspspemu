@@ -1,0 +1,5 @@
+Started
+vfpu_rgba8888to4444: FF0F, 810F, 750F, 0A0F
+vfpu_rgba8888to5551: FC1F, 881F, 281F, 541F
+vfpu_rgba8888to5650: F81F, 101F, 501F, A81F
+Ended

@@ -1,0 +1,16 @@
+[x] sceDisplayAdjustAccumulatedHcount:
+[x]   -1: 800001fe
+[x]   INT_MIN: 800001fe
+[x]   INT_MAX: 00000000, hcount -> 2147483647
+[x]   0: 00000000, hcount -> 0
+
+[x] sceDisplayGetAccumulatedHcount:
+[x]   Adjust to INT_MAX: 00000000, hcount -> 2147483647
+[x]   Wrapped around to 0: OK
+
+[x] sceDisplayGetCurrentHcount:
+[x]   (NOTE: not always consistent, use a few runs to get common numbers.)
+[x]   Lowest: 1
+[x]   Highest (in vblank): 14
+[x]   Highest stride: 286
+[x]   Average: 286

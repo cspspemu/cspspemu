@@ -1,0 +1,56 @@
+[x] Objects:
+[x]   Normal: OK (timeout=0us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000007,wait=0)
+[x]   NULL: Failed (8002019d, timeout=0us) FPL: Failed (00000000)
+[x]   Invalid: Failed (8002019d, timeout=0us) FPL: Failed (deadbeef)
+[x]   Deleted: Failed (8002019d, timeout=0us) FPL: Invalid (8002019d)
+
+[x] Timeout:
+[x]   No timeout: OK (timeout=0us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000007,wait=0)
+[x]   1000 with free: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[r]   1000 without free: Failed (800201a8, timeout=0us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000000,wait=0)
+
+[x] Allocation order (lowmem):
+[x]   Base #1: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000007,wait=0)
+[x]   Alloc #2: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 16 bytes after #1
+[x]   Free #1: 00000000
+[x]   Alloc #3: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 16 bytes before #3
+[x]   Free #3: 00000000
+[x]   Alloc #4: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 32 bytes before #4
+
+[x] Allocation order (highmem):
+[x]   Base #1: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00004000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000007,wait=0)
+[x]   Alloc #2: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00004000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 16 bytes after #1
+[x]   Free #1: 00000000
+[x]   Alloc #3: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00004000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 16 bytes before #3
+[x]   Free #3: 00000000
+[x]   Alloc #4: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00004000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 32 bytes before #4
+
+[x] Different alignment:
+[x]   Base #1: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000007,wait=0)
+[x]   Alloc #2: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 32 bytes after #1
+[x]   Free #1: 00000000
+[x]   Alloc #3: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 32 bytes before #3
+[x]   Free #3: 00000000
+[x]   Alloc #4: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000008,freeBlocks=00000006,wait=0)
+[x]   Alloc #2 is 64 bytes before #4
+
+[x] With two waiting:
+[x]   With waiting threads: OK (timeout=1us) FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000001,freeBlocks=00000000,wait=0)
+FPL: OK (size=56,name=fpl,attr=00000000,blockSize=00000010,numBlocks=00000001,freeBlocks=00000000,wait=0)
+[r]   ** started waiting thread 1
+[r]   ** started waiting thread 2
+[x]   Freed: 00000000
+[r]   ** waiting thread 1 got result: 00000000, received = ptr, timeout = 7ms remaining
+[r]   ** waiting thread 2 got result: 800201b5, received = NULL, timeout = 8ms remaining
+[r]   ** stopped waiting thread 2
+[r]   ** waiting thread 1 delayed: 00000000
+[r]   ** waiting thread 1 freed: 8002019d
+[r]   ** stopped waiting thread 1

@@ -1,0 +1,27 @@
+Event flag: OK (size=52,name='set',attr=0,init=00000000,cur=00000000,wait=0)
+Basic 0x2: OK
+Event flag: OK (size=52,name='set',attr=0,init=00000000,cur=00000000,wait=0)
+Basic 0x1: OK
+Event flag: OK (size=52,name='set',attr=0,init=00000000,cur=00000000,wait=0)
+Basic 0x1: OK
+Event flag: OK (size=52,name='set',attr=0,init=00000000,cur=00000000,wait=0)
+Basic 0xF000: OK
+Event flag: OK (size=52,name='set',attr=0,init=00000000,cur=00000000,wait=0)
+Zero: OK
+Event flag: OK (size=52,name='set',attr=0,init=00000000,cur=00000000,wait=0)
+Event flag: OK (size=52,name='signal',attr=0,init=FFFFFFFE,cur=FFFFFFFE,wait=0)
+All but 0x1 + 0x1: OK
+Event flag: OK (size=52,name='signal',attr=0,init=FFFFFFFE,cur=00000000,wait=0)
+NULL: Failed (8002019A)
+Event flag: Failed (00000000)
+Invalid: Failed (8002019A)
+Event flag: Invalid (8002019A)
+Deleted: Failed (8002019A)
+Event flag: Invalid (8002019A)
+NULL: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=8002019A)
+Other + 2: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=00000000)
+Other + 1: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=00000000)
+Same + 2: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=00000000)
+Same + 1: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=00000000)
+Same + 1: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=00000000)
+Set with multi and clear: AT1BT2BT3BCET1D (result=800201b5, bits=00000000) T2D (result=800201b5, bits=00000000) T3D (result=800201b5, bits=00000000) F(main=00000000)

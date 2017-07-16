@@ -1,0 +1,30 @@
+NULL name: Failed (80020001)
+Blank name: OK
+Event flag: OK (size=52,name='',attr=0,init=00000000,cur=00000000,wait=0)
+Long name: OK
+Event flag: OK (size=52,name='1234567890123456789012345678901',attr=0,init=00000000,cur=00000000,wait=0)
+Weird attr: OK
+Event flag: OK (size=52,name='create',attr=1,init=00000000,cur=00000000,wait=0)
+0x10 attr: OK
+Event flag: OK (size=52,name='create',attr=16,init=00000000,cur=00000000,wait=0)
+0x100 attr: Failed (80020191)
+0x122 attr: Failed (80020191)
+0x200 attr: OK
+Event flag: OK (size=52,name='create',attr=512,init=00000000,cur=00000000,wait=0)
+0x222 attr: OK
+Event flag: OK (size=52,name='create',attr=546,init=00000000,cur=00000000,wait=0)
+0x300 attr: Failed (80020191)
+0x900 attr: Failed (80020191)
+0x1200 attr: Failed (80020191)
+All bits set: OK
+Event flag: OK (size=52,name='create',attr=0,init=FFFFFFFF,cur=FFFFFFFF,wait=0)
+Some bits set: OK
+Event flag: OK (size=52,name='create',attr=0,init=00000029,cur=00000029,wait=0)
+Event flag: OK (size=52,name='create',attr=0,init=00000000,cur=00000000,wait=0)
+Event flag: OK (size=52,name='create',attr=0,init=00000000,cur=00000000,wait=0)
+NULL name: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=80020001)
+Create some bits set: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=00000001)
+Create no bits set: A1B1C2E1D1F2 (thread=800201B5, thread bits=00000000, main=00000001)
+Initial no bits set: A1B1C2E2D1F2 (thread=800201B5, thread bits=00000000, main=00000000)
+Initial some bits set: A1B1D2C2E1F1 (thread=00000000, thread bits=00000029, main=00000000)
+Create 1024: OK

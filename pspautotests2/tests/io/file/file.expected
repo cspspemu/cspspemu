@@ -1,0 +1,46 @@
+0x80010002 = sceIoGetstat("nofile")
+0x80010002 = sceIoOpen("nofile", PSP_O_RDONLY)
+0x80020323 = sceIoClose(9999)
+attr : 32
+mode : 8628
+creation date : 2013-1-21-0-11-54-0
+modif date : 2013-1-21-0-11-54-0
+sceIoOpen("testfile", PSP_O_WRONLY|PSP_O_CREAT)
+36 = sceIoWrite(36)
+attr : 32
+mode : 8612
+0x80020323 = sceIoRead(128)
+0 = sceIoClose()
+sceIoOpen("testfile", PSP_O_RDONLY)
+36 = sceIoRead(128) = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+26 = sceIoLseek(fd,-10, SEEK_END)
+10 = sceIoRead(128) = 0123456789
+26 = sceIoLseek(fd,-10, SEEK_CUR)
+5 = sceIoRead(5) = 01234
+21 = sceIoLseek(fd,-10, SEEK_CUR)
+15 = sceIoRead(128) = VWXYZ0123456789
+-1 = sceIoLseek(fd,-10, SEEK_SET)
+200 = sceIoLseek(fd,200, SEEK_SET)
+0 = sceIoRead(128) = 
+190 = sceIoLseek(fd,-10, SEEK_CUR)
+0 = sceIoRead(128) = 
+36 = sceIoLseek(fd,0, SEEK_END)
+26 = sceIoLseek32(fd,-10, SEEK_END)
+10 = sceIoRead(128) = 0123456789
+26 = sceIoLseek32(fd,-10, SEEK_CUR)
+5 = sceIoRead(5) = 01234
+21 = sceIoLseek32(fd,-10, SEEK_CUR)
+15 = sceIoRead(128) = VWXYZ0123456789
+-1 = sceIoLseek32(fd,-10, SEEK_CUR)
+0x80020323 = sceIoWrite(36)
+0 = sceIoClose()
+sceIoOpen("testfile", PSP_O_RDONLY | PSP_O_WRONLY | PSP_O_APPEND)
+36 = sceIoWrite(36)
+0 = sceIoLseek32(fd,0, SEEK_SET)
+72 = sceIoRead(128) = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+0 = sceIoRename("testfile", "testfile2")
+0x80010002 = sceIoRename("nofile", "nofile2")
+attr : 32
+mode : 8612
+0 = sceIoRemove("testfile2")
+0x80010002 = sceIoRemove("testfile2")

@@ -1,0 +1,24 @@
+sceKernelLibcTime:
+NULL: 1 0
+Normal: 1 1
+Invalid: 00000000
+
+sceKernelLibcClock: OK
+
+sceKernelGetSystemTimeWide: OK
+
+sce_paf_private_memset:
+2: 512 vs 1024, 1
+255: 255 vs 1024, 1
+1024: 0 vs 1024, 1
+0 bytes long: 0 vs 1024, 1
+NULL 0 bytes long: 00000000
+Invalid 0 bytes long: DEADBEEF
+
+sce_paf_private_memcpy:
+256: 256 vs 1024, 1
+1: 1 vs 1024, 1
+0: 0 vs 1024, 1
+Overlapping: 256 vs 1024, 1
+NULL -> NULL 0 bytes long: 00000000
+Invalid -> Invalid 0 bytes long: DEADBEEF

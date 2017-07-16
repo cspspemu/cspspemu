@@ -1,0 +1,18 @@
+[x] Basics:
+[x]   Without pending: 00000000
+[x]  * cbFunc hit: 00000001, 00000001, abc00001
+[x]   With 1 pending: 00000001
+[x]  * cbFunc hit: 00000001, 00000001, abc00001
+[x]  * cbFunc hit: 00000001, 00000002, abc00002
+[x]   With 2 pending: 00000001
+
+[x] Different thread:
+[x]   Beginning sleep on better priority sleeping thread
+[x]   ** started better priority sleeping thread
+[x]   ** started worse priority sleeping thread
+[r]   Beginning sleep on worse priority sleeping thread
+[r]   Callback hit on better priority sleeping thread: 00000001, 00001337, returning 00000000
+[x] sceKernelCheckCallback: 00000000
+[r]   Callback hit on worse priority sleeping thread: 00000001, 00001337, returning 00000000
+[r]   ** stopped worse priority sleeping thread
+[r]   ** stopped better priority sleeping thread

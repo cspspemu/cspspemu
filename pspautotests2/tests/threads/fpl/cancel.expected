@@ -1,0 +1,17 @@
+[x] Objects:
+[x]   Normal: OK (waiting=0) FPL: OK (size=56,name=cancel,attr=00000000,blockSize=00000100,numBlocks=00000001,freeBlocks=00000001,wait=0)
+[x]   NULL: Failed (8002019d, waiting=1337)
+[x]   Invalid: Failed (8002019d, waiting=1337)
+[x]   Already canceled: OK (waiting=0) FPL: OK (size=56,name=cancel,attr=00000000,blockSize=00000100,numBlocks=00000001,freeBlocks=00000001,wait=0)
+[x]   Deleted: Failed (8002019d, waiting=1337)
+
+[x] Count:
+[x]   No thread count: OK (waiting=1337) FPL: OK (size=56,name=cancel,attr=00000000,blockSize=00000100,numBlocks=00000001,freeBlocks=00000001,wait=0)
+
+[x] Waits:
+[r]   ** started waiting thread 1
+[r]   ** started waiting thread 2
+[x]   With waiting threads: OK (waiting=2) FPL: OK (size=56,name=cancel,attr=00000000,blockSize=00000100,numBlocks=00000001,freeBlocks=00000000,wait=0)
+[r]   ** waiting thread 1 got result: 800201a9, received = NULL
+[r]   ** waiting thread 2 got result: 800201a9, received = NULL, timeout = 8ms remaining
+[r]   ** stopped waiting thread 2

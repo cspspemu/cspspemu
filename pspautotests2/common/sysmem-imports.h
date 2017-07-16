@@ -1,0 +1,11 @@
+extern int sceKernelSetCompiledSdkVersion(u32 ver);
+extern int sceKernelSetCompiledSdkVersion370(u32 ver);
+extern int sceKernelSetCompiledSdkVersion380_390(u32 ver);
+extern int sceKernelSetCompiledSdkVersion395(u32 ver);
+extern int sceKernelSetCompiledSdkVersion401_402(u32 ver);
+extern int sceKernelSetCompiledSdkVersion500_505(u32 ver);
+extern int sceKernelSetCompiledSdkVersion507(u32 ver);
+extern int sceKernelSetCompiledSdkVersion600_602(u32 ver);
+extern int sceKernelSetCompiledSdkVersion603_605(u32 ver);
+extern int sceKernelSetCompiledSdkVersion606(u32 ver);
+extern u32 sceKernelGetCompiledSdkVersion();

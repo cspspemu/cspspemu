@@ -1,0 +1,39 @@
+*.PBP
+*.elf
+*.map
+*.o
+*.a
+PARAM.SFO
+
+.pspsh.hist
+
+__testoutput.txt
+__testerror.txt
+__testfinish.txt
+__screenshot.bmp
+__testfailure.bmp
+
+# For emulators that outputs to elf's folder
+*.lastdebug*
+*.lastoutput*
+*.lastdiff
+
+# For IDA
+*.idb
+*.id0
+*.id1
+*.log
+*.nam
+*.til
+
+# For vcproj
+*.user
+*.sdf
+*.ncb
+*.opensdf
+*.suo
+
+io/file/workdir/testfile
+
+libpsmfplayer.prx
+psmf.prx

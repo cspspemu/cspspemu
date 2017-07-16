@@ -1,0 +1,25 @@
+[x]   Create test file 1: 00000000
+[r]   Create test file 2: 00000000
+[r]   Create test file 3: 00000000
+
+[x] Rename behavior:
+[x]   sceIoChdir host0:/: 00000000
+[r]   sceIoRename abs -> abs: 00000000
+[r]   sceIoRename abs -> abs overwrite: 80010011
+[x]   sceIoChdir ms0:/PSP: 00000000
+[r]   sceIoRename rel -> rel: 00000000
+[r]     renamed to: origin dir
+[r]   sceIoRename rel -> abs: 00000000
+[r]     renamed to: origin dir
+
+[x] Error handling:
+[r]   Recreate test file 1: 00000000
+[r]   Recreate test file 2: 00000000
+[x]   sceIoRename cross device: 80020322
+[r]   sceIoRename bad dest path: 80010011
+[r]   sceIoRename bad src path: 80010002
+[r]   sceIoRename bad src file: 80010002
+[r]   sceIoRename same path: 80010011
+[r]   sceIoRename wild -> rel: 80010016
+[r]   sceIoRename rel -> wild: 80010016
+[r]   sceIoRename wild -> wild: 80010016

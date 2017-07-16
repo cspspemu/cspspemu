@@ -1,0 +1,12 @@
+[x] Normal: OK
+[x] NULL: Failed (8002019d)
+[x] Invalid: Failed (8002019d)
+[x] Deleted: Failed (8002019d)
+
+[x] Waits:
+[r]   ** started waiting thread 1
+[r]   ** started waiting thread 2
+[x] With waiting threads: 00000000
+[r]   ** waiting thread 1 got result: 800201b5, received = NULL
+[r]   ** waiting thread 2 got result: 800201b5, received = NULL, timeout = 8ms remaining
+[r]   ** stopped waiting thread 2

@@ -1,0 +1,87 @@
+[x] Checking for files:
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901/DATA.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901ABC/DATA.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901F1/DATA.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901M2/DATA.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901L3/DATA.BIN (80010002)
+
+[x] Init
+[x] sceUtilitySavedataInitStart: 00000000
+[x] sceUtilitySavedataGetStatus: 00000001 (duplicates skipped)
+[x] sceUtilitySavedataGetStatus: 00000002 (duplicates skipped)
+[r] sceUtilitySavedataUpdate: 00000000 (duplicates skipped)
+[x] sceUtilitySavedataGetStatus: 00000003 (duplicates skipped)
+[x] sceUtilitySavedataShutdownStart: 00000000
+[x] sceUtilitySavedataGetStatus: 00000004 (duplicates skipped)
+[r] Delayed to allow for shutdown: 00000000
+[x] sceUtilitySavedataGetStatus: 00000000 (duplicates skipped)
+
+[x] Checking for files:
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901/OTHER.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901ABC/OTHER.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901F1/OTHER.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901M2/OTHER.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901L3/OTHER.BIN (80010002)
+
+[x] Init
+[x] sceUtilitySavedataInitStart: 00000000
+[x] sceUtilitySavedataGetStatus: 00000001 (duplicates skipped)
+[x] sceUtilitySavedataGetStatus: 00000002 (duplicates skipped)
+[r] sceUtilitySavedataUpdate: 00000000 (duplicates skipped)
+[x] sceUtilitySavedataGetStatus: 00000003 (duplicates skipped)
+[x] sceUtilitySavedataShutdownStart: 00000000
+[x] sceUtilitySavedataGetStatus: 00000004 (duplicates skipped)
+[r] Delayed to allow for shutdown: 00000000
+[x] sceUtilitySavedataGetStatus: 00000000 (duplicates skipped)
+
+[x] Checking for files:
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901ASDF/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901F1/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901M2/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901L3/NEW.BIN (80010002)
+
+[x] Init
+[x] sceUtilitySavedataInitStart: 00000000
+[x] sceUtilitySavedataGetStatus: 00000001 (duplicates skipped)
+[x] sceUtilitySavedataGetStatus: 00000002 (duplicates skipped)
+[r] sceUtilitySavedataUpdate: 00000000 (duplicates skipped)
+CHANGE: clusterSize: 00000000 => 00008000
+CHANGE: freeClusters: 00000000 => 00008000
+CHANGE: freeSpaceKB: 00000000 => 00100000
+CHANGE: freeSpaceStr:  => 1 GB
+CHANGE: usedClusters: 00000000 => 00000003
+CHANGE: usedSpaceKB: 00000000 => 00000060
+CHANGE: usedSpaceStr:  => 96 KB
+CHANGE: usedSpace32KB: 00000000 => 00000060
+CHANGE: usedSpace32Str:  => 96 KB
+CHANGE: info.usedClusters: 00000000 => 00000080
+CHANGE: info.usedSpaceKB: 00000000 => 20383231
+CHANGE: info.usedSpaceStr:  => KB
+CHANGE: info.usedSpace32KB: 00000000 => 20383231
+CHANGE: info.usedSpace32Str:  => KB
+[x] sceUtilitySavedataGetStatus: 00000003 (duplicates skipped)
+[x] sceUtilitySavedataShutdownStart: 00000000
+[x] sceUtilitySavedataGetStatus: 00000004 (duplicates skipped)
+[r] Delayed to allow for shutdown: 00000000
+[x] sceUtilitySavedataGetStatus: 00000000 (duplicates skipped)
+[x] Result: 00000000
+
+[x] Checking for files:
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901ASDF/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901F1/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901M2/NEW.BIN (80010002)
+[r]   Does not exist: ms0:/PSP/SAVEDATA/TEST99901L3/NEW.BIN (80010002)
+[r] sceIoRemove: 00000000
+[r] sceIoRemove: 00000000
+[r] sceIoRemove: 00000000
+[r] sceIoRmdir: 00000000
+[r] sceIoRemove: 80010002
+[r] sceIoRemove: 80010002
+[r] sceIoRemove: 80010002
+[r] sceIoRmdir: 80010002
+[r] sceIoRemove: 80010002
+[r] sceIoRemove: 80010002
+[r] sceIoRemove: 80010002
+[r] sceIoRmdir: 80010002

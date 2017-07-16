@@ -1,0 +1,71 @@
+Attr 0x0:
+  [1] Waiting...
+  [2] Waiting...
+  [3] Waiting...
+  [4] Waiting...
+  [5] Waiting...
+  [6] Waiting...
+  [7] Waiting...
+  [0] Ready.
+  [1] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00001000,freeSize=00000708,wait=6)
+  [2] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00001000,freeSize=00000718,wait=5)
+  [3] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00001000,freeSize=00000728,wait=4)
+  [4] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00001000,freeSize=00000738,wait=3)
+  [5] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00001000,freeSize=00000748,wait=2)
+  [6] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00001000,freeSize=00000758,wait=1)
+  [7] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000000,poolSize=00001000,freeSize=00000768,wait=0)
+
+Attr 0x100:
+  [1] Waiting...
+  [2] Waiting...
+  [3] Waiting...
+  [4] Waiting...
+  [5] Waiting...
+  [6] Waiting...
+  [7] Waiting...
+  [0] Ready.
+  [7] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00001000,freeSize=00000768,wait=6)
+  [6] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00001000,freeSize=00000758,wait=5)
+  [5] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00001000,freeSize=00000748,wait=4)
+  [4] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00001000,freeSize=00000738,wait=3)
+  [3] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00001000,freeSize=00000728,wait=2)
+  [2] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00001000,freeSize=00000718,wait=1)
+  [1] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000100,poolSize=00001000,freeSize=00000708,wait=0)
+
+Attr 0x200:
+  [1] Waiting...
+  [2] Waiting...
+  [3] Waiting...
+  [4] Waiting...
+  [5] Waiting...
+  [6] Waiting...
+  [7] Waiting...
+  [0] Ready.
+  [1] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00001000,freeSize=00000708,wait=6)
+  [2] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00001000,freeSize=00000718,wait=5)
+  [3] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00001000,freeSize=00000728,wait=4)
+  [4] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00001000,freeSize=00000738,wait=3)
+  [5] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00001000,freeSize=00000748,wait=2)
+  [6] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00001000,freeSize=00000758,wait=1)
+  [7] Allocated.
+    VPL: OK (size=52,name=vpl,attr=00000200,poolSize=00001000,freeSize=00000768,wait=0)

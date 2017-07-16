@@ -1,0 +1,36 @@
+[x] Init:
+[r] sceUtilityLoadModule: 00000000
+[x] sceNetInit: 00000000
+
+[x] sceNetEtherNtostr MAC values:
+[x]   7 bytes: 00000011, ab:cd:12:34:65:43
+[x]   6 bytes: 00000011, ab:cd:12:34:65:43
+[x]   All zeros: 00000011, 00:00:00:00:00:00
+
+[x] sceNetEtherNtostr errors:
+[x]   NULL dest: 09d40000, 
+[x]   NULL source: 09d40000, (null)
+[x]   Both NULL: 09d40000, (null)
+[x]   After sceNetTerm: 00000011, 00:00:00:00:00:00
+
+[x] sceNetEtherStrton strings:
+[x]   Normal: 00000043, ab:cd:12:34:65:43
+[x]   Lowercase: 00000043, ab:cd:12:34:65:43
+[x]   Too long: 00000043, ab:cd:12:34:65:43
+[x]   No colons: 0989680c, ab:d1:34:54:6f:0c
+[x]   Spaces (sets of 1): 098967f6, 1f:fc:4f:f2:af:f6
+[x]   Spaces (sets of 2): 00000043, ab:cd:12:34:65:43
+[x]   Spaces (with a zero): 009896af, ab:7f:9f:bf:cf:af
+[x]   Letter separators: 00000043, ab:cd:12:34:65:43
+[x]   Letter separators (2x): 00000236, ab:3c:53:43:34:36
+[x]   NULL separators: 0989680c, ab:cd:f5:6f:e8:0c
+[x]   Too short: 000001f2, ab:cd:12:34:f6:f2
+[x]   Empty: 000001dd, 6f:0c:f7:de:1e:dd
+
+[x] sceNetEtherStrton errors:
+[x]   NULL dest: 00000000, 00:00:00:00:00:00
+[x]   After sceNetTerm: 00000043, ab:cd:12:34:65:43
+
+[x] Cleanup:
+[x] sceNetTerm: 00000000
+[r] sceUtilityUnloadModule: 00000000

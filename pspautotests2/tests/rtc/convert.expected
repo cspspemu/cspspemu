@@ -1,0 +1,100 @@
+Checking sceRtcConvertLocalTimeToUTC
+epoch : 62135596800000000
+epoch as UTC: 62135593200000000
+Checking checkRtcConvertUtcToLocalTime
+epoch as UTC: 62135596800000000
+epoch as UTC as Local : 62135600400000000
+Checking sceRtcSetTime_t
+from 0:0
+ 1970, 1, 1, 0, 0, 0, 0
+from epoc:0
+ 2033, 7, 27, 5, 24, 16, 0
+from epoc(64):0
+ 54861, 7, 13, 12, 29, 40, 441792
+from 2012, 9, 20, 7, 12, 15, 500:0
+ 2012, 9, 20, 7, 12, 15, 0
+from epoc&0xffffffff:0
+ 2033, 7, 27, 5, 24, 16, 0
+Checking sceRtcGetTime_t
+from epoc:0
+ 2012, 9, 20, 7, 12, 15, 500
+ticks: 1348125135
+from epoc (64):0
+ 2012, 9, 20, 7, 12, 15, 500
+ticks: 1348125135
+time_t time :  2012, 9, 20, 7, 12, 15, 0
+Checking sceRtcSetDosTime
+from epoc:0
+0 =  1980, 0, 0, 0, 0, 0, 0
+from epoc:0
+1 =  1980, 0, 0, 0, 0, 2, 0
+from epoc:0
+10 =  1980, 0, 0, 0, 0, 20, 0
+from epoc:0
+100 =  1980, 0, 0, 0, 3, 8, 0
+from epoc:0
+1000 =  1980, 0, 0, 0, 31, 16, 0
+from epoc:0
+10000 =  1980, 0, 0, 4, 56, 32, 0
+from epoc:0
+100000 =  1980, 0, 1, 16, 53, 0, 0
+from epoc:0
+1000000 =  1980, 0, 15, 8, 18, 0, 0
+from epoc:0
+10000000 =  1980, 4, 24, 18, 52, 0, 0
+from epoc:0
+62135596800000000ULL =  2107, 9, 11, 24, 0, 0, 0
+Checking sceRtcGetDosTime
+from epoc:0
+ 2107, 9, 11, 24, 0, 0, 0
+ticks: 4281057280
+from epoc:-1
+from epoc:-1
+Checking sceRtcSetWin32FileTime
+  Zero time (1601 January 01): (00000000) 1601, 1, 1, 0, 0, 0, 0
+  Arbitrary date/time: (00000000) 2005, 12, 1, 13, 1, 0, 1
+
+Checking sceRtcGetWin32FileTime
+  NULL filetime: -1337 (800001fe)
+  Zeroed time: 0 (800001fe)
+  Arbitrary date/time: 127779156600000010 (00000000)
+  1601 January 01: 0 (00000000)
+  1600 January 01: 0 (800001fe)
+  1 January 01: 0 (800001fe)
+
+Checking sceRtcGetTick
+Normal: 00000000
+Ticks : 283996800000000
+Bad date: 00000000
+Ticks : 315474825600000000
+Min year: 800001fe
+Ticks : 315474825600000000
+Max year: 00000000
+Ticks : 315506361600000000
+Year overflow: 800001fe
+Ticks : 315506361600000000
+checkSetTick: empty small value: 00000000
+ 1, 1, 1, 0, 0, 0, 835072
+checkSetTick: empty rtcMagicOffset: 00000000
+ 1970, 1, 1, 0, 0, 0, 0
+Normal: 00000000
+checkSetTick: 2012, 09, 20, 7, 12, 15, 500: 00000000
+ 2012, 9, 20, 7, 12, 15, 500
+preset
+ 2010, 9, 20, 7, 12, 15, 500
+checkSetTick: not empty:00000000
+ 2012, 9, 20, 7, 12, 15, 500
+Normal:
+ 2012, 1, 30, 2, 12, 15, 900
+RFC 2822:  04:16:00 +0416
+Normal:
+ 2010, 9, 20, 7, 12, 15, 500
+RFC 2822:  14:48:07 +0416
+Normal:
+ 2012, 1, 30, 2, 12, 15, 900
+RFC 3339: :15.71+04:16
+Normal:
+ 2010, 9, 20, 7, 12, 15, 500
+RFC 3339: :07.29+04:16
+Checking sceRtcParseDateTime
+UNTESTED!

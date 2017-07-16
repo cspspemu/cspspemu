@@ -1,0 +1,90 @@
+Until 2.60:
+
+[x] Thread IDs:
+[x]   NULL: 00000000
+[x]   Current: 00000000
+[x]   Deleted: 80020198
+[x]   Invalid: 80020198
+
+[x] Sizes:
+[x]   -1: 00000000 => 104 (exit: 800201a4)
+[x]   0: 00000000 => 0 (exit: ffffffff)
+[x]   1: 00000000 => 104 (exit: ffffffff)
+[x]   2: 00000000 => 104 (exit: ffffffff)
+[x]   3: 00000000 => 104 (exit: ffffffff)
+[x]   4: 00000000 => 104 (exit: ffffffff)
+[x]   5: 00000000 => 104 (exit: ffffffff)
+[x]   8: 00000000 => 104 (exit: ffffffff)
+[x]   16: 00000000 => 104 (exit: ffffffff)
+[x]   32: 00000000 => 104 (exit: ffffffff)
+[x]   64: 00000000 => 104 (exit: ffffffff)
+[x]   80: 00000000 => 104 (exit: ffffffff)
+[x]   82: 00000000 => 104 (exit: ffff01a4)
+[x]   108: 00000000 => 104 (exit: 800201a4)
+[x]   128: 00000000 => 104 (exit: 800201a4)
+[x]   1024: 00000000 => 104 (exit: 800201a4)
+
+[x] Values:
+Thread delay (attr=800040ff, status=2, entry=1, stack=1, stacksize=1000, gp=1, priority init=20, cur=20, wait=0 for 0, wakeup=0, exit=800201a4, unk=ffffffff)
+[x]   slumber before start:
+Thread slumber (attr=800000ff, status=16, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=0 for 0, wakeup=0, exit=800201a2, unk=ffffffff)
+[x]   started slumber
+[x]   slumber after start:
+Thread slumber (attr=800000ff, status=4, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=1 for 0, wakeup=0, exit=800201a4, unk=ffffffff)
+[x]   terminated slumber
+[x]   slumber after terminate:
+Thread slumber (attr=800000ff, status=16, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=0 for 0, wakeup=0, exit=800201ac, unk=ffffffff)
+[x]   started slumber
+[x]   slumber after start:
+Thread slumber (attr=800000ff, status=4, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=1 for 0, wakeup=0, exit=800201a4, unk=ffffffff)
+ ** slumber woke up
+[x]   woke slumber: 00000000
+[x]   slumber after wake:
+Thread slumber (attr=800000ff, status=16, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=0 for 0, wakeup=0, exit=00000008, unk=ffffffff)
+[x]   terminated and deleted slumber
+
+
+After 2.60:
+
+[x] Thread IDs:
+[x]   NULL: 00000000
+[x]   Current: 00000000
+[x]   Deleted: 80020198
+[x]   Invalid: 80020198
+
+[x] Sizes:
+[x]   -1: 800201bc => -1 (exit: ffffffff)
+[x]   0: 00000000 => 0 (exit: ffffffff)
+[x]   1: 00000000 => 108 (exit: ffffffff)
+[x]   2: 00000000 => 108 (exit: ffffffff)
+[x]   3: 00000000 => 108 (exit: ffffffff)
+[x]   4: 00000000 => 108 (exit: ffffffff)
+[x]   5: 00000000 => 108 (exit: ffffffff)
+[x]   8: 00000000 => 108 (exit: ffffffff)
+[x]   16: 00000000 => 108 (exit: ffffffff)
+[x]   32: 00000000 => 108 (exit: ffffffff)
+[x]   64: 00000000 => 108 (exit: ffffffff)
+[x]   80: 00000000 => 108 (exit: ffffffff)
+[x]   82: 00000000 => 108 (exit: ffff01a4)
+[x]   108: 00000000 => 108 (exit: 800201a4)
+[x]   128: 800201bc => 128 (exit: ffffffff)
+[x]   1024: 800201bc => 1024 (exit: ffffffff)
+
+[x] Values:
+Thread delay (attr=800040ff, status=2, entry=1, stack=1, stacksize=1000, gp=1, priority init=20, cur=20, wait=0 for 0, wakeup=0, exit=800201a4, unk=00000000)
+[x]   slumber before start:
+Thread slumber (attr=800000ff, status=16, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=0 for 0, wakeup=0, exit=800201a2, unk=00000000)
+[x]   started slumber
+[x]   slumber after start:
+Thread slumber (attr=800000ff, status=4, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=1 for 0, wakeup=0, exit=800201a4, unk=00000000)
+[x]   terminated slumber
+[x]   slumber after terminate:
+Thread slumber (attr=800000ff, status=16, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=0 for 0, wakeup=0, exit=800201ac, unk=00000000)
+[x]   started slumber
+[x]   slumber after start:
+Thread slumber (attr=800000ff, status=4, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=1 for 0, wakeup=0, exit=800201a4, unk=00000000)
+ ** slumber woke up
+[x]   woke slumber: 00000000
+[x]   slumber after wake:
+Thread slumber (attr=800000ff, status=16, entry=1, stack=1, stacksize=1000, gp=1, priority init=1f, cur=1f, wait=0 for 0, wakeup=0, exit=00000008, unk=00000000)
+[x]   terminated and deleted slumber

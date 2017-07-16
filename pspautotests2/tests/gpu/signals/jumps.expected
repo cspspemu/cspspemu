@@ -1,0 +1,196 @@
+Using default SDK version:
+
+Jump absolute (0x10):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(9999, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(9999, list+FF)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	0 DONE    	Sync 0 DONE
+  List 2	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	0 DONE    	Sync 0 DONE after unstall (80000020)
+  WAIT  	0 DONE    	
+
+Jump relative (0x13):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(9999, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(9999, list+FF)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	0 DONE    	Sync 0 DONE
+  List 2	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	0 DONE    	Sync 0 DONE after unstall (80000020)
+  WAIT  	0 DONE    	
+
+Jump relative to origin (0x15):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(9999, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(9999, list+FF)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	0 DONE    	Sync 0 DONE
+  List 2	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	0 DONE    	Sync 0 DONE after unstall (80000020)
+  WAIT  	0 DONE    	
+
+Call absolute (0x11):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(aaaa, list+FF)
+  List 1	2 DRAWING 	Signal(7777, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(aaaa, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	2 DRAWING 	Signal(7777, list+FF)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Call relaive (0x14):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(aaaa, list+FF)
+  List 1	2 DRAWING 	Signal(7777, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(aaaa, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	2 DRAWING 	Signal(7777, list+FF)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Call relative to origin (0x16):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(aaaa, list+FF)
+  List 1	2 DRAWING 	Signal(7777, list+FF)
+  List 1	0 DONE    	Finish(0, list+FF)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(aaaa, list+FF)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (ffffffff)
+  List 2	2 DRAWING 	Signal(7777, list+FF)
+  List 2	0 DONE    	Finish(0, list+FF)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+
+Using 6.60 SDK version:
+
+Jump absolute (0x10):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(9999, list+13)
+  List 1	0 DONE    	Finish(0, list+20)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(9999, list+13)
+  List 2	0 DONE    	Finish(0, list+20)
+  List 2	          	Enqueued with stall...
+  List 2	0 DONE    	Sync 0 DONE
+  List 2	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	0 DONE    	Sync 0 DONE after unstall (80000020)
+  WAIT  	0 DONE    	
+
+Jump relative (0x13):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(9999, list+13)
+  List 1	0 DONE    	Finish(0, list+20)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(9999, list+13)
+  List 2	0 DONE    	Finish(0, list+20)
+  List 2	          	Enqueued with stall...
+  List 2	0 DONE    	Sync 0 DONE
+  List 2	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	0 DONE    	Sync 0 DONE after unstall (80000020)
+  WAIT  	0 DONE    	
+
+Jump relative to origin (0x15):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(9999, list+13)
+  List 1	0 DONE    	Finish(0, list+20)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(9999, list+13)
+  List 2	0 DONE    	Finish(0, list+20)
+  List 2	          	Enqueued with stall...
+  List 2	0 DONE    	Sync 0 DONE
+  List 2	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	0 DONE    	Sync 0 DONE after unstall (80000020)
+  WAIT  	0 DONE    	
+
+Call absolute (0x11):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(aaaa, list+23)
+  List 1	2 DRAWING 	Signal(7777, list+0A)
+  List 1	0 DONE    	Finish(0, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(aaaa, list+23)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	2 DRAWING 	Signal(7777, list+0A)
+  List 2	0 DONE    	Finish(0, list+0C)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Call relaive (0x14):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(aaaa, list+23)
+  List 1	2 DRAWING 	Signal(7777, list+0A)
+  List 1	0 DONE    	Finish(0, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(aaaa, list+23)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	2 DRAWING 	Signal(7777, list+0A)
+  List 2	0 DONE    	Finish(0, list+0C)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	
+
+Call relative to origin (0x16):
+  LIST #	DRAWSTATE	INFO
+  List 1	2 DRAWING 	Signal(aaaa, list+23)
+  List 1	2 DRAWING 	Signal(7777, list+0A)
+  List 1	0 DONE    	Finish(0, list+0C)
+  List 1	          	Enqueued without stall...
+  List 1	0 DONE    	Sync 0 DONE
+  List 1	0 DONE    	Sync 0 DONE after continue (00000000)
+  List 2	2 DRAWING 	Signal(aaaa, list+23)
+  List 2	          	Enqueued with stall...
+  List 2	3 STALL   	Sync 3 STALL
+  List 2	3 STALL   	Sync 3 STALL after continue (80000020)
+  List 2	2 DRAWING 	Signal(7777, list+0A)
+  List 2	0 DONE    	Finish(0, list+0C)
+  List 2	0 DONE    	Sync 0 DONE after unstall (00000000)
+  WAIT  	0 DONE    	

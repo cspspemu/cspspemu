@@ -1,0 +1,32 @@
+[x] sceCtrlGetSamplingMode:
+[x]   Initial mode: 00000000, value=0
+[x]   Mode 0: OK (00000000), value=0
+[x]   Mode 1: OK (00000000), value=1
+[x]   Mode 2: Set failed (80000107), value = 1
+[x]   Mode -1: Set failed (80000107), value = 1
+[x]   Mode 0 again: OK (00000001), value=0
+
+[x] sceCtrlGetSamplingCycle:
+[x]   Initial cycle: 00000000, value=0
+[x]   Cycle 1: Set failed (800001fe), value = 0
+[x]   Cycle 20000: OK (00000000), value=20000
+[x]   Cycle 0: OK (00004e20), value=0
+[x]   Cycle -1: Set failed (800001fe), value = 0
+
+[x] Buffers:
+      * PAD: 00000001  00000000 L(128, 128) R(0, 0) 00000000
+[x]   sceCtrlReadBufferPositive 1: 00000001
+      * PAD: 00000001  00000000 L(128, 128) R(0, 0) 00000000
+[r]   sceCtrlReadBufferPositive 64: 00000001
+      * PAD: 00000040  00000000 L(128, 128) R(0, 0) 00000000
+[x]   sceCtrlPeekBufferPositive 64: 00000040
+      * PAD: 80000104  00000000 L(128, 128) R(0, 0) 00000000
+[x]   sceCtrlReadBufferPositive 96: 80000104
+
+[x] Latch:
+      * LATCH: 00000001  make=00000000, break=00000000, press=00000000, release=ffffffff
+[x]   sceCtrlPeekLatch: 00000001
+      * LATCH: 00000001  make=00000000, break=00000000, press=00000000, release=ffffffff
+[x]   sceCtrlReadLatch: 00000001
+      * LATCH: 00000000  make=00000000, break=00000000, press=00000000, release=00000000
+[x]   sceCtrlPeekLatch: 00000000

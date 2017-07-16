@@ -1,0 +1,45 @@
+[x] Names:
+[x]   NULL name: Failed (80020001)
+[x]   Blank name: Mutex: OK (size=56,name=,attr=00000000,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   Long name: Mutex: OK (size=56,name=1234567890123456789012345678901,attr=00000000,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   Two with same name: OK
+
+[x] Attributes:
+[x]   1: Mutex: OK (size=56,name=create,attr=00000001,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   100: Mutex: OK (size=56,name=create,attr=00000100,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   200: Mutex: OK (size=56,name=create,attr=00000200,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   400: Failed (80020191)
+[x]   800: Mutex: OK (size=56,name=create,attr=00000800,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   b00: Mutex: OK (size=56,name=create,attr=00000b00,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   bff: Mutex: OK (size=56,name=create,attr=00000bff,init=0,current=0,lockThread=0,waiting=00000000)
+[x]   c00: Failed (80020191)
+[x]   1000: Failed (80020191)
+[x]   2000: Failed (80020191)
+[x]   4000: Failed (80020191)
+[x]   8000: Failed (80020191)
+[x]   10000: Failed (80020191)
+
+[x] Counts:
+[x]   Negative count: Failed (800201BD)
+[x]   Positive count: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   Large count: Failed (800201BD)
+
+[x] Option sizes:
+[x]   -1: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   0: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   1: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   4: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   8: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   16: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   32: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   64: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   256: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+[x]   2147483647: Mutex: OK (size=56,name=create,attr=00000000,init=1,current=1,lockThread=1,waiting=00000000)
+
+[x] Scheduling:
+NULL name: A1B1C2E1D1F2 (thread=800201B5, main=80020001)
+Create locked: A1B1C2E1D1F2 (thread=800201B5, main=00000001)
+Create not locked: A1B1C2E1D1F2 (thread=800201B5, main=00000001)
+Initial not locked: A1B1D2C2E1F1 (thread=00000000, main=00000000)
+Initial locked: A1B1C2E2D1F2 (thread=800201B5, main=00000000)
+Create 1024: OK

@@ -1,0 +1,49 @@
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=0,first=NULL)
+Empty: OK
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=1,first=OTHER)
+  hi 0 prio=00 next=ITSELF
+Modified: OK
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=2,first=OTHER)
+  hi 0 prio=00 next=OTHER  hi 1 prio=00 next=FIRST
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=2,first=OTHER)
+  hi 1 prio=00 next=ITSELF
+Receive tampered #1: Failed (800201C9, 5000ms left, ptr=DEAD)
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=2,first=OTHER)
+  hi 1 prio=00 next=ITSELF
+Receive tampered #2: Failed (800201C9, 5000ms left, ptr=DEAD)
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=0,first=NULL)
+Empty: OK
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=1,first=OTHER)
+  hi 2 prio=00 next=ITSELF
+Modified B: OK
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=2,first=OTHER)
+  hi 2 prio=00 next=OTHER  hi 3 prio=00 next=FIRST
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=2,first=NULL)
+Receive tampered B #1: Failed (800200D3, 5000ms left, ptr=DEAD)
+Receive tampered B #2: Failed (800200D3, 5000ms left, ptr=DEAD)
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=0,first=NULL)
+Modified C: OK
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=1,first=OTHER)
+  hi 4 prio=00 next=ITSELF
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=1,first=OTHER)
+  hi 5 prio=00 next=OTHER  hi 4 prio=00 next=FIRST
+Receive tampered C #1: OK (5000ms left, ptr=OTHER) GOT: "hi 5" (next=FIRST, prio=00) Messagebox: OK (size=52,name='set',attr=0,wait=0,count=0,first=OTHER)
+  hi 4 prio=00 next=ITSELF
+Receive tampered C #2: Failed (800201A8, 0ms left, ptr=DEAD)
+Send twice #1: OK
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=1,first=OTHER)
+  hi 6 prio=00 next=ITSELF
+Send twice #2: Failed (800201C9)
+Messagebox: OK (size=52,name='set',attr=0,wait=0,count=1,first=OTHER)
+  hi 6 prio=00 next=ITSELF
+Receive twice #1: OK (5000ms left, ptr=OTHER) GOT: "hi 6" (next=ITSELF, prio=00) Messagebox: OK (size=52,name='set',attr=0,wait=0,count=0,first=NULL)
+Receive twice #2: Failed (800201A8, 0ms left, ptr=DEAD)
+NULL: Failed (8002019B)
+Messagebox: Failed (00000000)
+Invalid: Failed (8002019B)
+Messagebox: Failed (DEADBEEF)
+Deleted: Failed (8002019B)
+Messagebox: Invalid (8002019B)
+NULL: A1B1C2E1D1F2 (thread=800201B5, main=8002019B)
+Other: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Same: A1B1C2D1E2F1 (thread=00000000, main=00000000)

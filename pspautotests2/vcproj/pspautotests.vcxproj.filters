@@ -1,0 +1,1059 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <ItemGroup>
+    <Filter Include="tests">
+      <UniqueIdentifier>{8ADDFA23-605C-45A1-9827-8BD5B4E79F01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\video">
+      <UniqueIdentifier>{0DB7DFCF-2404-4A19-A66F-297868340DE8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\video\expected">
+      <UniqueIdentifier>{9D831986-FCC1-446E-9A55-D8224F62B065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\utility">
+      <UniqueIdentifier>{50B9FAD6-C7FD-43BC-8BD2-1CBFA1C390FA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\utility\expected">
+      <UniqueIdentifier>{AB7C78B6-1875-4006-A4ED-61C8B3B89E62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\umd">
+      <UniqueIdentifier>{840580BE-91F9-47C2-B091-3219159197FA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\umd\expected">
+      <UniqueIdentifier>{462E9274-9C04-4D75-A509-9B469A46539C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads">
+      <UniqueIdentifier>{F7811B2B-2A30-4591-B315-B8B67993541C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\expected">
+      <UniqueIdentifier>{D12BBADC-D95F-4929-93BF-D703D7E485A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\semaphores">
+      <UniqueIdentifier>{26F0E546-4A31-438E-AF93-8E20B4228C99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\semaphores\expected">
+      <UniqueIdentifier>{8980AE95-BAB0-423E-9867-AA59EF0AECCA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\scheduling">
+      <UniqueIdentifier>{4F10EE31-BD41-4E80-AB01-22E0DD58243F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\scheduling\expected">
+      <UniqueIdentifier>{8F8BC252-AA25-4D94-A385-91DEF072208F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\mutex">
+      <UniqueIdentifier>{91DE4961-B3CB-4C8D-80E3-B8DF914310B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\mutex\expected">
+      <UniqueIdentifier>{E6EA57EC-63A1-4F73-A81F-FF7D73CC6345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\mbx">
+      <UniqueIdentifier>{B19DD560-48E0-48F9-886A-6D5E78C13410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\mbx\expected">
+      <UniqueIdentifier>{02C471AC-751F-4546-9069-9CDF5646709E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\lwmutex">
+      <UniqueIdentifier>{197D8A0E-9778-4D4B-B28A-1B518EE333C1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\lwmutex\expected">
+      <UniqueIdentifier>{A938342B-A5F6-4DD5-AE49-AC7D33B7FB50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\events">
+      <UniqueIdentifier>{B28A0383-2B8E-41C8-89BE-8C9F0A98FAE5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\events\expected">
+      <UniqueIdentifier>{1F96526C-B0B6-459A-B9DA-599C23C7495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\sysmem">
+      <UniqueIdentifier>{554D7C21-3E67-44EC-84C5-4121126E44FB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\sysmem\expected">
+      <UniqueIdentifier>{AB083144-B516-4B2E-8730-6740AB0B4D80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\string">
+      <UniqueIdentifier>{60AE96C5-DBB0-436B-B95F-0E7D745E56C0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\string\expected">
+      <UniqueIdentifier>{587322FE-3695-4061-9130-96DC5933EDD2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\rtc">
+      <UniqueIdentifier>{0580DE31-4F61-4491-A6CD-53F8327BB5BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\rtc\expected">
+      <UniqueIdentifier>{3333EEF7-61D9-40DA-A75A-296099DD2B65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\power">
+      <UniqueIdentifier>{357741D4-1561-4759-8DBB-FC062B9A36B1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\power\expected">
+      <UniqueIdentifier>{6579F31C-2E74-48BE-AFD6-6CD017B8D378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\mstick">
+      <UniqueIdentifier>{5C5146E4-6AEF-4160-B2A0-2F939458FEAD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\mstick\expected">
+      <UniqueIdentifier>{26EAA2FE-4DF2-454D-9FAE-BCF3AE8FF63E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\modules">
+      <UniqueIdentifier>{2890FC40-D264-48DE-AA0F-E497F47A34C5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\modules\expected">
+      <UniqueIdentifier>{9C4F0A4A-8D81-49E8-87A9-AB6E3BA15191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\misc">
+      <UniqueIdentifier>{9FD5AC6B-DB6B-4870-B30D-4BAB5CB99AA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\misc\expected">
+      <UniqueIdentifier>{B2D5DF24-BCCB-403C-82AE-829CCF94F14D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\me">
+      <UniqueIdentifier>{00E952CD-C760-4762-85F2-9DDF265F1B47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\malloc">
+      <UniqueIdentifier>{6774BBFE-6D04-4CDB-8A54-05355C478583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\malloc\expected">
+      <UniqueIdentifier>{FD1840EE-2BD4-4A2C-BB82-73054ACAA9E8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\loader">
+      <UniqueIdentifier>{24D89B38-92C9-459C-A6C2-427F4255AB6D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\loader\expected">
+      <UniqueIdentifier>{FA660825-3980-4BB4-B785-931862784500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\libs">
+      <UniqueIdentifier>{B4EF0D5F-CF48-4DA6-8B91-E34C5DD30A3F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\kirk">
+      <UniqueIdentifier>{629BAC76-93CD-4E74-8474-67080C4FC064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\kirk\expected">
+      <UniqueIdentifier>{DAE5C349-BECE-4AE6-B65A-7B6357E83C3F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\io">
+      <UniqueIdentifier>{06983F4C-E857-4068-9BA0-938A420F007B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\io\expected">
+      <UniqueIdentifier>{5E10E83D-90DC-4E3C-BBB5-2D72E4109B77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\io\directory">
+      <UniqueIdentifier>{7AEFEC62-471C-440A-8A99-B7A971F0CB83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\io\directory\folder">
+      <UniqueIdentifier>{19BD6C43-3965-4392-B870-68F0C14DAA86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\io\directory\expected">
+      <UniqueIdentifier>{898CDFD3-6F50-41F6-96A2-520B00DE226D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\intr">
+      <UniqueIdentifier>{19FE6517-4E4E-4330-804C-DB138D623833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\intr\expected">
+      <UniqueIdentifier>{C512187C-D3A1-4520-903A-E9DB28ED0426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\hle">
+      <UniqueIdentifier>{5188F1E8-2C20-40DC-9B66-8CDD0572889A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\hle\expected">
+      <UniqueIdentifier>{E05F2DFE-4DF6-411A-9B07-F93F74F31479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\gpu">
+      <UniqueIdentifier>{4DC2CBC9-6E6D-4EEC-ABD4-DAB66EF81C3C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\gpu\expected">
+      <UniqueIdentifier>{E6B35055-6BD2-46C6-B40F-476B6B619641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\font">
+      <UniqueIdentifier>{8213741C-BEA7-4772-A80A-95D1E3626083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\font\expected">
+      <UniqueIdentifier>{341990CC-7240-4015-80AE-C25DE1F3A441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\dmac">
+      <UniqueIdentifier>{4D629D22-D409-4723-9ECB-900C549CC8F4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\dmac\expected">
+      <UniqueIdentifier>{9124DFE3-5AF3-482E-93B1-12381B74C465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\display">
+      <UniqueIdentifier>{399D858C-AAD0-4539-9F28-5BFE56BB0D9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\display\expected">
+      <UniqueIdentifier>{829FFDD5-5FEC-4492-8216-124CA88CBA72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\ctrl">
+      <UniqueIdentifier>{D98D9333-F525-4811-BC14-ECCCEB5C48C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\ctrl\expected">
+      <UniqueIdentifier>{E05FA2D2-DB4B-4BBA-8F16-CCBCEE74A897}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\cpu">
+      <UniqueIdentifier>{E141B871-8A9B-4C0B-8A13-9F170197C6B1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\cpu\vfpu">
+      <UniqueIdentifier>{2D476261-7D7A-460C-A743-FD464935C32C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\cpu\vfpu\expected">
+      <UniqueIdentifier>{B55BE314-549F-47F0-BBD1-D4EC478C1D70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\cpu\expected">
+      <UniqueIdentifier>{B74AF41B-5227-4A3A-B898-9C8B2D6E1679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\audio">
+      <UniqueIdentifier>{0A62C971-C846-4CAA-886A-BCEC872ABF9D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\audio\expected">
+      <UniqueIdentifier>{F9B8F4CA-313B-4E20-8571-AA8D5F1188C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\alarm">
+      <UniqueIdentifier>{CD1F1422-F491-4C51-B8FE-FB1AFDBA1A3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\threads\alarm\expected">
+      <UniqueIdentifier>{53C203E1-9C75-4E6A-9732-9FE8B1C28039}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{fc104fc6-0286-4498-b89c-5ba6ca628c83}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\tests\video\pmf_simple\readme.txt">
+      <Filter>tests\video</Filter>
+    </None>
+    <None Include="..\tests\video\pmf_simple\pmf_simple.expected">
+      <Filter>tests\video\expected</Filter>
+    </None>
+    <None Include="..\tests\video\pmf\test.info">
+      <Filter>tests\video</Filter>
+    </None>
+    <None Include="..\tests\video\pmf\readme.txt">
+      <Filter>tests\video</Filter>
+    </None>
+    <None Include="..\tests\video\pmf\pmf.expected">
+      <Filter>tests\video\expected</Filter>
+    </None>
+    <None Include="..\tests\utility\systemparam\systemparam.expected">
+      <Filter>tests\utility\expected</Filter>
+    </None>
+    <None Include="..\tests\umd\wait\wait.expected">
+      <Filter>tests\umd\expected</Filter>
+    </None>
+    <None Include="..\tests\umd\umd.expected">
+      <Filter>tests\umd\expected</Filter>
+    </None>
+    <None Include="..\tests\umd\raw_access\raw_acess.expected">
+      <Filter>tests\umd\expected</Filter>
+    </None>
+    <None Include="..\tests\umd\raw_access\raw_access.expected">
+      <Filter>tests\umd\expected</Filter>
+    </None>
+    <None Include="..\tests\umd\io\umd_io.expected">
+      <Filter>tests\umd\expected</Filter>
+    </None>
+    <None Include="..\tests\umd\callbacks\umd.expected">
+      <Filter>tests\umd\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\wakeup\wakeup.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\vtimers\vtimer.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\vpl\vpl.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\threads\threads.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\wait\wait.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\signal\signal.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\semaphore_greater_than_zero\semaphore_greater_than_zero.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\semaphores.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\refer\refer.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\priority\priority.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\poll\poll.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\delete\delete.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\create\create.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\semaphores\cancel\cancel.expected">
+      <Filter>tests\threads\semaphores\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\scheduling\scheduling.expected">
+      <Filter>tests\threads\scheduling\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mutex\unlock\unlock.expected">
+      <Filter>tests\threads\mutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mutex\try\try.expected">
+      <Filter>tests\threads\mutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mutex\priority\priority.expected">
+      <Filter>tests\threads\mutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mutex\mutex.expected">
+      <Filter>tests\threads\mutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mutex\lock\lock.expected">
+      <Filter>tests\threads\mutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mutex\delete\delete.expected">
+      <Filter>tests\threads\mutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mutex\create\create.expected">
+      <Filter>tests\threads\mutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\msgpipe\msgpipe.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\lwmutex\unlock\unlock.expected">
+      <Filter>tests\threads\lwmutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\lwmutex\try600\try600.expected">
+      <Filter>tests\threads\lwmutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\lwmutex\try\try.expected">
+      <Filter>tests\threads\lwmutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\lwmutex\priority\priority.expected">
+      <Filter>tests\threads\lwmutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\lwmutex\lock\lock.expected">
+      <Filter>tests\threads\lwmutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\lwmutex\delete\delete.expected">
+      <Filter>tests\threads\lwmutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\lwmutex\create\create.expected">
+      <Filter>tests\threads\lwmutex\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\k0\k0.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\fpl\fpl.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\callbacks\callbacks.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\sysmem\sysmem.expected">
+      <Filter>tests\sysmem\expected</Filter>
+    </None>
+    <None Include="..\tests\string\string.expected">
+      <Filter>tests\string\expected</Filter>
+    </None>
+    <None Include="..\tests\rtc\rtc.expected">
+      <Filter>tests\rtc\expected</Filter>
+    </None>
+    <None Include="..\tests\power\power.expected">
+      <Filter>tests\power\expected</Filter>
+    </None>
+    <None Include="..\tests\not_working_on_real_psp.txt">
+      <Filter>tests</Filter>
+    </None>
+    <None Include="..\tests\mstick\mstick.expected">
+      <Filter>tests\mstick\expected</Filter>
+    </None>
+    <None Include="..\tests\modules\loadexec\loader.expected">
+      <Filter>tests\modules\expected</Filter>
+    </None>
+    <None Include="..\tests\misc\testgp.expected">
+      <Filter>tests\misc\expected</Filter>
+    </None>
+    <None Include="..\tests\malloc\malloc.expected">
+      <Filter>tests\malloc\expected</Filter>
+    </None>
+    <None Include="..\tests\loader\bss\bss.expected">
+      <Filter>tests\loader\expected</Filter>
+    </None>
+    <None Include="..\tests\kirk\kirk.expected">
+      <Filter>tests\kirk\expected</Filter>
+    </None>
+    <None Include="..\tests\io\iodrv\iodrv.expected">
+      <Filter>tests\io\expected</Filter>
+    </None>
+    <None Include="..\tests\io\io\io.expected">
+      <Filter>tests\io\expected</Filter>
+    </None>
+    <None Include="..\tests\io\directory\folder\test.txt">
+      <Filter>tests\io\directory</Filter>
+    </None>
+    <None Include="..\tests\io\directory\folder\subfolder\subtext.txt">
+      <Filter>tests\io\directory\folder</Filter>
+    </None>
+    <None Include="..\tests\io\directory\folder\2.txt">
+      <Filter>tests\io\directory\folder</Filter>
+    </None>
+    <None Include="..\tests\io\directory\folder\1.txt">
+      <Filter>tests\io\directory\folder</Filter>
+    </None>
+    <None Include="..\tests\io\directory\directory.expected">
+      <Filter>tests\io\directory\expected</Filter>
+    </None>
+    <None Include="..\tests\io\cwd\cwd.expected">
+      <Filter>tests\io\expected</Filter>
+    </None>
+    <None Include="..\tests\intr\vblank\vblank.expected">
+      <Filter>tests\intr\expected</Filter>
+    </None>
+    <None Include="..\tests\intr\intr.expected">
+      <Filter>tests\intr\expected</Filter>
+    </None>
+    <None Include="..\tests\hle\check_not_used_uids.expected">
+      <Filter>tests\hle\expected</Filter>
+    </None>
+    <None Include="..\tests\gpu\triangle\triangle.expected">
+      <Filter>tests\gpu\expected</Filter>
+    </None>
+    <None Include="..\tests\gpu\simple\simple.expected">
+      <Filter>tests\gpu\expected</Filter>
+    </None>
+    <None Include="..\tests\gpu\rendertarget\rendertarget.expected">
+      <Filter>tests\gpu\expected</Filter>
+    </None>
+    <None Include="..\tests\gpu\reflection\reflection.expected">
+      <Filter>tests\gpu\expected</Filter>
+    </None>
+    <None Include="..\tests\gpu\complex\complex.expected">
+      <Filter>tests\gpu\expected</Filter>
+    </None>
+    <None Include="..\tests\gpu\callbacks\ge_callbacks.expected">
+      <Filter>tests\gpu\expected</Filter>
+    </None>
+    <None Include="..\tests\font\fonttest.expected">
+      <Filter>tests\font\expected</Filter>
+    </None>
+    <None Include="..\tests\dmac\dmactest.expected">
+      <Filter>tests\dmac\expected</Filter>
+    </None>
+    <None Include="..\tests\display\display.expected">
+      <Filter>tests\display\expected</Filter>
+    </None>
+    <None Include="..\tests\ctrl\sampling\sampling.expected">
+      <Filter>tests\ctrl\expected</Filter>
+    </None>
+    <None Include="..\tests\ctrl\ctrl.expected">
+      <Filter>tests\ctrl\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\vfpu\prefixes\vfpu_prefixes.expected">
+      <Filter>tests\cpu\vfpu\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\vfpu\convert\vfpu_convert.expected">
+      <Filter>tests\cpu\vfpu\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\vfpu\colors\vfpu_colors.expected">
+      <Filter>tests\cpu\vfpu\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\vfpu\base\vfpu.expected">
+      <Filter>tests\cpu\vfpu\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\lsu\lsu.expected">
+      <Filter>tests\cpu\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\icache\icache.expected">
+      <Filter>tests\cpu\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\fpu\fpu.expected">
+      <Filter>tests\cpu\expected</Filter>
+    </None>
+    <None Include="..\tests\cpu\cpu_alu\cpu_alu.expected">
+      <Filter>tests\cpu\expected</Filter>
+    </None>
+    <None Include="..\tests\audio\sascore\sascore.expected">
+      <Filter>tests\audio\expected</Filter>
+    </None>
+    <None Include="..\tests\audio\atrac\atractest.expected">
+      <Filter>tests\audio\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\wait\wait.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\set\set.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\refer\refer.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\poll\poll.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\events.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\delete\delete.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\create\create.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\clear\clear.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\events\cancel\cancel.expected">
+      <Filter>tests\threads\events\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\mbx.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\poll\poll.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\refer\refer.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\cancel\cancel.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\create\create.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\delete\delete.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\receive\receive.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\priority\priority.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\mbx\send\send.expected">
+      <Filter>tests\threads\mbx\expected</Filter>
+    </None>
+    <None Include="..\gentest.py" />
+    <None Include="..\tests\threads\alarm\alarm.expected">
+      <Filter>tests\threads\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\alarm\set\set.expected">
+      <Filter>tests\threads\alarm\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\alarm\refer\refer.expected">
+      <Filter>tests\threads\alarm\expected</Filter>
+    </None>
+    <None Include="..\tests\threads\alarm\cancel\cancel.expected">
+      <Filter>tests\threads\alarm\expected</Filter>
+    </None>
+    <None Include="..\tests\ctrl\idle\idle.expected">
+      <Filter>tests\ctrl\expected</Filter>
+    </None>
+    <None Include="..\tests\ctrl\sampling2\sampling2.expected">
+      <Filter>tests\ctrl\expected</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\tests\video\pmf\pmf_video.h">
+      <Filter>tests\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\video\pmf\pmf_reader.h">
+      <Filter>tests\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\video\pmf\pmf_decoder.h">
+      <Filter>tests\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\video\pmf\pmf_audio.h">
+      <Filter>tests\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\threads\semaphores\sub_shared.h">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\threads\mutex\sub_shared.h">
+      <Filter>tests\threads\mutex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\threads\lwmutex\sub_shared.h">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xtime.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xtexture.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xtext.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xsound.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xparticle.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xobj.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xmem.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xmath.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xlog.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xlib.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xini.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xheightmap.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xgraphics.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xctrl.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xconfig.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\libs\xlib\xbuffer.h">
+      <Filter>tests\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\kirk\kirk_engine.h">
+      <Filter>tests\kirk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\font\libfont.h">
+      <Filter>tests\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\audio\sascore\sascore.h">
+      <Filter>tests\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\threads\events\sub_shared.h">
+      <Filter>tests\threads\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\threads\mbx\sub_shared.h">
+      <Filter>tests\threads\mbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tests\threads\alarm\sub_shared.h">
+      <Filter>tests\threads\alarm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\common.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\tests\video\pmf_simple\pmf_simple.c">
+      <Filter>tests\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\video\pmf\pmf.c">
+      <Filter>tests\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\utility\systemparam\systemparam.c">
+      <Filter>tests\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\umd\wait\wait.c">
+      <Filter>tests\umd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\umd\umd.c">
+      <Filter>tests\umd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\umd\raw_access\raw_access.c">
+      <Filter>tests\umd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\umd\io\umd_io.c">
+      <Filter>tests\umd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\umd\callbacks\umd.c">
+      <Filter>tests\umd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\wakeup\wakeup.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\vtimers\vtimer.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\vpl\vpl.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\threads\thread_state.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\threads\threads.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\wait\wait.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\signal\signal.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\semaphore_greater_than_zero\semaphore_greater_than_zero.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\semaphores.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\refer\refer.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\priority\priority.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\poll\poll.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\delete\delete.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\create\create.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\semaphores\cancel\cancel.c">
+      <Filter>tests\threads\semaphores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\scheduling\scheduling.c">
+      <Filter>tests\threads\scheduling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\unlock\unlock.c">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\try\try.c">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\priority\priority.c">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\mutex.c">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\mutex-imports.S">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\lock\lock.c">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\delete\delete.c">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mutex\create\create.c">
+      <Filter>tests\threads\mutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\msgpipe\msgpipe.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\unlock\unlock.c">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\try600\try600.c">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\try\try.c">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\priority\priority.c">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\lwmutex-imports.S">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\lock\lock.c">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\delete\delete.c">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\lwmutex\create\create.c">
+      <Filter>tests\threads\lwmutex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\k0\k0.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\fpl\fpl.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\callbacks\callbacks.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\sysmem\sysmem.c">
+      <Filter>tests\sysmem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\string\string.c">
+      <Filter>tests\string</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\rtc\rtc.c">
+      <Filter>tests\rtc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\power\power.c">
+      <Filter>tests\power</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\mstick\mstick.c">
+      <Filter>tests\mstick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\modules\prxloader.c">
+      <Filter>tests\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\modules\mymodule_exports.c">
+      <Filter>tests\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\modules\mymodule.c">
+      <Filter>tests\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\modules\MyLib.S">
+      <Filter>tests\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\modules\loadexec\simple.c">
+      <Filter>tests\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\modules\loadexec\loader.c">
+      <Filter>tests\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\misc\testgp.c">
+      <Filter>tests\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\me\me.S">
+      <Filter>tests\me</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\me\main.c">
+      <Filter>tests\me</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\malloc\malloc.c">
+      <Filter>tests\malloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\loader\bss\bss.c">
+      <Filter>tests\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xtime.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xtexture.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xtext.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xsound.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xparticle.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xobj.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xmem.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xmath.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xlog.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xlib.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xini.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xheightmap.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xgraphics.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xctrl.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\libs\xlib\xbuffer.c">
+      <Filter>tests\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\kirk\kirk.c">
+      <Filter>tests\kirk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\kirk\kirk-imports.S">
+      <Filter>tests\kirk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\io\iodrv\iodrv.c">
+      <Filter>tests\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\io\io\io.c">
+      <Filter>tests\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\io\directory\directory.c">
+      <Filter>tests\io\directory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\io\cwd\cwd.c">
+      <Filter>tests\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\intr\vblank\vblank.c">
+      <Filter>tests\intr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\intr\intr.c">
+      <Filter>tests\intr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\intr\check_sceKernelCpuSuspendIntr.c">
+      <Filter>tests\intr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\hle\check_not_used_uids.c">
+      <Filter>tests\hle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\gpu\triangle\triangle.c">
+      <Filter>tests\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\gpu\simple\simple.c">
+      <Filter>tests\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\gpu\rendertarget\rendertarget.c">
+      <Filter>tests\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\gpu\reflection\reflection.c">
+      <Filter>tests\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\gpu\complex\complex.c">
+      <Filter>tests\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\gpu\callbacks\ge_callbacks.c">
+      <Filter>tests\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\font\libfont-imports.S">
+      <Filter>tests\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\font\fonttest.c">
+      <Filter>tests\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\dmac\dmactest.c">
+      <Filter>tests\dmac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\dmac\dmac-imports.S">
+      <Filter>tests\dmac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\display\display.c">
+      <Filter>tests\display</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\ctrl\sampling\sampling.c">
+      <Filter>tests\ctrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\ctrl\ctrl.c">
+      <Filter>tests\ctrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\vfpu\prefixes\vfpu_prefixes.c">
+      <Filter>tests\cpu\vfpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\vfpu\convert\vfpu_convert_asm.S">
+      <Filter>tests\cpu\vfpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\vfpu\convert\vfpu_convert.c">
+      <Filter>tests\cpu\vfpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\vfpu\colors\vfpu_colors_asm.S">
+      <Filter>tests\cpu\vfpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\vfpu\colors\vfpu_colors.c">
+      <Filter>tests\cpu\vfpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\vfpu\base\vfpu.c">
+      <Filter>tests\cpu\vfpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\lsu\lsu.c">
+      <Filter>tests\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\icache\icache.c">
+      <Filter>tests\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\fpu\fpu.c">
+      <Filter>tests\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\cpu\cpu_alu\cpu_alu.c">
+      <Filter>tests\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\audio\sascore\sascore.c">
+      <Filter>tests\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\audio\sascore\sascore-imports.S">
+      <Filter>tests\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\audio\atrac\atractest.c">
+      <Filter>tests\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\wait\wait.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\set\set.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\refer\refer.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\poll\poll.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\events.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\delete\delete.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\create\create.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\clear\clear.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\events\cancel\cancel.c">
+      <Filter>tests\threads\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\mbx.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\poll\poll.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\refer\refer.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\create\create.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\delete\delete.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\cancel\cancel.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\receive\receive.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\priority\priority.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\mbx\send\send.c">
+      <Filter>tests\threads\mbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\alarm\alarm.c">
+      <Filter>tests\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\alarm\set\set.c">
+      <Filter>tests\threads\alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\alarm\refer\refer.c">
+      <Filter>tests\threads\alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\threads\alarm\cancel\cancel.c">
+      <Filter>tests\threads\alarm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\ctrl\idle\idle.c">
+      <Filter>tests\ctrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\common.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tests\ctrl\sampling2\sampling2.c">
+      <Filter>tests\ctrl</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

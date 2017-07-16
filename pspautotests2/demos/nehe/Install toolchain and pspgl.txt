@@ -1,0 +1,29 @@
+Toolchain, PSPSDK and cygwin
+----------------------------
+
+To get the toolchain and PSPSDK up and running with CYGWIN on a windows machine you only need to follow the tutorial at the address below (but I had some errors when I executed "./toolchain.sh". My solution to solve those errors was to modify "C:/cygwin/cygwin.bat" with PSPSDK location as explained at the end of the tutorial before executing the toolchain.sh script.)
+http://www.psp-programming.com/tutorials/c/lesson01.htm
+
+I had an other problem when I tried to compile my first program, some kind of error about "cygwin1.dll". It was because I had this file somewhere in my Windows folder (make a search). When I deleted it, everything went OK. (but don't delete the one somewhere in cygwin folder)
+
+
+PSPGL
+-----
+
+To get pspgl and install it, you just need to follow the next procedure:
+- launch cygwin
+- type "svn co svn://svn.pspdev.org/psp/trunk/pspgl" (without quotes)
+- go to newly created pspgl directory, by typing "cd pspgl" (allways without quote)
+- then type "make"
+- and finaly type "make install"
+
+now you can compile pspgl programs.
+For example if you want to compile code in "Nehe01" directory:
+- go in "Nehe01" directory
+- type "make" if you have a 1.0 PSP or type "make kxploit" if you have a 1.5 PSP
+
+
+
+I hope it was usefull to some :)
+
+Edorul.

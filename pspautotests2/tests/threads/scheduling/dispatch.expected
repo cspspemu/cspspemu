@@ -1,0 +1,428 @@
+[x/y] Semas without changes:
+[x/y] sceKernelCreateSema: 00000001
+[x/y] sceKernelSignalSema: 00000000
+[x/y] sceKernelWaitSema: 00000000
+[x/y] sceKernelWaitSema too much: 800201bd
+[x/y] sceKernelDeleteSema: 00000000
+[x/y] sceKernelCreateSema: 00000001
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] S sceKernelStartThread: 00000000
+[r/y] sceKernelWaitSema: 800201a8
+[x/y] T sceKernelWaitSema: 00000000
+[x/y] sceKernelSignalSema: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelSignalSema: 00000000
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelPollSema: 00000000
+[x/y] sceKernelDeleteSema: 00000000
+
+[x/y] Semas with short dispatch suspend:
+[x/y] sceKernelCreateSema: 00000001
+[x/y] sceKernelSignalSema: 00000000
+[x/y] sceKernelWaitSema: 00000000
+[x/y] sceKernelWaitSema too much: 800201bd
+[x/y] sceKernelDeleteSema: 00000000
+[x/y] sceKernelCreateSema: 00000001
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelWaitSema: 800201a7
+[?/n] sceKernelSignalSema: 00000000
+[?/y] T sceKernelWaitSema: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelSignalSema: 00000000
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelPollSema: 00000000
+[x/y] sceKernelDeleteSema: 00000000
+
+[x/y] Semas while dispatch suspended:
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelCreateSema: 00000001
+[?/n] sceKernelSignalSema: 00000000
+[?/n] sceKernelWaitSema: 800201a7
+[?/n] sceKernelWaitSema too much: 800201a7
+[?/n] sceKernelDeleteSema: 00000000
+[?/n] sceKernelCreateSema: 00000001
+[?/y] S sceKernelCreateThread: 00000001
+[?/y] S sceKernelStartThread: 00000000
+[?/y] sceKernelWaitSema: 800201a8
+[?/y] T sceKernelWaitSema: 00000000
+[?/y] sceKernelSignalSema: 00000000
+[?/y] T sceKernelDelayThread: 00000000
+[?/y] T sceKernelSignalSema: 00000000
+[?/y] E sceKernelWaitThreadEnd: 00000000
+[?/y] E sceKernelTerminateDeleteThread: 00000000
+[?/y] sceKernelPollSema: 00000000
+[?/y] sceKernelDeleteSema: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+
+[x/y] Semas while intr suspended:
+[x/n] sceKernelCpuSuspendIntr: 00000001
+[x/n] sceKernelCreateSema: 00000001
+[x/n] sceKernelSignalSema: 00000000
+[x/n] sceKernelWaitSema: 800201a7
+[x/n] sceKernelWaitSema too much: 800201a7
+[x/n] sceKernelDeleteSema: 00000000
+[x/n] sceKernelCreateSema: 00000001
+[x/n] S sceKernelCreateThread: 00000001
+[x/n] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 80020066
+[?/n] sceKernelWaitSema: 800201a7
+[?/n] sceKernelSignalSema: 00000000
+[?/n] sceKernelResumeDispatchThread: 80020066
+[x/n] E sceKernelWaitThreadEnd: 800201a7
+[x/n] E sceKernelTerminateDeleteThread: 00000000
+[x/n] sceKernelPollSema: 00000000
+[x/n] sceKernelDeleteSema: 00000000
+[x/y] sceKernelCpuResumeIntr: 00000000
+
+
+[x/y] Mutexes without changes:
+[x/y] sceKernelCreateMutex: 00000001
+[x/y] sceKernelUnlockMutex: 00000000
+[x/y] sceKernelLockMutex: 00000000
+[x/y] sceKernelLockMutex invalid: 800201bd
+[x/y] sceKernelDeleteMutex: 00000000
+[x/y] sceKernelCreateMutex: 00000001
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] T sceKernelLockMutex: 800201bd
+[x/y] S sceKernelStartThread: 00000000
+[x/y] sceKernelLockMutex: 800201c8
+[x/y] sceKernelUnlockMutex: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelUnlockMutex: 800201c5
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelTryLockMutex: 00000000
+[x/y] sceKernelDeleteMutex: 00000000
+
+[x/y] Mutexes with short dispatch suspend:
+[x/y] sceKernelCreateMutex: 00000001
+[x/y] sceKernelUnlockMutex: 00000000
+[x/y] sceKernelLockMutex: 00000000
+[x/y] sceKernelLockMutex invalid: 800201bd
+[x/y] sceKernelDeleteMutex: 00000000
+[x/y] sceKernelCreateMutex: 00000001
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] T sceKernelLockMutex: 800201bd
+[x/y] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelLockMutex: 800201a7
+[?/n] sceKernelUnlockMutex: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelUnlockMutex: 800201c5
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelTryLockMutex: 00000000
+[x/y] sceKernelDeleteMutex: 00000000
+
+[x/y] Mutexes while dispatch suspended:
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelCreateMutex: 00000001
+[?/n] sceKernelUnlockMutex: 00000000
+[?/n] sceKernelLockMutex: 800201a7
+[?/n] sceKernelLockMutex invalid: 800201a7
+[?/n] sceKernelDeleteMutex: 00000000
+[?/n] sceKernelCreateMutex: 00000001
+[?/y] S sceKernelCreateThread: 00000001
+[?/y] T sceKernelLockMutex: 800201bd
+[?/y] S sceKernelStartThread: 00000000
+[?/y] sceKernelLockMutex: 800201c8
+[?/y] sceKernelUnlockMutex: 00000000
+[?/y] T sceKernelDelayThread: 00000000
+[?/y] T sceKernelUnlockMutex: 800201c5
+[?/y] E sceKernelWaitThreadEnd: 00000000
+[?/y] E sceKernelTerminateDeleteThread: 00000000
+[?/y] sceKernelTryLockMutex: 00000000
+[?/y] sceKernelDeleteMutex: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+
+[x/y] Mutexes while intr suspended:
+[x/n] sceKernelCpuSuspendIntr: 00000001
+[x/n] sceKernelCreateMutex: 00000001
+[x/n] sceKernelUnlockMutex: 00000000
+[x/n] sceKernelLockMutex: 800201a7
+[x/n] sceKernelLockMutex invalid: 800201a7
+[x/n] sceKernelDeleteMutex: 00000000
+[x/n] sceKernelCreateMutex: 00000001
+[x/n] S sceKernelCreateThread: 00000001
+[x/n] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 80020066
+[?/n] sceKernelLockMutex: 800201a7
+[?/n] sceKernelUnlockMutex: 00000000
+[?/n] sceKernelResumeDispatchThread: 80020066
+[x/n] E sceKernelWaitThreadEnd: 800201a7
+[x/n] E sceKernelTerminateDeleteThread: 00000000
+[x/n] sceKernelTryLockMutex: 00000000
+[x/n] sceKernelDeleteMutex: 00000000
+[x/y] sceKernelCpuResumeIntr: 00000000
+
+
+[x/y] LwMutexes without changes:
+[x/y] sceKernelCreateLwMutex: 00000000
+[x/y] sceKernelUnlockLwMutex: 00000000
+[x/y] sceKernelLockLwMutex: 00000000
+[x/y] sceKernelLockLwMutex invalid: 800201bd
+[x/y] sceKernelDeleteLwMutex: 00000000
+[x/y] sceKernelCreateLwMutex: 00000000
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] T sceKernelLockLwMutex: 800201bd
+[x/y] S sceKernelStartThread: 00000000
+[x/y] sceKernelLockLwMutex: 800201cf
+[x/y] sceKernelUnlockLwMutex: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelUnlockLwMutex: 800201cc
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelTryLockLwMutex: 00000000
+[x/y] sceKernelDeleteLwMutex: 00000000
+
+[x/y] LwMutexes with short dispatch suspend:
+[x/y] sceKernelCreateLwMutex: 00000000
+[x/y] sceKernelUnlockLwMutex: 00000000
+[x/y] sceKernelLockLwMutex: 00000000
+[x/y] sceKernelLockLwMutex invalid: 800201bd
+[x/y] sceKernelDeleteLwMutex: 00000000
+[x/y] sceKernelCreateLwMutex: 00000000
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] T sceKernelLockLwMutex: 800201bd
+[x/y] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelLockLwMutex: 800201a7
+[?/n] sceKernelUnlockLwMutex: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelUnlockLwMutex: 800201cc
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelTryLockLwMutex: 00000000
+[x/y] sceKernelDeleteLwMutex: 00000000
+
+[x/y] LwMutexes while dispatch suspended:
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelCreateLwMutex: 00000000
+[?/n] sceKernelUnlockLwMutex: 00000000
+[?/n] sceKernelLockLwMutex: 800201a7
+[?/n] sceKernelLockLwMutex invalid: 800201a7
+[?/n] sceKernelDeleteLwMutex: 00000000
+[?/n] sceKernelCreateLwMutex: 00000000
+[?/y] S sceKernelCreateThread: 00000001
+[?/y] T sceKernelLockLwMutex: 800201bd
+[?/y] S sceKernelStartThread: 00000000
+[?/y] sceKernelLockLwMutex: 800201cf
+[?/y] sceKernelUnlockLwMutex: 00000000
+[?/y] T sceKernelDelayThread: 00000000
+[?/y] T sceKernelUnlockLwMutex: 800201cc
+[?/y] E sceKernelWaitThreadEnd: 00000000
+[?/y] E sceKernelTerminateDeleteThread: 00000000
+[?/y] sceKernelTryLockLwMutex: 00000000
+[?/y] sceKernelDeleteLwMutex: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+
+[x/y] LwMutexes while intr suspended:
+[x/n] sceKernelCpuSuspendIntr: 00000001
+[x/n] sceKernelCreateLwMutex: 00000000
+[x/n] sceKernelUnlockLwMutex: 00000000
+[x/n] sceKernelLockLwMutex: 800201a7
+[x/n] sceKernelLockLwMutex invalid: 800201a7
+[x/n] sceKernelDeleteLwMutex: 00000000
+[x/n] sceKernelCreateLwMutex: 00000000
+[x/n] S sceKernelCreateThread: 00000001
+[x/n] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 80020066
+[?/n] sceKernelLockLwMutex: 800201a7
+[?/n] sceKernelUnlockLwMutex: 00000000
+[?/n] sceKernelResumeDispatchThread: 80020066
+[x/n] E sceKernelWaitThreadEnd: 800201a7
+[x/n] E sceKernelTerminateDeleteThread: 00000000
+[x/n] sceKernelTryLockLwMutex: 00000000
+[x/n] sceKernelDeleteLwMutex: 00000000
+[x/y] sceKernelCpuResumeIntr: 00000000
+
+
+[x/y] EventFlags without changes:
+[x/y] sceKernelCreateEventFlag: 00000001
+[x/y] sceKernelClearEventFlag: 00000000
+[x/y] sceKernelWaitEventFlag: 00000000
+[x/y] sceKernelWaitEventFlag invalid: 800201b1
+[x/y] sceKernelDeleteEventFlag: 00000000
+[x/y] sceKernelCreateEventFlag: 00000001
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] T sceKernelWaitEventFlag: 00000000
+[x/y] S sceKernelStartThread: 00000000
+[x/y] sceKernelWaitEventFlag: 00000000
+[x/y] sceKernelClearEventFlag: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelClearEventFlag: 00000000
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelPollEventFlag: 00000000
+[x/y] sceKernelDeleteEventFlag: 00000000
+
+[x/y] EventFlags with short dispatch suspend:
+[x/y] sceKernelCreateEventFlag: 00000001
+[x/y] sceKernelClearEventFlag: 00000000
+[x/y] sceKernelWaitEventFlag: 00000000
+[x/y] sceKernelWaitEventFlag invalid: 800201b1
+[x/y] sceKernelDeleteEventFlag: 00000000
+[x/y] sceKernelCreateEventFlag: 00000001
+[x/y] S sceKernelCreateThread: 00000001
+[x/y] T sceKernelWaitEventFlag: 00000000
+[x/y] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelWaitEventFlag: 800201a7
+[?/n] sceKernelClearEventFlag: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+[r/y] T sceKernelDelayThread: 00000000
+[x/y] T sceKernelClearEventFlag: 00000000
+[r/y] E sceKernelWaitThreadEnd: 00000000
+[x/y] E sceKernelTerminateDeleteThread: 00000000
+[x/y] sceKernelPollEventFlag: 00000000
+[x/y] sceKernelDeleteEventFlag: 00000000
+
+[x/y] EventFlags while dispatch suspended:
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceKernelCreateEventFlag: 00000001
+[?/n] sceKernelClearEventFlag: 00000000
+[?/n] sceKernelWaitEventFlag: 800201a7
+[?/n] sceKernelWaitEventFlag invalid: 800201b1
+[?/n] sceKernelDeleteEventFlag: 00000000
+[?/n] sceKernelCreateEventFlag: 00000001
+[?/y] S sceKernelCreateThread: 00000001
+[?/y] T sceKernelWaitEventFlag: 00000000
+[?/y] S sceKernelStartThread: 00000000
+[?/y] sceKernelWaitEventFlag: 00000000
+[?/y] sceKernelClearEventFlag: 00000000
+[?/y] T sceKernelDelayThread: 00000000
+[?/y] T sceKernelClearEventFlag: 00000000
+[?/y] E sceKernelWaitThreadEnd: 00000000
+[?/y] E sceKernelTerminateDeleteThread: 00000000
+[?/y] sceKernelPollEventFlag: 00000000
+[?/y] sceKernelDeleteEventFlag: 00000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+
+[x/y] EventFlags while intr suspended:
+[x/n] sceKernelCpuSuspendIntr: 00000001
+[x/n] sceKernelCreateEventFlag: 00000001
+[x/n] sceKernelClearEventFlag: 00000000
+[x/n] sceKernelWaitEventFlag: 800201a7
+[x/n] sceKernelWaitEventFlag invalid: 800201b1
+[x/n] sceKernelDeleteEventFlag: 00000000
+[x/n] sceKernelCreateEventFlag: 00000001
+[x/n] S sceKernelCreateThread: 00000001
+[x/n] S sceKernelStartThread: 00000000
+[?/n] sceKernelSuspendDispatchThread: 80020066
+[?/n] sceKernelWaitEventFlag: 800201a7
+[?/n] sceKernelClearEventFlag: 00000000
+[?/n] sceKernelResumeDispatchThread: 80020066
+[x/n] E sceKernelWaitThreadEnd: 800201a7
+[x/n] E sceKernelTerminateDeleteThread: 00000000
+[x/n] sceKernelPollEventFlag: 00000000
+[x/n] sceKernelDeleteEventFlag: 00000000
+[x/y] sceKernelCpuResumeIntr: 00000000
+
+
+[x/y] Io without changes:
+[r/y] sceIoOpen: 00000001
+[r/y] sceIoRead: 00000080
+[r/y] sceIoClose: 00000000
+[r/y] sceIoOpen: 00000001
+[r/y] sceIoRead: 00000080
+[r/y] sceIoClose: 00000000
+[x/y] sceIoOpenAsync: 00000001
+[x/y] sceIoPollAsync: 00000001 / ffffffffffffffff
+[x/y] sceIoGetAsyncStat: 00000001 / ffffffffffffffff
+[r/y] sceIoGetAsyncStat: 00000000 / 0000000000000001
+[x/y] sceIoWaitAsync: 8002032a / 0000000000000001
+[x/y] sceIoWaitAsync: 8002032a / 0000000000000001
+[r/y] sceIoRead: 00000080
+[x/y] sceIoWrite: 00000007
+[x/y] sceIoCloseAsync: 00000000
+[r/y] sceIoWaitAsync: 00000000 / 0000000000000000
+
+[x/y] Io with short dispatch suspend:
+[r/y] sceIoOpen: 00000001
+[r/y] sceIoRead: 00000080
+[r/y] sceIoClose: 00000000
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceIoOpen: ffffffff
+[?/n] sceIoRead: 80020323
+[?/n] sceIoClose: 80020323
+[?/y] sceKernelResumeDispatchThread: 00000000
+[x/y] sceIoOpenAsync: 00000001
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceIoPollAsync: 00000001 / ffffffffffffffff
+[?/n] sceIoGetAsyncStat: 00000001 / ffffffffffffffff
+[?/n] sceIoGetAsyncStat: 800201a7 / ffffffffffffffff
+[?/n] sceIoWaitAsync: 800201a7 / ffffffffffffffff
+[?/y] sceKernelResumeDispatchThread: 00000000
+[r/y] sceIoWaitAsync: 00000000 / 0000000000000001
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceIoRead: ffffffff
+[?/n] sceIoWrite: 00000007
+[?/y] sceKernelResumeDispatchThread: 00000000
+[x/y] sceIoCloseAsync: 00000000
+[r/y] sceIoWaitAsync: 00000000 / 0000000000000000
+
+[x/y] Io while dispatch suspended:
+[?/n] sceKernelSuspendDispatchThread: 00000001
+[?/n] sceIoOpen: ffffffff
+[?/n] sceIoRead: 80020323
+[?/n] sceIoClose: 80020323
+[?/n] sceIoOpen: ffffffff
+[?/n] sceIoRead: 80020323
+[?/n] sceIoClose: 80020323
+[?/y] sceIoOpenAsync: 00000001
+[?/y] sceIoPollAsync: 00000001 / ffffffffffffffff
+[?/y] sceIoGetAsyncStat: 00000001 / ffffffffffffffff
+[?/y] sceIoGetAsyncStat: 00000000 / 0000000000000001
+[?/y] sceIoWaitAsync: 8002032a / 0000000000000001
+[?/y] sceIoWaitAsync: 8002032a / 0000000000000001
+[?/y] sceIoRead: 00000080
+[?/y] sceIoWrite: 00000007
+[?/y] sceIoCloseAsync: 00000000
+[?/y] sceIoWaitAsync: 00000000 / 0000000000000000
+[?/y] sceKernelResumeDispatchThread: 00000000
+
+[x/y] Io while intr suspended:
+[x/n] sceKernelCpuSuspendIntr: 00000001
+[x/n] sceIoOpen: ffffffff
+[x/n] sceIoRead: 80020323
+[x/n] sceIoClose: 80020323
+[?/n] sceKernelSuspendDispatchThread: 80020066
+[?/n] sceIoOpen: ffffffff
+[?/n] sceIoRead: 80020323
+[?/n] sceIoClose: 80020323
+[?/n] sceKernelResumeDispatchThread: 80020066
+[x/n] sceIoOpenAsync: 00000001
+[?/n] sceKernelSuspendDispatchThread: 80020066
+[?/n] sceIoPollAsync: 00000001 / ffffffffffffffff
+[?/n] sceIoGetAsyncStat: 00000001 / ffffffffffffffff
+[?/n] sceIoGetAsyncStat: 800201a7 / ffffffffffffffff
+[?/n] sceIoWaitAsync: 800201a7 / ffffffffffffffff
+[?/n] sceKernelResumeDispatchThread: 80020066
+[x/n] sceIoWaitAsync: 800201a7 / ffffffffffffffff
+[?/n] sceKernelSuspendDispatchThread: 80020066
+[?/n] sceIoRead: 80020329
+[?/n] sceIoWrite: 00000007
+[?/n] sceKernelResumeDispatchThread: 80020066
+[x/n] sceIoCloseAsync: 80020329
+[x/n] sceIoWaitAsync: 800201a7 / ffffffffffffffff
+[x/y] sceKernelCpuResumeIntr: 00000000
+
+
+[x/y] Interrupts while dispatch disabled:
+[?/n] vblankCallback
+[?/n] vblankCallback
+[?/n] vblankCallback
+[?/n] vblankCallback
+[?/n] vblanks=4
+[x/n] vblankCallback
+[x/n] vblankCallback
+[x/n] vblankCallback
+[x/n] vblankCallback
+[x/y] vblanks=4

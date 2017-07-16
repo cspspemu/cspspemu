@@ -1,0 +1,15 @@
+sceCtrlGetIdleCancelThreshold: 00000000 (-1, -1) preempt:0
+sceCtrlSetIdleCancelThreshold: 00000000 (0, 0) preempt:0
+sceCtrlGetIdleCancelThreshold: 00000000 (0, 0) preempt:0
+sceCtrlSetIdleCancelThreshold: 800001FE (-127, -127) preempt:0
+sceCtrlSetIdleCancelThreshold: 800001FE (-65535, 65536) preempt:0
+sceCtrlSetIdleCancelThreshold: 00000000 (128, 128) preempt:0
+sceCtrlSetIdleCancelThreshold: 00000000 (0, -1) preempt:0
+sceCtrlSetIdleCancelThreshold: 800001FE (-2, -2) preempt:0
+sceCtrlSetIdleCancelThreshold: 800001FE (129, 129) preempt:0
+sceCtrlGetIdleCancelThreshold: 00000000 (0, -1) preempt:0
+sceCtrlSetIdleCancelThreshold: 800001FE (1, 129) preempt:0
+sceCtrlGetIdleCancelThreshold: 00000000 (0, -1) preempt:0
+sceCtrlGetIdleCancelThreshold: 00000000 (0, NULL) preempt:0
+sceCtrlGetIdleCancelThreshold: 00000000 (NULL, NULL) preempt:0
+sceCtrlGetIdleCancelThreshold: 80000023 (0xDEADBEEF, 0xDEADBEEF) preempt:0

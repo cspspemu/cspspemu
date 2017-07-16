@@ -1,0 +1,19 @@
+thread2 started
+sceKernelSetAlarm: OK
+alarmHandler called: 00001234 on thread -1
+thread2 awake (1)
+sceKernelCancelAlarm: 00000000
+sceKernelSetAlarm: OK
+thread2 awake (2)
+thread2 awake (3)
+thread2 awake (4)
+thread2 awake (5)
+thread2 awake (6)
+thread2 awake (7)
+thread2 awake (8)
+thread2 awake (9)
+thread2 awake (10)
+alarmHandler2 called on thread -1
+sceKernelCancelSema: 00000000
+Canceled sema: 800201A9
+thread2: 10

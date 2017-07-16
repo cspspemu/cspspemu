@@ -1,0 +1,32 @@
+[x] Init:
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+[r] sceUtilityLoadNetModule parsehttp: 00000000
+[r] sceUtilityLoadNetModule parseuri: 00000000
+[r] sceUtilityLoadNetModule http: 00000000
+[x] sceNetInit: 00000000
+[x] sceHttpInit: 00000000
+[x] sceHttpCreateTemplate: 00000001
+
+[x] Connecting to ppsspp.org:
+[x] sceHttpCreateConnectionWithURL: 01000001
+[x] sceHttpCreateRequestWithURL: 02000001
+[x] sceHttpSendRequest: 80410402
+[x] sceHttpGetContentLength: 80431065
+[x] response length: ffffffff
+[x] sceHttpReadData: 02000001
+[x] content: 
+
+[x] Cleanup:
+[x] sceHttpDeleteRequest: 00000000
+[x] sceHttpDeleteConnection: 00000000
+[x] sceHttpDeleteTemplate: 00000000
+[x] sceHttpEnd: 00000000
+[x] sceNetTerm: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000

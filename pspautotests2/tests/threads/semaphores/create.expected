@@ -1,0 +1,48 @@
+[x] Names:
+[x]   NULL name: Failed (80020001)
+[x]   Blank name: OK Sema: OK (size=56,name='',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   Long name: OK Sema: OK (size=56,name='1234567890123456789012345678901',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   Two with same name #1: Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   Two with same name #2: Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+
+[x] Attributes:
+[x]   1: OK Sema: OK (size=56,name='create',attr=1,init=0,cur=0,max=2,wait=0)
+[x]   100: OK Sema: OK (size=56,name='create',attr=256,init=0,cur=0,max=2,wait=0)
+[x]   1ff: OK Sema: OK (size=56,name='create',attr=511,init=0,cur=0,max=2,wait=0)
+[x]   200: Failed (80020191)
+[x]   400: Failed (80020191)
+[x]   800: Failed (80020191)
+[x]   900: Failed (80020191)
+[x]   1000: Failed (80020191)
+[x]   2000: Failed (80020191)
+[x]   4000: Failed (80020191)
+[x]   8000: Failed (80020191)
+[x]   10000: Failed (80020191)
+
+[x] Counts:
+[x]   Negative initial count: OK Sema: OK (size=56,name='create',attr=0,init=-1,cur=-1,max=2,wait=0)
+[x]   Positive initial count: OK Sema: OK (size=56,name='create',attr=0,init=1,cur=1,max=2,wait=0)
+[x]   Initial count above max: OK Sema: OK (size=56,name='create',attr=0,init=3,cur=3,max=2,wait=0)
+[x]   Negative max count: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=-1,wait=0)
+[x]   Large initial count: OK Sema: OK (size=56,name='create',attr=0,init=65537,cur=65537,max=0,wait=0)
+[x]   Large max count: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=65537,wait=0)
+
+[x] Option sizes:
+[x]   -1: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   0: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   1: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   4: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   8: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   16: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   32: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   64: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   256: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+[x]   2147483647: OK Sema: OK (size=56,name='create',attr=0,init=0,cur=0,max=2,wait=0)
+
+[x] Scheduling:
+NULL name: A1B1C2E1D1F2 (thread=800201B5, main=80020001)
+Create signaled: A1B1C2E1D1F2 (thread=800201B5, main=00000001)
+Create not signaled: A1B1C2E1D1F2 (thread=800201B5, main=00000001)
+Initial not signaled: A1B1C2E2D1F2 (thread=00000000, main=00000000)
+Initial signaled: A1B1D2C2E1F1 (thread=00000000, main=00000000)
+Create 1024: OK

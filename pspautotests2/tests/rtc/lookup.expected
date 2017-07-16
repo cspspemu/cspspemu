@@ -1,0 +1,55 @@
+Checking sceRtcGetDaysInMonth
+sceRtcGetDaysInMonth:2010, 4
+30
+Checking sceRtcGetDayOfWeek
+sceRtcGetDayOfWeek:2010, 4, 27
+2
+sceRtcGetDayOfWeek:166970016, 1024, 0
+3
+sceRtcGetDayOfWeek:2000, 0, 0
+1
+sceRtcGetDayOfWeek:2000, 1, 0
+5
+sceRtcGetDayOfWeek:2000, 573, 0
+0
+sceRtcGetDayOfWeek:2000, 1, 2458
+6
+sceRtcGetDayOfWeek:2000, 4587, 2458
+0
+sceRtcGetDayOfWeek:2001, 0, 0
+2
+sceRtcGetDayOfWeek:2001, 1, 0
+0
+sceRtcGetDayOfWeek:2001, 573, 0
+1
+sceRtcGetDayOfWeek:2001, 1, 2458
+1
+sceRtcGetDayOfWeek:2001, 4587, 2458
+1
+Checking sceRtcIsLeapYear
+Leap Years:
+1636: 00000001
+1776: 00000001
+1872: 00000001
+1948: 00000001
+2004: 00000001
+2096: 00000001
+Non-Leap Years:
+1637: 00000000
+1777: 00000000
+1873: 00000000
+1949: 00000000
+2005: 00000000
+2097: 00000000
+Checking sceRtcCheckValid for maximum year
+Max year: 10000, struct year: 10000, result: -1
+Checking sceRtcCheckValid
+Valid Date:0
+Very invalid Date:-1
+invalid year:-1
+invalid month:-2
+invalid day:-3
+invalid hour:-4
+invalid minutes:-5
+invalid seconds:-6
+invalid microseconds:-7

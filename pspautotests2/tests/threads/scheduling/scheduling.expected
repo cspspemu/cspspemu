@@ -1,0 +1,60 @@
+[x] testNoThreadSwitchingWhenSuspendedInterrupts:
+[x]   Sleeping Thread: going to sleep
+[r]   sceKernelWakeupThread: 00000000
+[x]   Main Thread with disabled interrupts
+[x]   Sleeping Thread: that was a nice nap
+[x]   Main Thread with enabled interrupts
+
+[x] testSimpleScheduling (1):
+[x]   * 00000000 @3
+[x]   Started thread 0
+[x]   * 00000000 @2
+[x]   * 00000000 @1
+[x]   * 00000001 @3
+[x]   * 00000001 @2
+[x]   * 00000000 @0
+[x]   Started thread 1
+[x]   * 00000001 @1
+[x]   * 00000001 @0
+[x]   * 00000002 @3
+[x]   * 00000002 @2
+[x]   Started thread 2
+[x]   Waiting
+[r]   * 00000002 @1
+[r]   * 00000002 @0
+[r]   Finished
+
+[x] testSimpleScheduling (500):
+[x]   * 00000000 @3
+[x]   Started thread 0
+[x]   * 00000000 @2
+[x]   * 00000001 @3
+[x]   Started thread 1
+[x]   * 00000000 @1
+[x]   * 00000001 @2
+[x]   * 00000002 @3
+[x]   Started thread 2
+[x]   Waiting
+[r]   * 00000000 @0
+[x]   * 00000001 @1
+[r]   * 00000002 @2
+[r]   * 00000001 @0
+[r]   * 00000002 @1
+[r]   * 00000002 @0
+[r]   Finished
+
+[x] testSimpleVblankScheduling:
+[x]   FFFFFF00 @3
+[x]   FFFFFF01 @3
+[x]   FFFFFF02 @3
+[x]   Waiting
+[r]   FFFFFF00 @2
+[x]   FFFFFF01 @2
+[x]   FFFFFF02 @2
+[r]   FFFFFF00 @1
+[x]   FFFFFF01 @1
+[x]   FFFFFF02 @1
+[r]   FFFFFF00 @0
+[x]   FFFFFF01 @0
+[x]   FFFFFF02 @0
+[r]   Finished

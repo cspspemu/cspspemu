@@ -1,0 +1,26 @@
+NULL name: Failed (80020001)
+Blank name: OK
+Messagebox: OK (size=52,name='',attr=0,wait=0,count=0,first=NULL)
+Long name: OK
+Messagebox: OK (size=52,name='1234567890123456789012345678901',attr=0,wait=0,count=0,first=NULL)
+Weird attr: OK
+Messagebox: OK (size=52,name='create',attr=1,wait=0,count=0,first=NULL)
+0x10 attr: OK
+Messagebox: OK (size=52,name='create',attr=16,wait=0,count=0,first=NULL)
+0x100 attr: OK
+Messagebox: OK (size=52,name='create',attr=256,wait=0,count=0,first=NULL)
+0x122 attr: OK
+Messagebox: OK (size=52,name='create',attr=290,wait=0,count=0,first=NULL)
+0x200 attr: Failed (80020191)
+0x300 attr: Failed (80020191)
+0x400 attr: OK
+Messagebox: OK (size=52,name='create',attr=1024,wait=0,count=0,first=NULL)
+0x422 attr: OK
+Messagebox: OK (size=52,name='create',attr=1058,wait=0,count=0,first=NULL)
+0x900 attr: Failed (80020191)
+0x1200 attr: Failed (80020191)
+Messagebox: OK (size=52,name='create',attr=0,wait=0,count=0,first=NULL)
+Messagebox: OK (size=52,name='create',attr=0,wait=0,count=0,first=NULL)
+NULL name: A1B1C2E1D1F2 (thread=800201B5, main=80020001)
+Normal: A1B1C2E1D1F2 (thread=800201B5, main=00000001)
+Create 1024: OK

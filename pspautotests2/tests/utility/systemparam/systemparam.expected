@@ -1,0 +1,23 @@
+1 (00000000) - Nickname         : shadow
+2 (00000000) - AdHoc Channel    : 0
+3 (00000000) - WLAN Powersave   : off
+4 (00000000) - Date Format      : DDMMYYYY
+5 (00000000) - Time Format      : 24HR
+6 (00000000) - Timezone         : 60
+7 (00000000) - Daylight Savings : standard
+8 (00000000) - Language         : English
+9 (00000000) - Button Assignment: 1
+a (00000000) - Parental Level   : 9
+
+String lengths:
+   0: 80110102 ()
+   1: 80110102 ()
+   2: 80110102 ()
+   3: 80110102 ()
+   4: 80110102 ()
+   5: 80110102 ()
+   6: 80110102 ()
+   7: 00000000 (shadow)
+   10: 00000000 (shadow)
+   256: 00000000 (shadow)
+   -1: 80110102 ()

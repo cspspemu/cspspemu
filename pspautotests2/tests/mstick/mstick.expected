@@ -1,0 +1,10 @@
+cb_id: 00000001
+MScmRegisterMSInsertEjectCallback: 00000000
+ms_callback: 00000001, 00000001, 00000777
+sizeInfo:: maxClusters: OK
+sizeInfo:: freeClusters: OK
+sizeInfo:: maxSectors: OK
+sizeInfo:: sectorSize=512, sectorCount=64
+sceKernelCheckCallback: 00000001
+MScmUnregisterMSInsertEjectCallback: 00000000
+sceKernelDeleteCallback: 00000000

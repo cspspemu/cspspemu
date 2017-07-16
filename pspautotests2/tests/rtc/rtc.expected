@@ -1,0 +1,21 @@
+Checking sceRtcGetCurrentTick
+1
+Checking sceRtcGetCurrentClock
+-60 TZ: OK
+Year: OK
+Date: OK
+Time: OK
+Microseconds: OK
+0 TZ: 00000000
++13 TZ: 00000000
++60 TZ: 00000000
+-60 TZ: 00000000
+-600000 TZ: 00000000
+INT_MAX TZ: 00000000
+-INT_MAX TZ: 00000000
+Checking sceRtcGetCurrentClockLocalTime
+Normal: 00000000
+Year: OK
+Date: OK
+Time: OK
+Microseconds: OK

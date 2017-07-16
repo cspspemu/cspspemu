@@ -1,0 +1,42 @@
+[x] sceGeBreak - empty queue:
+[x]   Mode 0: 80000020
+[x]   Mode 1: 80000020
+[x]   Mode -1: 80000107
+[x]   Mode 2: 80000107
+[x]   Valid ptr: 80000020
+[x]   Invalid ptr 1: 80000023
+[x]   Invalid ptr 2: 80000023
+[x]   Invalid ptr 3: 80000023
+[x]   Invalid ptr 4: 80000020
+
+[x] sceGeContinue - empty queue:
+[x]   Normal: 00000000
+
+[x] Stalled list:
+[x]   Break 0: 00001337
+[x]   Continue: 00000000
+[x]   Break 1: 00000000
+
+[x] Pause signal:
+[x]   Break 0: 80000021, status = 00000004
+[x]   Continue: 00000000, status = 00000000
+[x]   Break 1: 80000020, status = 00000000
+
+[x] Completed list:
+[x]   Break 0: 80000020
+[x]   Continue: 00000000
+[x]   Break 1: 80000020
+
+[x] Address handling:
+[x]   * Addresses: 0bcc2437, 0bdd2437, 22222200
+[x]   Break 0: 00001337
+[x]   * Addresses: 0bcc2437, 0bdd2437, 00000000
+[x]   Break 1: 00000000
+[x]   * Addresses: 0bcc2437, 0bdd2437, 00000000
+
+[x] Address handling:
+[x]   * Addresses: cccccccc, cccccccc, cccccccc
+[x]   Break 0: 00001337
+[x]   * Addresses: 0bcc2437, 0bdd2437, 22222200
+[x]   Break 1: 00000000
+[x]   * Addresses: 0bcc2437, 0bdd2437, 22222200

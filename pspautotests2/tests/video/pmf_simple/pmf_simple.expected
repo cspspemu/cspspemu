@@ -1,0 +1,2874 @@
+sceUtilityLoadModule         :0x00000000
+sceMpegInit                  :0x00000000
+sceMpegRingbufferQueryMemSize:0x001F8600
+sceMpegQueryMemSize          :0x00010000
+m_RingbufferData             :0x08822850
+m_MpegMemData                :0x08A1AE60
+sceMpegRingbufferConstruct   :0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000000
+    iUnk1     : 0x00000000
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x00000000
+sceMpegCreate                :0x00000000
+    pointer          : 'LIBMPEG'
+    unk_m1           : 0xFFFFFFFF
+    ringbuffer_start : 0x0882162C
+    ringbuffer_end   : 0x08A02850
+sceMpegAvcDecodeMode         :0x00000000
+sceIoOpen                    :0x00000005
+sceMpegQueryStreamOffset     :0x00000000
+  value: 0x00000800
+sceMpegQueryStreamSize       :0x00000000
+  value: 0x00040800
+m_iLastTimeStamp             :0x000A145A
+sceMpegRegistStream          :0x08A1C140
+sceMpegRegistStream          :0x08A1C580
+sceMpegMallocAvcEsBuf        :0x00000001
+sceMpegInitAu                :0x00000000
+   iPtsMSB           : 0x00000000
+   iPts              : 0x00000000
+   iDtsMSB           : 0x00000000
+   iDts              : 0x00000000
+   iEsBuffer         : 0x00000001
+   iAuSize           : 0x00000000
+sceMpegQueryAtracEsSize      :0x00000000
+   m_MpegAtracEsSize : 2112
+   m_MpegAtracOutSize: 8192
+m_pEsBufferAtrac             :0x08A2AE80
+sceMpegInitAu                :0x00000000
+   iPtsMSB           : 0x00000000
+   iPts              : 0x00000000
+   iDtsMSB           : 0x00000000
+   iDts              : 0x00000000
+   iEsBuffer         : 0x08A2AE80
+   iAuSize           : 0x00000000
+sceMpegRingbufferAvailableSize: 0x000003C0
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08822850, iNumPackets=0x000003C0, pParam=0x08821668)
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000081
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000033F
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00015F90
+     iDtsMSB        : 0x00000000
+     iDts           : 0x000153D5
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000ECF
+sceMpegAvcDecode              : 0x00000000
+     Init: 0
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00015F90
+     iDtsMSB        : 0x00000000
+     iDts           : 0x000153D5
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000341
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000341
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004CC
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AC AD B3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000341
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000341
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000658
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AC AD B3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000342
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000342
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000562
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AD AE B5 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000343
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000343
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000005E3
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B2 B3 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000343
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000343
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000487
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B1 B2 B8 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000344
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000344
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000005F4
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B1 B2 B8 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000345
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000345
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000477
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B2 B3 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000345
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000345
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004E5
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: BB BC C3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000346
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000346
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000532
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: BD BF C5 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000347
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000347
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000523
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B5 B6 BD 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000347
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000347
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000548
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B4 B5 BC 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000348
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000348
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000005E0
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B4 B5 BC 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000349
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000349
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000055D
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B4 B5 BC 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000349
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000349
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000050E
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B3 B4 BA 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034A
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034A
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000535
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B3 B4 BA 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034B
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034B
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000530
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AF B1 B7 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034B
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034B
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000551
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AF B1 B7 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034C
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034C
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004DA
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AF B1 B7 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034C
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034C
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004EB
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AF B1 B7 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034D
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034D
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000555
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B2 B3 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034E
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034E
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000515
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B1 B2 B8 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034E
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034E
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000553
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B3 B4 BA 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000034F
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000034F
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000053D
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B6 B8 BE 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000350
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000350
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000005EA
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B5 B6 BD 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000351
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000351
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000059A
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B2 B3 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000351
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000351
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000419
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B2 B3 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000352
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000352
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000059A
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AF B1 B7 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000352
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000352
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000464
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AF B1 B7 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000353
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000353
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000005D6
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AF B1 B7 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000354
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000354
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000046D
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AD AE B5 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000354
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000354
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004CE
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AD AE B5 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000355
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000355
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004EE
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AE AF B6 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000356
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000356
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000623
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B6 B8 BE 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000356
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000356
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000052B
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: BB BE C6 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000357
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000357
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000598
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: BF C2 CA 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000358
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000358
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000588
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C5 C8 D0 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000358
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000358
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000053A
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C6 C9 D1 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000359
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000359
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000570
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C9 CC D4 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035A
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035A
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004DD
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C9 CC D4 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035A
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035A
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004F0
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C7 CB D3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035B
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035B
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000499
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C7 CB D3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035C
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035C
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000054E
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: CB CE D6 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035C
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035C
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000003F2
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: CD D0 D8 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035D
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035D
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000057E
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: CE D2 DA 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035D
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035D
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000477
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: CB CE D6 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035E
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035E
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004DB
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: CB CE D6 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035F
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035F
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000004D0
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C7 CB D3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x0000035F
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x0000035F
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000517
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C4 C7 CF 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000360
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000360
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000506
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C0 C4 CC 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000360
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000360
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000056F
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: C0 C4 CC 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000361
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000361
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000055B
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: BE C1 C9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000362
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000362
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x000005AF
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B8 BB C3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000363
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000363
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000539
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B8 BB C3 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000363
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000363
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000051B
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B5 B8 C0 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000364
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000364
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000554
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: B0 B3 BB 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000365
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000365
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000054E
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AE B1 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000365
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000365
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000052C
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AE B1 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000366
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000366
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x0000053F
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AE B1 B9 00
+     iPtsMSB        : 0xFFFFFFFF
+     iPts           : 0xFFFFFFFF
+     iDtsMSB        : 0xFFFFFFFF
+     iDts           : 0xFFFFFFFF
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegRingbufferAvailableSize: 0x00000368
+sceMpegRingbufferPut...
+RingbufferCallback(pData=0x08863050, iNumPackets=0x0000033F, pParam=0x08821668)
+sceMpegRingbufferPut          : 0x00000000
+    iPackets  : 0x000003C0
+    iUnk0     : 0x00000081
+    iUnk1     : 0x00000081
+    iUnk2     : 0x00000000
+    iUnk3     : 0x00000800
+    pData     : 0x08822850
+    Callback  : 0x088042B4
+    pCBparam  : 0x08821668
+    iUnk4     : 0x08A02850
+    iUnk5     : 0x00000000
+    pSceMpeg  : 0x0882167C
+sceMpegRingbufferAvailableSize: 0x00000368
+sceMpegGetAtracAu             : 0x806101FE
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegAtracDecode            : 0x807F0001
+     DATA: 77 77 77 77
+     iPtsMSB        : 0x00000000
+     iPts           : 0x00000000
+     iDtsMSB        : 0x00000000
+     iDts           : 0x00000000
+     iEsBuffer      : 0x08A2AE80
+     iAuSize        : 0x00000000
+sceMpegGetAvcAu               : 0x00000000
+     iPtsMSB        : 0x00000000
+     iPts           : 0x000413A9
+     iDtsMSB        : 0x00000000
+     iDts           : 0x000407EE
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000E50
+sceMpegAvcDecode              : 0x00000000
+     Init: 1
+     DATA: AE B1 B9 00
+     iPtsMSB        : 0x00000000
+     iPts           : 0x000413A9
+     iDtsMSB        : 0x00000000
+     iDts           : 0x000407EE
+     iEsBuffer      : 0x00000001
+     iAuSize        : 0x00000000
+sceMpegAvcDecodeStop          : 0x00000000
+sceMpegFlushAllStream         : 0x00000000

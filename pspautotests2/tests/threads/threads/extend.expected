@@ -1,0 +1,36 @@
+[x] Normal: c0debeef (main thread)
+[x] Normal:  stack 40000 -> 4000 (different stack)
+[x] Normal result: 12345678
+[x] Recursive: inceptionThread c0debeef (main thread)
+[x] Recursive:  stack 40000 -> 4000 (different stack)
+[x] Recursive: c0de1c71 (main thread)
+[x] Recursive:  stack 40000 -> 8000 (different stack)
+[x] Recursive result: 12345678
+
+[x] Sizes:
+[x]   0 result: 80020194
+[x]   -1 result: 80020190
+[x]   1 result: 80020194
+[x]   32 result: 80020194
+[x]   64 result: 80020194
+[x]   128 result: 80020194
+[x]   256 result: 80020194
+[x]   384 result: 80020194
+[x]   512: c0debeef (main thread)
+[x]   512:  stack 40000 -> 200 (different stack)
+[x]   512 result: 12345678
+[x]   640: c0debeef (main thread)
+[x]   640:  stack 40000 -> 300 (different stack)
+[x]   640 result: 12345678
+[x]   768: c0debeef (main thread)
+[x]   768:  stack 40000 -> 300 (different stack)
+[x]   768 result: 12345678
+[x]   1024: c0debeef (main thread)
+[x]   1024:  stack 40000 -> 400 (different stack)
+[x]   1024 result: 12345678
+
+[x] Stack layout:
+    0x1000: WARNING: k0 not inside stack.
+[x] 0x1000
+    0x100000: WARNING: k0 not inside stack.
+[x] 0x100000

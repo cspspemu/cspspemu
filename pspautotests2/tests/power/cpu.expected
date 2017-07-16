@@ -1,0 +1,12 @@
+powerHandler called: 00000001, 00000080, 00001234
+sceKernelCheckCallback: 00000001
+scePowerGetCpuClockFrequency: 000000DE
+scePowerGetCpuClockFrequencyInt: 000000DE
+scePowerGetCpuClockFrequencyFloat: 0.000000
+sceKernelCheckCallback: 00000000
+scePowerSetCpuClockFrequency: 00000000
+sceKernelCheckCallback: 00000000
+scePowerGetCpuClockFrequency: 000000A5
+scePowerGetCpuClockFrequencyInt: 000000A5
+scePowerGetCpuClockFrequencyFloat: 0.000000
+sceKernelCheckCallback: 00000000

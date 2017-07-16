@@ -1,0 +1,83 @@
+[x] Modes:
+[x]   Mode -2: 80000107 (0xdead1337, 00001337)
+[x]   Mode -1: 80000107 (0xdead1337, 00001337)
+[x]   Mode 0: 00000000 (0x8400000, 00400000)
+[x]   Mode 1: 80000107 (0xdead1337, 00001337)
+[x]   Mode 2: 80000107 (0xdead1337, 00001337)
+[x]   Mode 3: 80000107 (0xdead1337, 00001337)
+[x]   Mode 4: 80000107 (0xdead1337, 00001337)
+[x]   Mode 5: 80000107 (0xdead1337, 00001337)
+[x]   Mode 6: 80000107 (0xdead1337, 00001337)
+[x]   Mode 7: 80000107 (0xdead1337, 00001337)
+[x]   Mode 16: 80000107 (0xdead1337, 00001337)
+[x]   Mode 256: 80000107 (0xdead1337, 00001337)
+[x]   Mode 4096: 80000107 (0xdead1337, 00001337)
+[x]   Mode 2147483647: 80000107 (0xdead1337, 00001337)
+
+[x] Output:
+[x]   No ptr: 00000000 (0xdead1337, 00400000)
+[x]   No size: 00000000 (0x8400000, 00001337)
+[x]   Neither: 00000000 (0xdead1337, 00001337)
+
+[x] Waits:
+[r]   ** started waiting thread 1
+[r]   ** started waiting thread 2
+[r]   ** started waiting thread 3
+[x]   With three waiting
+[r]   * waiting thread 1: 00000000 (0x8400000, 00400000)
+[r]   * waiting thread 2: 00000000 (0x8400000, 00400000)
+[r]   * waiting thread 3: 00000000 (0x8400000, 00400000)
+
+[x] Modes (scePower):
+[x]   Mode -2 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode -1 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 0 (scePower): 00000000 (0x8400000, 00400000)
+[x]   Mode 1 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 2 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 3 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 4 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 5 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 6 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 7 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 16 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 256 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 4096 (scePower): 80000107 (0xdead1337, 00001337)
+[x]   Mode 2147483647 (scePower): 80000107 (0xdead1337, 00001337)
+
+[x] Output (scePower):
+[x]   No ptr (scePower): 00000000 (0xdead1337, 00400000)
+[x]   No size (scePower): 00000000 (0x8400000, 00001337)
+[x]   Neither (scePower): 00000000 (0xdead1337, 00001337)
+
+[x] Waits (scePower):
+[r]   ** started waiting thread 1
+[r]   ** started waiting thread 2
+[r]   ** started waiting thread 3
+[x]   With three waiting
+[r]   * waiting thread 1: 00000000 (0x8400000, 00400000)
+[r]   * waiting thread 2: 00000000 (0x8400000, 00400000)
+[r]   * waiting thread 3: 00000000 (0x8400000, 00400000)
+
+[x] Interrupts disabled:
+[x]   While dispatch disabled: 800201a7 (0x8400000, 00400000)
+[x]   While dispatch disabled (again): 800201a7 (0x8400000, 00400000)
+[x]   While dispatch disabled (scePower): 800201a7 (0x8400000, 00400000)
+[x]   Unlock (outside): 800201ae
+
+[x] Interrupts disabled (while locked):
+[x]   While dispatch disabled: 800201a7 (0x8400000, 00400000)
+[x]   While dispatch disabled (again): 800201a7 (0x8400000, 00400000)
+[x]   While dispatch disabled (scePower): 800201a7 (0x8400000, 00400000)
+[x]   Unlock (outside): 00000000
+
+[x] Inside interrupt:
+[r]   While dispatch disabled: 80020064 (0x8400000, 00400000)
+[x]   While dispatch disabled (again): 80020064 (0x8400000, 00400000)
+[x]   While dispatch disabled (scePower): 80020064 (0x8400000, 00400000)
+[x]   Unlock (outside): 800201ae
+
+[x] Inside interrupt (while locked):
+[r]   While dispatch disabled: 80020064 (0x8400000, 00400000)
+[x]   While dispatch disabled (again): 80020064 (0x8400000, 00400000)
+[x]   While dispatch disabled (scePower): 80020064 (0x8400000, 00400000)
+[x]   Unlock (outside): 00000000

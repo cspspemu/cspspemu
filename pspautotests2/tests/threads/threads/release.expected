@@ -1,0 +1,15 @@
+* waitWithDelay awake: 800201aa
+Delay: 00000000
+* waitWithSleep awake: 800201aa
+Sleep: 00000000
+* waitSomeSema awake: 800201aa
+Semaphore: 00000000
+Not waiting: 800201a6
+Invalid: 80020198
+Zero: 80020197
+-1: 80020198
+Self: 80020197
+Not started: 800201a6
+Deleted: 80020198
+Normal: A1B1C2D1E2F1 (thread=800201AA, main=00000000)
+Zero: A1B1C2E1D1F2 (thread=800201B5, main=80020197)

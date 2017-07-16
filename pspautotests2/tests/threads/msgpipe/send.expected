@@ -1,0 +1,115 @@
+[x] Objects:
+[x]   Normal: OK (bytes=256, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=f00, sending=0, receiving=0)
+[x]   NULL: Failed (8002019e, bytes=1337, timeout=1ms) Msgpipe: Invalid (8002019e)
+[x]   Invalid: Failed (8002019e, bytes=1337, timeout=1ms) Msgpipe: Failed (deadbeef)
+[x]   Deleted: Failed (8002019e, bytes=1337, timeout=1ms) Msgpipe: Invalid (8002019e)
+
+[x] Buffers:
+[x]   0 length: OK (bytes=0, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   NULL and 0 length: OK (bytes=0, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Unaligned: OK (bytes=1, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=fff, sending=0, receiving=0)
+[x]   Bigger than buffer: Failed (800201bc, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=fff, sending=0, receiving=0)
+[x]   Larger (0x10000): Failed (800201bc, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=fff, sending=0, receiving=0)
+[x]   Larger (0x40000000): Failed (800201bc, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=fff, sending=0, receiving=0)
+[x]   Negative: Failed (800200d3, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=fff, sending=0, receiving=0)
+[x]   Fill: OK (bytes=4095, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=0, sending=0, receiving=0)
+[r]   Timeout: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=0, sending=0, receiving=0)
+[x]   Without bytes: OK (bytes=-1, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=f00, sending=0, receiving=0)
+[x]   Without timeout: OK (bytes=256, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=e00, sending=0, receiving=0)
+
+[x] ASAP mode:
+[x]   ASAP: OK (bytes=256, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=f00, sending=0, receiving=0)
+[x]   ASAP partial: OK (bytes=3840, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=0, sending=0, receiving=0)
+[x]   ASAP too big: Failed (800201bc, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   ASAP no bytes: OK (bytes=-1, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=f00, sending=0, receiving=0)
+[x]   ASAP partial no bytes: OK (bytes=-1, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=0, sending=0, receiving=0)
+
+[x] Other modes:
+[x]   Mode -2: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode -1: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 2: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 3: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 4: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 5: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 6: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 7: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 8: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 9: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 257: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 4097: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+[x]   Mode 65537: Failed (80020195, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=1000, free=1000, sending=0, receiving=0)
+
+[x] Buffers (pipe size = 0):
+[x]   0 length: OK (bytes=0, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[x]   NULL and 0 length: OK (bytes=0, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   Unaligned: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   Bigger than buffer: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[x]   Negative: Failed (800200d3, bytes=1337, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   Fill: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   Timeout: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   Without bytes: Failed (800201a8, bytes=-1, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+
+[x] ASAP mode (pipe size = 0):
+[r]   ASAP: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   ASAP partial: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   ASAP too big: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   ASAP no bytes: Failed (800201a8, bytes=-1, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r]   ASAP partial no bytes: Failed (800201a8, bytes=-1, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+
+[x] Timeouts:
+[x] 0us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[x] 1us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[x] 2us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 3us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 4us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 5us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 6us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 7us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 8us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 9us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 10us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 15us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 30us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 50us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 100us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 200us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 205us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 210us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 215us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 220us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+[r] 300us: Failed (800201a8, bytes=0, timeout=0ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+
+[x] With one waiting:
+[r]   ** started receiving thread
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=100, free=100, sending=0, receiving=1)
+[x]   With receiving thread: OK (bytes=256, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=100, free=100, sending=0, receiving=0)
+[r]   ** receiving thread got result: 00000000, received = 00000100, timeout = 8ms remaining
+[r]   ** stopped receiving thread
+
+[x] With partial receive timeout:
+[r]   ** started receiving thread 1
+[r]   ** started receiving thread 2
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=100, free=100, sending=0, receiving=2)
+[x]   With receiving threads: OK (bytes=256, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=100, free=100, sending=0, receiving=1)
+[r]   ** receiving thread 1 got result: 00000000, received = 00000080, timeout = 7ms remaining
+[r]   ** receiving thread 2 got result: 800201a8, received = 00000080, timeout = 0ms remaining
+
+[x] With interleaved send waits:
+[r]   ** sending thread 1 got result: 00000000, sent = 00000080, timeout = 10ms remaining
+[r]   ** started sending thread 1
+[r]   ** started sending thread 2
+[r]   ** started sending thread 3
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=100, free=80, sending=2, receiving=0)
+[x]   Receive with three sending: 00000000
+[r]   ** sending thread 2 got result: 00000000, sent = 00000100, timeout = 7ms remaining
+[r]   ** sending thread 3 got result: 00000000, sent = 00000080, timeout = 8ms remaining
+
+[x] Without a buffer:
+[r]   ** started receiving thread 1
+[r]   ** started receiving thread 2
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=2)
+[x]   Partial packet: OK (bytes=128, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=2)
+[x]   Complete packet: OK (bytes=256, timeout=1ms) Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=1)
+[r]   ** receiving thread 1 got result: 00000000, received = 00000100, timeout = 7ms remaining
+[r]   ** receiving thread 2 got result: 800201b5, received = 00000080, timeout = 8ms remaining
+[r]   ** stopped receiving thread 2

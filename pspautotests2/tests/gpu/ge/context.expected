@@ -1,0 +1,23 @@
+[x] sceGeSaveContext:
+[x]   Normal: 00000000
+[x]   Size check: OK
+
+[x] With enqueued list
+[x]   Enqueued: 00001337
+[x]   Status: list=00000003, draw=00000003
+[x]   Save context: ffffffff
+[x]   Restore context: 80000021
+[x]   Status: list=00000003, draw=00000003
+[x]   Unstall: 00000000
+[x]   Save context: 00000000
+[x]   Restore context: 00000000
+
+[x] From sceGeListEnQueue:
+[x]   Enqueued: 00001337
+[r]   Delayed for catch up: 00000000
+[x]   Current value: 17000001
+[x]   Context value: 17000000
+[x]   Unstall: 00000000
+[r]   Delayed for catch up: 00000000
+[x]   Current value: 17000000
+[x]   Context value: 17000000

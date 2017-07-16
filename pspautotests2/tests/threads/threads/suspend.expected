@@ -1,0 +1,31 @@
+[x] sceKernelSuspendThread:
+[x]   Zero: 80020197
+[x]   Invalid: 80020198
+[x]   Created: 800201a2
+[x]   Ready: 00000000
+[x]   Finished: 800201a2
+[x]   Deleted: 80020198
+[x]   Suspended: 800201a3
+[x]   Current: 80020197
+
+[x] sceKernelResumeThread:
+[x]   Zero: 80020197
+[x]   Invalid: 80020198
+[x]   Created: 800201a5
+[x]   Ready: 800201a5
+[x]   Finished: 800201a5
+[x]   Deleted: 80020198
+[x]   Suspended: 800201a5
+[x]   Current: 80020197
+
+[x] Wait for wakeup:
+[r]   sceKernelDelayThread: 00000000
+[r]   sceKernelWaitThreadEnd: 800201a8
+[x]   sceKernelResumeThread: 00000000
+[x]   sceKernelSuspendThread again: 00000000
+
+[x] Reset scenario:
+[x]   Terminate: 00000000
+[x]   Start again: 00000000
+[r]  - testThread
+[r]   Delay: 00000000

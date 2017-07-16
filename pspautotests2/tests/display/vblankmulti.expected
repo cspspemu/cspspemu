@@ -1,0 +1,71 @@
+[x] Start:
+[r] i=0    vcount=0    wait=00000000  vblank=1
+[r] i=1    vcount=1    wait=00000000  vblank=1
+[r] i=2    vcount=2    wait=00000000  vblank=1
+[r] i=3    vcount=3    wait=00000000  vblank=1
+
+[x] StartCB:
+[r] i=0    vcount=0    wait=00000000  vblank=1
+[r] i=1    vcount=1    wait=00000000  vblank=1
+[r] i=2    vcount=2    wait=00000000  vblank=1
+[r] i=3    vcount=3    wait=00000000  vblank=1
+
+[x] Vblank:
+[r] i=0    vcount=0    wait=00000000  vblank=1
+[x] i=1    vcount=1    wait=00000001  vblank=1
+[x] i=2    vcount=1    wait=00000001  vblank=1
+[x] i=3    vcount=1    wait=00000001  vblank=1
+
+[x] VblankCB:
+[r] i=0    vcount=0    wait=00000000  vblank=1
+[x] i=1    vcount=1    wait=00000001  vblank=1
+[x] i=2    vcount=1    wait=00000001  vblank=1
+[x] i=3    vcount=1    wait=00000001  vblank=1
+
+[x] Multi:
+[r] i=0    vcount=0    wait=00000000  vblank=1
+[r] i=1    vcount=3    wait=00000000  vblank=1
+[r] i=2    vcount=6    wait=00000000  vblank=1
+[r] i=3    vcount=9    wait=00000000  vblank=1
+
+[x] MultiCB:
+[r] i=0    vcount=0    wait=00000000  vblank=1
+[r] i=1    vcount=3    wait=00000000  vblank=1
+[r] i=2    vcount=6    wait=00000000  vblank=1
+[r] i=3    vcount=9    wait=00000000  vblank=1
+
+[x] Multi:
+[x] i=0    vcount=0    wait=800001fe  vblank=0
+[x] i=1    vcount=0    wait=800001fe  vblank=0
+[x] i=2    vcount=0    wait=800001fe  vblank=0
+[x] i=3    vcount=0    wait=800001fe  vblank=0
+
+[x] MultiCB:
+[x] i=0    vcount=0    wait=800001fe  vblank=0
+[x] i=1    vcount=0    wait=800001fe  vblank=0
+[x] i=2    vcount=0    wait=800001fe  vblank=0
+[x] i=3    vcount=0    wait=800001fe  vblank=0
+
+[x] Multi:
+[x] i=0    vcount=0    wait=800001fe  vblank=0
+[x] i=1    vcount=0    wait=800001fe  vblank=0
+[x] i=2    vcount=0    wait=800001fe  vblank=0
+[x] i=3    vcount=0    wait=800001fe  vblank=0
+
+[x] MultiCB:
+[x] i=0    vcount=0    wait=800001fe  vblank=0
+[x] i=1    vcount=0    wait=800001fe  vblank=0
+[x] i=2    vcount=0    wait=800001fe  vblank=0
+[x] i=3    vcount=0    wait=800001fe  vblank=0
+
+[x] Multi:
+[x] i=0    vcount=0    wait=800001fe  vblank=0
+[x] i=1    vcount=0    wait=800001fe  vblank=0
+[x] i=2    vcount=0    wait=800001fe  vblank=0
+[x] i=3    vcount=0    wait=800001fe  vblank=0
+
+[x] MultiCB:
+[x] i=0    vcount=0    wait=800001fe  vblank=0
+[x] i=1    vcount=0    wait=800001fe  vblank=0
+[x] i=2    vcount=0    wait=800001fe  vblank=0
+[x] i=3    vcount=0    wait=800001fe  vblank=0

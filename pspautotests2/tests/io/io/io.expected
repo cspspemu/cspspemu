@@ -1,0 +1,59 @@
+result: 1
+Initial: /testdir/testdir2
+Empty: /testdir/testdir2
+Non-existent: (chdir error) ffffffff
+Parent: /testdir
+Parent + subdirs: /testdir/testdir2
+Multiple parents: outside or at basedir
+Back to testdir: /testdir
+Current dir: /testdir
+Current + extra slashes: /testdir/testdir2
+Switch drive no slash: (chdir error) ffffffff
+Switch drive + slash: ms0:
+Absolute + drive: ms0:/PSP/SAVEDATA
+Absolute no drive: ms0:/PSP
+Root: ms0:
+PSP and back again + trailing /: ms0:/PSP
+Initial: 0
+test
+Empty: 0
+test
+Non-existent: 0
+Parent: 0
+test
+Parent: 0
+testdir2
+Parent + subdirs: 0
+.
+..
+test
+Multiple parents: 0
+testdir
+Back to testdir: 0
+testdir2
+Current dir: 0
+testdir2
+Current + extra slashes: 0
+test
+Switch drive no slash: 0
+PSP
+Switch drive + slash: 0
+PSP
+Absolute + drive: 0
+SAVEDATA
+Absolute no drive: 0
+SAVEDATA not found
+Root: 0
+PSP not found
+Flash drive: 0
+.
+PSP and back again + trailing /: 0
+SAVEDATA
+1
+1
+io.c
+io.elf
+io.expected
+io.o
+io.prx
+GAME

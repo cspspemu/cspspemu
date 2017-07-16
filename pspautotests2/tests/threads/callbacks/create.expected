@@ -1,0 +1,19 @@
+[x] Names:
+[x]   NULL name: Failed (80020001)
+[x]   Normal name: OK Callback: OK (size=56,name=test,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+[x]   Blank name: OK Callback: OK (size=56,name=,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+[x]   Long name: OK Callback: OK (size=56,name=1234567890123456789012345678901,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+[x]   Two with same name: OK Callback: OK (size=56,name=create,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+
+[x] Funcs:
+[x]   NULL func: OK Callback: OK (size=56,name=test,thread=1,callback=0,common=00000000,notifyCount=00000000,notifyArg=0)
+[x]   Invalid func: Failed (800200d3)
+[x]   Invalid func #2: OK Callback: OK (size=56,name=test,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+[x]   NULL func with arg: OK Callback: OK (size=56,name=test,thread=1,callback=0,common=00001337,notifyCount=00000000,notifyArg=0)
+[x]   Two with same func: OK Callback: OK (size=56,name=create2,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+
+[x] Args:
+[x]   Invalid arg pointer: OK Callback: OK (size=56,name=test,thread=1,callback=1,common=deadbeef,notifyCount=00000000,notifyArg=0)
+
+[x] Create 1024:
+[x]   OK

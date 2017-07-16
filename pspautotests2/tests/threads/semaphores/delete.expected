@@ -1,0 +1,7 @@
+Normal: OK
+NULL: Failed (80020199)
+Invalid: Failed (80020199)
+Deleted: Failed (80020199)
+Delete other: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Delete same: A1B1C2D1E2F1 (thread=800201B5, main=00000000)
+NULL: A1B1C2E1D1F2 (thread=800201B5, main=80020199)

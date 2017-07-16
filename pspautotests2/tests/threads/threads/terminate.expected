@@ -1,0 +1,46 @@
+[x] sceKernelTerminateThread threads:
+[x]   -1: 80020198
+[x]   Zero: 80020197
+[x]   Invalid: 80020198
+[x]   Created: 800201a2
+[x]   Ready: 00000000
+[x]   Finished: 800201a2
+[x]   Deleted: 80020198
+[x]   Suspended: 00000000
+[x]   Waiting: 00000000
+[x]   Current: 80020197
+[x]   (giving waitingThread2 a chance to wake.)
+[x]   Resumed: 800201a2
+[x]  - waitThread woke up with 800201ac
+
+[x] sceKernelTerminateDeleteThread threads:
+[x]   -1: 80020198
+[x]   Zero: 80020197
+[x]   Invalid: 80020198
+[x]   Created: 00000000
+[x]   Ready: 00000000
+[x]   Finished: 00000000
+[x]   Deleted: 80020198
+[x]   Suspended: 00000000
+[x]   Waiting: 00000000
+[x]   Current: 80020197
+[x]   (giving waitingThread2 a chance to wake.)
+[x]   Resumed: 80020198
+[x]  - waitThread woke up with 800201ac
+
+[x] sceKernelDeleteThread threads:
+[x]   -1: 80020198
+[x]   Zero: 800201a4
+[x]   Invalid: 80020198
+[x]   Created: 00000000
+[x]   Ready: 800201a4
+[x]   Finished: 00000000
+[x]   Deleted: 80020198
+[x]   Suspended: 800201a4
+[x]   Waiting: 800201a4
+[x]   Current: 800201a4
+[x]   (giving waitingThread2 a chance to wake.)
+[x]   Resumed: 800201a4
+[r]  - testThread
+[r]  - testThread
+[r]  - waitThread woke up with 00000000

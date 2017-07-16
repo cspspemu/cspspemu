@@ -1,0 +1,35 @@
+[x] Modes:
+[x]   Mode -2: 80000107
+[x]   Mode -1: 80000107
+[x]   Mode 0: 00000000
+[x]   Mode 1: 80000107
+[x]   Mode 2: 80000107
+[x]   Mode 3: 80000107
+[x]   Mode 4: 80000107
+[x]   Mode 5: 80000107
+[x]   Mode 6: 80000107
+[x]   Mode 7: 80000107
+[x]   Mode 16: 80000107
+[x]   Mode 256: 80000107
+[x]   Mode 4096: 80000107
+[x]   Mode 2147483647: 80000107
+
+[x] Modes (scePower):
+[x]   Mode -2 (scePower): 80000107
+[x]   Mode -1 (scePower): 80000107
+[x]   Mode 0 (scePower): 00000000
+[x]   Mode 1 (scePower): 80000107
+[x]   Mode 2 (scePower): 80000107
+[x]   Mode 3 (scePower): 80000107
+[x]   Mode 4 (scePower): 80000107
+[x]   Mode 5 (scePower): 80000107
+[x]   Mode 6 (scePower): 80000107
+[x]   Mode 7 (scePower): 80000107
+[x]   Mode 16 (scePower): 80000107
+[x]   Mode 256 (scePower): 80000107
+[x]   Mode 4096 (scePower): 80000107
+[x]   Mode 2147483647 (scePower): 80000107
+
+[x] While not locked:
+[x]   Kernel: 800201ae
+[x]   Power: 800201ae

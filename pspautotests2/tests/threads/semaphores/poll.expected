@@ -1,0 +1,13 @@
+Signaled: OK
+Not signaled: Failed (800201AD)
+Zero (while not signaled): Failed (800201AD)
+Zero (while signaled): Failed (800201BD)
+Negative: Failed (800201BD)
+NULL: Failed (80020199)
+Invalid: Failed (80020199)
+Deleted: Failed (80020199)
+NULL: A1B1C2E1D1F2 (thread=800201B5, main=800201BD)
+Zero other: A1B1C2E1D1F2 (thread=800201B5, main=800201BD)
+Zero same: A1B1C2E1D1F2 (thread=800201B5, main=800201BD)
+Poll other: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Poll same: A1B1C2E1D1F2 (thread=800201B5, main=800201AD)

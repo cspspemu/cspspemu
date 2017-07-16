@@ -1,0 +1,59 @@
+For attr 00000000:
+Single standard: OK (ptr=OTHER) GOT: "hi 0" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=0,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 1" (next=FIRST, prio=15) Messagebox: OK (size=52,name='wait1',attr=0,wait=0,count=1,first=OTHER)
+  hi 2 prio=05 next=ITSELF
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 2" (next=ITSELF, prio=05) Messagebox: OK (size=52,name='wait1',attr=0,wait=0,count=0,first=NULL)
+Empty no ptr: Failed (800201A8, 0ms left, ptr=DEAD)
+Empty standard: Failed (800201A8, 0ms left, ptr=DEAD)
+Single standard: OK (500ms left, ptr=OTHER) GOT: "hi 3" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=0,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (500ms left, ptr=OTHER) GOT: "hi 4" (next=FIRST, prio=15) Messagebox: OK (size=52,name='wait1',attr=0,wait=0,count=1,first=OTHER)
+  hi 5 prio=05 next=ITSELF
+Multiple standard #2: OK (500ms left, ptr=OTHER) GOT: "hi 5" (next=ITSELF, prio=05) Messagebox: OK (size=52,name='wait1',attr=0,wait=0,count=0,first=NULL)
+Multiple standard #3: Failed (800201A8, 0ms left, ptr=DEAD)
+For attr 00000100:
+Single standard: OK (ptr=OTHER) GOT: "hi 6" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=256,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 7" (next=FIRST, prio=15) Messagebox: OK (size=52,name='wait1',attr=256,wait=0,count=1,first=OTHER)
+  hi 8 prio=05 next=ITSELF
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 8" (next=ITSELF, prio=05) Messagebox: OK (size=52,name='wait1',attr=256,wait=0,count=0,first=NULL)
+Empty no ptr: Failed (800201A8, 0ms left, ptr=DEAD)
+Empty standard: Failed (800201A8, 0ms left, ptr=DEAD)
+Single standard: OK (500ms left, ptr=OTHER) GOT: "hi 9" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=256,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (500ms left, ptr=OTHER) GOT: "hi 10" (next=FIRST, prio=15) Messagebox: OK (size=52,name='wait1',attr=256,wait=0,count=1,first=OTHER)
+  hi 11 prio=05 next=ITSELF
+Multiple standard #2: OK (500ms left, ptr=OTHER) GOT: "hi 11" (next=ITSELF, prio=05) Messagebox: OK (size=52,name='wait1',attr=256,wait=0,count=0,first=NULL)
+Multiple standard #3: Failed (800201A8, 0ms left, ptr=DEAD)
+For attr 00000400:
+Single standard: OK (ptr=OTHER) GOT: "hi 12" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=1024,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 14" (next=FIRST, prio=05) Messagebox: OK (size=52,name='wait1',attr=1024,wait=0,count=1,first=OTHER)
+  hi 13 prio=15 next=ITSELF
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 13" (next=ITSELF, prio=15) Messagebox: OK (size=52,name='wait1',attr=1024,wait=0,count=0,first=NULL)
+Empty no ptr: Failed (800201A8, 0ms left, ptr=DEAD)
+Empty standard: Failed (800201A8, 0ms left, ptr=DEAD)
+Single standard: OK (500ms left, ptr=OTHER) GOT: "hi 15" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=1024,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (500ms left, ptr=OTHER) GOT: "hi 17" (next=FIRST, prio=05) Messagebox: OK (size=52,name='wait1',attr=1024,wait=0,count=1,first=OTHER)
+  hi 16 prio=15 next=ITSELF
+Multiple standard #2: OK (500ms left, ptr=OTHER) GOT: "hi 16" (next=ITSELF, prio=15) Messagebox: OK (size=52,name='wait1',attr=1024,wait=0,count=0,first=NULL)
+Multiple standard #3: Failed (800201A8, 0ms left, ptr=DEAD)
+For attr 00000500:
+Single standard: OK (ptr=OTHER) GOT: "hi 18" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=1280,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (ptr=OTHER) GOT: "hi 20" (next=FIRST, prio=05) Messagebox: OK (size=52,name='wait1',attr=1280,wait=0,count=1,first=OTHER)
+  hi 19 prio=15 next=ITSELF
+Multiple standard #2: OK (ptr=OTHER) GOT: "hi 19" (next=ITSELF, prio=15) Messagebox: OK (size=52,name='wait1',attr=1280,wait=0,count=0,first=NULL)
+Empty no ptr: Failed (800201A8, 0ms left, ptr=DEAD)
+Empty standard: Failed (800201A8, 0ms left, ptr=DEAD)
+Single standard: OK (500ms left, ptr=OTHER) GOT: "hi 21" (next=ITSELF, prio=20) Messagebox: OK (size=52,name='wait1',attr=1280,wait=0,count=0,first=NULL)
+Multiple standard #1: OK (500ms left, ptr=OTHER) GOT: "hi 23" (next=FIRST, prio=05) Messagebox: OK (size=52,name='wait1',attr=1280,wait=0,count=1,first=OTHER)
+  hi 22 prio=15 next=ITSELF
+Multiple standard #2: OK (500ms left, ptr=OTHER) GOT: "hi 22" (next=ITSELF, prio=15) Messagebox: OK (size=52,name='wait1',attr=1280,wait=0,count=0,first=NULL)
+Multiple standard #3: Failed (800201A8, 0ms left, ptr=DEAD)
+Wait timeout: A1B1C1D2E2 (thread=00000000, main=00000000, remaining=4)
+After delete: 800201B5 (ptr=DEAD) 
+Cancel: After delete: 800201A9 (ptr=DEAD) 
+NULL: Failed (8002019B, ptr=DEAD)
+Invalid: Failed (8002019B, ptr=DEAD)
+Deleted: Failed (8002019B, ptr=DEAD)
+NULL: A1B1C2E1D1F2 (thread=800201B5, main=8002019B)
+Other timeout: A1B1C2E2D1F2 (thread=800201B5, main=800201A8)
+Same timeout: A1B1C2E2D1F2 (thread=800201B5, main=800201A8)
+Other timeout (5ms): A1B1C2E2D1F2 (thread=800201B5, main=800201A8)
+Same timeout (5ms): A1B1C2E2D1F2 (thread=800201B5, main=800201A8)

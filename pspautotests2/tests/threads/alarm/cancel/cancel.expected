@@ -1,0 +1,7 @@
+Normal: 00000000
+Deleted: 8002019F
+Invalid: 8002019F
+NULL: 8002019F
+Normal: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+Deleted: A1B1C2E1D1F2 (thread=800201B5, main=8002019F)
+Already ran: 8002019F

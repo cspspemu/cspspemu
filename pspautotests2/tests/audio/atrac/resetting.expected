@@ -1,0 +1,65 @@
+[x] IDs:
+[x]   Unallocated: 80630005
+   #1: write=0xcccccccc, writable=cccccccc, min=cccccccc, file=cccccccc
+   #2: write=0xcccccccc, writable=cccccccc, min=cccccccc, file=cccccccc
+[x]   Invalid: 80630005
+   #1: write=0xcccccccc, writable=cccccccc, min=cccccccc, file=cccccccc
+   #2: write=0xcccccccc, writable=cccccccc, min=cccccccc, file=cccccccc
+[x]   Valid: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00000060
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+
+[x] Sample values:
+[x]   00000000: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00000060
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   00001000: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00000350
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   00010000: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00002f60
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   00100000: 80630015
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00002f60
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   01000000: 80630015
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00002f60
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   7fffffff: 80630015
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00002f60
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   ffffffff: 00000000
+   #1: write=p+0x0, writable=00005998, min=00000468, file=00000060
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+
+[x] Entire buffer:
+[x]   At start -> 0: 00000000
+   #1: write=p+0x0, writable=00000000, min=00000000, file=00000000
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[r]   Decode: 00000000
+[x]   After decode -> 0: 00000000
+   #1: write=p+0x0, writable=00000000, min=00000000, file=00000000
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   At start -> 2048: 00000000
+   #1: write=p+0x0, writable=00000000, min=00000000, file=00000000
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[r]   Decode: 00000000
+[x]   After decode -> 2048: 00000000
+   #1: write=p+0x0, writable=00000000, min=00000000, file=00000000
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+
+[x] Half buffer:
+[x]   At start -> 0: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00000060
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[r]   Decode: 00000000
+[x]   After decode -> 0: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00000060
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[x]   At start -> 2048: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00002f60
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000
+[r]   Decode: 00000000
+[x]   After decode -> 2048: 00000000
+   #1: write=p+0x0, writable=00005998, min=000002f0, file=00002f60
+   #2: write=p+0x0, writable=00000000, min=00000000, file=00000000

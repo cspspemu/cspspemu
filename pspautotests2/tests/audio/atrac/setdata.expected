@@ -1,0 +1,15 @@
+[x] IDs:
+[x]   ATRAC3: 80630007
+[r]   ATRAC3+: 00000000
+[x]   Unallocated (1): 80630005
+[x]   Unallocated (4): 80630005
+[x]   -1: 80630005
+
+[x] Buffer:
+[x]   Zero length: 80630011
+[x]   Zeroed data: 80630006
+
+[x] sceAtracSetDataAndGetID:
+[x]   Zeroed data: 80630006
+[r]   * Reloaded ATRAC3+ test file
+[r]   Normal: 00000001

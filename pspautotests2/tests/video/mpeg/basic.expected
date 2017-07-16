@@ -1,0 +1,2905 @@
+[x] createTestMpeg:
+[x]   sceMpegRingbufferQueryMemSize: 0010d000
+[x]   sceMpegQueryMemSize: 00010000
+[x]   sceMpegRingbufferConstruct: 00000000
+[r]   sceMpegCreate: 00000000
+[x]   MPEG: LIBMPEG
+
+[x] registMpegStreams:
+[x]   sceMpegRegistStream: 000012c0
+[x]   sceMpegRegistStream: 00001700
+[x]   sceMpegMallocAvcEsBuf: 00000001
+[x]   sceMpegInitAu AVC: 00000000
+[x]   sceMpegQueryAtracEsSize: 00000000 (00000840, 00002000)
+[x]   sceMpegInitAu ATRAC: 00000000
+
+[x] loadMpegFile:
+[r]   sceIoOpen: OK
+[r]   sceIoRead: 00000800
+[x]   sceMpegQueryStreamOffset: 00000000 (00000800)
+[x]   sceMpegQueryStreamSize: 00000000 (00040800)
+
+[x] testDecodeVideo:
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 512
+[x]   - mpeg_callback called: 00000000, 24, 00001234
+[r]     sceIoRead: 0000c000, returning 24
+[x]   sceMpegRingbufferPut: 00000018
+[x]   sceMpegRingbufferAvailableSize: 488
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au (interesting): presented=0/90000, decoded=0/86997, es=AVC, size=3791
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000000)
+[x]     Au (interesting): presented=0/90000, decoded=0/86997, es=AVC, size=0
+[x]  *** Frame: 0 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 490
+[x]   - mpeg_callback called: 0000c000, 24, 00001234
+[r]     sceIoRead: 0000c000, returning 24
+[x]   sceMpegRingbufferPut: 00000018
+[x]   sceMpegRingbufferAvailableSize: 466
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1228
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 1 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 466
+[x]   - mpeg_callback called: 00018000, 24, 00001234
+[r]     sceIoRead: 0000c000, returning 24
+[x]   sceMpegRingbufferPut: 00000018
+[x]   sceMpegRingbufferAvailableSize: 442
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1624
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 2 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 443
+[x]   - mpeg_callback called: 00024000, 24, 00001234
+[r]     sceIoRead: 0000c000, returning 24
+[x]   sceMpegRingbufferPut: 00000018
+[x]   sceMpegRingbufferAvailableSize: 419
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1378
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 3 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 420
+[x]   - mpeg_callback called: 00030000, 24, 00001234
+[r]     sceIoRead: 0000c000, returning 24
+[x]   sceMpegRingbufferPut: 00000018
+[x]   sceMpegRingbufferAvailableSize: 396
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1507
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 4 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 396
+[x]   - mpeg_callback called: 0003c000, 24, 00001234
+[r]     sceIoRead: 00004800, returning 9
+[x]   - mpeg_callback called: 00040800, 15, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000009
+[x]   sceMpegRingbufferAvailableSize: 387
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1159
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 5 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 388
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 388
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1524
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 6 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 389
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 389
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1143
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 7 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 389
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 389
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1253
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 8 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 390
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 390
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1330
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 9 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 391
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 391
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1315
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 10 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 391
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 391
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1352
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 11 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 392
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 392
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1504
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 12 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 393
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 393
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1373
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 13 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 393
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 393
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1294
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 14 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 394
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 394
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1333
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 15 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 395
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 395
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1328
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 16 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 395
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 395
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1361
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 17 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 396
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 396
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1242
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 18 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 396
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 396
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1259
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 19 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 397
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 397
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1365
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 20 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 398
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 398
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1301
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 21 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 398
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 398
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1363
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 22 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 399
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 399
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1341
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 23 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 400
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 400
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1514
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 24 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 401
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 401
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1434
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 25 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 401
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 401
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1049
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 26 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 402
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 402
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1434
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 27 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 402
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 402
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1124
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 28 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 403
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 403
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1494
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 29 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 404
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 404
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1133
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 30 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 404
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 404
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1230
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 31 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 405
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 405
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1262
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 32 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 406
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 406
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1571
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 33 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 406
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 406
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1323
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 34 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 407
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 407
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1432
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 35 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 408
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 408
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1416
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 36 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 408
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 408
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1338
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 37 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 409
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 409
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1392
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 38 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 410
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 410
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1245
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 39 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 410
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 410
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1264
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 40 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 411
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 411
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1177
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 41 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 412
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 412
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1358
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 42 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 412
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 412
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1010
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 43 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 413
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 413
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1406
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 44 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 413
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 413
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1143
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 45 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 414
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 414
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1243
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 46 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 415
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 415
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1232
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 47 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 415
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 415
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1303
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 48 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 416
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 416
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1286
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 49 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 416
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 416
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1391
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 50 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 417
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 417
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1371
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 51 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 418
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 418
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1455
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 52 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 419
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 419
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1337
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 53 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 419
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 419
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1307
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 54 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 420
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 420
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1364
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 55 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 421
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 421
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1358
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 56 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 421
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 421
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1324
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 57 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 422
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 422
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000000)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1343
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 58 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 424
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 424
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au (interesting): presented=0/267177, decoded=0/264174, es=AVC, size=3664
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au (interesting): presented=0/267177, decoded=0/264174, es=AVC, size=0
+[x]  *** Frame: 59 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 425
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 425
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=2371
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 60 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 427
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 427
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1090
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 61 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 427
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 427
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1190
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 62 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 428
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 428
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=803
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 63 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 428
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 428
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=861
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 64 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 429
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 429
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1116
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 65 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 429
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 429
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1000
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 66 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 430
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 430
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1094
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 67 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 430
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 430
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=995
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 68 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 431
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 431
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=972
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 69 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 431
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 431
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1051
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 70 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 432
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 432
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1058
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 71 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 432
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 432
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1111
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 72 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 433
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 433
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1556
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 73 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 433
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 433
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1289
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 74 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 434
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 434
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1678
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 75 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 435
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 435
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1707
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 76 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 436
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 436
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1682
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 77 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 437
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 437
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1973
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 78 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 438
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 438
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1585
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 79 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 438
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 438
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1691
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 80 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 439
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 439
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1288
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 81 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 440
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 440
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1694
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 82 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 441
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 441
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1309
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 83 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 441
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 441
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1502
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 84 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 442
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 442
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1833
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 85 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 443
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 443
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1696
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 86 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 444
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 444
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1543
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 87 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 445
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 445
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1471
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 88 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 445
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 445
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1856
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 89 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 446
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 446
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1403
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 90 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 447
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 447
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1186
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 91 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 448
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 448
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1717
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 92 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 448
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 448
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1348
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 93 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 449
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 449
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1282
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 94 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 450
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 450
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1204
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 95 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 450
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 450
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1116
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 96 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 451
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 451
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1012
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 97 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 451
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 451
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1017
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 98 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 452
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 452
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1402
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 99 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 452
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 452
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1295
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 100 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 453
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 453
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1262
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 101 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 454
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 454
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1152
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 102 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 454
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 454
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1156
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 103 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 455
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 455
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1520
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 104 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 456
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 456
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1157
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 105 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 456
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 456
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1357
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 106 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 457
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 457
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1572
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 107 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 458
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 458
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1719
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 108 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 459
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 459
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1630
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 109 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 459
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 459
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000000)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1739
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 110 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 461
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 461
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au (interesting): presented=0/423333, decoded=0/420330, es=AVC, size=3122
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au (interesting): presented=0/423333, decoded=0/420330, es=AVC, size=0
+[x]  *** Frame: 111 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 462
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 462
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1622
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 112 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 463
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 463
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1914
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 113 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 464
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 464
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1401
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 114 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 465
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 465
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1294
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 115 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 465
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 465
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1370
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 116 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 466
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 466
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1440
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 117 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 467
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 467
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1880
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 118 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 468
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 468
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1616
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 119 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 468
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 468
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1977
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 120 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 469
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 469
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=969
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 121 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 470
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 470
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1564
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 122 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 471
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 471
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1177
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 123 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 471
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 471
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=914
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 124 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 472
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 472
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=899
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 125 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 472
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 472
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=934
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 126 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 473
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 473
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=959
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 127 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 473
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 473
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1180
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 128 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 474
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 474
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=999
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 129 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 474
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 474
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1049
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 130 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 475
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 475
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1046
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 131 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 475
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 475
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1058
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 132 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 476
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 476
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1286
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 133 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 476
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 476
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=803
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 134 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 477
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 477
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1028
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 135 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 477
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 477
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=944
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 136 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 478
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 478
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1045
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 137 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 478
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 478
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=880
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 138 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 479
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 479
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=770
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 139 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 479
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 479
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1123
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 140 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 480
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 480
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=922
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 141 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 480
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 480
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=901
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 142 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 480
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 480
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=955
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 143 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 481
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 481
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=811
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 144 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 481
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 481
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=813
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 145 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 482
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 482
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=817
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 146 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 482
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 482
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1166
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 147 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 483
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 483
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1054
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 148 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 483
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 483
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1518
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 149 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 484
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 484
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1326
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 150 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 485
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 485
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1640
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 151 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 485
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 485
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=2143
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 152 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 486
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 486
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1736
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 153 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 487
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 487
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1741
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 154 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 488
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 488
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1952
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 155 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 489
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 489
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1469
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 156 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 490
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 490
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1214
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 157 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 491
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 491
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1365
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 158 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 491
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 491
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=974
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 159 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 492
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 492
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1131
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 160 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 492
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 492
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1060
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 161 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 493
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 493
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=966
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 162 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 493
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 493
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1115
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 163 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 494
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 494
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1224
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 164 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 494
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 494
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1227
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 165 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 495
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 495
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1091
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 166 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 496
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 496
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1201
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 167 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 496
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 496
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1391
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 168 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 497
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 497
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000000)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1099
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 169 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 498
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 498
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au (interesting): presented=0/600510, decoded=0/597507, es=AVC, size=3327
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au (interesting): presented=0/600510, decoded=0/597507, es=AVC, size=0
+[x]  *** Frame: 170 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 499
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 499
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=992
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 171 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 500
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 500
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1573
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 172 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 500
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 500
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1221
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 173 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 501
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 501
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1532
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 174 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 502
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 502
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1339
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 175 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 502
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 502
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1126
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 176 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 503
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 503
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1435
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 177 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 504
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 504
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[x]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=994
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 178 ***
+
+[x] Next frame
+[x]   sceMpegRingbufferAvailableSize: 504
+[x]   - mpeg_callback called: 00040800, 24, 00001234
+[r]     sceIoRead: 00000000, returning 0
+[x]   sceMpegRingbufferPut: 00000000
+[x]   sceMpegRingbufferAvailableSize: 504
+[x]   sceMpegGetAtracAu: 80618001 (at 00000000 from 08952980)
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegAtracDecode: 807f00fd
+[x]     Au (interesting): presented=0/0, decoded=0/0, es=ATRAC, size=0
+[r]   sceMpegGetAvcAu: 00000000 (00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=1628
+[r]   sceMpegAvcDecode: 00000000 (00000200, 00000001)
+[x]     Au: presented=-1/-1, decoded=-1/-1, es=AVC, size=0
+[x]  *** Frame: 179 ***
+[r]   sceMpegAvcDecodeFlush: 00000000

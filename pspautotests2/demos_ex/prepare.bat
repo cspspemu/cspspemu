@@ -1,0 +1,9 @@
+@ECHO OFF
+IF "%PSPSDK_IN_PATH%"=="1" GOTO END
+
+REM SET PSPSDK=%~dp0\..\dev\pspsdk
+SET PSPSDK=c:\pspsdk
+SET PATH=%PATH%;%PSPSDK%\bin
+SET PSPSDK_IN_PATH=1
+
+:END

@@ -1,0 +1,46 @@
+[x] Thread IDs:
+[x]   Normal: 00000000
+[x]   Twice: 800201a4
+[x]   NULL: 80020197
+[x]   Current: 800201a4
+[x]   Deleted: 80020198
+[x]   Invalid: 80020198
+
+[x] Argument length:
+[x]   With NULL ptr: 00000000 (0, NULL)
+[x]   -1 arg length: 800200d3 (-1, NULL)
+[x]   -2147483648 arg length: 800200d3 (-1, NULL)
+[x]   0 arg length: 00000000 (0, NULL)
+[x]   1 arg length: 00000000 (1, stack+0x6f0)
+[x]   2 arg length: 00000000 (2, stack+0x6f0)
+[x]   3 arg length: 00000000 (3, stack+0x6f0)
+[x]   4 arg length: 00000000 (4, stack+0x6f0)
+[x]   5 arg length: 00000000 (5, stack+0x6f0)
+[x]   6 arg length: 00000000 (6, stack+0x6f0)
+[x]   7 arg length: 00000000 (7, stack+0x6f0)
+[x]   8 arg length: 00000000 (8, stack+0x6f0)
+[x]   80 arg length: 00000000 (80, stack+0x6b0)
+[x]   90 arg length: 00000000 (90, stack+0x6a0)
+[x]   1536 arg length: 00000000 (1536, stack+0x100)
+
+[x] Argument pointers:
+[x]   arg ptr #0: 00000000 (4, stack+0x6f0)
+[x]   arg ptr #1: 800200d3 (-1, NULL)
+[x]   arg ptr #2: 800200d3 (-1, NULL)
+
+[x] Priorities:
+[x]   priority 0x08: 00000000 (current-0x18, resched)
+[x]   priority 0x1f: 00000000 (current-0x01, resched)
+[r]   priority 0x20: 00000000 (current+0x00, deferred)
+[r]   priority 0x21: 00000000 (current+0x01, deferred)
+[r]   priority 0x40: 00000000 (current+0x20, deferred)
+
+[x] Stack:
+[x]   No arg
+[x]   Odd arg
+[x]   Large arg
+      Low stack: WARNING: stack allocated low.
+[x]   Low stack
+      Low stack without fill: WARNING: stack allocated low.
+      Low stack without fill: WARNING: stack not set to FF, instead: 00000000.
+[x]   Low stack without fill

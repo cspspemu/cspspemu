@@ -1,0 +1,18 @@
+[x] Objects:
+[x]   Normal: OK Callback: OK (size=56,name=cancel,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+[x]   NULL: Failed (800201a1)
+[x]   Invalid: Failed (800201a1)
+[x]   Deleted: Failed (800201a1)
+
+[x] After notify:
+[x]   1 pending: OK Callback: OK (size=56,name=notify,thread=1,callback=1,common=00000000,notifyCount=00000000,notifyArg=0)
+[r] sceKernelDelayThreadCB: 00000000
+
+[x] Different thread:
+[x]   Beginning sleep on better priority sleeping thread
+[x]   ** started better priority sleeping thread
+[x]   ** started worse priority sleeping thread
+[r]   Beginning sleep on worse priority sleeping thread
+[r]   Callback hit on better priority sleeping thread: 00000001, 00001337, returning 00000000
+[r]   ** stopped worse priority sleeping thread
+[r]   ** stopped better priority sleeping thread

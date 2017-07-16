@@ -1,0 +1,11 @@
+[x] sceKernelGetThreadExitStatus threads:
+[x]   -1: 80020198
+[x]   Zero: 80020198
+[x]   Invalid: 80020198
+[x]   Created: 800201a2
+[x]   Ready: 800201a4
+[x]   Finished: 00000000
+[x]   Deleted: 80020198
+[x]   Suspended: 800201a4
+[x]   Waiting: 800201a4
+[x]   Current: 800201a4

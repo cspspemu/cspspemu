@@ -1,0 +1,10 @@
+sceUmdRegisterUMDCallBack: 00000000
+sceUmdActivate: 00000000
+umdHandler called: 00000001, 00000001, 00001234
+sceKernelCheckCallback: 1
+sceUmdDeactivate: 00000000
+umdHandler called: 00000001, 00000001, 00001234
+sceUmdWaitDriveStatCB: 00000000
+sceKernelCheckCallback: 0
+sceUmdUnRegisterUMDCallBack: 00000001
+sceUmdUnRegisterUMDCallBack: 00000000

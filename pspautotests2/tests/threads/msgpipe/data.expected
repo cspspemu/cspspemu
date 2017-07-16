@@ -1,0 +1,95 @@
+[x] Using a buffer:
+[r]   ** started receiving thread 1
+[r]   ** started receiving thread 2
+[r]   ** started receiving thread 3
+[r]   ** sending thread 1 got result: 00000000, sent = 00000009
+[r]   ** receiving thread 1 got result: 00000000, received = 00000004 = msg1
+[r]   ** receiving thread 2 got result: 00000000, received = 00000004 = msg2
+[r]   ** started sending thread 1
+[r]   ** sending thread 2 got result: 00000000, sent = 00000003
+[r]   ** receiving thread 3 got result: 00000000, received = 00000004 = msg3
+[r]   ** started sending thread 2
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=100, free=100, sending=0, receiving=0)
+
+[x] Without a buffer:
+[r]   ** started receiving thread 1
+[r]   ** started receiving thread 2
+[r]   ** started receiving thread 3
+[r]   ** sending thread 1 got result: 00000000, sent = 00000009
+[r]   ** receiving thread 1 got result: 00000000, received = 00000004 = msg1
+[r]   ** receiving thread 2 got result: 00000000, received = 00000004 = msg2
+[r]   ** started sending thread 1
+[r]   ** sending thread 2 got result: 00000000, sent = 00000003
+[r]   ** receiving thread 3 got result: 00000000, received = 00000004 = msg3
+[r]   ** started sending thread 2
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=0)
+
+[x] Using receive priorities:
+[r]   ** started receiving thread 1
+[r]   ** started receiving thread 2
+[r]   ** started receiving thread 3
+[r]   ** sending thread 1 got result: 00000000, sent = 00000003
+[r]   ** started sending thread 1
+[r]   ** receiving thread 3 got result: 00000000, received = 00000004 = msg1
+[r]   ** sending thread 2 got result: 00000000, sent = 00000003
+[r]   ** started sending thread 2
+[r]   ** receiving thread 2 got result: 00000000, received = 00000004 = msg2
+[r]   ** sending thread 3 got result: 00000000, sent = 00000003
+[r]   ** started sending thread 3
+[r]   ** receiving thread 1 got result: 00000000, received = 00000004 = msg3
+[r]   ** sending thread 4 got result: 00000000, sent = 00000003
+[r]   ** started sending thread 4
+Msgpipe: OK (size=56, name=msgpipe, attr=00001000, buffer=4, free=4, sending=0, receiving=0)
+
+[x] Using send priorities:
+[r]   ** sending thread 1 got result: 00000000, sent = 00000003
+[r]   ** started sending thread 1
+[r]   ** started sending thread 2
+[r]   ** started sending thread 3
+[r]   ** started sending thread 4
+[r]   ** receiving thread 1 got result: 00000000, received = 00000004 = msgs
+[r]   ** sending thread 4 got result: 00000000, sent = 00000003
+[r]   ** started receiving thread 1
+[r]   ** receiving thread 2 got result: 00000000, received = 00000004 = g3g2
+[r]   ** sending thread 3 got result: 00000000, sent = 00000003
+[r]   ** sending thread 2 got result: 00000000, sent = 00000003
+[r]   ** started receiving thread 2
+[r]   ** receiving thread 3 got result: 00000000, received = 00000004 = m1ms
+[r]   ** started receiving thread 3
+Msgpipe: OK (size=56, name=msgpipe, attr=00000100, buffer=4, free=4, sending=0, receiving=0)
+
+[x] Using ASAP:
+[r]   ** sending thread 1 got result: 00000000, sent = 00000003
+[r]   ** started sending thread 1
+[r]   ** sending thread 2 got result: 00000000, sent = 00000001
+[r]   ** started sending thread 2
+[r]   ** started sending thread 3
+[r]   ** started sending thread 4
+[r]   ** receiving thread 1 got result: 00000000, received = 00000004 = msg1
+[r]   ** sending thread 3 got result: 00000000, sent = 00000003
+[r]   ** sending thread 4 got result: 00000000, sent = 00000001
+[r]   ** started receiving thread 1
+[r]   ** receiving thread 2 got result: 00000000, received = 00000004 = g2ms
+[r]   ** started receiving thread 2
+[r]   ** started receiving thread 3
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=4, free=4, sending=0, receiving=1)
+[r]   ** receiving thread 3 got result: 800201b5, received = 00000000 = 
+[r]   ** stopped receiving thread 3
+
+[x] Using ASAP and no buffer:
+[r]   ** started sending thread 1
+[r]   ** started sending thread 2
+[r]   ** started sending thread 3
+[r]   ** started sending thread 4
+[r]   ** receiving thread 1 got result: 00000000, received = 00000004 = msg1
+[r]   ** sending thread 1 got result: 00000000, sent = 00000003
+[r]   ** sending thread 2 got result: 00000000, sent = 00000001
+[r]   ** started receiving thread 1
+[r]   ** receiving thread 2 got result: 00000000, received = 00000004 = g2ms
+[r]   ** sending thread 3 got result: 00000000, sent = 00000003
+[r]   ** sending thread 4 got result: 00000000, sent = 00000001
+[r]   ** started receiving thread 2
+[r]   ** started receiving thread 3
+Msgpipe: OK (size=56, name=msgpipe, attr=00000000, buffer=0, free=0, sending=0, receiving=1)
+[r]   ** receiving thread 3 got result: 800201b5, received = 00000000 = 
+[r]   ** stopped receiving thread 3

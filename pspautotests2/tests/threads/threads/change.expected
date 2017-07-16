@@ -1,0 +1,162 @@
+[x] sceKernelChangeThreadPriority threads:
+[x]   -1: 80020198
+[r]   Zero: 00000000
+[x]   Invalid: 80020198
+[x]   Created: 800201a2
+[x]   Ready: 00000000
+[x]   Finished: 800201a2
+[x]   Deleted: 80020198
+[x]   Suspended: 00000000
+[x]   Waiting: 00000000
+[x]  - testThread
+[x]   Current: 00000000
+[r]   Current: 00000000
+
+[x] sceKernelChangeThreadPriority priorities:
+[x]   0xfffffffe priority: 80020193
+[x]   0xffffffff priority: 80020193
+[x]   0x00 priority: 00000000
+[x]   0x01 priority: 80020193
+[x]   0x02 priority: 80020193
+[x]   0x04 priority: 80020193
+[x]   0x05 priority: 80020193
+[x]   0x06 priority: 80020193
+[x]   0x07 priority: 80020193
+[x]  - testThread
+[x]   0x08 priority: 00000000
+[x]  - testThread
+[x]   0x09 priority: 00000000
+[x]  - testThread
+[x]   0x17 priority: 00000000
+[x]  - testThread
+[x]   0x18 priority: 00000000
+[x]   0x2f priority: 00000000
+[x]   0x30 priority: 00000000
+[x]   0x31 priority: 00000000
+[x]   0x50 priority: 00000000
+[x]   0x6e priority: 00000000
+[x]   0x6f priority: 00000000
+[x]   0x77 priority: 00000000
+[x]   0x78 priority: 80020193
+[x]   0x79 priority: 80020193
+
+[x] sceKernelChangeThreadPriority priority 0:
+[x]   Set to 0x21: Current=21, init=30
+[x]   Set to 0: Current=18, init=30
+
+[x] sceKernelChangeThreadPriority restarted priorities:
+[x]   Before: Current=30, init=30
+[x]   0xfffffffe priority: 80020193
+[x]     After error: Current=30, init=30
+[x]   0xffffffff priority: 80020193
+[x]     After error: Current=30, init=30
+[x]   0x00 priority: 00000000
+[x]     After restart: Current=18, init=30
+[x]   0x01 priority: 80020193
+[x]     After error: Current=18, init=30
+[x]   0x02 priority: 80020193
+[x]     After error: Current=18, init=30
+[x]   0x04 priority: 80020193
+[x]     After error: Current=18, init=30
+[x]   0x05 priority: 80020193
+[x]     After error: Current=18, init=30
+[x]   0x06 priority: 80020193
+[x]     After error: Current=18, init=30
+[x]   0x07 priority: 80020193
+[x]     After error: Current=18, init=30
+[x]   0x08 priority: 00000000
+[x]     After restart: Current=30, init=30
+[x]   0x09 priority: 00000000
+[x]     After restart: Current=30, init=30
+[x]   0x17 priority: 00000000
+[x]     After restart: Current=30, init=30
+[x]   0x18 priority: 00000000
+[x]     After restart: Current=18, init=30
+[x]   0x2f priority: 00000000
+[x]     After restart: Current=2f, init=30
+[x]   0x30 priority: 00000000
+[x]     After restart: Current=30, init=30
+[x]   0x31 priority: 00000000
+[x]     After restart: Current=31, init=30
+[x]   0x50 priority: 00000000
+[x]     After restart: Current=50, init=30
+[x]   0x6e priority: 00000000
+[x]     After restart: Current=6e, init=30
+[x]   0x6f priority: 00000000
+[x]     After restart: Current=6f, init=30
+[x]   0x77 priority: 00000000
+[x]     After restart: Current=77, init=30
+[x]   0x78 priority: 80020193
+[x]     After error: Current=77, init=30
+[x]   0x79 priority: 80020193
+[x]     After error: Current=77, init=30
+
+[x] sceKernelChangeCurrentThreadAttr add:
+[x]   0: 00000000, attr=800040ff
+[x]   1: 80020191, attr=800040ff
+[x]   2: 80020191, attr=800040ff
+[x]   4: 80020191, attr=800040ff
+[x]   8: 80020191, attr=800040ff
+[x]   10: 80020191, attr=800040ff
+[x]   20: 80020191, attr=800040ff
+[x]   40: 80020191, attr=800040ff
+[x]   80: 80020191, attr=800040ff
+[x]   100: 80020191, attr=800040ff
+[x]   200: 80020191, attr=800040ff
+[x]   400: 80020191, attr=800040ff
+[x]   800: 80020191, attr=800040ff
+[x]   1000: 80020191, attr=800040ff
+[x]   2000: 80020191, attr=800040ff
+[x]   4000: 00000000, attr=800040ff
+[x]   8000: 80020191, attr=800040ff
+[x]   10000: 80020191, attr=800040ff
+[x]   20000: 80020191, attr=800040ff
+[x]   40000: 80020191, attr=800040ff
+[x]   80000: 80020191, attr=800040ff
+[x]   100000: 80020191, attr=800040ff
+[x]   200000: 80020191, attr=800040ff
+[x]   400000: 80020191, attr=800040ff
+[x]   800000: 80020191, attr=800040ff
+[x]   1000000: 80020191, attr=800040ff
+[x]   2000000: 80020191, attr=800040ff
+[x]   4000000: 80020191, attr=800040ff
+[x]   8000000: 80020191, attr=800040ff
+[x]   10000000: 80020191, attr=800040ff
+[x]   20000000: 80020191, attr=800040ff
+[x]   40000000: 80020191, attr=800040ff
+[x]   80000000: 80020191, attr=800040ff
+
+[x] sceKernelChangeCurrentThreadAttr remove:
+[x]   0: 00000000, attr=800040ff
+[x]   1: 80020191, attr=800040ff
+[x]   2: 80020191, attr=800040ff
+[x]   4: 80020191, attr=800040ff
+[x]   8: 80020191, attr=800040ff
+[x]   10: 80020191, attr=800040ff
+[x]   20: 80020191, attr=800040ff
+[x]   40: 80020191, attr=800040ff
+[x]   80: 80020191, attr=800040ff
+[x]   100: 80020191, attr=800040ff
+[x]   200: 80020191, attr=800040ff
+[x]   400: 80020191, attr=800040ff
+[x]   800: 80020191, attr=800040ff
+[x]   1000: 80020191, attr=800040ff
+[x]   2000: 80020191, attr=800040ff
+[x]   4000: 00000000, attr=800000ff
+[x]   8000: 80020191, attr=800000ff
+[x]   10000: 80020191, attr=800000ff
+[x]   20000: 80020191, attr=800000ff
+[x]   40000: 80020191, attr=800000ff
+[x]   80000: 80020191, attr=800000ff
+[x]   100000: 80020191, attr=800000ff
+[x]   200000: 80020191, attr=800000ff
+[x]   400000: 80020191, attr=800000ff
+[x]   800000: 80020191, attr=800000ff
+[x]   1000000: 80020191, attr=800000ff
+[x]   2000000: 80020191, attr=800000ff
+[x]   4000000: 80020191, attr=800000ff
+[x]   8000000: 80020191, attr=800000ff
+[x]   10000000: 80020191, attr=800000ff
+[x]   20000000: 80020191, attr=800000ff
+[x]   40000000: 80020191, attr=800000ff
+[x]   80000000: 80020191, attr=800000ff

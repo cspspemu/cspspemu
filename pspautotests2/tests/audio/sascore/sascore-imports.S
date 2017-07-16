@@ -1,0 +1,37 @@
+.set noreorder
+
+#include "pspimport.s"
+
+IMPORT_START "sceSasCore",0x00090011
+IMPORT_FUNC  "sceSasCore",0x42778A9F,__sceSasInit
+IMPORT_FUNC  "sceSasCore",0xA3589D81,__sceSasCore
+IMPORT_FUNC  "sceSasCore",0x50A14DFC,__sceSasCoreWithMix
+IMPORT_FUNC  "sceSasCore",0x68A46B95,__sceSasGetEndFlag
+IMPORT_FUNC  "sceSasCore",0x440CA7D8,__sceSasSetVolume
+IMPORT_FUNC  "sceSasCore",0xAD84D37F,__sceSasSetPitch
+IMPORT_FUNC  "sceSasCore",0x99944089,__sceSasSetVoice
+IMPORT_FUNC  "sceSasCore",0xB7660A23,__sceSasSetNoise
+IMPORT_FUNC  "sceSasCore",0x019B25EB,__sceSasSetADSR
+IMPORT_FUNC  "sceSasCore",0x9EC3676A,__sceSasSetADSRmode
+IMPORT_FUNC  "sceSasCore",0x5F9529F6,__sceSasSetSL
+IMPORT_FUNC  "sceSasCore",0x74AE582A,__sceSasGetEnvelopeHeight
+IMPORT_FUNC  "sceSasCore",0xCBCD4F79,__sceSasSetSimpleADSR
+IMPORT_FUNC  "sceSasCore",0xA0CF2FA4,__sceSasSetKeyOff
+IMPORT_FUNC  "sceSasCore",0x76F01ACA,__sceSasSetKeyOn
+IMPORT_FUNC  "sceSasCore",0xF983B186,__sceSasRevVON
+IMPORT_FUNC  "sceSasCore",0xD5A229C9,__sceSasRevEVOL
+IMPORT_FUNC  "sceSasCore",0x33D4AB37,__sceSasRevType
+IMPORT_FUNC  "sceSasCore",0x267A6DD2,__sceSasRevParam
+IMPORT_FUNC  "sceSasCore",0x2C8E6AB3,__sceSasGetPauseFlag
+IMPORT_FUNC  "sceSasCore",0x787D04D5,__sceSasSetPause
+IMPORT_FUNC  "sceSasCore",0xA232CBE6,__sceSasSetTrianglarWave
+IMPORT_FUNC  "sceSasCore",0xD5EBBBCD,__sceSasSetSteepWave
+IMPORT_FUNC  "sceSasCore",0xBD11B7C2,__sceSasGetGrain
+IMPORT_FUNC  "sceSasCore",0xD1E0A01E,__sceSasSetGrain
+IMPORT_FUNC  "sceSasCore",0xE175EF66,__sceSasGetOutputmode
+IMPORT_FUNC  "sceSasCore",0xE855BF76,__sceSasSetOutputmode
+IMPORT_FUNC  "sceSasCore",0x07F58C24,__sceSasGetAllEnvelopeHeights
+IMPORT_FUNC  "sceSasCore",0xE1CD9561,__sceSasSetVoicePCM
+IMPORT_FUNC  "sceSasCore",0x4AA9EAD6,__sceSasSetVoiceATRAC3
+IMPORT_FUNC  "sceSasCore",0x7497EA85,__sceSasConcatenateATRAC3
+IMPORT_FUNC  "sceSasCore",0xF6107F00,__sceSasUnsetATRAC3

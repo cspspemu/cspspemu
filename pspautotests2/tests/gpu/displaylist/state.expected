@@ -1,0 +1,75 @@
+main
+init()
+/init()
+signal: sceGeDrawSync: 2 DRAWING
+signal: sceGeDrawSync: 0 DONE
+sceGeDrawSync(1): 0x3 (STALL)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x3 (STALL)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeBreak(0, ...): 1
+sceGeDrawSync(1): 0x2 (DRAWING)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x4 (BREAK)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeBreak(0, ...): 0x80000021
+sceGeDrawSync(1): 0x2 (DRAWING)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x4 (BREAK)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeContinue(): 0
+sceGeDrawSync(1): 0x3 (STALL)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x3 (STALL)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeListEnQueueHead(...)
+sceGeDrawSync(1): 0x3 (STALL)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x3 (STALL)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeListSync(dl=3, 1): Invalid list - 0x800001fe
+sceGeBreak(0, 0) then sceGeListEnQueueHead(...)
+sceGeDrawSync(1): 0x3 (STALL)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x4 (BREAK)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeListSync(dl=3, 1): Invalid list - 0x800001fe
+sceGeListSync(dl=4, 1): 0x1 (QUEUED)
+sceGeListSync(dl=5, 1): 0x4 (BREAK)
+sceGeContinue(): 0
+sceGeDrawSync(1): 0x3 (STALL)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x4 (BREAK)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeListSync(dl=3, 1): Invalid list - 0x800001fe
+sceGeListSync(dl=4, 1): 0x3 (STALL)
+sceGeListSync(dl=5, 1): 0x0 (DONE)
+sceGeListUpdateStallAddr(4): 0
+sceGeDrawSync(1): 0x3 (STALL)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x3 (STALL)
+sceGeListSync(dl=2, 1): 0x1 (QUEUED)
+sceGeListSync(dl=3, 1): Invalid list - 0x800001fe
+sceGeListSync(dl=4, 1): 0x0 (DONE)
+sceGeListSync(dl=5, 1): 0x0 (DONE)
+sceGeBreak(1, ...): 0
+sceGeDrawSync(1): 0x0 (DONE)
+sceGeListSync(dl=0, 1): 0x80000100 (INVALID)
+sceGeListSync(dl=1, 1): 0x80000100 (INVALID)
+sceGeListSync(dl=2, 1): 0x80000100 (INVALID)
+sceGeListSync(dl=3, 1): Invalid list - 0x800001fe
+sceGeListSync(dl=4, 1): 0x80000100 (INVALID)
+sceGeListSync(dl=5, 1): 0x80000100 (INVALID)
+Enqueue 2 more
+sceGeDrawSync(1): 0x0 (DONE)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x0 (DONE)
+After sceGeListSync with wait
+sceGeDrawSync(1): 0x0 (DONE)
+sceGeListSync(dl=0, 1): 0x0 (DONE)
+sceGeListSync(dl=1, 1): 0x0 (DONE)
+sceGeDrawSync(0): 0
+sceGeDrawSync(1): 0x0 (DONE)
+sceGeListSync(dl=0, 1): 0x80000100 (INVALID)
+sceGeListSync(dl=1, 1): 0x80000100 (INVALID)
+sceGeDrawSync(0): 0

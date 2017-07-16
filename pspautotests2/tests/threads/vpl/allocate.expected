@@ -1,0 +1,69 @@
+[x] No timeout:
+[x]   More than free: Failed (800201B7) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+[x]   0 bytes: Failed (800201B7) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFE0,wait=0)
+[x]   1 byte: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFD0,wait=0)
+[x]   -1 bytes: Failed (800201B7) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFD0,wait=0)
+[x]   16 bytes: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFB8,wait=0)
+[x]   8 bytes: OK VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFA8,wait=0)
+
+[x] With timeout:
+[x]   More than free: Failed (800201B7, 500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFA8,wait=0)
+[x]   0 bytes: Failed (800201B7, 500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FFA8,wait=0)
+[x]   1 byte: OK (500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FF98,wait=0)
+[x]   -1 bytes: Failed (800201B7, 500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FF98,wait=0)
+[x]   16 bytes: OK (500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FF80,wait=0)
+[x]   8 bytes: OK (500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FF70,wait=0)
+
+[x] Errors:
+[r]   Into NULL: Failed (800201A8, 0ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=0000FF70,wait=0)
+[x]   Most remaining: OK (500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000068,wait=0)
+[r]   More than remaining: Failed (800201A8, 0ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000068,wait=0)
+[r]   All remaining: Failed (800201A8, 0ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000068,wait=0)
+[r]   All remaining - 7: Failed (800201A8, 0ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000068,wait=0)
+[x]   All remaining - 8: OK (500ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000000,wait=0)
+[r]   1 byte (none left): Failed (800201A8, 0ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000000,wait=0)
+[x]   1 byte (none left, 0 timeout): Failed (800201A8, 0ms left) VPL: OK (size=52,name=vpl,attr=00000000,poolSize=0000FFE0,freeSize=00000000,wait=0)
+
+[x] Objects:
+[x]   NULL: Failed (8002019C, 500ms left) VPL: Failed (00000000)
+[x]   NULL with invalid: Failed (8002019C, 500ms left) VPL: Failed (00000000)
+[x]   Invalid: Failed (8002019C, 500ms left) VPL: Failed (DEADBEEF)
+[x]   Deleted: Failed (8002019C, 500ms left) VPL: Invalid (8002019C)
+
+[x] Allocation difference:
+[x]   Three 0x08s: diff=18, 10
+
+[x] Attr 0:
+[x]   Alloc 0x10 of 0x00/0xE0: L1 L2 Failed (thread=800201A8, main=800201A8)
+[r]   Alloc 0x10 of 0x20/0xE0: L1 L2 OK (thread=00000000)
+[r]   Alloc 0x10 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+[x] Attr 100:
+[x]   Alloc 0x10 of 0x00/0xE0: L1 L2 Failed (thread=800201A8, main=800201A8)
+[r]   Alloc 0x10 of 0x20/0xE0: L1 L2 OK (thread=00000000)
+[r]   Alloc 0x10 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+[x] Attr 200:
+[x]   Alloc 0x10 of 0x00/0xE0: L1 L2 Failed (thread=800201A8, main=800201A8)
+[r]   Alloc 0x10 of 0x20/0xE0: L1 L2 OK (thread=00000000)
+[r]   Alloc 0x10 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+[x] Attr 4000:
+[x]   Alloc 0x10 of 0x00/0xE0: L1 L2 Failed (thread=800201A8, main=800201A8)
+[r]   Alloc 0x10 of 0x20/0xE0: L1 L2 OK (thread=00000000)
+[r]   Alloc 0x10 of 0x40/0xE0: L1 L2 OK (thread=00000000)
+
+[x] Delete while waiting:
+[x]   After delete: 800201B5
+
+[x] Scheduling:
+Zero: A1B1C2E1D1F2 (thread=800201B5, main=800201B7)
+Alloc same: A1B1C2E2D1F2 (thread=800201B5, main=00000000)
+Alloc other: A1B1C2E1D1F2 (thread=800201B5, main=00000000)
+
+[x] Callbacks:
+[x]   Invalid: 
+[x]   Successful: [x]   * callbackFunc: 2, 1, 00000000
+
+[x]   More than available: 
+[x]   Unsuccessful: [x]   * callbackFunc: 2, 1, 00000000

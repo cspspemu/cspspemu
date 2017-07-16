@@ -1,0 +1,18 @@
+sceIoDopen: 80010002
+'..': size : 4096
+'..': attr : 16
+'1.txt': size : 5
+'1.txt': attr : 32
+'2.txt': size : 6
+'2.txt': attr : 32
+'largefile.bin': size : 211894
+'largefile.bin': attr : 32
+'subfolder': size : 0
+'subfolder': attr : 16
+'test.txt': size : 15
+'test.txt': attr : 32
+'SAVEDATA': size : 0
+'SAVEDATA': attr : 16
+'SAVEDATA': mode : fmt=dir, user=rwx, group=rwx, other=rwx
+sceIoDread bad fd: 80020323
+sceIoDclose bad fd: 80020323

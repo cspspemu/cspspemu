@@ -1,0 +1,90 @@
+sceKernelCreateCallback: OK
+sceKernelCreateCallback: OK
+scePowerRegisterCallback: 00000000
+scePowerRegisterCallback: 00000001
+scePowerRegisterCallback: 00000002
+powerHandler called: 00000001, 00000080, 00001234
+powerHandler2 called: 00000002, 00000080, 00004567
+sceKernelCheckCallback: 00000001
+scePowerUnregisterCallback: 00000000
+scePowerUnregisterCallback twice: 80000025
+scePowerUnregisterCallback never registered: 80000025
+scePowerUnregisterCallback too low: 80000102
+scePowerUnregisterCallback too high (31): 80000023
+scePowerUnregisterCallback too high (32): 80000102
+scePowerUnregisterCallback: 00000000
+scePowerUnregisterCallback: 00000000
+
+[x] ---
+scePowerRegisterCallback: 00000000
+sceKernelPowerTick: 00000000
+powerHandler called: 00000001, 00000080, 00001234
+sceKernelCheckCallback: 00000001
+scePowerIsBatteryCharging
+sceKernelCheckCallback: 00000000
+scePowerIsBatteryExist: 00000001
+sceKernelCheckCallback: 00000000
+scePowerIsPowerOnline: 00000001
+sceKernelCheckCallback: 00000000
+scePowerGetBatteryLifePercent: OK
+sceKernelCheckCallback: 00000000
+scePowerGetBatteryChargingStatus
+sceKernelCheckCallback: 00000000
+scePowerIsLowBattery: 00000000
+sceKernelCheckCallback: 00000000
+sceKernelPowerLock: 00000000
+sceKernelCheckCallback: 00000000
+sceKernelPowerUnlock: 00000000
+sceKernelCheckCallback: 00000000
+sceKernelPowerUnlock: 00000000
+sceKernelCheckCallback: 00000000
+sceKernelPowerLock: 80000107
+sceKernelCheckCallback: 00000000
+sceKernelPowerTick: 00000000
+sceKernelCheckCallback: 00000000
+scePowerSetBusClockFrequency to 66: 00000000
+sceKernelCheckCallback: 00000000
+scePowerSetBusClockFrequency to 111: 00000000
+sceKernelCheckCallback: 00000000
+scePowerSetCpuClockFrequency to 111: 00000000
+sceKernelCheckCallback: 00000000
+scePowerSetCpuClockFrequency to 222: 00000000
+sceKernelCheckCallback: 00000000
+scePowerUnregisterCallback: 00000000
+
+[x] ---
+scePowerRegisterCallback: Normal: 00000000
+scePowerRegisterCallback: Invalid CB: 80000100
+scePowerRegisterCallback: Too low slot: 80000102
+scePowerRegisterCallback: Too high (31): 80000023
+scePowerRegisterCallback: Too high (32): 80000102
+scePowerRegisterCallback: Twice (same): 80000020
+scePowerRegisterCallback: Twice (different): 80000020
+scePowerUnregisterCallback: 00000000
+powerHandler called: 00000001, 00000080, 00001234
+sceKernelCheckCallback: 00000001
+scePowerRegisterCallback: 00000000
+scePowerUnregisterCallback: 00000000
+sceKernelDeleteCallback: 00000000
+sceKernelCheckCallback: 00000000
+
+[x] ---
+scePowerRegisterCallback: 00000000
+scePowerRegisterCallback: 00000001
+scePowerRegisterCallback: 00000002
+scePowerRegisterCallback: 00000003
+scePowerRegisterCallback: 00000004
+scePowerRegisterCallback: 00000005
+scePowerRegisterCallback: 00000006
+scePowerRegisterCallback: 00000007
+scePowerRegisterCallback: 00000008
+scePowerRegisterCallback: 00000009
+scePowerRegisterCallback: 0000000A
+scePowerRegisterCallback: 0000000B
+scePowerRegisterCallback: 0000000C
+scePowerRegisterCallback: 0000000D
+scePowerRegisterCallback: 0000000E
+scePowerRegisterCallback: 0000000F
+scePowerRegisterCallback: 80000022
+
+[x] ---
