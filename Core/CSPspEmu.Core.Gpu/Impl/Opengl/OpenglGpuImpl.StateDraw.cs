@@ -330,7 +330,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             if (TextureMappingState->Enabled)
             {
-                TextureMatrix = Matrix4f.Identity
+                _textureMatrix = Matrix4f.Identity
                         .Scale(
                             1.0f / Mipmap0->BufferWidth,
                             1.0f / Mipmap0->TextureHeight,
@@ -356,12 +356,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             if (TextureMappingState->Enabled)
             {
-                TextureMatrix = Matrix4f.Identity;
+                _textureMatrix = Matrix4f.Identity;
 
                 switch (TextureMappingState->TextureMapMode)
                 {
                     case TextureMapMode.GU_TEXTURE_COORDS:
-                        TextureMatrix = TextureMatrix
+                        _textureMatrix = _textureMatrix
                                 .Translate(TextureState->OffsetU, TextureState->OffsetV, 0)
                                 .Scale(TextureState->ScaleU, TextureState->ScaleV, 1)
                             ;

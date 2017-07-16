@@ -101,25 +101,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             }
         }
 
-        private FastList<VertexInfoVector3f> VerticesPosition = new FastList<VertexInfoVector3f>();
-        private FastList<VertexInfoVector3f> VerticesNormal = new FastList<VertexInfoVector3f>();
-        private FastList<VertexInfoVector3f> VerticesTexcoords = new FastList<VertexInfoVector3f>();
-        private FastList<VertexInfoColor> VerticesColors = new FastList<VertexInfoColor>();
-        private FastList<VertexInfoWeights> VerticesWeights = new FastList<VertexInfoWeights>();
+        private readonly FastList<VertexInfoVector3F> _verticesPosition = new FastList<VertexInfoVector3F>();
+        private readonly FastList<VertexInfoVector3F> _verticesNormal = new FastList<VertexInfoVector3F>();
+        private readonly FastList<VertexInfoVector3F> _verticesTexcoords = new FastList<VertexInfoVector3F>();
+        private readonly FastList<VertexInfoColor> _verticesColors = new FastList<VertexInfoColor>();
+        private readonly FastList<VertexInfoWeights> _verticesWeights = new FastList<VertexInfoWeights>();
 
-        private GLBuffer VerticesPositionBuffer;
-        private GLBuffer VerticesNormalBuffer;
-        private GLBuffer VerticesTexcoordsBuffer;
-        private GLBuffer VerticesColorsBuffer;
-        private GLBuffer VerticesWeightsBuffer;
+        private GLBuffer _verticesPositionBuffer;
+        private GLBuffer _verticesNormalBuffer;
+        private GLBuffer _verticesTexcoordsBuffer;
+        private GLBuffer _verticesColorsBuffer;
+        private GLBuffer _verticesWeightsBuffer;
 
         private FastList<uint> IndicesList = new FastList<uint>();
 
-        private Matrix4f WorldViewProjectionMatrix = default(Matrix4f);
-        private Matrix4f TextureMatrix = default(Matrix4f);
+        private Matrix4f _worldViewProjectionMatrix = default(Matrix4f);
+        private Matrix4f _textureMatrix = default(Matrix4f);
 
         public RenderbufferManager RenderbufferManager { get; private set; }
-        private GLShader Shader;
+        private GLShader _shader;
 
         public class ShaderInfoClass
         {
@@ -176,31 +176,31 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         private void DrawInitVertices()
         {
             //Console.WriteLine(WGL.wglGetCurrentContext());
-            VerticesPositionBuffer = GLBuffer.Create();
-            VerticesNormalBuffer = GLBuffer.Create();
-            VerticesTexcoordsBuffer = GLBuffer.Create();
-            VerticesColorsBuffer = GLBuffer.Create();
-            VerticesWeightsBuffer = GLBuffer.Create();
-            Shader = new GLShader(
+            _verticesPositionBuffer = GLBuffer.Create();
+            _verticesNormalBuffer = GLBuffer.Create();
+            _verticesTexcoordsBuffer = GLBuffer.Create();
+            _verticesColorsBuffer = GLBuffer.Create();
+            _verticesWeightsBuffer = GLBuffer.Create();
+            _shader = new GLShader(
                 typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.vert")
                     .ReadAllContentsAsString(),
                 typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.frag")
                     .ReadAllContentsAsString()
             );
             Console.WriteLine("###################################");
-            foreach (var Uniform in Shader.Uniforms) Console.WriteLine(Uniform);
-            foreach (var Attribute in Shader.Attributes) Console.WriteLine(Attribute);
+            foreach (var Uniform in _shader.Uniforms) Console.WriteLine(Uniform);
+            foreach (var Attribute in _shader.Attributes) Console.WriteLine(Attribute);
             Console.WriteLine("###################################");
 
-            Shader.BindUniformsAndAttributes(ShaderInfo);
+            _shader.BindUniformsAndAttributes(ShaderInfo);
         }
 
         private void PrepareDrawStateFirst()
         {
-            if (Shader == null) this.DrawInitVertices();
+            if (_shader == null) this.DrawInitVertices();
 
-            ShaderInfo.matrixWorldViewProjection.Set(WorldViewProjectionMatrix);
-            ShaderInfo.matrixTexture.Set(TextureMatrix);
+            ShaderInfo.matrixWorldViewProjection.Set(_worldViewProjectionMatrix);
+            ShaderInfo.matrixTexture.Set(_textureMatrix);
             ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4f());
             ShaderInfo.hasPerVertexColor.Set(VertexType.HasColor);
             ShaderInfo.clearingMode.Set(GpuState->ClearingMode);
@@ -210,7 +210,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //ShaderInfo.weightCount.Set(0);
             if (VertexType.HasWeight)
             {
-                ShaderInfo.matrixBones.Set(new Matrix4f[]
+                ShaderInfo.matrixBones.Set(new[]
                 {
                     GpuState->SkinningState.BoneMatrix0.Matrix4,
                     GpuState->SkinningState.BoneMatrix1.Matrix4,
@@ -260,38 +260,38 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         {
             ShaderInfo.hasReversedNormal.NoWarning().Set(VertexType.ReversedNormal);
 
-            Shader.Draw(Type, IndicesList.Buffer, IndicesList.Length, () =>
+            _shader.Draw(Type, IndicesList.Buffer, IndicesList.Length, () =>
             {
                 if (VertexType.HasPosition)
                 {
-                    VerticesPositionBuffer.SetData(this.VerticesPosition.Buffer, 0, this.VerticesPosition.Length);
-                    ShaderInfo.vertexPosition.SetData<float>(VerticesPositionBuffer, 3, 0, sizeof(VertexInfoVector3f),
+                    _verticesPositionBuffer.SetData(this._verticesPosition.Buffer, 0, this._verticesPosition.Length);
+                    ShaderInfo.vertexPosition.SetData<float>(_verticesPositionBuffer, 3, 0, sizeof(VertexInfoVector3F),
                         false);
                 }
 
                 if (VertexType.HasTexture)
                 {
-                    VerticesTexcoordsBuffer.SetData(this.VerticesTexcoords.Buffer, 0, this.VerticesTexcoords.Length);
-                    ShaderInfo.vertexTexCoords.SetData<float>(VerticesTexcoordsBuffer, 3, 0, sizeof(VertexInfoVector3f),
+                    _verticesTexcoordsBuffer.SetData(this._verticesTexcoords.Buffer, 0, this._verticesTexcoords.Length);
+                    ShaderInfo.vertexTexCoords.SetData<float>(_verticesTexcoordsBuffer, 3, 0, sizeof(VertexInfoVector3F),
                         false);
                 }
 
                 if (VertexType.HasColor)
                 {
-                    VerticesColorsBuffer.SetData(this.VerticesColors.Buffer, 0, this.VerticesColors.Length);
-                    ShaderInfo.vertexColor.SetData<float>(VerticesColorsBuffer, 4, 0, sizeof(VertexInfoColor), false);
+                    _verticesColorsBuffer.SetData(this._verticesColors.Buffer, 0, this._verticesColors.Length);
+                    ShaderInfo.vertexColor.SetData<float>(_verticesColorsBuffer, 4, 0, sizeof(VertexInfoColor), false);
                 }
 
                 if (VertexType.HasNormal)
                 {
-                    VerticesNormalBuffer.SetData(this.VerticesNormal.Buffer, 0, this.VerticesNormal.Length);
+                    _verticesNormalBuffer.SetData(this._verticesNormal.Buffer, 0, this._verticesNormal.Length);
                     ShaderInfo.vertexNormal.NoWarning()
-                        .SetData<float>(VerticesNormalBuffer, 4, 0, sizeof(VertexInfoVector3f), false);
+                        .SetData<float>(_verticesNormalBuffer, 4, 0, sizeof(VertexInfoVector3F), false);
                 }
 
                 if (VertexType.HasWeight)
                 {
-                    VerticesWeightsBuffer.SetData(this.VerticesWeights.Buffer, 0, this.VerticesWeights.Length);
+                    _verticesWeightsBuffer.SetData(this._verticesWeights.Buffer, 0, this._verticesWeights.Length);
                     var vertexWeights = new[]
                     {
                         ShaderInfo.vertexWeight0, ShaderInfo.vertexWeight1, ShaderInfo.vertexWeight2,
@@ -300,7 +300,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                     };
                     for (int n = 0; n < VertexType.RealSkinningWeightCount; n++)
                     {
-                        vertexWeights[n].SetData<float>(VerticesWeightsBuffer, 1, n * sizeof(float),
+                        vertexWeights[n].SetData<float>(_verticesWeightsBuffer, 1, n * sizeof(float),
                             sizeof(VertexInfoWeights), false);
                     }
                 }
@@ -309,11 +309,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
         private void ResetVertex()
         {
-            VerticesPosition.Reset();
-            VerticesNormal.Reset();
-            VerticesWeights.Reset();
-            VerticesTexcoords.Reset();
-            VerticesColors.Reset();
+            _verticesPosition.Reset();
+            _verticesNormal.Reset();
+            _verticesWeights.Reset();
+            _verticesTexcoords.Reset();
+            _verticesColors.Reset();
 
             IndicesList.Reset();
         }
@@ -325,7 +325,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
         private void PutVertexIndexRelative(int Offset)
         {
-            PutVertexIndex(VerticesPosition.Length + Offset);
+            PutVertexIndex(_verticesPosition.Length + Offset);
         }
 
         private void PutVertexIndex(int VertexIndex)
@@ -342,13 +342,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         {
             _CapturePutVertex(ref VertexInfo);
 
-            PutVertexIndex(VerticesPosition.Length);
+            PutVertexIndex(_verticesPosition.Length);
 
-            VerticesPosition.Add(new VertexInfoVector3f(VertexInfo.Position));
-            VerticesNormal.Add(new VertexInfoVector3f(VertexInfo.Normal));
-            VerticesTexcoords.Add(new VertexInfoVector3f(VertexInfo.Texture));
-            VerticesColors.Add(new VertexInfoColor(VertexInfo.Color));
-            VerticesWeights.Add(new VertexInfoWeights(VertexInfo));
+            _verticesPosition.Add(new VertexInfoVector3F(VertexInfo.Position));
+            _verticesNormal.Add(new VertexInfoVector3F(VertexInfo.Normal));
+            _verticesTexcoords.Add(new VertexInfoVector3F(VertexInfo.Texture));
+            _verticesColors.Add(new VertexInfoColor(VertexInfo.Color));
+            _verticesWeights.Add(new VertexInfoWeights(VertexInfo));
         }
 
         private void ReadVertex_Void(int Index, out VertexInfo VertexInfo)
@@ -511,9 +511,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             ResetVertex();
 
 
-            if (Shader != null)
+            if (_shader != null)
             {
-                Shader.GetUniform("lopEnabled").Set(GpuState->LogicalOperationState.Enabled);
+                _shader.GetUniform("lopEnabled").Set(GpuState->LogicalOperationState.Enabled);
 
                 if (GpuState->LogicalOperationState.Enabled)
                 {
@@ -522,10 +522,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                         LogicOpsRenderTarget = GLRenderTarget.Create(512, 272, RenderTargetLayers.Color);
                     }
                     GLRenderTarget.CopyFromTo(GLRenderTarget.Current, LogicOpsRenderTarget);
-                    Shader.GetUniform("backtex").Set(GLTextureUnit.CreateAtIndex(1).SetFiltering(GLScaleFilter.Linear)
+                    _shader.GetUniform("backtex").Set(GLTextureUnit.CreateAtIndex(1).SetFiltering(GLScaleFilter.Linear)
                         .SetWrap(GLWrap.ClampToEdge).SetTexture(LogicOpsRenderTarget.TextureColor));
 
-                    Shader.GetUniform("lop").Set((int) GpuState->LogicalOperationState.Operation);
+                    _shader.GetUniform("lop").Set((int) GpuState->LogicalOperationState.Operation);
 
                     //new Bitmap(512, 272).SetChannelsDataInterleaved(LogicOpsRenderTarget.ReadPixels(), BitmapChannelList.RGBA).Save(@"c:\temp\test.png");
                 }
@@ -570,7 +570,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                     PrepareStateDraw(GpuState);
                 }
 
-                OpenglGpuImplMatrix.PrepareStateMatrix(GpuState, ref WorldViewProjectionMatrix);
+                OpenglGpuImplMatrix.PrepareStateMatrix(GpuState, ref _worldViewProjectionMatrix);
                 PrepareDrawStateFirst();
             }
 
@@ -644,32 +644,30 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             int z = 0;
             VertexInfo TempVertexInfo;
 
-            float* Morphs = &GpuState->MorphingState.MorphWeight0;
-
             //for (int n = 0; n < MorpingVertexCount; n++) Console.Write("{0}, ", Morphs[n]); Console.WriteLine("");
 
             //int VertexInfoFloatCount = (sizeof(Color4F) + sizeof(Vector3F) * 3) / sizeof(float);
-            int VertexInfoFloatCount = (sizeof(VertexInfo)) / sizeof(float);
-            fixed (VertexInfo* VerticesPtr = Vertices)
+            int vertexInfoFloatCount = (sizeof(VertexInfo)) / sizeof(float);
+            fixed (VertexInfo* verticesPtr = Vertices)
             {
                 if (MorpingVertexCount == 1)
                 {
-                    VertexReader.ReadVertices(0, VerticesPtr, (int) TotalVerticesWithoutMorphing);
+                    VertexReader.ReadVertices(0, verticesPtr, (int) TotalVerticesWithoutMorphing);
                 }
                 else
                 {
-                    var ComponentsIn = (float*) &TempVertexInfo;
-                    for (int n = 0; n < TotalVerticesWithoutMorphing; n++)
+                    var componentsIn = (float*) &TempVertexInfo;
+                    for (var n = 0; n < TotalVerticesWithoutMorphing; n++)
                     {
-                        var ComponentsOut = (float*) &VerticesPtr[n];
-                        for (int cc = 0; cc < VertexInfoFloatCount; cc++) ComponentsOut[cc] = 0;
+                        var componentsOut = (float*) &verticesPtr[n];
+                        for (int cc = 0; cc < vertexInfoFloatCount; cc++) componentsOut[cc] = 0;
                         for (int m = 0; m < MorpingVertexCount; m++)
                         {
                             VertexReader.ReadVertex(z++, &TempVertexInfo);
-                            for (int cc = 0; cc < VertexInfoFloatCount; cc++)
-                                ComponentsOut[cc] += ComponentsIn[cc] * Morphs[m];
+                            for (int cc = 0; cc < vertexInfoFloatCount; cc++)
+                                componentsOut[cc] += componentsIn[cc] * GpuState->MorphingState.MorphWeight[m];
                         }
-                        VerticesPtr[n].Normal = VerticesPtr[n].Normal.Normalize();
+                        verticesPtr[n].Normal = verticesPtr[n].Normal.Normalize();
                     }
                 }
             }
@@ -703,12 +701,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                         GL.glDisable(GL.GL_CULL_FACE);
                         for (int n = 0; n < VertexCount; n += 2)
                         {
-                            VertexInfo V0, V1, V2, V3;
+                            VertexInfo v0, v1, v2, v3;
 
-                            ReadVertex(n + 0, out V0);
-                            ReadVertex(n + 1, out V3);
+                            ReadVertex(n + 0, out v0);
+                            ReadVertex(n + 1, out v3);
 
-                            VertexUtils.GenerateTriangleStripFromSpriteVertices(ref V0, out V1, out V2, ref V3);
+                            VertexUtils.GenerateTriangleStripFromSpriteVertices(ref v0, out v1, out v2, ref v3);
 
                             if (n > 0)
                             {
@@ -716,7 +714,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                                 PutVertexIndexRelative(0);
                             }
 
-                            PutVertices(V0, V1, V2, V3);
+                            PutVertices(v0, v1, v2, v3);
                         }
                     }
                     else

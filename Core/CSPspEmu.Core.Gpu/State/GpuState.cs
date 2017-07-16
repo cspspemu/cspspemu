@@ -225,16 +225,9 @@ namespace CSPspEmu.Core.Gpu.State
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct MorphingStateStruct
+    public unsafe struct MorphingStateStruct
     {
-        public float MorphWeight0;
-        public float MorphWeight1;
-        public float MorphWeight2;
-        public float MorphWeight3;
-        public float MorphWeight4;
-        public float MorphWeight5;
-        public float MorphWeight6;
-        public float MorphWeight7;
+        public fixed float MorphWeight[8];
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

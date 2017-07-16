@@ -6,43 +6,38 @@ using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu.Core.Gpu
 {
-    public static class Vector4fRawExtensions
+    public static class Vector4FRawExtensions
     {
-        public static Vector4f Normalize(this Vector4f Vector)
-        {
-            return Vector * (1.0f / (float) Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Vector.Z * Vector.Z));
-        }
+        public static Vector4f Normalize(this Vector4f vector) =>
+            vector * (1.0f / (float) Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z));
 
-        public static Vector4f ToVector3(this Vector4f Vector)
-        {
-            return new Vector4f(Vector.X, Vector.Y, Vector.Z, 0f);
-        }
+        public static Vector4f ToVector3(this Vector4f vector) => new Vector4f(vector.X, vector.Y, vector.Z, 0f);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct VertexInfoVector3f
+    public struct VertexInfoVector3F
     {
         public float X, Y, Z;
 
-        public VertexInfoVector3f(Vector4f Vector4f)
+        public VertexInfoVector3F(Vector4f vector4F)
         {
-            this.X = Vector4f.X;
-            this.Y = Vector4f.Y;
-            this.Z = Vector4f.Z;
+            X = vector4F.X;
+            Y = vector4F.Y;
+            Z = vector4F.Z;
         }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct VertexInfoColor
+    public struct VertexInfoColor
     {
         public float R, G, B, A;
 
-        public VertexInfoColor(Vector4f Vector4f)
+        public VertexInfoColor(Vector4f vector4F)
         {
-            this.R = Vector4f.X;
-            this.G = Vector4f.Y;
-            this.B = Vector4f.Z;
-            this.A = Vector4f.W;
+            R = vector4F.X;
+            G = vector4F.Y;
+            B = vector4F.Z;
+            A = vector4F.W;
         }
     }
 
@@ -51,18 +46,16 @@ namespace CSPspEmu.Core.Gpu
     {
         public fixed float W[8];
 
-        public unsafe VertexInfoWeights(VertexInfo VertexInfo)
+        public VertexInfoWeights(VertexInfo vertexInfo)
         {
-            fixed (float* WPtr = W)
+            fixed (float* wPtr = W)
             {
-                for (int n = 0; n < 8; n++) WPtr[n] = VertexInfo.Weights[n];
+                for (var n = 0; n < 8; n++) wPtr[n] = vertexInfo.Weights[n];
             }
         }
     }
 
-    /// <summary>
-    /// Information about a vertex.
-    /// </summary>
+    /// <summary>Information about a vertex.</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct VertexInfo
     {

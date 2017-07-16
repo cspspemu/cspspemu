@@ -1,6 +1,7 @@
 ﻿namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    // ReSharper disable UnusedMember.Global
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         /**
          * Specify morph weight entry
@@ -22,33 +23,14 @@
         }));
         */
 
-        private void _OP_MW(int index)
-        {
-            (&GpuState->MorphingState.MorphWeight0)[index] = Float1;
-        }
-
-        // ReSharper disable once UnusedMember.Global
+        private void _OP_MW(int index) => GpuState->MorphingState.MorphWeight[index] = Float1;
         public void OP_MW0() => _OP_MW(0);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_MW1() => _OP_MW(1);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_MW2() => _OP_MW(2);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_MW3() => _OP_MW(3);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_MW4() => _OP_MW(4);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_MW5() => _OP_MW(5);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_MW6() => _OP_MW(6);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_MW7() => _OP_MW(7);
     }
 }
