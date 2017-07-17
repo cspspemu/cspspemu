@@ -659,7 +659,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         }
     }
 
-    unsafe public struct MacAddress
+    public unsafe struct MacAddress
     {
         public static readonly MacAddress All = new MacAddress();
 
@@ -692,12 +692,12 @@ namespace CSPspEmu.Hle.Modules.pspnet
             return MacAddress;
         }
 
-        static public bool operator ==(MacAddress a, MacAddress b)
+        public static bool operator ==(MacAddress a, MacAddress b)
         {
             return a.GetAddressBytes().SequenceEqual(b.GetAddressBytes());
         }
 
-        static public bool operator !=(MacAddress a, MacAddress b)
+        public static bool operator !=(MacAddress a, MacAddress b)
         {
             return !a.GetAddressBytes().SequenceEqual(b.GetAddressBytes());
         }

@@ -18,7 +18,7 @@ using Hashing = CSPspEmu.Utils.Hashing;
 
 namespace CSPspEmu.Core.Gpu
 {
-    public unsafe abstract class Texture<TGpuImpl> : IDisposable
+    public abstract unsafe class Texture<TGpuImpl> : IDisposable
     {
         //public int TextureId { get; private set; }
         public ulong TextureHash

@@ -5,7 +5,7 @@ using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         /**
          * Set draw buffer parameters (and store in context for buffer-swap)

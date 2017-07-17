@@ -13,6 +13,12 @@ namespace SafeILGenerator.Ast
         {
         }
 
+        public AstGenerator Unimplemented(string message)
+        {
+            Console.WriteLine(message);
+            return this;
+        }
+
         public static readonly AstGenerator Instance = new AstGenerator();
 
         public AstNodeStmComment Comment(string comment) => new AstNodeStmComment(comment);

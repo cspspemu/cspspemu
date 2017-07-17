@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CSharpPlatform
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 16)]
-    unsafe public struct Vector4f
+    public unsafe struct Vector4f
     {
         public float X, Y, Z, W;
 
@@ -67,7 +67,7 @@ namespace CSharpPlatform
             );
         }
 
-        static public Vector4f Create(params float[] Values)
+        public static Vector4f Create(params float[] Values)
         {
             var Vector = default(Vector4f);
             for (int n = 0; n < 4; n++) Vector[n] = Values[n];

@@ -10,12 +10,12 @@ namespace CSPspEmu.Core.Memory
 {
     public unsafe class NormalPspMemory : PspMemory
     {
-        override public bool HasFixedGlobalAddress
+        public override bool HasFixedGlobalAddress
         {
             get { return false; }
         }
 
-        override public IntPtr FixedGlobalAddress
+        public override IntPtr FixedGlobalAddress
         {
             get { return IntPtr.Zero; }
         }

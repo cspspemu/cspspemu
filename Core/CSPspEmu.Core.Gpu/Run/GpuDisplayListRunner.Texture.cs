@@ -6,7 +6,7 @@ using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         //static pure string TextureArrayOperation(string type, string code) { return ArrayOperation(type, 0, 7, code); }
 

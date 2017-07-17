@@ -9,9 +9,9 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 {
-	unsafe public class MiniPlayer
+	public unsafe class MiniPlayer
 	{
-		static public int Play(Stream Stream, Stream OutStream)
+		public static int Play(Stream Stream, Stream OutStream)
 		{
 			var strt = Stream.ReadString(3);
 			Stream.Position = 0;

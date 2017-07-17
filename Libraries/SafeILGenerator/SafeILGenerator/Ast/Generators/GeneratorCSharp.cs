@@ -15,12 +15,12 @@ namespace SafeILGenerator.Ast.Generators
             return this;
         }
 
-        static public string GenerateString(AstNode astNode)
+        public static string GenerateString(AstNode astNode)
         {
             return GenerateString<GeneratorCSharp>(astNode);
         }
 
-        static public string GenerateString<TGeneratorCSharp>(AstNode astNode)
+        public static string GenerateString<TGeneratorCSharp>(AstNode astNode)
             where TGeneratorCSharp : GeneratorCSharp, new()
         {
             if (astNode == null) return "";

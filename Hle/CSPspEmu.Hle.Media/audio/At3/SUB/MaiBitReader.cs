@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 {
-	unsafe public sealed class MaiBitReader : IDisposable
+	public sealed unsafe class MaiBitReader : IDisposable
 	{
 		public const int MaiBitReaderTypeHigh = 0;
 		public const int MaiBitReaderTypeLow = 1;

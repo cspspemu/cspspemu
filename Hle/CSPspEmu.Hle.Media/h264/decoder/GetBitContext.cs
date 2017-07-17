@@ -110,7 +110,7 @@ namespace cscodec.h264.decoder
 		public long cache1;
 		public int size_in_bits;
 
-		static public long bitswap_32(long _x)
+		public static long bitswap_32(long _x)
 		{
 			ulong x = (ulong)_x;
 			return av_reverse[(int)(x & 0x0FF)] << 24

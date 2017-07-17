@@ -14,7 +14,7 @@ using CSharpPlatform.GL.Impl;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    unsafe public sealed partial class OpenglGpuImpl
+    public sealed unsafe partial class OpenglGpuImpl
     {
         //Thread CThread;
         AutoResetEvent StopEvent = new AutoResetEvent(false);

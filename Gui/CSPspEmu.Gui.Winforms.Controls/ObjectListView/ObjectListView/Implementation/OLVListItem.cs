@@ -67,7 +67,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the bounding rectangle of the item, including all subitems
         /// </summary>
-        new public Rectangle Bounds
+        public new Rectangle Bounds
         {
             get
             {
@@ -116,7 +116,7 @@ namespace BrightIdeasSoftware
         /// Unfortuneately, this won't work if this property is set through the base class, since
         /// the property is not declared as virtual.
         /// </remarks>
-        new public bool Checked
+        public new bool Checked
         {
             get { return base.Checked; }
             set

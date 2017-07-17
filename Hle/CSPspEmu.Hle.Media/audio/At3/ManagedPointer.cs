@@ -5,20 +5,20 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-static public class ManagedPointerExtensions
+public static class ManagedPointerExtensions
 {
-	static public ManagedPointer<T> GetPointer<T>(this T[] This, int Offset)
+	public static ManagedPointer<T> GetPointer<T>(this T[] This, int Offset)
 	{
 		return new ManagedPointer<T>(This, Offset);
 	}
 
-	static public ManagedPointer<T> GetPointer<T>(this ManagedPointer<T> This, int Offset)
+	public static ManagedPointer<T> GetPointer<T>(this ManagedPointer<T> This, int Offset)
 	{
 		return This.Slice(Offset);
 	}
 }
 
-unsafe public class ManagedPointer<T>
+public unsafe class ManagedPointer<T>
 {
 	private readonly T[] Container;
 	private readonly int Offset;

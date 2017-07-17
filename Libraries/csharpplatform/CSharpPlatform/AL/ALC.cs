@@ -22,7 +22,7 @@ using System.Security;
 
 namespace CSharpPlatform.AL
 {
-    unsafe public partial class AL
+    public unsafe partial class AL
     {
         public const int ALC_INVALID = 0;
         public const int ALC_VERSION_0_1 = 1;
@@ -50,86 +50,86 @@ namespace CSharpPlatform.AL
         public const int ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER = 0x311;
         public const int ALC_CAPTURE_SAMPLES = 0x312;
 
-        static public readonly alcCreateContext alcCreateContext;
-        static public readonly alcMakeContextCurrent alcMakeContextCurrent;
-        static public readonly alcProcessContext alcProcessContext;
-        static public readonly alcSuspendContext alcSuspendContext;
-        static public readonly alcDestroyContext alcDestroyContext;
-        static public readonly alcGetCurrentContext alcGetCurrentContext;
-        static public readonly alcGetContextsDevice alcGetContextsDevice;
-        static public readonly alcOpenDevice alcOpenDevice;
-        static public readonly alcCloseDevice alcCloseDevice;
-        static public readonly alcGetError alcGetError;
-        static public readonly alcIsExtensionPresent alcIsExtensionPresent;
-        static public readonly alcGetProcAddress alcGetProcAddress;
-        static public readonly alcGetEnumValue alcGetEnumValue;
-        static public readonly alcGetString alcGetString;
-        static public readonly alcGetIntegerv alcGetIntegerv;
-        static public readonly alcCaptureOpenDevice alcCaptureOpenDevice;
-        static public readonly alcCaptureCloseDevice alcCaptureCloseDevice;
-        static public readonly alcCaptureStart alcCaptureStart;
-        static public readonly alcCaptureStop alcCaptureStop;
-        static public readonly alcCaptureSamples alcCaptureSamples;
+        public static readonly alcCreateContext alcCreateContext;
+        public static readonly alcMakeContextCurrent alcMakeContextCurrent;
+        public static readonly alcProcessContext alcProcessContext;
+        public static readonly alcSuspendContext alcSuspendContext;
+        public static readonly alcDestroyContext alcDestroyContext;
+        public static readonly alcGetCurrentContext alcGetCurrentContext;
+        public static readonly alcGetContextsDevice alcGetContextsDevice;
+        public static readonly alcOpenDevice alcOpenDevice;
+        public static readonly alcCloseDevice alcCloseDevice;
+        public static readonly alcGetError alcGetError;
+        public static readonly alcIsExtensionPresent alcIsExtensionPresent;
+        public static readonly alcGetProcAddress alcGetProcAddress;
+        public static readonly alcGetEnumValue alcGetEnumValue;
+        public static readonly alcGetString alcGetString;
+        public static readonly alcGetIntegerv alcGetIntegerv;
+        public static readonly alcCaptureOpenDevice alcCaptureOpenDevice;
+        public static readonly alcCaptureCloseDevice alcCaptureCloseDevice;
+        public static readonly alcCaptureStart alcCaptureStart;
+        public static readonly alcCaptureStop alcCaptureStop;
+        public static readonly alcCaptureSamples alcCaptureSamples;
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCcontext* alcCreateContext(ALCdevice*device, ALCint* attrlist);
+    public unsafe delegate ALCcontext* alcCreateContext(ALCdevice*device, ALCint* attrlist);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCboolean alcMakeContextCurrent(ALCcontext*context);
+    public unsafe delegate ALCboolean alcMakeContextCurrent(ALCcontext*context);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alcProcessContext(ALCcontext*context);
+    public unsafe delegate void alcProcessContext(ALCcontext*context);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alcSuspendContext(ALCcontext*context);
+    public unsafe delegate void alcSuspendContext(ALCcontext*context);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alcDestroyContext(ALCcontext*context);
+    public unsafe delegate void alcDestroyContext(ALCcontext*context);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCcontext* alcGetCurrentContext();
+    public unsafe delegate ALCcontext* alcGetCurrentContext();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCdevice* alcGetContextsDevice(ALCcontext*context);
+    public unsafe delegate ALCdevice* alcGetContextsDevice(ALCcontext*context);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCdevice* alcOpenDevice(ALCchar*devicename);
+    public unsafe delegate ALCdevice* alcOpenDevice(ALCchar*devicename);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCboolean alcCloseDevice(ALCdevice*device);
+    public unsafe delegate ALCboolean alcCloseDevice(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCenum alcGetError(ALCdevice*device);
+    public unsafe delegate ALCenum alcGetError(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCboolean alcIsExtensionPresent(ALCdevice*device, ALCchar*extname);
+    public unsafe delegate ALCboolean alcIsExtensionPresent(ALCdevice*device, ALCchar*extname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void* alcGetProcAddress(ALCdevice*device, ALCchar*funcname);
+    public unsafe delegate void* alcGetProcAddress(ALCdevice*device, ALCchar*funcname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCenum alcGetEnumValue(ALCdevice*device, ALCchar*enumname);
+    public unsafe delegate ALCenum alcGetEnumValue(ALCdevice*device, ALCchar*enumname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCchar* alcGetString(ALCdevice*device, ALCenum param);
+    public unsafe delegate ALCchar* alcGetString(ALCdevice*device, ALCenum param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alcGetIntegerv(ALCdevice*device, ALCenum param, ALCsizei size, ALCint*data);
+    public unsafe delegate void alcGetIntegerv(ALCdevice*device, ALCenum param, ALCsizei size, ALCint*data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCdevice* alcCaptureOpenDevice(ALCchar*devicename, ALCuint frequency, ALCenum format,
+    public unsafe delegate ALCdevice* alcCaptureOpenDevice(ALCchar*devicename, ALCuint frequency, ALCenum format,
         ALCsizei buffersize);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALCboolean alcCaptureCloseDevice(ALCdevice*device);
+    public unsafe delegate ALCboolean alcCaptureCloseDevice(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alcCaptureStart(ALCdevice*device);
+    public unsafe delegate void alcCaptureStart(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alcCaptureStop(ALCdevice*device);
+    public unsafe delegate void alcCaptureStop(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alcCaptureSamples(ALCdevice*device, void*buffer, ALCsizei samples);
+    public unsafe delegate void alcCaptureSamples(ALCdevice*device, void*buffer, ALCsizei samples);
 }

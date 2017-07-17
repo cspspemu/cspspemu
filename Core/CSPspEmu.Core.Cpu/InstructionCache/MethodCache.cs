@@ -23,84 +23,73 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
     {
         public static readonly MethodCache Methods = new MethodCache();
 
-        private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
-        private static readonly GeneratorIL GeneratorILInstance = new GeneratorIL();
+        private static readonly AstMipsGenerator Ast = AstMipsGenerator.Instance;
+        private static readonly GeneratorIL GeneratorIlInstance = new GeneratorIL();
 
-        private readonly Dictionary<uint, MethodCacheInfo> MethodMapping =
+        private readonly Dictionary<uint, MethodCacheInfo> _methodMapping =
             new Dictionary<uint, MethodCacheInfo>(64 * 1024);
 
-        public IEnumerable<uint> PCs
-        {
-            get { return MethodMapping.Keys; }
-        }
+        public IEnumerable<uint> PCs => _methodMapping.Keys;
 
         [Inject] public CpuProcessor CpuProcessor;
 
-        MethodCompilerThread MethodCompilerThread;
+        MethodCompilerThread _methodCompilerThread;
 
-        void IInjectInitialize.Initialize()
-        {
-            MethodCompilerThread = new MethodCompilerThread(CpuProcessor, this);
-        }
+        void IInjectInitialize.Initialize() => _methodCompilerThread = new MethodCompilerThread(CpuProcessor, this);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="PC"></param>
+        /// <param name="pc"></param>
         /// <returns></returns>
-        public MethodCacheInfo GetForPC(uint PC)
+        public MethodCacheInfo GetForPc(uint pc)
         {
-            if (MethodMapping.ContainsKey(PC))
+            if (_methodMapping.ContainsKey(pc))
             {
-                return MethodMapping[PC];
+                return _methodMapping[pc];
             }
             else
             {
-                var DelegateGeneratorForPC = GeneratorILInstance.GenerateDelegate<Action<CpuThreadState>>(
-                    "MethodCache.DynamicCreateNewFunction", ast.Statements(
-                        ast.Statement(ast.CallInstance(ast.CpuThreadState,
+                var delegateGeneratorForPc = GeneratorIlInstance.GenerateDelegate<Action<CpuThreadState>>(
+                    "MethodCache.DynamicCreateNewFunction", Ast.Statements(
+                        Ast.Statement(Ast.CallInstance(Ast.CpuThreadStateExpr,
                             (Action<MethodCacheInfo, uint>) CpuThreadState.Methods._MethodCacheInfo_SetInternal,
-                            ast.GetMethodCacheInfoAtPC(PC), PC)),
-                        ast.Statement(ast.TailCall(ast.CallInstance(ast.GetMethodCacheInfoAtPC(PC),
-                            (Action<CpuThreadState>) MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadState))),
-                        ast.Return()
+                            Ast.GetMethodCacheInfoAtPc(pc), pc)),
+                        Ast.Statement(Ast.TailCall(Ast.CallInstance(Ast.GetMethodCacheInfoAtPc(pc),
+                            (Action<CpuThreadState>) MethodCacheInfo.Methods.CallDelegate, Ast.CpuThreadStateExpr))),
+                        Ast.Return()
                     ));
-                return MethodMapping[PC] = new MethodCacheInfo(this, DelegateGeneratorForPC, PC);
+                return _methodMapping[pc] = new MethodCacheInfo(this, delegateGeneratorForPc, pc);
             }
         }
 
-        internal void Free(MethodCacheInfo MethodCacheInfo)
-        {
-            MethodMapping.Remove(MethodCacheInfo.EntryPC);
-        }
+        internal void Free(MethodCacheInfo methodCacheInfo) => _methodMapping.Remove(methodCacheInfo.EntryPC);
 
         public void FlushAll()
         {
-            foreach (var MethodCacheInfo in MethodMapping.Values.ToArray())
-            {
-                MethodCacheInfo.Free();
-            }
+            foreach (var methodCacheInfo in _methodMapping.Values.ToArray())
+                methodCacheInfo.Free();
         }
 
-        public void FlushRange(uint Start, uint End)
+        public void FlushRange(uint start, uint end)
         {
             //Console.Error.WriteLine("[{0}]", MethodMapping);
             //Console.Error.WriteLine("[{0}]", MethodMapping.Values);
-            foreach (var MethodCacheInfo in MethodMapping.Values.ToArray())
+            foreach (var methodCacheInfo in _methodMapping.Values.ToArray())
                 //foreach (var MethodCacheInfo in MethodMapping.Values)
             {
                 //Console.Error.WriteLine("[{0}]", MethodCacheInfo);
-                if (MethodCacheInfo.MaxPC >= Start && MethodCacheInfo.MinPC <= End)
+                if (methodCacheInfo.MaxPC >= start && methodCacheInfo.MinPC <= end)
                 {
-                    MethodCacheInfo.Free();
+                    methodCacheInfo.Free();
                 }
             }
         }
 
-        public void _MethodCacheInfo_SetInternal(CpuThreadState CpuThreadState, MethodCacheInfo MethodCacheInfo,
-            uint PC)
+        public void _MethodCacheInfo_SetInternal(CpuThreadState cpuThreadState, MethodCacheInfo methodCacheInfo,
+            uint pc)
         {
-            MethodCacheInfo.SetDynarecFunction(MethodCompilerThread.GetDynarecFunctionForPC(PC));
+            methodCacheInfo.SetDynarecFunction(_methodCompilerThread.GetDynarecFunctionForPC(pc));
         }
     }
 
@@ -113,53 +102,42 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         private CpuProcessor CpuProcessor;
         private MethodCache MethodCache;
 
-        public MethodCompilerThread(CpuProcessor CpuProcessor, MethodCache MethodCache)
+        public MethodCompilerThread(CpuProcessor cpuProcessor, MethodCache methodCache)
         {
-            this.CpuProcessor = CpuProcessor;
-            this.MethodCache = MethodCache;
-            this.Thread = new Thread(Main)
+            CpuProcessor = cpuProcessor;
+            MethodCache = methodCache;
+            Thread = new Thread(Main)
             {
                 IsBackground = true
             };
-            this.Thread.Start();
+            Thread.Start();
         }
 
-        private bool _ShouldAdd(uint PC)
-        {
-            return !Functions.ContainsKey(PC) && !ExploringPCs.Contains(PC);
-        }
+        private bool _ShouldAdd(uint pc) => !Functions.ContainsKey(pc) && !ExploringPCs.Contains(pc);
 
-        private void _AddedPC(uint PC)
-        {
-            //Console.WriteLine("Enqueing: {0:X8}", PC);
-            ExploringPCs.Add(PC);
-        }
+        private void _AddedPC(uint pc) => ExploringPCs.Add(pc);
 
-        public void AddPCNow(uint PC)
+        public void AddPcNow(uint pc)
         {
             lock (this)
             {
-                if (_ShouldAdd(PC))
-                {
-                    _AddedPC(PC);
-                    ExploreQueue.AddFirst(PC);
-                }
+                if (!_ShouldAdd(pc)) return;
+                _AddedPC(pc);
+                ExploreQueue.AddFirst(pc);
             }
         }
 
-        public void AddPCLater(uint PC)
+        public void AddPcLater(uint pc)
         {
             lock (this)
             {
-                if (_ShouldAdd(PC))
-                {
-                    _AddedPC(PC);
-                    ExploreQueue.AddLast(PC);
-                }
+                if (!_ShouldAdd(pc)) return;
+                _AddedPC(pc);
+                ExploreQueue.AddLast(pc);
             }
         }
 
-        AutoResetEvent CompletedFunction = new AutoResetEvent(false);
+        AutoResetEvent _completedFunction = new AutoResetEvent(false);
 
         private void Main()
         {
@@ -168,12 +146,12 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             {
                 while (true)
                 {
-                    var PC = ExploreQueue.ReadOne();
+                    var pc = ExploreQueue.ReadOne();
                     //Console.Write("Compiling {0:X8}...", PC);
-                    var DynarecFunction = _GenerateForPC(PC);
-                    lock (this) this.Functions[PC] = DynarecFunction;
+                    var dynarecFunction = _GenerateForPC(pc);
+                    lock (this) Functions[pc] = dynarecFunction;
                     //Console.WriteLine("Ok");
-                    CompletedFunction.Set();
+                    _completedFunction.Set();
                 }
             }
             finally
@@ -182,20 +160,20 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             }
         }
 
-        private DynarecFunction _GenerateForPC(uint PC)
+        private DynarecFunction _GenerateForPC(uint pc)
         {
-            var Memory = CpuProcessor.Memory;
+            var memory = CpuProcessor.Memory;
             if (_DynarecConfig.DebugFunctionCreation)
             {
-                Console.Write("PC=0x{0:X8}...", PC);
+                Console.Write("PC=0x{0:X8}...", pc);
             }
             //var Stopwatch = new Logger.Stopwatch();
             var Time0 = DateTime.UtcNow;
 
             var DynarecFunction =
                 CpuProcessor.DynarecFunctionCompiler.CreateFunction(
-                    new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
-            if (DynarecFunction.EntryPC != PC) throw (new Exception("Unexpected error"));
+                    new InstructionStreamReader(new PspMemoryStream(memory)), pc);
+            if (DynarecFunction.EntryPc != pc) throw (new Exception("Unexpected error"));
 
             if (_DynarecConfig.AllowCreatingUsedFunctionsInBackground)
             {
@@ -203,7 +181,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
                 {
                     if (PspMemory.IsAddressValid(CallingPC))
                     {
-                        AddPCLater(CallingPC);
+                        AddPcLater(CallingPC);
                     }
                 }
             }
@@ -217,12 +195,12 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
                     if (Platform.IsMono) Marshal.Prelink(DynarecFunction.Delegate.Method);
                     DynarecFunction.Delegate(null);
                 }
-                catch (InvalidProgramException InvalidProgramException)
+                catch (InvalidProgramException)
                 {
                     Console.Error.WriteLine("Invalid delegate:");
                     Console.Error.WriteLine(DynarecFunction.AstNode.ToCSharpString());
-                    Console.Error.WriteLine(DynarecFunction.AstNode.ToILString<Action<CpuThreadState>>());
-                    throw (InvalidProgramException);
+                    Console.Error.WriteLine(DynarecFunction.AstNode.ToIlString<Action<CpuThreadState>>());
+                    throw;
                 }
             }
 
@@ -240,11 +218,11 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
                     {
                         Console.WriteLine(
                             "({0}): (analyze: {1}, generateAST: {2}, optimize: {3}, generateIL: {4}, createDelegate: {5}, link: {6}): ({1}, {2}, {3}, {4}, {5}, {6}) : {7} ms",
-                            (DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4,
+                            (DynarecFunction.MaxPc - DynarecFunction.MinPc) / 4,
                             (int) DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
                             (int) DynarecFunction.TimeGenerateAst.TotalMilliseconds,
                             (int) DynarecFunction.TimeOptimize.TotalMilliseconds,
-                            (int) DynarecFunction.TimeGenerateIL.TotalMilliseconds,
+                            (int) DynarecFunction.TimeGenerateIl.TotalMilliseconds,
                             (int) DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
                             (int) DynarecFunction.TimeLinking.TotalMilliseconds,
                             (int) (TimeAstGeneration + DynarecFunction.TimeLinking).TotalMilliseconds
@@ -276,13 +254,13 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         {
             lock (this)
             {
-                if (!this.Functions.ContainsKey(PC))
+                if (!Functions.ContainsKey(PC))
                 {
-                    this.Functions[PC] =
+                    Functions[PC] =
                         CpuProcessor.DynarecFunctionCompiler.CreateFunction(
                             new InstructionStreamReader(new PspMemoryStream(CpuProcessor.Memory)), PC);
                 }
-                return this.Functions[PC];
+                return Functions[PC];
             }
         }
 

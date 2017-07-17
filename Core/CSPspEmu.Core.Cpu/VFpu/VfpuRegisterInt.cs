@@ -11,22 +11,22 @@ namespace CSPspEmu.Core.Cpu.VFpu
     {
         public uint Value;
 
-        static public implicit operator int(VfpuRegisterInt Value)
+        public static implicit operator int(VfpuRegisterInt Value)
         {
             return (int) Value.Value;
         }
 
-        static public implicit operator VfpuRegisterInt(int Value)
+        public static implicit operator VfpuRegisterInt(int Value)
         {
             return new VfpuRegisterInt() {Value = (uint) Value};
         }
 
-        static public implicit operator uint(VfpuRegisterInt Value)
+        public static implicit operator uint(VfpuRegisterInt Value)
         {
             return Value.Value;
         }
 
-        static public implicit operator VfpuRegisterInt(uint Value)
+        public static implicit operator VfpuRegisterInt(uint Value)
         {
             return new VfpuRegisterInt() {Value = Value};
         }

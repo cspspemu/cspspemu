@@ -10,27 +10,18 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
         public MipsDisassembler.Result DisassembledResult;
         public AstNodeStm Statement;
 
-        public AstNodeStmPspInstruction(MipsDisassembler.Result DisassembledResult, AstNodeStm Statement)
+        public AstNodeStmPspInstruction(MipsDisassembler.Result disassembledResult, AstNodeStm statement)
         {
-            this.DisassembledResult = DisassembledResult;
-            this.Statement = Statement;
+            DisassembledResult = disassembledResult;
+            Statement = statement;
         }
 
-        public override void TransformNodes(TransformNodesDelegate Transformer)
-        {
-            Transformer.Ref(ref Statement);
-        }
+        public override void TransformNodes(TransformNodesDelegate transformer) => transformer.Ref(ref Statement);
 
-        public override Dictionary<string, string> Info
+        public override Dictionary<string, string> Info => new Dictionary<string, string>
         {
-            get
-            {
-                return new Dictionary<string, string>()
-                {
-                    {"Address", String.Format("0x{0:X8}", DisassembledResult.InstructionPc)},
-                    {"Instruction", DisassembledResult.ToString()},
-                };
-            }
-        }
+            {"Address", $"0x{DisassembledResult.InstructionPc:X8}"},
+            {"Instruction", DisassembledResult.ToString()},
+        };
     }
 }

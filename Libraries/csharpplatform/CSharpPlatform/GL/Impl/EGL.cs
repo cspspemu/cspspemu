@@ -12,10 +12,12 @@ using EGLClientBuffer = System.IntPtr;
 using EGLNativeDisplayType = System.IntPtr;
 using EGLNativeWindowType = System.IntPtr;
 using EGLNativePixmapType = System.IntPtr;
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
 
 namespace CSharpPlatform.GL.Impl
 {
-    public unsafe class EGL
+    public unsafe class Egl
     {
         public const int EGL_VERSION_1_0 = 1;
         public const int EGL_VERSION_1_1 = 1;

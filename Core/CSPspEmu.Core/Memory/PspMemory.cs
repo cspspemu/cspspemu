@@ -7,7 +7,7 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Memory
 {
-    public unsafe abstract class PspModel
+    public abstract unsafe class PspModel
     {
         public const bool IsSlim = false;
         //public const bool IsSlim = true;
@@ -25,16 +25,16 @@ namespace CSPspEmu.Core.Memory
     /// 0x1fc00000  0x1fcfffff  1mb   Hardware Exception Vectors (RAM)
     /// 0x1fd00000  0x1fffffff        Hardware I/O
     /// </summary>
-    public unsafe abstract class PspMemory : IPspMemoryInfo, IDisposable
+    public abstract unsafe class PspMemory : IPspMemoryInfo, IDisposable
     {
         //internal static Logger Logger = Logger.GetLogger("Memory");
 
-        abstract public bool HasFixedGlobalAddress { get; }
-        abstract public IntPtr FixedGlobalAddress { get; }
+        public abstract bool HasFixedGlobalAddress { get; }
+        public abstract IntPtr FixedGlobalAddress { get; }
 
         public const uint MemoryMask = 0x1FFFFFFF;
 
-        static public readonly void* InvalidPointer = Marshal.AllocHGlobal(0x10000).ToPointer();
+        public static readonly void* InvalidPointer = Marshal.AllocHGlobal(0x10000).ToPointer();
         public readonly void* InvalidPointerInstance = PspMemory.InvalidPointer;
 
         public class InvalidAddressException : Exception

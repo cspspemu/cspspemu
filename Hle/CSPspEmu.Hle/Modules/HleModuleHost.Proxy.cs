@@ -44,16 +44,16 @@ namespace CSPspEmu.Hle
             }
         }
 
-        static private readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
+        private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
 
-        static public TType GetObjectFromPoolHelper<TType>(CpuThreadState CpuThreadState, int Index)
+        public static TType GetObjectFromPoolHelper<TType>(CpuThreadState CpuThreadState, int Index)
         {
             //Console.Error.WriteLine("GetObjectFromPoolHelper");
             return (TType) CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>()
                 .Get(typeof(TType), Index);
         }
 
-        static public object GetObjectFromPoolHelper(CpuThreadState CpuThreadState, Type Type, int Index,
+        public static object GetObjectFromPoolHelper(CpuThreadState CpuThreadState, Type Type, int Index,
             bool CanReturnNull)
         {
             //Console.Error.WriteLine("GetObjectFromPoolHelper");
@@ -61,7 +61,7 @@ namespace CSPspEmu.Hle
                 .Get(Type, Index, CanReturnNull: CanReturnNull);
         }
 
-        static public uint GetOrAllocIndexFromPoolHelper(CpuThreadState CpuThreadState, Type Type,
+        public static uint GetOrAllocIndexFromPoolHelper(CpuThreadState CpuThreadState, Type Type,
             IHleUidPoolClass Item)
         {
             //Console.Error.WriteLine("AllocIndexFromPoolHelper");
@@ -119,12 +119,12 @@ namespace CSPspEmu.Hle
 
             protected override AstNodeExpr ReadFromFpr(Type Type, int Index)
             {
-                return ast.FPR(Index);
+                return ast.Fpr(Index);
             }
 
             protected override AstNodeExpr ReadFromGpr(Type Type, int Index)
             {
-                return ast.GPR(Type, Index);
+                return ast.Gpr(Type, Index);
             }
 
             protected override AstNodeExpr ReadFromStack(Type Type, int Index)
@@ -150,9 +150,9 @@ namespace CSPspEmu.Hle
                 return Read(typeof(TType), ParameterInfo);
             }
 
-            abstract protected TReturn ReadFromFpr(Type Type, int Index);
-            abstract protected TReturn ReadFromGpr(Type Type, int Index);
-            abstract protected TReturn ReadFromStack(Type Type, int Index);
+            protected abstract TReturn ReadFromFpr(Type Type, int Index);
+            protected abstract TReturn ReadFromGpr(Type Type, int Index);
+            protected abstract TReturn ReadFromStack(Type Type, int Index);
 
             public TReturn Read(Type Type, ParameterInfo ParameterInfo)
             {
@@ -251,7 +251,7 @@ namespace CSPspEmu.Hle
                     // The CpuThreadState
                     if (ParameterType == typeof(CpuThreadState))
                     {
-                        AstParameters.Add(ast.CpuThreadState);
+                        AstParameters.Add(ast.CpuThreadStateExpr);
                     }
                     // A stringz
                     else if (ParameterType == typeof(string))
@@ -259,7 +259,7 @@ namespace CSPspEmu.Hle
                         AstParameters.Add(
                             ast.CallStatic(
                                 (Func<CpuThreadState, uint, string>) HleModuleHost.StringFromAddress,
-                                ast.CpuThreadState,
+                                ast.CpuThreadStateExpr,
                                 RegisterReader.Read<uint>(ParameterInfo)
                             )
                         );
@@ -273,10 +273,10 @@ namespace CSPspEmu.Hle
                                 ast.MemoryGetPointer(
                                     CpuProcessor.Memory,
                                     RegisterReader.Read<uint>(ParameterInfo),
-                                    Safe: true,
-                                    ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " +
+                                    safe: true,
+                                    errorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " +
                                                       ParameterInfo.Name + "'",
-                                    InvalidAddress: InvalidAddressAsEnum
+                                    invalidAddress: InvalidAddressAsEnum
                                 )
                             )
                         );
@@ -311,7 +311,7 @@ namespace CSPspEmu.Hle
 
                         AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
                             (Func<CpuThreadState, Type, int, bool, object>) GetObjectFromPoolHelper,
-                            ast.CpuThreadState,
+                            ast.CpuThreadStateExpr,
                             ast.Immediate(ParameterType),
                             RegisterReader.Read<int>(ParameterInfo),
                             (InvalidAddressAsEnum == InvalidAddressAsEnum.Null)
@@ -337,7 +337,7 @@ namespace CSPspEmu.Hle
             else if (AstMethodCall.Type == typeof(long))
                 AstNodes.AddStatement(ast.Assign(ast.GPR_l(2), ast.Cast<long>(AstMethodCall)));
             else if (AstMethodCall.Type == typeof(float))
-                AstNodes.AddStatement(ast.Assign(ast.FPR(0), ast.Cast<float>(AstMethodCall)));
+                AstNodes.AddStatement(ast.Assign(ast.Fpr(0), ast.Cast<float>(AstMethodCall)));
             else if (AstMethodCall.Type.IsClass)
             {
                 if (!AstMethodCall.Type.Implements(typeof(IHleUidPoolClass)))
@@ -347,16 +347,16 @@ namespace CSPspEmu.Hle
                         AstMethodCall.Type)));
                 }
                 AstNodes.AddStatement(ast.Assign(
-                    ast.GPR(2),
+                    ast.Gpr(2),
                     ast.CallStatic(
                         (Func<CpuThreadState, Type, IHleUidPoolClass, uint>) GetOrAllocIndexFromPoolHelper,
-                        ast.CpuThreadState,
+                        ast.CpuThreadStateExpr,
                         ast.Immediate(AstMethodCall.Type),
                         ast.Cast<IHleUidPoolClass>(AstMethodCall)
                     )
                 ));
             }
-            else AstNodes.AddStatement(ast.Assign(ast.GPR(2), ast.Cast<uint>(AstMethodCall)));
+            else AstNodes.AddStatement(ast.Assign(ast.Gpr(2), ast.Cast<uint>(AstMethodCall)));
 
             return AstNodes;
         }
@@ -384,7 +384,7 @@ namespace CSPspEmu.Hle
                 )
             );
 
-            var Delegate = AstNodeExtensions._GeneratorILPsp.GenerateDelegate<Action<CpuThreadState>>(
+            var Delegate = AstNodeExtensions.GeneratorIlPsp.GenerateDelegate<Action<CpuThreadState>>(
                 String.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
                 AstNodes
             );
@@ -471,7 +471,7 @@ namespace CSPspEmu.Hle
                     Console.WriteLine("CALLING: {0}", MethodInfo);
                     Console.WriteLine("{0}", (new GeneratorCSharp()).GenerateRoot(AstNodes).ToString());
 
-                    foreach (var Line in AstNodeExtensions._GeneratorILPsp.GenerateToStringList(MethodInfo, AstNodes))
+                    foreach (var Line in AstNodeExtensions.GeneratorIlPsp.GenerateToStringList(MethodInfo, AstNodes))
                     {
                         Console.WriteLine(Line);
                     }

@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         /**
          * Start filling a new display-context

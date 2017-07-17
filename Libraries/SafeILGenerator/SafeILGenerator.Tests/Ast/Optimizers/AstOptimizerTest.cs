@@ -15,7 +15,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
     [TestFixture]
     public class AstOptimizerTest
     {
-        static private AstGenerator ast = AstGenerator.Instance;
+        private static AstGenerator ast = AstGenerator.Instance;
 
         [Test]
         public void TestCalculateImmediates()

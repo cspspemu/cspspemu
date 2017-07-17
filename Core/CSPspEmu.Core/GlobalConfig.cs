@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
-    static public class GlobalConfig
+    public static class GlobalConfig
     {
         /// <summary>
         /// 

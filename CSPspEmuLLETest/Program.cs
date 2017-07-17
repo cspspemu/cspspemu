@@ -10,7 +10,7 @@ namespace CSPspEmuLLETest
 {
     unsafe class Program
     {
-        static public string NandPath
+        public static string NandPath
         {
             get
             {
@@ -19,7 +19,7 @@ namespace CSPspEmuLLETest
             }
         }
 
-        static public string PreIplPath
+        public static string PreIplPath
         {
             get { return @"..\..\..\deploy\cspspemu\psp_bios.bin"; }
         }

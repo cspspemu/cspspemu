@@ -14,15 +14,15 @@ namespace SafeILGenerator.Tests.Ast.Generators
     [TestFixture]
     public unsafe class GeneratorILTest
     {
-        static private AstGenerator ast = AstGenerator.Instance;
+        private static AstGenerator ast = AstGenerator.Instance;
         private GeneratorIL GeneratorIL = new GeneratorIL();
 
-        static public void TestAstSetGetLValue_Set(int Index, int Value)
+        public static void TestAstSetGetLValue_Set(int Index, int Value)
         {
             Console.WriteLine("Set: {0}, {1}", Index, Value);
         }
 
-        static public int TestAstSetGetLValue_Get(int Index)
+        public static int TestAstSetGetLValue_Get(int Index)
         {
             Console.WriteLine("Get: {0}", Index);
             return 999;
@@ -121,7 +121,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(b, Func(a));
         }
 
-        static public Type testReturnType()
+        public static Type testReturnType()
         {
             return typeof(int);
         }
@@ -239,7 +239,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             public int Test;
         }
 
-        static public int GetTestValue(int Value)
+        public static int GetTestValue(int Value)
         {
             return 333 * Value;
         }

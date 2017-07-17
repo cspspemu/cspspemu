@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 {
     public sealed class MethodCacheInfo
     {
-        static public readonly MethodCacheInfo Methods = new MethodCacheInfo();
+        public static readonly MethodCacheInfo Methods = new MethodCacheInfo();
 
         /// <summary>
         /// 
@@ -31,9 +31,9 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
         public void SetDynarecFunction(DynarecFunction DynarecFunction)
         {
-            this._DynarecFunction = DynarecFunction;
-            this.FunctionDelegate = DynarecFunction.Delegate;
-            this.StaticField.Value = DynarecFunction.Delegate;
+            _DynarecFunction = DynarecFunction;
+            FunctionDelegate = DynarecFunction.Delegate;
+            StaticField.Value = DynarecFunction.Delegate;
         }
 
         public bool HasSpecialName
@@ -80,8 +80,8 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         public MethodCacheInfo(MethodCache MethodCache, Action<CpuThreadState> DelegateGeneratorForPC, uint PC)
         {
             this.MethodCache = MethodCache;
-            this.FunctionDelegate = DelegateGeneratorForPC;
-            this.StaticField = IlInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC);
+            FunctionDelegate = DelegateGeneratorForPC;
+            StaticField = IlInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC);
             this.PC = PC;
         }
 
@@ -95,7 +95,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// </summary>
         public uint EntryPC
         {
-            get { return DynarecFunction.EntryPC; }
+            get { return DynarecFunction.EntryPc; }
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// </summary>
         public uint MinPC
         {
-            get { return DynarecFunction.MinPC; }
+            get { return DynarecFunction.MinPc; }
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// </summary>
         public uint MaxPC
         {
-            get { return DynarecFunction.MaxPC; }
+            get { return DynarecFunction.MaxPc; }
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// </summary>
         public uint TotalInstructions
         {
-            get { return (DynarecFunction.MaxPC - DynarecFunction.MinPC) / 7; }
+            get { return (DynarecFunction.MaxPc - DynarecFunction.MinPc) / 7; }
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ using CSharpUtils.Extensions;
 namespace CSPspEmu.Core.Tests
 {
     [TestFixture]
-    unsafe public class PmfTest
+    public unsafe class PmfTest
     {
         [Test]
         public void LoadTest()

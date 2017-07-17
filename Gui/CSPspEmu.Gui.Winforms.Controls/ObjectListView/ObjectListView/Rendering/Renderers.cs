@@ -2112,7 +2112,7 @@ namespace BrightIdeasSoftware
         /// <param name="trueImage">Draw this when our data value is true</param>
         /// <param name="falseImage">Draw this when our data value is false</param>
         /// <returns>A Renderer</returns>
-        static public MappedImageRenderer Boolean(Object trueImage, Object falseImage)
+        public static MappedImageRenderer Boolean(Object trueImage, Object falseImage)
         {
             return new MappedImageRenderer(true, trueImage, false, falseImage);
         }
@@ -2124,7 +2124,7 @@ namespace BrightIdeasSoftware
         /// <param name="falseImage">Draw this when our data value is false</param>
         /// <param name="nullImage">Draw this when our data value is null</param>
         /// <returns>A Renderer</returns>
-        static public MappedImageRenderer TriState(Object trueImage, Object falseImage, Object nullImage)
+        public static MappedImageRenderer TriState(Object trueImage, Object falseImage, Object nullImage)
         {
             return new MappedImageRenderer(new Object[] {true, trueImage, false, falseImage, null, nullImage});
         }
@@ -2624,7 +2624,7 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="image">The image to be tested</param>
             /// <returns>Is the image an animation?</returns>
-            static public bool IsAnimation(Image image)
+            public static bool IsAnimation(Image image)
             {
                 if (image == null)
                     return false;

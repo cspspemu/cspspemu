@@ -212,14 +212,14 @@ namespace CSPspEmu.Hle.Vfs.Local
             return 0;
         }
 
-        public unsafe static HleIoDirent CreateFakeDirectoryHleIoDirent(string RealFileName, string Name)
+        public static unsafe HleIoDirent CreateFakeDirectoryHleIoDirent(string RealFileName, string Name)
         {
             var Ret = ConvertFileSystemInfoToHleIoDirent(new DirectoryInfo(RealFileName + "\\" + Name));
             Ret.Name = Name;
             return Ret;
         }
 
-        public unsafe static HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
+        public static unsafe HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
         {
             var HleIoDirent = default(HleIoDirent);
             var FileInfo = (FileSystemInfo as FileInfo);

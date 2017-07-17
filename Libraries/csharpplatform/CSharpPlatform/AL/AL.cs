@@ -20,7 +20,7 @@ using CSharpPlatform.Library;
 
 namespace CSharpPlatform.AL
 {
-    unsafe public partial class AL
+    public unsafe partial class AL
     {
         internal const string DllWindows = "OpenAL32";
         internal const string DllLinux = "libopenal.so.1";
@@ -104,288 +104,288 @@ namespace CSharpPlatform.AL
         public const ALenum AL_EXPONENT_DISTANCE = 0xD005;
         public const ALenum AL_EXPONENT_DISTANCE_CLAMPED = 0xD006;
 
-        static public readonly alGetError alGetError;
-        static public readonly alSourcef alSourcef;
-        static public readonly alSource3f alSource3f;
-        static public readonly alGenSources alGenSources;
-        static public readonly alDeleteSources alDeleteSources;
-        static public readonly alIsSource alIsSource;
-        static public readonly alEnable alEnable;
-        static public readonly alDisable alDisable;
-        static public readonly alIsEnabled alIsEnabled;
-        static public readonly alGetSourcei alGetSourcei;
-        static public readonly alBufferData alBufferData;
-        static public readonly alGetString alGetString;
-        static public readonly alGetBooleanv alGetBooleanv;
-        static public readonly alGetIntegerv alGetIntegerv;
-        static public readonly alGetFloatv alGetFloatv;
-        static public readonly alGetDoublev alGetDoublev;
-        static public readonly alGetBoolean alGetBoolean;
-        static public readonly alGetInteger alGetInteger;
-        static public readonly alGetFloat alGetFloat;
-        static public readonly alGetDouble alGetDouble;
-        static public readonly alIsExtensionPresent alIsExtensionPresent;
-        static public readonly alGetProcAddress alGetProcAddress;
-        static public readonly alGetEnumValue alGetEnumValue;
-        static public readonly alListenerf alListenerf;
-        static public readonly alListener3f alListener3f;
-        static public readonly alListenerfv alListenerfv;
-        static public readonly alListeneri alListeneri;
-        static public readonly alListener3i alListener3i;
-        static public readonly alListeneriv alListeneriv;
-        static public readonly alGetListenerf alGetListenerf;
-        static public readonly alGetListener3f alGetListener3f;
-        static public readonly alGetListenerfv alGetListenerfv;
-        static public readonly alGetListeneri alGetListeneri;
-        static public readonly alGetListener3i alGetListener3i;
-        static public readonly alGetListeneriv alGetListeneriv;
-        static public readonly alSourcefv alSourcefv;
-        static public readonly alSourcei alSourcei;
-        static public readonly alSource3i alSource3i;
-        static public readonly alSourceiv alSourceiv;
-        static public readonly alGetSourcef alGetSourcef;
-        static public readonly alGetSource3f alGetSource3f;
-        static public readonly alGetSourcefv alGetSourcefv;
-        static public readonly alGetSource3i alGetSource3i;
-        static public readonly alGetSourceiv alGetSourceiv;
-        static public readonly alSourcePlayv alSourcePlayv;
-        static public readonly alSourceStopv alSourceStopv;
-        static public readonly alSourceRewindv alSourceRewindv;
-        static public readonly alSourcePausev alSourcePausev;
-        static public readonly alSourcePlay alSourcePlay;
-        static public readonly alSourceStop alSourceStop;
-        static public readonly alSourceRewind alSourceRewind;
-        static public readonly alSourcePause alSourcePause;
-        static public readonly alSourceQueueBuffers alSourceQueueBuffers;
-        static public readonly alSourceUnqueueBuffers alSourceUnqueueBuffers;
-        static public readonly alGenBuffers alGenBuffers;
-        static public readonly alDeleteBuffers alDeleteBuffers;
-        static public readonly alIsBuffer alIsBuffer;
-        static public readonly alBufferf alBufferf;
-        static public readonly alBuffer3f alBuffer3f;
-        static public readonly alBufferfv alBufferfv;
-        static public readonly alBufferi alBufferi;
-        static public readonly alBuffer3i alBuffer3i;
-        static public readonly alBufferiv alBufferiv;
-        static public readonly alGetBufferf alGetBufferf;
-        static public readonly alGetBuffer3f alGetBuffer3f;
-        static public readonly alGetBufferfv alGetBufferfv;
-        static public readonly alGetBufferi alGetBufferi;
-        static public readonly alGetBuffer3i alGetBuffer3i;
-        static public readonly alGetBufferiv alGetBufferiv;
+        public static readonly alGetError alGetError;
+        public static readonly alSourcef alSourcef;
+        public static readonly alSource3f alSource3f;
+        public static readonly alGenSources alGenSources;
+        public static readonly alDeleteSources alDeleteSources;
+        public static readonly alIsSource alIsSource;
+        public static readonly alEnable alEnable;
+        public static readonly alDisable alDisable;
+        public static readonly alIsEnabled alIsEnabled;
+        public static readonly alGetSourcei alGetSourcei;
+        public static readonly alBufferData alBufferData;
+        public static readonly alGetString alGetString;
+        public static readonly alGetBooleanv alGetBooleanv;
+        public static readonly alGetIntegerv alGetIntegerv;
+        public static readonly alGetFloatv alGetFloatv;
+        public static readonly alGetDoublev alGetDoublev;
+        public static readonly alGetBoolean alGetBoolean;
+        public static readonly alGetInteger alGetInteger;
+        public static readonly alGetFloat alGetFloat;
+        public static readonly alGetDouble alGetDouble;
+        public static readonly alIsExtensionPresent alIsExtensionPresent;
+        public static readonly alGetProcAddress alGetProcAddress;
+        public static readonly alGetEnumValue alGetEnumValue;
+        public static readonly alListenerf alListenerf;
+        public static readonly alListener3f alListener3f;
+        public static readonly alListenerfv alListenerfv;
+        public static readonly alListeneri alListeneri;
+        public static readonly alListener3i alListener3i;
+        public static readonly alListeneriv alListeneriv;
+        public static readonly alGetListenerf alGetListenerf;
+        public static readonly alGetListener3f alGetListener3f;
+        public static readonly alGetListenerfv alGetListenerfv;
+        public static readonly alGetListeneri alGetListeneri;
+        public static readonly alGetListener3i alGetListener3i;
+        public static readonly alGetListeneriv alGetListeneriv;
+        public static readonly alSourcefv alSourcefv;
+        public static readonly alSourcei alSourcei;
+        public static readonly alSource3i alSource3i;
+        public static readonly alSourceiv alSourceiv;
+        public static readonly alGetSourcef alGetSourcef;
+        public static readonly alGetSource3f alGetSource3f;
+        public static readonly alGetSourcefv alGetSourcefv;
+        public static readonly alGetSource3i alGetSource3i;
+        public static readonly alGetSourceiv alGetSourceiv;
+        public static readonly alSourcePlayv alSourcePlayv;
+        public static readonly alSourceStopv alSourceStopv;
+        public static readonly alSourceRewindv alSourceRewindv;
+        public static readonly alSourcePausev alSourcePausev;
+        public static readonly alSourcePlay alSourcePlay;
+        public static readonly alSourceStop alSourceStop;
+        public static readonly alSourceRewind alSourceRewind;
+        public static readonly alSourcePause alSourcePause;
+        public static readonly alSourceQueueBuffers alSourceQueueBuffers;
+        public static readonly alSourceUnqueueBuffers alSourceUnqueueBuffers;
+        public static readonly alGenBuffers alGenBuffers;
+        public static readonly alDeleteBuffers alDeleteBuffers;
+        public static readonly alIsBuffer alIsBuffer;
+        public static readonly alBufferf alBufferf;
+        public static readonly alBuffer3f alBuffer3f;
+        public static readonly alBufferfv alBufferfv;
+        public static readonly alBufferi alBufferi;
+        public static readonly alBuffer3i alBuffer3i;
+        public static readonly alBufferiv alBufferiv;
+        public static readonly alGetBufferf alGetBufferf;
+        public static readonly alGetBuffer3f alGetBuffer3f;
+        public static readonly alGetBufferfv alGetBufferfv;
+        public static readonly alGetBufferi alGetBufferi;
+        public static readonly alGetBuffer3i alGetBuffer3i;
+        public static readonly alGetBufferiv alGetBufferiv;
 
-        static public string alGetErrorString(ALenum error)
+        public static string alGetErrorString(ALenum error)
         {
             return "Unknown(" + error + ")";
         }
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALenum alGetError();
+    public unsafe delegate ALenum alGetError();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourcef(ALuint sid, ALenum param, ALfloat value);
+    public unsafe delegate void alSourcef(ALuint sid, ALenum param, ALfloat value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSource3f(ALuint sid, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
+    public unsafe delegate void alSource3f(ALuint sid, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGenSources(ALsizei n, ALuint* sources);
+    public unsafe delegate void alGenSources(ALsizei n, ALuint* sources);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alDeleteSources(ALsizei n, ALuint* sources);
+    public unsafe delegate void alDeleteSources(ALsizei n, ALuint* sources);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALboolean alIsSource(ALuint sid);
+    public unsafe delegate ALboolean alIsSource(ALuint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alEnable(ALenum capability);
+    public unsafe delegate void alEnable(ALenum capability);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alDisable(ALenum capability);
+    public unsafe delegate void alDisable(ALenum capability);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALboolean alIsEnabled(ALenum capability);
+    public unsafe delegate ALboolean alIsEnabled(ALenum capability);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetSourcei(ALuint sid, ALenum param, ALint* value);
+    public unsafe delegate void alGetSourcei(ALuint sid, ALenum param, ALint* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alBufferData(ALuint bid, ALenum format, void* data, ALsizei size, ALsizei freq);
+    public unsafe delegate void alBufferData(ALuint bid, ALenum format, void* data, ALsizei size, ALsizei freq);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALchar* alGetString(ALenum param);
+    public unsafe delegate ALchar* alGetString(ALenum param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetBooleanv(ALenum param, ALboolean* data);
+    public unsafe delegate void alGetBooleanv(ALenum param, ALboolean* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetIntegerv(ALenum param, ALint* data);
+    public unsafe delegate void alGetIntegerv(ALenum param, ALint* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetFloatv(ALenum param, ALfloat* data);
+    public unsafe delegate void alGetFloatv(ALenum param, ALfloat* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetDoublev(ALenum param, ALdouble* data);
+    public unsafe delegate void alGetDoublev(ALenum param, ALdouble* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALboolean alGetBoolean(ALenum param);
+    public unsafe delegate ALboolean alGetBoolean(ALenum param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALint alGetInteger(ALenum param);
+    public unsafe delegate ALint alGetInteger(ALenum param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALfloat alGetFloat(ALenum param);
+    public unsafe delegate ALfloat alGetFloat(ALenum param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALdouble alGetDouble(ALenum param);
+    public unsafe delegate ALdouble alGetDouble(ALenum param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALboolean alIsExtensionPresent(ALchar* extname);
+    public unsafe delegate ALboolean alIsExtensionPresent(ALchar* extname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void* alGetProcAddress(ALchar* fname);
+    public unsafe delegate void* alGetProcAddress(ALchar* fname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALenum alGetEnumValue(ALchar* ename);
+    public unsafe delegate ALenum alGetEnumValue(ALchar* ename);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alListenerf(ALenum param, ALfloat value);
+    public unsafe delegate void alListenerf(ALenum param, ALfloat value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alListener3f(ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
+    public unsafe delegate void alListener3f(ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alListenerfv(ALenum param, ALfloat* values);
+    public unsafe delegate void alListenerfv(ALenum param, ALfloat* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alListeneri(ALenum param, ALint value);
+    public unsafe delegate void alListeneri(ALenum param, ALint value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alListener3i(ALenum param, ALint value1, ALint value2, ALint value3);
+    public unsafe delegate void alListener3i(ALenum param, ALint value1, ALint value2, ALint value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alListeneriv(ALenum param, ALint* values);
+    public unsafe delegate void alListeneriv(ALenum param, ALint* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetListenerf(ALenum param, ALfloat* value);
+    public unsafe delegate void alGetListenerf(ALenum param, ALfloat* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetListener3f(ALenum param, ALfloat*value1, ALfloat*value2, ALfloat*value3);
+    public unsafe delegate void alGetListener3f(ALenum param, ALfloat*value1, ALfloat*value2, ALfloat*value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetListenerfv(ALenum param, ALfloat* values);
+    public unsafe delegate void alGetListenerfv(ALenum param, ALfloat* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetListeneri(ALenum param, ALint* value);
+    public unsafe delegate void alGetListeneri(ALenum param, ALint* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetListener3i(ALenum param, ALint*value1, ALint*value2, ALint*value3);
+    public unsafe delegate void alGetListener3i(ALenum param, ALint*value1, ALint*value2, ALint*value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetListeneriv(ALenum param, ALint* values);
+    public unsafe delegate void alGetListeneriv(ALenum param, ALint* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourcefv(ALuint sid, ALenum param, ALfloat* values);
+    public unsafe delegate void alSourcefv(ALuint sid, ALenum param, ALfloat* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourcei(ALuint sid, ALenum param, ALint value);
+    public unsafe delegate void alSourcei(ALuint sid, ALenum param, ALint value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSource3i(ALuint sid, ALenum param, ALint value1, ALint value2, ALint value3);
+    public unsafe delegate void alSource3i(ALuint sid, ALenum param, ALint value1, ALint value2, ALint value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourceiv(ALuint sid, ALenum param, ALint* values);
+    public unsafe delegate void alSourceiv(ALuint sid, ALenum param, ALint* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetSourcef(ALuint sid, ALenum param, ALfloat* value);
+    public unsafe delegate void alGetSourcef(ALuint sid, ALenum param, ALfloat* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetSource3f(ALuint sid, ALenum param, ALfloat* value1, ALfloat* value2,
+    public unsafe delegate void alGetSource3f(ALuint sid, ALenum param, ALfloat* value1, ALfloat* value2,
         ALfloat* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetSourcefv(ALuint sid, ALenum param, ALfloat* values);
+    public unsafe delegate void alGetSourcefv(ALuint sid, ALenum param, ALfloat* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetSource3i(ALuint sid, ALenum param, ALint* value1, ALint* value2, ALint* value3);
+    public unsafe delegate void alGetSource3i(ALuint sid, ALenum param, ALint* value1, ALint* value2, ALint* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetSourceiv(ALuint sid, ALenum param, ALint* values);
+    public unsafe delegate void alGetSourceiv(ALuint sid, ALenum param, ALint* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourcePlayv(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourcePlayv(ALsizei ns, ALuint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourceStopv(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourceStopv(ALsizei ns, ALuint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourceRewindv(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourceRewindv(ALsizei ns, ALuint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourcePausev(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourcePausev(ALsizei ns, ALuint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourcePlay(ALuint sid);
+    public unsafe delegate void alSourcePlay(ALuint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourceStop(ALuint sid);
+    public unsafe delegate void alSourceStop(ALuint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourceRewind(ALuint sid);
+    public unsafe delegate void alSourceRewind(ALuint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourcePause(ALuint sid);
+    public unsafe delegate void alSourcePause(ALuint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourceQueueBuffers(ALuint sid, ALsizei numEntries, ALuint*bids);
+    public unsafe delegate void alSourceQueueBuffers(ALuint sid, ALsizei numEntries, ALuint*bids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alSourceUnqueueBuffers(ALuint sid, ALsizei numEntries, ALuint*bids);
+    public unsafe delegate void alSourceUnqueueBuffers(ALuint sid, ALsizei numEntries, ALuint*bids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGenBuffers(ALsizei n, ALuint* buffers);
+    public unsafe delegate void alGenBuffers(ALsizei n, ALuint* buffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alDeleteBuffers(ALsizei n, ALuint* buffers);
+    public unsafe delegate void alDeleteBuffers(ALsizei n, ALuint* buffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate ALboolean alIsBuffer(ALuint bid);
+    public unsafe delegate ALboolean alIsBuffer(ALuint bid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alBufferf(ALuint bid, ALenum param, ALfloat value);
+    public unsafe delegate void alBufferf(ALuint bid, ALenum param, ALfloat value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alBuffer3f(ALuint bid, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
+    public unsafe delegate void alBuffer3f(ALuint bid, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alBufferfv(ALuint bid, ALenum param, ALfloat* values);
+    public unsafe delegate void alBufferfv(ALuint bid, ALenum param, ALfloat* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alBufferi(ALuint bid, ALenum param, ALint value);
+    public unsafe delegate void alBufferi(ALuint bid, ALenum param, ALint value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alBuffer3i(ALuint bid, ALenum param, ALint value1, ALint value2, ALint value3);
+    public unsafe delegate void alBuffer3i(ALuint bid, ALenum param, ALint value1, ALint value2, ALint value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alBufferiv(ALuint bid, ALenum param, ALint* values);
+    public unsafe delegate void alBufferiv(ALuint bid, ALenum param, ALint* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetBufferf(ALuint bid, ALenum param, ALfloat* value);
+    public unsafe delegate void alGetBufferf(ALuint bid, ALenum param, ALfloat* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetBuffer3f(ALuint bid, ALenum param, ALfloat* value1, ALfloat* value2,
+    public unsafe delegate void alGetBuffer3f(ALuint bid, ALenum param, ALfloat* value1, ALfloat* value2,
         ALfloat* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetBufferfv(ALuint bid, ALenum param, ALfloat* values);
+    public unsafe delegate void alGetBufferfv(ALuint bid, ALenum param, ALfloat* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetBufferi(ALuint bid, ALenum param, ALint* value);
+    public unsafe delegate void alGetBufferi(ALuint bid, ALenum param, ALint* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetBuffer3i(ALuint bid, ALenum param, ALint* value1, ALint* value2, ALint* value3);
+    public unsafe delegate void alGetBuffer3i(ALuint bid, ALenum param, ALint* value1, ALint* value2, ALint* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate void alGetBufferiv(ALuint bid, ALenum param, ALint* values);
+    public unsafe delegate void alGetBufferiv(ALuint bid, ALenum param, ALint* values);
 }

@@ -621,7 +621,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets whether the program running on Vista or later?
         /// </summary>
-        static public bool IsVistaOrLater
+        public static bool IsVistaOrLater
         {
             get
             {
@@ -631,12 +631,12 @@ namespace BrightIdeasSoftware
             }
         }
 
-        static private bool? isVistaOrLater;
+        private static bool? isVistaOrLater;
 
         /// <summary>
         /// Gets whether the program running on Win7 or later?
         /// </summary>
-        static public bool IsWin7OrLater
+        public static bool IsWin7OrLater
         {
             get
             {
@@ -650,30 +650,30 @@ namespace BrightIdeasSoftware
             }
         }
 
-        static private bool? isWin7OrLater;
+        private static bool? isWin7OrLater;
 
         /// <summary>
         /// Gets or sets how what smoothing mode will be applied to graphic operations.
         /// </summary>
-        static public System.Drawing.Drawing2D.SmoothingMode SmoothingMode
+        public static System.Drawing.Drawing2D.SmoothingMode SmoothingMode
         {
             get { return ObjectListView.smoothingMode; }
             set { ObjectListView.smoothingMode = value; }
         }
 
-        static private System.Drawing.Drawing2D.SmoothingMode smoothingMode =
+        private static System.Drawing.Drawing2D.SmoothingMode smoothingMode =
             System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
         /// <summary>
         /// Gets or sets how should text be renderered.
         /// </summary>
-        static public System.Drawing.Text.TextRenderingHint TextRenderingHint
+        public static System.Drawing.Text.TextRenderingHint TextRenderingHint
         {
             get { return ObjectListView.textRendereringHint; }
             set { ObjectListView.textRendereringHint = value; }
         }
 
-        static private System.Drawing.Text.TextRenderingHint textRendereringHint =
+        private static System.Drawing.Text.TextRenderingHint textRendereringHint =
             System.Drawing.Text.TextRenderingHint.SystemDefault;
 
         /// <summary>
@@ -1158,7 +1158,7 @@ namespace BrightIdeasSoftware
         /// a specialised editor with it.
         /// </summary>
         [Editor("BrightIdeasSoftware.Design.OLVColumnCollectionEditor", "System.Drawing.Design.UITypeEditor")]
-        new public ListView.ColumnHeaderCollection Columns
+        public new ListView.ColumnHeaderCollection Columns
         {
             get { return base.Columns; }
         }
@@ -1373,7 +1373,7 @@ namespace BrightIdeasSoftware
         /// <see cref="EditorRegistry"/>
         /// <remarks>All instances of ObjectListView share the same editor registry.</remarks>
 // ReSharper disable FieldCanBeMadeReadOnly.Global
-        static public EditorRegistry EditorRegistry = new EditorRegistry();
+        public static EditorRegistry EditorRegistry = new EditorRegistry();
 // ReSharper restore FieldCanBeMadeReadOnly.Global
 
         /// <summary>
@@ -1470,7 +1470,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        virtual public IEnumerable FilteredObjects
+        public virtual IEnumerable FilteredObjects
         {
             get
             {
@@ -1528,7 +1528,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        new public ListViewGroupCollection Groups
+        public new ListViewGroupCollection Groups
         {
             get { return base.Groups; }
         }
@@ -2032,7 +2032,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        virtual public bool IsFiltering
+        public virtual bool IsFiltering
         {
             get { return this.UseFiltering && (this.ModelFilter != null || this.ListFilter != null); }
         }
@@ -2094,7 +2094,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        new public ListViewItemCollection Items
+        public new ListViewItemCollection Items
         {
             get { return base.Items; }
         }
@@ -2803,7 +2803,7 @@ namespace BrightIdeasSoftware
         [Category("Appearance"),
          Description("Should the list view show items in groups?"),
          DefaultValue(true)]
-        new public virtual bool ShowGroups
+        public new virtual bool ShowGroups
         {
             get { return base.ShowGroups; }
             set
@@ -2937,7 +2937,7 @@ namespace BrightIdeasSoftware
         /// as this will work:
         /// <code>listView1.SmallImageList = listView1.SmallImageList;</code></para>
         /// </remarks>
-        new public ImageList SmallImageList
+        public new ImageList SmallImageList
         {
             get { return this.shadowedImageList; }
             set
@@ -3302,7 +3302,7 @@ namespace BrightIdeasSoftware
         [Category("ObjectListView"),
          Description("Should the list enable filtering?"),
          DefaultValue(false)]
-        virtual public bool UseFiltering
+        public virtual bool UseFiltering
         {
             get { return useFiltering; }
             set
@@ -3323,7 +3323,7 @@ namespace BrightIdeasSoftware
         [Category("ObjectListView"),
          Description("Should an image be drawn in a column's header when that column is being used for filtering?"),
          DefaultValue(false)]
-        virtual public bool UseFilterIndicator
+        public virtual bool UseFilterIndicator
         {
             get { return useFilterIndicator; }
             set
@@ -3494,7 +3494,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <remarks>Switching to tile or details view installs the columns appropriate to that view.
         /// Confusingly, in tile view, every column is shown as a row of information.</remarks>
-        new public View View
+        public new View View
         {
             get { return base.View; }
             set
@@ -4633,7 +4633,7 @@ namespace BrightIdeasSoftware
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        new public ListViewHitTestInfo HitTest(int x, int y)
+        public new ListViewHitTestInfo HitTest(int x, int y)
         {
             // Everything costs something. Playing with the layout of the header can cause problems
             // with the hit testing. If the header shrinks, the underlying control can throw a tantrum.
@@ -7019,12 +7019,12 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets or sets the image that will be place next to the Sort Ascending command
         /// </summary>
-        static public Bitmap SortAscendingImage = Resources.SortAscending;
+        public static Bitmap SortAscendingImage = Resources.SortAscending;
 
         /// <summary>
         /// Gets or sets the image that will be placed next to the Sort Descending command
         /// </summary>
-        static public Bitmap SortDescendingImage = Resources.SortDescending;
+        public static Bitmap SortDescendingImage = Resources.SortDescending;
 
         /// <summary>
         /// Append the column selection menu items to the given menu strip.
@@ -8016,7 +8016,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Sort the items by the last sort column and order
         /// </summary>
-        new public void Sort()
+        public new void Sort()
         {
             this.Sort(this.LastSortColumn, this.LastSortOrder);
         }
@@ -10557,7 +10557,7 @@ namespace BrightIdeasSoftware
         /// <param name="aModelFilter"></param>
         /// <param name="aListFilter"></param>
         /// <returns></returns>
-        virtual protected IEnumerable FilterObjects(IEnumerable originalObjects, IModelFilter aModelFilter,
+        protected virtual IEnumerable FilterObjects(IEnumerable originalObjects, IModelFilter aModelFilter,
             IListFilter aListFilter)
         {
             // Being cautious

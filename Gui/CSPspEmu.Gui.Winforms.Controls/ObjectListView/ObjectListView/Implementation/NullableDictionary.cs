@@ -44,7 +44,7 @@ namespace BrightIdeasSoftware
         private bool hasNullKey;
         private TValue nullValue;
 
-        new public TValue this[TKey key]
+        public new TValue this[TKey key]
         {
             get
             {
@@ -68,12 +68,12 @@ namespace BrightIdeasSoftware
             }
         }
 
-        new public bool ContainsKey(TKey key)
+        public new bool ContainsKey(TKey key)
         {
             return key == null ? this.hasNullKey : base.ContainsKey(key);
         }
 
-        new public IList Keys
+        public new IList Keys
         {
             get
             {
@@ -84,7 +84,7 @@ namespace BrightIdeasSoftware
             }
         }
 
-        new public IList<TValue> Values
+        public new IList<TValue> Values
         {
             get
             {

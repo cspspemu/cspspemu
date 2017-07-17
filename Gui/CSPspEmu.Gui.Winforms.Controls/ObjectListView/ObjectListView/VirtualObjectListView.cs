@@ -145,7 +145,7 @@ namespace BrightIdeasSoftware
         [Category("Appearance"),
          Description("Should the list view show checkboxes?"),
          DefaultValue(false)]
-        new public bool CheckBoxes
+        public new bool CheckBoxes
         {
             get { return base.CheckBoxes; }
             set
@@ -419,7 +419,7 @@ namespace BrightIdeasSoftware
             }
         }
 
-        static private FieldInfo virtualListSizeFieldInfo;
+        private static FieldInfo virtualListSizeFieldInfo;
 
         #endregion
 

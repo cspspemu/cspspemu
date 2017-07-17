@@ -60,7 +60,7 @@ namespace CSharpUtils.Streams
         /// <param name="thisLength">Length of the Slice</param>
         /// <param name="canWrite">Determines if the Stream will be writtable.</param>
         /// <returns>A SliceStream</returns>
-        static public SliceStream CreateWithLength(Stream baseStream, long thisStart = 0, long thisLength = -1,
+        public static SliceStream CreateWithLength(Stream baseStream, long thisStart = 0, long thisLength = -1,
             bool? canWrite = null)
         {
             return new SliceStream(baseStream, thisStart, thisLength, canWrite);
@@ -74,7 +74,7 @@ namespace CSharpUtils.Streams
         /// <param name="upperBound"></param>
         /// <param name="canWrite">Determines if the Stream will be writtable.</param>
         /// <returns>A SliceStream</returns>
-        static public SliceStream CreateWithBounds(Stream baseStream, long lowerBound, long upperBound,
+        public static SliceStream CreateWithBounds(Stream baseStream, long lowerBound, long upperBound,
             bool? canWrite = null)
         {
             return new SliceStream(baseStream, lowerBound, upperBound - lowerBound, canWrite);

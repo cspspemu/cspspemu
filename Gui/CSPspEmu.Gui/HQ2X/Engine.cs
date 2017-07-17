@@ -13,7 +13,7 @@ using System.Drawing.Imaging;
 
 namespace HQ2x
 {
-    unsafe public class Engine
+    public unsafe class Engine
     {
         public ILerp Lerp { get; set; }
         public IThreshold Threshold { get; set; }

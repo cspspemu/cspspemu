@@ -12,7 +12,7 @@ namespace CSPspEmu.Hle
 {
     public unsafe partial class HleModuleHost : HleModule
     {
-        static readonly public HleModuleHost Methods = new HleModuleHost();
+        public static readonly HleModuleHost Methods = new HleModuleHost();
 
         private Dictionary<uint, HleFunctionEntry> _EntriesByNID = null;
         private Dictionary<string, HleFunctionEntry> _EntriesByName = null;

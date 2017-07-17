@@ -15,16 +15,16 @@ namespace CSPspEmu.Core.Cpu
 {
     public class FastPspMemoryUtils
     {
-        static private AstGenerator ast = AstGenerator.Instance;
+        private static AstGenerator ast = AstGenerator.Instance;
 
         private struct CacheKey
         {
             public IntPtr FixedGlobalAddress;
         }
 
-        static private Dictionary<CacheKey, MethodInfo> Cache = new Dictionary<CacheKey, MethodInfo>();
+        private static Dictionary<CacheKey, MethodInfo> Cache = new Dictionary<CacheKey, MethodInfo>();
 
-        static public MethodInfo GetFastMemoryReader(IntPtr FixedGlobalAddress)
+        public static MethodInfo GetFastMemoryReader(IntPtr FixedGlobalAddress)
         {
             var CacheKey = new CacheKey() {FixedGlobalAddress = FixedGlobalAddress};
             if (!Cache.ContainsKey(CacheKey))

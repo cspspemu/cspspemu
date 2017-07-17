@@ -278,7 +278,7 @@ namespace CSPspEmu.Core.Tests
             }
         }
 
-        static private IEnumerable<string> stringToLines(string str)
+        private static IEnumerable<string> stringToLines(string str)
         {
             return str.Split('\n').Select(Line => Line.Trim()).Where(Line => Line.Length > 0);
         }
@@ -1104,7 +1104,7 @@ namespace CSPspEmu.Core.Tests
             Assert.AreEqual(7 * 4, (int) CpuThreadState.PC);
         }
 
-        static private string AssemblySingleInstruction(string Text)
+        private static string AssemblySingleInstruction(string Text)
         {
             var Data = new byte[4];
             fixed (byte* DataPtr = Data)

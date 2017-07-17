@@ -112,7 +112,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="olv">The ObjectListView to modify</param>
         /// <param name="enumerable">The collection whose first element will be used to generate columns.</param>
-        static public void GenerateColumns(ObjectListView olv, IEnumerable enumerable)
+        public static void GenerateColumns(ObjectListView olv, IEnumerable enumerable)
         {
             Generator.GenerateColumns(olv, enumerable, false);
         }
@@ -125,7 +125,7 @@ namespace BrightIdeasSoftware
         /// <param name="olv">The ObjectListView to modify</param>
         /// <param name="enumerable">The collection whose first element will be used to generate columns.</param>
         /// <param name="allProperties">Will columns be generated for properties that are not marked with [OLVColumn].</param>
-        static public void GenerateColumns(ObjectListView olv, IEnumerable enumerable, bool allProperties)
+        public static void GenerateColumns(ObjectListView olv, IEnumerable enumerable, bool allProperties)
         {
             // Generate columns based on the type of the first model in the collection and then quit
             if (enumerable != null)
@@ -147,7 +147,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="olv">The ObjectListView to modify</param>
         /// <param name="type">The model type whose attributes will be considered.</param>
-        static public void GenerateColumns(ObjectListView olv, Type type)
+        public static void GenerateColumns(ObjectListView olv, Type type)
         {
             Generator.Instance.GenerateAndReplaceColumns(olv, type, false);
         }
@@ -159,7 +159,7 @@ namespace BrightIdeasSoftware
         /// <param name="olv">The ObjectListView to modify</param>
         /// <param name="type">The model type whose attributes will be considered.</param>
         /// <param name="allProperties">Will columns be generated for properties that are not marked with [OLVColumn].</param>
-        static public void GenerateColumns(ObjectListView olv, Type type, bool allProperties)
+        public static void GenerateColumns(ObjectListView olv, Type type, bool allProperties)
         {
             Generator.Instance.GenerateAndReplaceColumns(olv, type, allProperties);
         }
@@ -170,7 +170,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="type"></param>
         /// <returns>A collection of OLVColumns matching the attributes of Type that have OLVColumnAttributes.</returns>
-        static public IList<OLVColumn> GenerateColumns(Type type)
+        public static IList<OLVColumn> GenerateColumns(Type type)
         {
             return Generator.Instance.GenerateColumns(type, false);
         }

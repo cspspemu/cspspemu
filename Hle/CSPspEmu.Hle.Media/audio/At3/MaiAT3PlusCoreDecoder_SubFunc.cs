@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3
 {
-	unsafe public sealed partial class MaiAT3PlusCoreDecoder
+	public sealed unsafe partial class MaiAT3PlusCoreDecoder
 	{
 		static uint MAPCDSF_getHuffValue(MaiAT3PlusCoreDecoderSearchTableDes huff_table, MaiBitReader mbr0)//ushort *table0, byte *table1, uint max_len,  MaiBitReader mbr0)
 		{

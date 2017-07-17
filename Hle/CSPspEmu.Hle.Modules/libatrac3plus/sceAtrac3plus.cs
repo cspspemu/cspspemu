@@ -68,7 +68,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
                 this.OmaInfo = omaInfo;
             }
 
-            static public void WriteOma(string FileName,
+            public static void WriteOma(string FileName,
                 CSPspEmu.Hle.Modules.libatrac3plus.sceAtrac3plus.Atrac.At3FormatStruct Format, Stream DataStream)
             {
                 using (var Stream = File.Open(FileName, FileMode.Create, FileAccess.Write))
@@ -180,7 +180,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
                 /// </summary>
                 public ushort BlockAlignment;
 
-                static public StreamStructCachedArrayWrapper<StereoShortSoundSample> ParseWavData(Stream Stream)
+                public static StreamStructCachedArrayWrapper<StereoShortSoundSample> ParseWavData(Stream Stream)
                 {
                     StreamStructCachedArrayWrapper<StereoShortSoundSample> DecodedSamples = null;
                     var RiffWaveReader = new RiffWaveReader();

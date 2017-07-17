@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
             return SasCore.GrainSamples;
         }
 
-        static private void CheckGrains(int GrainSamples)
+        private static void CheckGrains(int GrainSamples)
         {
             if (GrainSamples < 0x40 || GrainSamples > 0x800 || (GrainSamples & 0x1F) != 0)
             {

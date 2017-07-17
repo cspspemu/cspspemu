@@ -485,12 +485,12 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary />
         public uint Value;
 
-        static public bool operator ==(VertexTypeStruct a, VertexTypeStruct b)
+        public static bool operator ==(VertexTypeStruct a, VertexTypeStruct b)
         {
             return (a.ReversedNormal == b.ReversedNormal) && (a.NormalCount == b.NormalCount) && (a.Value == b.Value);
         }
 
-        static public bool operator !=(VertexTypeStruct a, VertexTypeStruct b)
+        public static bool operator !=(VertexTypeStruct a, VertexTypeStruct b)
         {
             return !(a == b);
         }

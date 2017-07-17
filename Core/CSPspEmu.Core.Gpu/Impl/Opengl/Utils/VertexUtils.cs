@@ -4,7 +4,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
 {
     public class VertexUtils
     {
-        static public void GenerateTriangleStripFromSpriteVertices(ref VertexInfo v0, out VertexInfo v1,
+        public static void GenerateTriangleStripFromSpriteVertices(ref VertexInfo v0, out VertexInfo v1,
             out VertexInfo v2, ref VertexInfo v3)
         {
             var color = v3.Color;

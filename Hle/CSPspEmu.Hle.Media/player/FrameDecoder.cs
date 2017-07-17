@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace cscodec.h264.player
 {
-	abstract unsafe public class FrameDecoder<TOut> : IDisposable
+	public abstract unsafe class FrameDecoder<TOut> : IDisposable
 	{
 		public const int FF_INPUT_BUFFER_PADDING_SIZE = 80;
 		const int INBUF_SIZE = 65535;
@@ -28,9 +28,9 @@ namespace cscodec.h264.player
 			this.Stream = Stream;
 		}
 
-		abstract protected void InitProtected();
-		abstract protected TOut DecodeFrameFromPacket(AVPacket avpkt, out int len);
-		abstract protected void Close();
+		protected abstract void InitProtected();
+		protected abstract TOut DecodeFrameFromPacket(AVPacket avpkt, out int len);
+		protected abstract void Close();
 
 		private void TryInit()
 		{

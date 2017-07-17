@@ -6,12 +6,13 @@ using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Generators;
 using CSharpUtils;
+using CSPspEmu.Core.Cpu.Dynarec.Ast;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
     public class EmitLookupGenerator
     {
-        static private AstGenerator ast = AstGenerator.Instance;
+        private static AstGenerator ast = AstGenerator.Instance;
 
         public static Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> Callback,
             TType Instance)
@@ -19,7 +20,7 @@ namespace CSPspEmu.Core.Cpu.Table
             return Value => { return Callback(Value, Instance); };
         }
 
-        static private string DefaultNameConverter(string Name)
+        private static string DefaultNameConverter(string Name)
         {
             if (Name == "Default") return "unknown";
             if (Name == "break") return "_break";

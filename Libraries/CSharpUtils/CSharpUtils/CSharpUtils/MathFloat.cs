@@ -6,7 +6,7 @@ namespace CSharpUtils
     /// <summary>
     /// 
     /// </summary>
-    public unsafe sealed class MathFloat
+    public sealed unsafe class MathFloat
     {
         /// <summary>
         /// 

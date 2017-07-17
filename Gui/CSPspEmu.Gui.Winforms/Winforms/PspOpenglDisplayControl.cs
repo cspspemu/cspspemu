@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace CSPspEmu.Gui.Winforms.Winforms
 {
-    unsafe public sealed class PspOpenglDisplayControl : GLControl, IGuiWindowInfo
+    public sealed unsafe class PspOpenglDisplayControl : GLControl, IGuiWindowInfo
     {
         CommonGuiDisplayOpengl DisplayOpengl;
 

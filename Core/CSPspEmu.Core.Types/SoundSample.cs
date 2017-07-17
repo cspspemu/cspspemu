@@ -82,7 +82,7 @@ namespace CSPspEmu.Core.Audio
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        static public short Clamp(int Value)
+        public static short Clamp(int Value)
         {
             if (Value < short.MinValue) return short.MinValue;
             if (Value > short.MaxValue) return short.MaxValue;

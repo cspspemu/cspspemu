@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 {
-	unsafe public sealed class MaiQueue0
+	public sealed unsafe class MaiQueue0
 	{
 		byte[] @base;
 		int rear,front;

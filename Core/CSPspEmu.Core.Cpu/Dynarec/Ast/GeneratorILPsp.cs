@@ -1,19 +1,15 @@
 ﻿using SafeILGenerator.Ast.Generators;
-using System;
 
 namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 {
-    public class GeneratorILPsp : GeneratorIL
+    public class GeneratorIlPsp : GeneratorIL
     {
-        public GeneratorILPsp() : base()
+        protected void _Generate(AstNodeStmPspInstruction pspInstruction)
         {
-        }
-
-        protected void _Generate(AstNodeStmPspInstruction PspInstruction)
-        {
-            EmitComment(String.Format("0x{0:X8}: {1}", PspInstruction.DisassembledResult.InstructionPc,
-                PspInstruction.DisassembledResult.ToString()));
-            Generate(PspInstruction.Statement);
+            EmitComment(
+                $"0x{pspInstruction.DisassembledResult.InstructionPc:X8}: {pspInstruction.DisassembledResult}"
+            );
+            Generate(pspInstruction.Statement);
         }
     }
 }

@@ -19,29 +19,29 @@ namespace CSPspEmu.Core.Cpu.Dynarec
         {
         }
 
-        public DynarecFunction CreateFunction(IInstructionReader InstructionReader, uint PC,
-            Action<uint> ExploreNewPcCallback = null, bool DoDebug = false, bool DoLog = false)
+        public DynarecFunction CreateFunction(IInstructionReader instructionReader, uint pc,
+            Action<uint> exploreNewPcCallback = null, bool doDebug = false, bool doLog = false)
         {
-            switch (PC)
+            switch (pc)
             {
                 case SpecialCpu.ReturnFromFunction:
                     return new DynarecFunction()
                     {
                         AstNode = new AstNodeStmEmpty(),
-                        EntryPC = PC,
+                        EntryPc = pc,
                         Name = "SpecialCpu.ReturnFromFunction",
                         InstructionStats = new Dictionary<string, uint>(),
-                        Delegate = (CpuThreadState) =>
+                        Delegate = cpuThreadState =>
                         {
-                            if (CpuThreadState == null) return;
+                            if (cpuThreadState == null) return;
                             throw (new SpecialCpu.ReturnFromFunctionException());
                         }
                     };
                 default:
-                    var MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, PC, DoDebug, DoLog);
-                    var InternalFunctionCompiler = new InternalFunctionCompiler(InjectContext, MipsMethodEmiter, this,
-                        InstructionReader, ExploreNewPcCallback, PC, DoLog);
-                    return InternalFunctionCompiler.CreateFunction();
+                    var mipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, pc, doDebug, doLog);
+                    var internalFunctionCompiler = new InternalFunctionCompiler(InjectContext, mipsMethodEmiter, this,
+                        instructionReader, exploreNewPcCallback, pc, doLog);
+                    return internalFunctionCompiler.CreateFunction();
             }
         }
     }

@@ -7,7 +7,7 @@ namespace CSPspEmu.Core.Memory
 {
     public class DefaultMemoryInfo : IPspMemoryInfo
     {
-        static public DefaultMemoryInfo Instance = new DefaultMemoryInfo();
+        public static DefaultMemoryInfo Instance = new DefaultMemoryInfo();
 
         private DefaultMemoryInfo()
         {

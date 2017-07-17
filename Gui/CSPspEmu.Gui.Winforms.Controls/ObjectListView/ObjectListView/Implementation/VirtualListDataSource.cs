@@ -241,7 +241,7 @@ namespace BrightIdeasSoftware
         /// <param name="column"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        static public int DefaultSearchText(string value, int first, int last, OLVColumn column,
+        public static int DefaultSearchText(string value, int first, int last, OLVColumn column,
             IVirtualListDataSource source)
         {
             if (first <= last)
@@ -273,7 +273,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="modelFilter"></param>
         /// <param name="listFilter"></param>
-        virtual public void ApplyFilters(IModelFilter modelFilter, IListFilter listFilter)
+        public virtual void ApplyFilters(IModelFilter modelFilter, IListFilter listFilter)
         {
         }
 

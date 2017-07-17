@@ -26,7 +26,7 @@ public class TestHleUtils
         }
     }
 
-    static public InjectContext CreateInjectContext(object Bootstrap)
+    public static InjectContext CreateInjectContext(object Bootstrap)
     {
         var _InjectContext = InjectContext.Bootstrap(new TestHleUtils());
         _InjectContext.InjectDependencesTo(Bootstrap);

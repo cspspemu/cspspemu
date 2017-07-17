@@ -297,7 +297,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe public struct SceMpegPointer
+    public unsafe struct SceMpegPointer
     {
         public PspPointer SceMpeg;
 
@@ -308,7 +308,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 0x10000)] // 64KB
-    unsafe public struct SceMpeg
+    public unsafe struct SceMpeg
     {
         /// <summary>
         /// 0000 - LIBMPEG\0
@@ -378,7 +378,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
     /// Access Unit
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe public struct SceMpegAu
+    public unsafe struct SceMpegAu
     {
         /// <summary>
         /// 0000 - presentation timestamp (PTS) MSB
@@ -427,7 +427,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
     /// 
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe public struct SceMpegRingbuffer
+    public unsafe struct SceMpegRingbuffer
     {
         /// <summary>
         /// 00 - Packets
@@ -496,7 +496,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
     /// 
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe public struct SceMpegAvcMode
+    public unsafe struct SceMpegAvcMode
     {
         /// <summary>
         /// 0000 - unknown, set to -1
@@ -513,7 +513,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
     /// 
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe public struct AvcDecodeDetailStruct
+    public unsafe struct AvcDecodeDetailStruct
     {
         /// <summary>
         /// 0000 - Stores the result.

@@ -12,7 +12,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
     public class GeneratorCSharpTest
     {
         GeneratorCSharp GeneratorCSharp;
-        static private readonly AstGenerator ast = AstGenerator.Instance;
+        private static readonly AstGenerator ast = AstGenerator.Instance;
 
         [SetUp]
         public void SetUp()
@@ -20,11 +20,11 @@ namespace SafeILGenerator.Tests.Ast.Generators
             GeneratorCSharp = new GeneratorCSharp();
         }
 
-        static public void TestAstSetGetLValue_Set(int Index, int Value)
+        public static void TestAstSetGetLValue_Set(int Index, int Value)
         {
         }
 
-        static public int TestAstSetGetLValue_Get(int Index)
+        public static int TestAstSetGetLValue_Get(int Index)
         {
             return 0;
         }
@@ -114,7 +114,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(Expected, Actual);
         }
 
-        static public int GetTestValue(int Value)
+        public static int GetTestValue(int Value)
         {
             return 333 * Value;
         }

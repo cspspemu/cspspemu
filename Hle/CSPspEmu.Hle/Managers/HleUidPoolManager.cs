@@ -20,20 +20,20 @@ namespace CSPspEmu.Hle
     {
     }
 
-    static public class IHleUidPoolClassExtensions
+    public static class IHleUidPoolClassExtensions
     {
-        static public T AllocateUid<T>(this T IHleUidPoolClass, InjectContext InjectContext) where T : IHleUidPoolClass
+        public static T AllocateUid<T>(this T IHleUidPoolClass, InjectContext InjectContext) where T : IHleUidPoolClass
         {
             InjectContext.GetInstance<HleUidPoolManager>().Alloc(IHleUidPoolClass.GetType(), IHleUidPoolClass);
             return IHleUidPoolClass;
         }
 
-        static public void RemoveUid(this IHleUidPoolClass IHleUidPoolClass, InjectContext InjectContext)
+        public static void RemoveUid(this IHleUidPoolClass IHleUidPoolClass, InjectContext InjectContext)
         {
             InjectContext.GetInstance<HleUidPoolManager>().RemoveItem(IHleUidPoolClass.GetType(), IHleUidPoolClass);
         }
 
-        static public int GetUidIndex(this IHleUidPoolClass IHleUidPoolClass, InjectContext InjectContext)
+        public static int GetUidIndex(this IHleUidPoolClass IHleUidPoolClass, InjectContext InjectContext)
         {
             return InjectContext.GetInstance<HleUidPoolManager>()
                 .GetOrAllocIndex(IHleUidPoolClass.GetType(), IHleUidPoolClass);

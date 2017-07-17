@@ -6,7 +6,7 @@ namespace CSPspEmu.Core.Gpu.Run
     /// <summary>
     /// CLUT (Color LookUp Table) opcodes.
     /// </summary>
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         /**
          * Upload CLUT (Color Lookup Table)

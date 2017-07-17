@@ -18,7 +18,7 @@ namespace CSPspEmu.Gui.Winforms
         {
         }
 
-        static private readonly Dictionary<string, FieldInfo> _CacheControllerConfigField =
+        private static readonly Dictionary<string, FieldInfo> _CacheControllerConfigField =
             new Dictionary<string, FieldInfo>();
 
         static FieldInfo GetCachedControllerConfigField(string Name)

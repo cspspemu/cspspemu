@@ -13,7 +13,7 @@ using CSharpUtils.Drawing.Extensions;
 
 namespace CSPspEmu.Gui.Winforms.Winforms
 {
-    unsafe public class GLControl : UserControl
+    public unsafe class GLControl : UserControl
     {
         protected IGlContext Context;
 
@@ -62,7 +62,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
         //	OnDrawFrame();
         //}
 
-        virtual protected void OnDrawFrame()
+        protected virtual void OnDrawFrame()
         {
             GL.glClearColor(0, 0, 0, 1);
             GL.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -70,7 +70,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
             Context.SwapBuffers();
         }
 
-        sealed protected override void OnPaint(PaintEventArgs e)
+        protected sealed override void OnPaint(PaintEventArgs e)
         {
             if (!DesignMode)
             {

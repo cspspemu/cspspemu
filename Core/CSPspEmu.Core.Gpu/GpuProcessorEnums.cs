@@ -80,7 +80,7 @@ namespace CSPspEmu.Core.Gpu
         Paused = 4,
     }
 
-    unsafe public struct PspGeStack
+    public unsafe struct PspGeStack
     {
         public fixed uint Stack[8];
     }
@@ -88,7 +88,7 @@ namespace CSPspEmu.Core.Gpu
     /// <summary>
     /// 
     /// </summary>
-    unsafe public struct PspGeListArgs
+    public unsafe struct PspGeListArgs
     {
         /// <summary>
         /// Size of the structure

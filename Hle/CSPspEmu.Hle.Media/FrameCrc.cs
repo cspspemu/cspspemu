@@ -8,7 +8,7 @@ namespace cscodec
 {
 	public class FrameCrc
 	{
-		static public string GetFrameLine(AVPacket pkt)
+		public static string GetFrameLine(AVPacket pkt)
 		{
 			//pkt.data
 			uint crc = BitConverter.ToUInt32(new CRC32().ComputeHash(pkt.data_base.Select(Item => (byte)Item).ToArray(), pkt.data_offset, pkt.size), 0);

@@ -9,7 +9,7 @@ using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Hle.Managers
 {
-    sealed public class HleModuleManager : IInjectInitialize, IDisposable
+    public sealed class HleModuleManager : IInjectInitialize, IDisposable
     {
         private readonly Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
         public readonly List<HleModuleGuest> LoadedGuestModules = new List<HleModuleGuest>();

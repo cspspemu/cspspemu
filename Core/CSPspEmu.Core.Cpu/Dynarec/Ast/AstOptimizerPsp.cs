@@ -3,10 +3,8 @@
 using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
-using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Optimizers;
-using System;
 using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Cpu.Dynarec.Ast
@@ -16,22 +14,19 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
         private static AstMipsGenerator ast = AstMipsGenerator.Instance;
         public PspMemory Memory;
 
-        public static AstNodeStm GlobalOptimize(CpuProcessor Processor, AstNodeStm AstNodeStm)
+        public static AstNodeStm GlobalOptimize(CpuProcessor processor, AstNodeStm astNodeStm)
         {
-            if (Processor == null || Processor.CpuConfig.EnableAstOptimizations)
+            if (processor == null || processor.CpuConfig.EnableAstOptimizations)
             {
-                return (AstNodeStm) (new AstOptimizerPsp(Processor != null ? Processor.Memory : null)).Optimize(
-                    ast.Statements(AstNodeStm, ast.Return()));
+                return (AstNodeStm) (new AstOptimizerPsp(processor != null ? processor.Memory : null)).Optimize(
+                    ast.Statements(astNodeStm, ast.Return()));
             }
-            else
-            {
-                return AstNodeStm;
-            }
+            return astNodeStm;
         }
 
-        private AstOptimizerPsp(PspMemory Memory)
+        private AstOptimizerPsp(PspMemory memory)
         {
-            this.Memory = Memory;
+            Memory = memory;
         }
 
         public class LwlLwrState
@@ -40,124 +35,115 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
             public int LwlRtRegister;
             public int LwlRsRegister;
             public int LwlImm;
-            public uint LwlPC;
+            public uint LwlPc;
         }
 
-        private List<AstNodeStm> OptimizeLwlLwr(List<AstNodeStm> ContainerNodes)
+        private List<AstNodeStm> OptimizeLwlLwr(List<AstNodeStm> containerNodes)
         {
-            var LwlLwrStates = new Dictionary<int, LwlLwrState>();
+            var lwlLwrStates = new Dictionary<int, LwlLwrState>();
 
             //Console.WriteLine("StartList");
 
-            for (int n = 0; n < ContainerNodes.Count; n++)
+            for (var n = 0; n < containerNodes.Count; n++)
             {
                 // Empty node
-                if (ContainerNodes[n] == null)
-                {
+                if (containerNodes[n] == null)
                     continue;
-                }
 
                 // A label breaks the optimization, because we don't know if the register is being to be modified.
-                if (ContainerNodes[n] is AstNodeStmLabel)
+                if (containerNodes[n] is AstNodeStmLabel)
                 {
                     //Console.WriteLine("clear[0]");
-                    LwlLwrStates.Clear();
+                    lwlLwrStates.Clear();
                     continue;
                 }
 
-                var PspInstructionNode = ContainerNodes[n] as AstNodeStmPspInstruction;
-                if (PspInstructionNode != null)
+                var pspInstructionNode = containerNodes[n] as AstNodeStmPspInstruction;
+                if (pspInstructionNode == null) continue;
+                var disassembledResult = pspInstructionNode.DisassembledResult;
+                var instructionInfo = disassembledResult.InstructionInfo;
+                var instruction = disassembledResult.Instruction;
+                var pc = disassembledResult.InstructionPc;
+
+                // A branch instruction. It breaks the optimization.
+                if ((instructionInfo.InstructionType &
+                     (InstructionType.B | InstructionType.Jump | InstructionType.Syscall)) != 0)
                 {
-                    var DisassembledResult = PspInstructionNode.DisassembledResult;
-                    var InstructionInfo = DisassembledResult.InstructionInfo;
-                    var Instruction = DisassembledResult.Instruction;
-                    var PC = DisassembledResult.InstructionPc;
+                    //Console.WriteLine("clear[1]");
+                    lwlLwrStates.Clear();
+                    continue;
+                }
 
-                    // A branch instruction. It breaks the optimization.
-                    if ((InstructionInfo.InstructionType &
-                         (InstructionType.B | InstructionType.Jump | InstructionType.Syscall)) != 0)
-                    {
-                        //Console.WriteLine("clear[1]");
-                        LwlLwrStates.Clear();
-                        continue;
-                    }
-
-                    // lw(l/r) rt, x(rs)
-                    if (InstructionInfo.Name == "lwl")
-                    {
-                        LwlLwrStates[Instruction.RT] = new LwlLwrState()
+                // lw(l/r) rt, x(rs)
+                switch (instructionInfo.Name)
+                {
+                    case "lwl":
+                        lwlLwrStates[instruction.RT] = new LwlLwrState()
                         {
                             LwlListIndex = n,
-                            LwlRtRegister = Instruction.RT,
-                            LwlRsRegister = Instruction.RS,
-                            LwlImm = Instruction.IMM,
-                            LwlPC = PC,
+                            LwlRtRegister = instruction.RT,
+                            LwlRsRegister = instruction.RS,
+                            LwlImm = instruction.IMM,
+                            LwlPc = pc,
                         };
                         //Console.WriteLine("lwl");
                         //  GPR_u(RS), IMM_s(), GPR_u(RT)
-                    }
-                    else if (InstructionInfo.Name == "lwr")
-                    {
+                        break;
+                    case "lwr":
                         //Console.WriteLine("lwr");
                         //Console.WriteLine(LwlLwrStates.Count);
-                        if (LwlLwrStates.ContainsKey(Instruction.RT))
+                        if (lwlLwrStates.ContainsKey(instruction.RT))
                         {
-                            var LwlLwrState = LwlLwrStates[Instruction.RT];
+                            var lwlLwrState = lwlLwrStates[instruction.RT];
                             if (
-                                (LwlLwrState.LwlRsRegister == Instruction.RS) &&
-                                (LwlLwrState.LwlRtRegister == Instruction.RT) &&
-                                (LwlLwrState.LwlImm == Instruction.IMM + 3)
+                                (lwlLwrState.LwlRsRegister == instruction.RS) &&
+                                (lwlLwrState.LwlRtRegister == instruction.RT) &&
+                                (lwlLwrState.LwlImm == instruction.IMM + 3)
                             )
                             {
-                                ContainerNodes[LwlLwrState.LwlListIndex] = null;
-                                ContainerNodes[n] = ast.Statements(
-                                    ast.Comment(String.Format("{0:X8}+{1:X8} lwl+lwr", LwlLwrState.LwlPC, PC)),
-                                    ast.AssignGPR(
-                                        Instruction.RT,
+                                containerNodes[lwlLwrState.LwlListIndex] = null;
+                                containerNodes[n] = ast.Statements(
+                                    ast.Comment($"{lwlLwrState.LwlPc:X8}+{pc:X8} lwl+lwr"),
+                                    ast.AssignGpr(
+                                        instruction.RT,
                                         ast.MemoryGetValue<int>(
                                             Memory,
-                                            ast.Cast<uint>(ast.Binary(ast.GPR_s(Instruction.RS), "+", Instruction.IMM))
+                                            ast.Cast<uint>(ast.Binary(ast.GPR_s(instruction.RS), "+", instruction.IMM))
                                         )
                                     )
                                 );
                                 //Console.WriteLine("Valid match!");
                             }
                         }
-                    }
+                        break;
                 }
             }
-            return ContainerNodes;
+            return containerNodes;
         }
 
-        protected AstNode _Optimize(AstNodeStmPspInstruction PspInstruction)
-        {
-            return PspInstruction;
-        }
+        protected AstNode _Optimize(AstNodeStmPspInstruction pspInstruction) => pspInstruction;
 
-        protected override AstNode _Optimize(AstNodeStmContainer _Container)
+        protected override AstNode _Optimize(AstNodeStmContainer container)
         {
-            var Node = base._Optimize(_Container);
-            if (Node is AstNodeStmContainer)
-            {
-                var Container = Node as AstNodeStmContainer;
+            var node = base._Optimize(container);
+            if (!(node is AstNodeStmContainer)) return node;
+            var container2 = node as AstNodeStmContainer;
 #if ENABLE_OPTIMIZE_LWL_LWR
-                Container.Nodes = OptimizeLwlLwr(Container.Nodes);
+            container2.Nodes = OptimizeLwlLwr(container2.Nodes);
 #endif
-                //foreach (var _Node in Container.Nodes)
-                //{
-                //	if (_Node is AstNodeStmPspInstruction)
-                //	{
-                //		var PspNode = (_Node as AstNodeStmPspInstruction);
-                //		if (PspNode.DisassembledResult.InstructionInfo.InstructionType == InstructionType.Psp)
-                //		{
-                //
-                //			Console.WriteLine(PspNode.DisassembledResult);
-                //		}
-                //	}
-                //}
-                return base._Optimize(Container);
-            }
-            return Node;
+            //foreach (var _Node in Container.Nodes)
+            //{
+            //	if (_Node is AstNodeStmPspInstruction)
+            //	{
+            //		var PspNode = (_Node as AstNodeStmPspInstruction);
+            //		if (PspNode.DisassembledResult.InstructionInfo.InstructionType == InstructionType.Psp)
+            //		{
+            //
+            //			Console.WriteLine(PspNode.DisassembledResult);
+            //		}
+            //	}
+            //}
+            return base._Optimize(container2);
         }
     }
 }

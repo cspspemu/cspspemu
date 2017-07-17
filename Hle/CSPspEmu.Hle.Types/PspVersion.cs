@@ -30,7 +30,7 @@ namespace CSPspEmu.Hle.Types
             this.SetVersion(VersionString);
         }
 
-        static public implicit operator PspVersion(string String)
+        public static implicit operator PspVersion(string String)
         {
             return new PspVersion(String);
         }

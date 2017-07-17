@@ -12,7 +12,7 @@ namespace SafeILGenerator.Tests
     [TestFixture]
     public class BenchMarkTest
     {
-        static private AstGenerator ast = AstGenerator.Instance;
+        private static AstGenerator ast = AstGenerator.Instance;
 
         [Test]
         public void TestBenchmark()

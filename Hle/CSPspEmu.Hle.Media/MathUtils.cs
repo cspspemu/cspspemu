@@ -11,7 +11,7 @@ namespace cscodec
 	{
 		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-		static public int Clamp(int Value, int Min, int Max)
+		public static int Clamp(int Value, int Min, int Max)
 		{
 			if (Value < Min) return Min;
 			if (Value > Max) return Max;

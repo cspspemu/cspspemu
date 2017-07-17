@@ -21,11 +21,11 @@ namespace Tests.CSPspEmu.Core.Cpu.Cpu
         }
     }
 
-    static public class CpuUtils
+    public static class CpuUtils
     {
         static LazyPspMemory LazyPspMemory = new LazyPspMemory();
 
-        static public CpuProcessor CreateCpuProcessor(PspMemory Memory = null)
+        public static CpuProcessor CreateCpuProcessor(PspMemory Memory = null)
         {
             if (Memory == null) Memory = LazyPspMemory;
             var InjectContext = new InjectContext();

@@ -60,36 +60,36 @@ namespace BrightIdeasSoftware
         /// Gets or sets the string that labels the Apply button.
         /// Exposed so it can be localized.
         /// </summary>
-        static public string APPLY_LABEL = "Apply";
+        public static string APPLY_LABEL = "Apply";
 
         /// <summary>
         /// Gets or sets the string that labels the Clear All menu item.
         /// Exposed so it can be localized.
         /// </summary>
-        static public string CLEAR_ALL_FILTERS_LABEL = "Clear All Filters";
+        public static string CLEAR_ALL_FILTERS_LABEL = "Clear All Filters";
 
         /// <summary>
         /// Gets or sets the string that labels the Filtering menu as a whole..
         /// Exposed so it can be localized.
         /// </summary>
-        static public string FILTERING_LABEL = "Filtering";
+        public static string FILTERING_LABEL = "Filtering";
 
         /// <summary>
         /// Gets or sets the string that represents Select All values.
         /// If this is set to null or empty, no Select All option will be included.
         /// Exposed so it can be localized.
         /// </summary>
-        static public string SELECT_ALL_LABEL = "Select All";
+        public static string SELECT_ALL_LABEL = "Select All";
 
         /// <summary>
         /// Gets or sets the image that will be placed next to the Clear Filtering menu item
         /// </summary>
-        static public Bitmap ClearFilteringImage = Resources.ClearFiltering;
+        public static Bitmap ClearFilteringImage = Resources.ClearFiltering;
 
         /// <summary>
         /// Gets or sets the image that will be placed next to all "Apply" menu items on the filtering menu
         /// </summary>
-        static public Bitmap FilteringImage = Resources.Filtering;
+        public static Bitmap FilteringImage = Resources.Filtering;
 
         #endregion
 
@@ -133,7 +133,7 @@ namespace BrightIdeasSoftware
         /// <param name="listView"></param>
         /// <param name="column"></param>
         /// <returns>The strip that should be shown to the user</returns>
-        virtual public ToolStripDropDown MakeFilterMenu(ToolStripDropDown strip, ObjectListView listView,
+        public virtual ToolStripDropDown MakeFilterMenu(ToolStripDropDown strip, ObjectListView listView,
             OLVColumn column)
         {
             if (strip == null) throw new ArgumentNullException("strip");
@@ -160,7 +160,7 @@ namespace BrightIdeasSoftware
         /// <param name="listView"></param>
         /// <param name="column"></param>
         /// <returns></returns>
-        virtual protected List<ICluster> Cluster(IClusteringStrategy strategy, ObjectListView listView,
+        protected virtual List<ICluster> Cluster(IClusteringStrategy strategy, ObjectListView listView,
             OLVColumn column)
         {
             // Build a map that correlates cluster key to clusters
@@ -218,7 +218,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="strategy"></param>
         /// <param name="clusters"></param>
-        virtual protected void SortClusters(IClusteringStrategy strategy, List<ICluster> clusters)
+        protected virtual void SortClusters(IClusteringStrategy strategy, List<ICluster> clusters)
         {
             clusters.Sort();
         }
@@ -229,7 +229,7 @@ namespace BrightIdeasSoftware
         /// <param name="column"></param>
         /// <param name="clusters"></param>
         /// <returns></returns>
-        virtual protected ToolStripMenuItem CreateFilteringMenuItem(OLVColumn column, List<ICluster> clusters)
+        protected virtual ToolStripMenuItem CreateFilteringMenuItem(OLVColumn column, List<ICluster> clusters)
         {
             ToolStripCheckedListBox checkedList = new ToolStripCheckedListBox();
             checkedList.Tag = column;
@@ -288,7 +288,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        virtual protected void HandleItemChecked(object sender, ItemCheckEventArgs e)
+        protected virtual void HandleItemChecked(object sender, ItemCheckEventArgs e)
         {
             ToolStripCheckedListBox checkedList = sender as ToolStripCheckedListBox;
             if (checkedList == null) return;
@@ -310,7 +310,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         /// <param name="checkedList"></param>
         /// <param name="selectAllIndex"></param>
-        virtual protected void HandleSelectAllItem(ItemCheckEventArgs e, ToolStripCheckedListBox checkedList,
+        protected virtual void HandleSelectAllItem(ItemCheckEventArgs e, ToolStripCheckedListBox checkedList,
             int selectAllIndex)
         {
             // Did they check/uncheck the "Select All"?
@@ -362,7 +362,7 @@ namespace BrightIdeasSoftware
         /// Clear all the filters that are applied to the given column
         /// </summary>
         /// <param name="column">The column from which filters are to be removed</param>
-        virtual protected void ClearAllFilters(OLVColumn column)
+        protected virtual void ClearAllFilters(OLVColumn column)
         {
             ObjectListView olv = column.ListView as ObjectListView;
             if (olv == null || olv.IsDisposed)
@@ -376,7 +376,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="checkedList">A list in which the checked items should be used as filters</param>
         /// <param name="column">The column for which a filter should be generated</param>
-        virtual protected void EnactFilter(ToolStripCheckedListBox checkedList, OLVColumn column)
+        protected virtual void EnactFilter(ToolStripCheckedListBox checkedList, OLVColumn column)
         {
             ObjectListView olv = column.ListView as ObjectListView;
             if (olv == null || olv.IsDisposed)

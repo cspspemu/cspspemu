@@ -990,7 +990,7 @@ namespace BrightIdeasSoftware
         /// Show the given window without activating it
         /// </summary>
         /// <param name="win">The window to show</param>
-        static public void ShowWithoutActivate(IWin32Window win)
+        public static void ShowWithoutActivate(IWin32Window win)
         {
             const int SW_SHOWNA = 8;
             NativeMethods.ShowWindow(win.Handle, SW_SHOWNA);
@@ -1005,28 +1005,28 @@ namespace BrightIdeasSoftware
         /// This method works, but it prevents subitems in the given column from having
         /// back colors. 
         /// </remarks>
-        static public void SetSelectedColumn(ListView objectListView, ColumnHeader value)
+        public static void SetSelectedColumn(ListView objectListView, ColumnHeader value)
         {
             NativeMethods.SendMessage(objectListView.Handle,
                 LVM_SETSELECTEDCOLUMN, (value == null) ? -1 : value.Index, 0);
         }
 
-        static public int GetTopIndex(ListView lv)
+        public static int GetTopIndex(ListView lv)
         {
             return (int) SendMessage(lv.Handle, LVM_GETTOPINDEX, 0, 0);
         }
 
-        static public IntPtr GetTooltipControl(ListView lv)
+        public static IntPtr GetTooltipControl(ListView lv)
         {
             return SendMessage(lv.Handle, LVM_GETTOOLTIPS, 0, 0);
         }
 
-        static public IntPtr SetTooltipControl(ListView lv, ToolTipControl tooltip)
+        public static IntPtr SetTooltipControl(ListView lv, ToolTipControl tooltip)
         {
             return SendMessage(lv.Handle, LVM_SETTOOLTIPS, 0, tooltip.Handle);
         }
 
-        static public bool HasHorizontalScrollBar(ListView lv)
+        public static bool HasHorizontalScrollBar(ListView lv)
         {
             const int GWL_STYLE = -16;
             const int WS_HSCROLL = 0x00100000;

@@ -48,7 +48,7 @@ namespace CSPspEmu.Gui
         public byte B, G, R, A;
     }
 
-    unsafe public class CommonGuiDisplayOpengl
+    public unsafe class CommonGuiDisplayOpengl
     {
         IGuiExternalInterface IGuiExternalInterface;
         IGuiWindowInfo IGuiWindowInfo;

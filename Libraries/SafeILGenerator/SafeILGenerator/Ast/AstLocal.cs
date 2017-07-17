@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast
 {
-    sealed public class AstLocal
+    public sealed class AstLocal
     {
         public readonly string Name;
         public readonly Type Type;

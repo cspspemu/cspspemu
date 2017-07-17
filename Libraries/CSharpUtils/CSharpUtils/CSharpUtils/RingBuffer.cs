@@ -5,7 +5,7 @@ namespace CSharpUtils
     /// <summary>
     /// 
     /// </summary>
-    unsafe public class ByteRingBufferWrapper
+    public unsafe class ByteRingBufferWrapper
     {
         private byte* _dataPointer;
         private int _dataLength;

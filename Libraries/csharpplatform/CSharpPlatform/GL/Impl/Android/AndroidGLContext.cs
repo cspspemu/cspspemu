@@ -1,4 +1,5 @@
 ﻿using System;
+using CSharpPlatform.GL.Impl.Windows;
 
 namespace CSharpPlatform.GL.Impl.Android
 {
@@ -16,7 +17,7 @@ namespace CSharpPlatform.GL.Impl.Android
         }
 
         public static AndroidGLContext FromWindowHandle(IntPtr WindowHandle) => new AndroidGLContext(WindowHandle);
-        public GLContextSize Size => throw new NotImplementedException();
+        public GlContextSize Size => throw new NotImplementedException();
         public IGlContext MakeCurrent() => throw new NotImplementedException();
         public IGlContext ReleaseCurrent() => throw new NotImplementedException();
         public IGlContext SwapBuffers() => throw new NotImplementedException();

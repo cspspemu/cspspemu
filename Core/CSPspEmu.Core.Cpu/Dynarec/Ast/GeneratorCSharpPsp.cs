@@ -5,11 +5,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 {
     public class GeneratorCSharpPsp : GeneratorCSharp
     {
-        protected void _Generate(AstNodeStmPspInstruction PspInstruction)
+        protected void _Generate(AstNodeStmPspInstruction pspInstruction)
         {
-            Generate(PspInstruction.Statement);
-            Output.Write(String.Format(" // 0x{0:X8}: {1}", PspInstruction.DisassembledResult.InstructionPc,
-                PspInstruction.DisassembledResult.AssemblyLine));
+            Generate(pspInstruction.Statement);
+            Output.Write(
+                $" // 0x{pspInstruction.DisassembledResult.InstructionPc:X8}: {pspInstruction.DisassembledResult.AssemblyLine}"
+            );
         }
     }
 }

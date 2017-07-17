@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace cscodec.h264.player
 {
-	unsafe public sealed class At3pFrameDecoder : FrameDecoder<short[]>
+	public sealed unsafe class At3pFrameDecoder : FrameDecoder<short[]>
 	{
 		private MaiAT3PlusFrameDecoder MaiAT3PlusFrameDecoder;
 

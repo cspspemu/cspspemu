@@ -11,7 +11,7 @@ namespace CSharpPlatform.Library
 {
     public class DynamicLibraryFactory
     {
-        static public IDynamicLibrary CreateForLibrary(string NameWindows, string NameLinux = null,
+        public static IDynamicLibrary CreateForLibrary(string NameWindows, string NameLinux = null,
             string NameMac = null, string NameAndroid = null)
         {
             if (NameLinux == null) NameLinux = NameWindows;
@@ -43,7 +43,7 @@ namespace CSharpPlatform.Library
             }
         }
 
-        static public void MapLibraryToType<TType>(IDynamicLibrary DynamicLibrary)
+        public static void MapLibraryToType<TType>(IDynamicLibrary DynamicLibrary)
         {
             var Type = typeof(TType);
             foreach (var Field in Type.GetFields(BindingFlags.Public | BindingFlags.Static))

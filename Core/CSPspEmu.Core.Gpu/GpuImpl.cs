@@ -5,7 +5,7 @@ using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu
 {
-    public unsafe abstract class GpuImpl : PspPluginImpl
+    public abstract unsafe class GpuImpl : PspPluginImpl
     {
         [Inject] protected PspStoredConfig PspStoredConfig;
 

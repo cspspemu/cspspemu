@@ -58,17 +58,17 @@ namespace CSPspEmu.Core.Gpu
         /// <summary>
         /// 
         /// </summary>
-        volatile private uint InstructionAddressStart;
+        private volatile uint InstructionAddressStart;
 
         /// <summary>
         /// 
         /// </summary>
-        volatile private uint InstructionAddressCurrent;
+        private volatile uint InstructionAddressCurrent;
 
         /// <summary>
         /// 
         /// </summary>
-        volatile private uint InstructionAddressStall;
+        private volatile uint InstructionAddressStall;
 
         /// <summary>
         /// 

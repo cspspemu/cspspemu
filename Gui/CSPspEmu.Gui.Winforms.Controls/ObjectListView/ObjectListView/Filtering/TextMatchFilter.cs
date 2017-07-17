@@ -387,7 +387,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Base class for the various types of string matching that TextMatchFilter provides
         /// </summary>
-        abstract protected class TextMatchingStrategy
+        protected abstract class TextMatchingStrategy
         {
             /// <summary>
             /// Gets how the filter will match text
@@ -613,7 +613,7 @@ namespace BrightIdeasSoftware
                 get { return this.Regex == TextRegexMatchingStrategy.InvalidRegexMarker; }
             }
 
-            static private Regex InvalidRegexMarker = new Regex(".*");
+            private static Regex InvalidRegexMarker = new Regex(".*");
 
             /// <summary>
             /// Does the given text match the filter

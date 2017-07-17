@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-static public class ICompressedIsoExtensions
+public static class ICompressedIsoExtensions
 {
-    static public byte[] CombineAsASingleByteArray(this IEnumerable<ArraySegment<byte>> Segments)
+    public static byte[] CombineAsASingleByteArray(this IEnumerable<ArraySegment<byte>> Segments)
     {
         var OutputArray = new byte[Segments.Sum(Segment => Segment.Count)];
         int OutputOffset = 0;

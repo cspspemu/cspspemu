@@ -79,7 +79,7 @@ namespace CSPspEmu.Core.Cpu
         //	return o;
         //}
 
-        static public int FloatToHalfFloat(float Float)
+        public static int FloatToHalfFloat(float Float)
         {
             var i = MathFloat.ReinterpretFloatAsInt(Float);
             int s = ((i >> 16) & 0x00008000); // sign

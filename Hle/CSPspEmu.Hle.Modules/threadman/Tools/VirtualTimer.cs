@@ -12,7 +12,7 @@ using CSPspEmu.Core.Components.Rtc;
 namespace CSPspEmu.Hle.Modules.threadman
 {
     [HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_VTIMER)]
-    unsafe public class VirtualTimer : IHleUidPoolClass, IDisposable
+    public unsafe class VirtualTimer : IHleUidPoolClass, IDisposable
     {
         [Inject] PspRtc PspRtc;
 

@@ -18,7 +18,7 @@ namespace cscodec.h264.decoder
 			}
 		}
 
-		static public void weight_h264_pixels_c(int W, int H, byte[] block, int _block_offset, int stride, int log2_denom, int weight, int offset)
+		public static void weight_h264_pixels_c(int W, int H, byte[] block, int _block_offset, int stride, int log2_denom, int weight, int offset)
 		{
 			int y;
 			int block_offset = _block_offset;
@@ -48,7 +48,7 @@ namespace cscodec.h264.decoder
 			}
 		}
 
-		static public void biweight_h264_pixels_c(int W, int H, byte[] dst, int _dst_offset, byte[] src, int _src_offset, int stride, int log2_denom, int weightd, int weights, int offset)
+		public static void biweight_h264_pixels_c(int W, int H, byte[] dst, int _dst_offset, byte[] src, int _src_offset, int stride, int log2_denom, int weightd, int weights, int offset)
 		{
 			int y;
 			int src_offset = _src_offset;
@@ -168,7 +168,7 @@ namespace cscodec.h264.decoder
 			else return a;
 		}
 
-		static private byte av_clip_uint8(int a)
+		private static byte av_clip_uint8(int a)
 		{
 			if ((a & (~0xFF)) != 0) return (byte)((-a) >> 31);
 			else return (byte)a;

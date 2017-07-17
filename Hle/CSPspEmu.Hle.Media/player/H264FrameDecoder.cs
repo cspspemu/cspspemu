@@ -12,7 +12,7 @@ using CSharpUtils;
 
 namespace cscodec.h264.player
 {
-	unsafe public sealed class H264FrameDecoder : FrameDecoder<AVFrame>
+	public sealed unsafe class H264FrameDecoder : FrameDecoder<AVFrame>
 	{
 		H264Decoder Codec;
 		MpegEncContext Context = null;

@@ -20,17 +20,14 @@ namespace CSPspEmu.Core.Cpu
 
     unsafe delegate void* GetMemoryPtrNotNullDelegate(uint Address);
 
-    unsafe sealed public partial class CpuThreadState
+    public sealed unsafe partial class CpuThreadState
     {
-        static public readonly CpuThreadState Methods = new CpuThreadState();
+        public static readonly CpuThreadState Methods = new CpuThreadState();
 
         public CpuProcessor CpuProcessor;
 
         ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public PspMemory Memory
-        {
-            get { return CpuProcessor.Memory; }
-        }
+        public PspMemory Memory => CpuProcessor.Memory;
 
         public MethodCache MethodCache;
 
@@ -517,6 +514,8 @@ namespace CSPspEmu.Core.Cpu
         {
         }
 
+        static public CpuThreadState Dummy;
+
         /// <summary>
         /// 
         /// </summary>
@@ -773,7 +772,7 @@ namespace CSPspEmu.Core.Cpu
             try
             {
                 RA = SpecialCpu.ReturnFromFunction;
-                MethodCache.GetForPC(this.PC).CallDelegate(this);
+                MethodCache.GetForPc(this.PC).CallDelegate(this);
             }
             catch (SpecialCpu.ReturnFromFunctionException)
             {
@@ -808,7 +807,7 @@ namespace CSPspEmu.Core.Cpu
         /// <returns></returns>
         public Action<CpuThreadState> GetFuncAtPC(uint PC)
         {
-            return CpuProcessor.MethodCache.GetForPC(PC).CallDelegate;
+            return CpuProcessor.MethodCache.GetForPc(PC).CallDelegate;
         }
     }
 }

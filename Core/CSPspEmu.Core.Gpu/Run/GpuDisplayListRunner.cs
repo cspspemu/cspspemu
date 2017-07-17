@@ -6,7 +6,7 @@ using System.Runtime;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         public static readonly GpuDisplayListRunner Methods = new GpuDisplayListRunner();
 

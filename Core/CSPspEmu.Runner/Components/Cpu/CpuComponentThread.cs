@@ -34,7 +34,7 @@ using CSPspEmu.Hle.Vfs.Emulator;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
-    public unsafe sealed class CpuComponentThread : ComponentThread, IInjectInitialize
+    public sealed unsafe class CpuComponentThread : ComponentThread, IInjectInitialize
     {
         static Logger Logger = Logger.GetLogger("CpuComponentThread");
 

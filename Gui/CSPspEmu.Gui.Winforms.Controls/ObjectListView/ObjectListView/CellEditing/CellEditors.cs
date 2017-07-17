@@ -160,7 +160,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets or sets the value shown by this editor
         /// </summary>
-        new public int Value
+        public new int Value
         {
             get { return Decimal.ToInt32(base.Value); }
             set { base.Value = new Decimal(value); }
@@ -183,7 +183,7 @@ namespace BrightIdeasSoftware
             this.Maximum = 9999999;
         }
 
-        new public uint Value
+        public new uint Value
         {
             get { return Decimal.ToUInt32(base.Value); }
             set { base.Value = new Decimal(value); }
@@ -297,7 +297,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets or sets the value shown by this editor
         /// </summary>
-        new public double Value
+        public new double Value
         {
             get { return Convert.ToDouble(base.Value); }
             set { base.Value = Convert.ToDecimal(value); }

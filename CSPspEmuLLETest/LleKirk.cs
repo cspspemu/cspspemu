@@ -9,7 +9,7 @@ using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 
 namespace CSPspEmuLLETest
 {
-    unsafe public class LleKirk : ILleDma
+    public unsafe class LleKirk : ILleDma
     {
         DebugPspMemory Memory;
         Kirk Kirk;

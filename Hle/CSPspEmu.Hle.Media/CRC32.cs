@@ -106,7 +106,7 @@ using System.Text;
 
       /// <summary>Computes the hash value for the given input stream.</summary>
       /// <remarks>The computation preserves the internal state between the calls, so it can be used for computation of a stream data.</remarks>
-      new public byte[] ComputeHash(Stream inputStream) {
+      public new byte[] ComputeHash(Stream inputStream) {
          byte[] buffer = new byte[4096];
          int bytesRead;
          while ((bytesRead = inputStream.Read(buffer, 0, 4096)) > 0) {
@@ -117,13 +117,13 @@ using System.Text;
 
       /// <summary>Computes the hash value for the input data.</summary>
       /// <remarks>The computation preserves the internal state between the calls, so it can be used for computation of a stream data.</remarks>
-      new public byte[] ComputeHash(byte[] buffer) {
+      public new byte[] ComputeHash(byte[] buffer) {
          return ComputeHash(buffer, 0, buffer.Length);
       }
 
       /// <summary>Computes the hash value for the input data.</summary>
       /// <remarks>The computation preserves the internal state between the calls, so it can be used for computation of a stream data.</remarks>
-      new public byte[] ComputeHash(byte[] buffer, int offset, int count) {
+      public new byte[] ComputeHash(byte[] buffer, int offset, int count) {
          HashCore(buffer, offset, count);
          return HashFinal();
       }

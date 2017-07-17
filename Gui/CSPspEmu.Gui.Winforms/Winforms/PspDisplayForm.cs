@@ -33,7 +33,7 @@ namespace CSPspEmu.Gui.Winforms
 {
     public unsafe partial class PspDisplayForm : Form, IMessageFilter
     {
-        static internal PspDisplayForm Singleton;
+        internal static PspDisplayForm Singleton;
 
         internal IGuiExternalInterface IGuiExternalInterface;
 

@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 namespace CSharpPlatform
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    unsafe public delegate uint ByteSwap(uint Value);
+    public unsafe delegate uint ByteSwap(uint Value);
 
-    sealed unsafe public class Intrinsics
+    public sealed unsafe class Intrinsics
     {
-        static public readonly ByteSwap ByteSwap;
+        public static readonly ByteSwap ByteSwap;
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         public static ushort Portable_ByteSwap_ushort(ushort Value)
@@ -38,7 +38,7 @@ namespace CSharpPlatform
         [DllImport("Kernel32.dll")]
         private static extern void* HeapAlloc(IntPtr hHeap, uint dwFlags, int dwBytes);
 
-        static private void SetMethodBody<T>(ref T Func, byte[] FuncBody)
+        private static void SetMethodBody<T>(ref T Func, byte[] FuncBody)
         {
             fixed (byte* FuncBodyPtr = FuncBody)
             {
@@ -49,7 +49,7 @@ namespace CSharpPlatform
             }
         }
 
-        static private void SetMethodBody<T>(ref T Func, T Func2)
+        private static void SetMethodBody<T>(ref T Func, T Func2)
         {
             Func = Func2;
         }

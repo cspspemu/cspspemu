@@ -527,7 +527,7 @@ namespace CSPspEmu.Hle.Formats.Font
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe public struct FontInfo
+    public unsafe struct FontInfo
     {
         private Fixed26_6 MaxGlyphWidthI;
         private Fixed26_6 MaxGlyphHeightI;

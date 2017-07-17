@@ -118,7 +118,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                     //ast.DebugWrite(String.Format("Dynarec:PC:{0:X8}", EntryPC)),
                     //ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
                     ast.If(
-                        ast.Binary(ast.CpuThreadState, "==", ast.Null<CpuThreadState>()),
+                        ast.Binary(ast.CpuThreadStateExpr, "==", ast.Null<CpuThreadState>()),
                         ast.Return()
                     ),
                     Nodes
@@ -133,15 +133,15 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                 {
                     Name = CpuEmitter.SpecialName,
                     CallingPCs = CallingPCs,
-                    EntryPC = EntryPC,
-                    MinPC = MinPC,
-                    MaxPC = MaxPC,
+                    EntryPc = EntryPC,
+                    MinPc = MinPC,
+                    MaxPc = MaxPC,
                     AstNode = Nodes,
                     DisableOptimizations = MipsMethodEmitterResult.DisableOptimizations,
                     Delegate = MipsMethodEmitterResult.Delegate,
                     InstructionStats = InstructionStats,
                     TimeOptimize = MipsMethodEmitterResult.TimeOptimize,
-                    TimeGenerateIL = MipsMethodEmitterResult.TimeGenerateIL,
+                    TimeGenerateIl = MipsMethodEmitterResult.TimeGenerateIl,
                     TimeCreateDelegate = MipsMethodEmitterResult.TimeCreateDelegate,
                     TimeAnalyzeBranches = Time1 - Time0,
                     TimeGenerateAst = Time2 - Time1,
@@ -351,7 +351,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
             }
 
             uint PC;
-            static private AstMipsGenerator ast = AstMipsGenerator.Instance;
+            private static AstMipsGenerator ast = AstMipsGenerator.Instance;
 
             private AstNodeStm StorePC()
             {
@@ -437,7 +437,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                     if (_DynarecConfig.UpdatePCEveryInstruction)
                     {
-                        Nodes.AddStatement(ast.AssignPC(PC));
+                        Nodes.AddStatement(ast.AssignPc(PC));
                     }
 
                     Nodes.AddStatement(_GetAstCpuInstructionAT(PC));
@@ -614,27 +614,27 @@ namespace CSPspEmu.Core.Cpu.Dynarec
             {
                 if (CpuProcessor.CpuConfig.ShowInstructionStats)
                 {
-                    bool HasNew = false;
-                    foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
+                    bool hasNew = false;
+                    foreach (var pair in InstructionStats.OrderByDescending(item => item.Value))
                     {
-                        if (NewInstruction.ContainsKey(Pair.Key))
+                        if (NewInstruction.ContainsKey(pair.Key))
                         {
-                            HasNew = true;
+                            hasNew = true;
                         }
                     }
 
-                    if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || HasNew)
+                    if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || hasNew)
                     {
                         Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", MinPC, MaxPC);
                         ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.White, () =>
                         {
-                            foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
+                            foreach (var pair in InstructionStats.OrderByDescending(item => item.Value))
                             {
-                                var IsNew = NewInstruction.ContainsKey(Pair.Key);
-                                if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || IsNew)
+                                var isNew = NewInstruction.ContainsKey(pair.Key);
+                                if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || isNew)
                                 {
-                                    Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);
-                                    if (IsNew) Console.Error.Write(" <-- NEW!");
+                                    Console.Error.Write("{0} : {1}", pair.Key, pair.Value);
+                                    if (isNew) Console.Error.Write(" <-- NEW!");
                                     Console.Error.WriteLine("");
                                 }
                             }

@@ -7,9 +7,9 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu.VFpu
 {
-    static public class VfpuConstants
+    public static class VfpuConstants
     {
-        static public string GetRegisterNameByIndex(VfpuRegisterType Type, int Size, uint Register)
+        public static string GetRegisterNameByIndex(VfpuRegisterType Type, int Size, uint Register)
         {
             var RegisterName = GetRegisterNames(Type, Size)[Register];
             if (RegisterName == "")
@@ -18,14 +18,14 @@ namespace CSPspEmu.Core.Cpu.VFpu
             return RegisterName;
         }
 
-        static public uint GetRegisterIndexByName(VfpuRegisterType Type, int Size, string Name)
+        public static uint GetRegisterIndexByName(VfpuRegisterType Type, int Size, string Name)
         {
             // @TODO: Create a dictionary.
             var Names = GetRegisterNames(Type, Size);
             return (uint) Array.IndexOf(Names, Name);
         }
 
-        static private string[] GetRegisterNames(VfpuRegisterType Type, int Size)
+        private static string[] GetRegisterNames(VfpuRegisterType Type, int Size)
         {
             if (Type == VfpuRegisterType.Cell && Size == 1) return vfpu_sreg_names;
 

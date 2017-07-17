@@ -478,7 +478,7 @@ namespace cscodec.h264.decoder
 		public int next_slice_index;
 		public long svq3_watermark_key;
 
-		static public readonly byte[] ff_alternate_horizontal_scan = {
+		public static readonly byte[] ff_alternate_horizontal_scan = {
 				0,  1,   2,  3,  8,  9, 16, 17,
 				10, 11,  4,  5,  6,  7, 15, 14,
 				13, 12, 19, 18, 24, 25, 32, 33,
@@ -489,7 +489,7 @@ namespace cscodec.h264.decoder
 				52, 53, 54, 55, 60, 61, 62, 63,
 			};
 
-		static public readonly byte[] ff_alternate_vertical_scan = {
+		public static readonly byte[] ff_alternate_vertical_scan = {
 				0,  8,  16, 24,  1,  9,  2, 10,
 				17, 25, 32, 40, 48, 56, 57, 49,
 				41, 33, 26, 18,  3, 11,  4, 12,
@@ -502,7 +502,7 @@ namespace cscodec.h264.decoder
 
 		//////////////////////////////////
 		// Decoder for H.264 Symbols
-		static public readonly short[] scan8 = {
+		public static readonly short[] scan8 = {
 			 4+1*8, 5+1*8, 4+2*8, 5+2*8,
 			 6+1*8, 7+1*8, 6+2*8, 7+2*8,
 			 4+3*8, 5+3*8, 4+4*8, 5+4*8,

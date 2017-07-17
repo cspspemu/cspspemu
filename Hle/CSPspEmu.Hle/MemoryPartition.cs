@@ -17,7 +17,7 @@ namespace CSPspEmu.Hle
     }
 
     [HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_ILLEGAL_PARTITION_ID, FirstItem = 1)]
-    unsafe public class MemoryPartition : IHleUidPoolClass, IDisposable
+    public unsafe class MemoryPartition : IHleUidPoolClass, IDisposable
     {
         public enum Anchor : int
         {

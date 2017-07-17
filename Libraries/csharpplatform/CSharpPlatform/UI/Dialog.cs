@@ -23,7 +23,7 @@ namespace CSharpPlatform.UI
             Error = 1,
         }
 
-        static public void ShowDialog(Action<Result> Done, string Message, Type Type)
+        public static void ShowDialog(Action<Result> Done, string Message, Type Type)
         {
             new Thread(() =>
             {

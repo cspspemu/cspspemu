@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using CSharpPlatform.GL.Impl.Windows;
 
 namespace CSharpPlatform.GL.Impl.Linux
 {
-    public unsafe class LinuxGLContext : IGlContext
+    public unsafe class LinuxGlContext : IGlContext
     {
         private static Object Lock = new Object();
         public static IntPtr DefaultDisplay;
@@ -12,10 +13,10 @@ namespace CSharpPlatform.GL.Impl.Linux
         public static int DefaultScreen;
 
         //static public IntPtr DefaultRootWindow;
-        private static IntPtr SharedContext;
+        private static IntPtr _sharedContext;
 
         private IntPtr Display;
-        private int Screen;
+        private int _screen;
         private IntPtr WindowHandle;
         private IntPtr Context;
 
@@ -27,15 +28,15 @@ namespace CSharpPlatform.GL.Impl.Linux
 
         [DllImport("libX11")]
         public static extern IntPtr XCreateWindow(IntPtr display, IntPtr parent, int x, int y, int width, int height,
-            int border_width, int depth, int xclass, IntPtr visual, IntPtr valuemask,
+            int borderWidth, int depth, int xclass, IntPtr visual, IntPtr valuemask,
             ref XSetWindowAttributes attributes);
 
         [DllImport("libX11")]
         public static extern IntPtr XCreateSimpleWindow(IntPtr display, IntPtr parent, int x, int y, int width,
-            int height, int border_width, int border, int background);
+            int height, int borderWidth, int border, int background);
 
         [DllImport("libX11")]
-        public static extern IntPtr XRootWindow(IntPtr display, int screen_number);
+        public static extern IntPtr XRootWindow(IntPtr display, int screenNumber);
 
         [DllImport("libX11")]
         public static extern IntPtr XCreateColormap(IntPtr display, IntPtr window, IntPtr visual, int alloc);
@@ -47,28 +48,24 @@ namespace CSharpPlatform.GL.Impl.Linux
         public static extern int XInitThreads();
 
         [DllImport("libX11")]
-        public static extern IntPtr XGetVisualInfo(IntPtr display, IntPtr vinfo_mask, ref XVisualInfo template,
+        public static extern IntPtr XGetVisualInfo(IntPtr display, IntPtr vinfoMask, ref XVisualInfo template,
             out int nitems);
 
 
-        public static IGlContext FromWindowHandle(IntPtr WindowHandle)
+        public static IGlContext FromWindowHandle(IntPtr windowHandle)
         {
             lock (Lock)
-            {
-                return new LinuxGLContext(WindowHandle);
-            }
+                return new LinuxGlContext(windowHandle);
         }
 
-        static LinuxGLContext()
-        {
-            XInitThreads();
-        }
+        static LinuxGlContext() => XInitThreads();
 
-        private LinuxGLContext(IntPtr WindowHandle)
+        private LinuxGlContext(IntPtr windowHandle)
         {
             Console.Out.WriteLineColored(ConsoleColor.Yellow, "InitialWindowHandle:{0:X8}",
-                new UIntPtr(WindowHandle.ToPointer()).ToUInt64());
-            int Width = 128, Height = 128;
+                new UIntPtr(windowHandle.ToPointer()).ToUInt64());
+            const int width = 128;
+            const int height = 128;
             int fbcount;
             var visualAttributes = new List<int>();
 #if false
@@ -102,7 +99,7 @@ namespace CSharpPlatform.GL.Impl.Linux
             }
 
             Display = DefaultDisplay;
-            Screen = DefaultScreen;
+            _screen = DefaultScreen;
 
             //Console.WriteLine("{0}", GLX.ChooseVisual(Display, Screen, visualAttributes.ToArray()));
 
@@ -114,7 +111,7 @@ namespace CSharpPlatform.GL.Impl.Linux
 			Console.WriteLine("++++++++++++++++++++++++");
 #else
 
-            var fbconfigs = GLX.glXChooseFBConfig(Display, Screen, visualAttributes.ToArray(), out fbcount);
+            var fbconfigs = GLX.glXChooseFBConfig(Display, _screen, visualAttributes.ToArray(), out fbcount);
             var visinfo = GLX.glXGetVisualFromFBConfig(Display, *fbconfigs);
 #endif
             var root = XRootWindow(Display, visinfo->Screen);
@@ -127,7 +124,7 @@ namespace CSharpPlatform.GL.Impl.Linux
             //info = default(XVisualInfo);
             //info.VisualID = new IntPtr(33); int nitems; XGetVisualInfo(Display, (IntPtr)XVisualInfoMask.ID, ref info, out nitems);
 
-            if (WindowHandle == IntPtr.Zero)
+            if (windowHandle == IntPtr.Zero)
             {
                 //var attr = default(XSetWindowAttributes);
                 ///* window attributes */
@@ -154,17 +151,17 @@ namespace CSharpPlatform.GL.Impl.Linux
 
                 Console.WriteLine("{0}, {1}", info.Visual, info.VisualID);
 
-                WindowHandle = XCreateWindow(
+                windowHandle = XCreateWindow(
                     Display,
                     root,
-                    0, 0, Width, Height,
+                    0, 0, width, height,
                     0,
                     info.Depth, (int) XWindowClass.InputOutput,
                     info.Visual, (IntPtr) mask, ref attr
                 );
             }
 
-            this.WindowHandle = WindowHandle;
+            this.WindowHandle = windowHandle;
 
             //XMapWindow(Display, WindowHandle);
 
@@ -172,7 +169,7 @@ namespace CSharpPlatform.GL.Impl.Linux
             //var Info = (XVisualInfo*)GLX.ChooseVisual(Display, Screen, visualAttributes.ToArray()).ToPointer();
 
             //GLX.glXCreateContextAttribsARB(
-            Context = GLX.glXCreateContext(Display, &info, SharedContext, false);
+            Context = GLX.glXCreateContext(Display, &info, _sharedContext, false);
             GL.CheckError();
 
             // Just for >= 3.0
@@ -200,9 +197,9 @@ namespace CSharpPlatform.GL.Impl.Linux
             //	}
             //}
 
-            if (SharedContext == IntPtr.Zero)
+            if (_sharedContext == IntPtr.Zero)
             {
-                SharedContext = Context;
+                _sharedContext = Context;
             }
 
             MakeCurrent();
@@ -212,7 +209,7 @@ namespace CSharpPlatform.GL.Impl.Linux
             Console.Out.WriteLineColored(ConsoleColor.Yellow, "Display:{0:X8}",
                 new UIntPtr(Display.ToPointer()).ToUInt64());
             Console.Out.WriteLineColored(ConsoleColor.Yellow, "WindowHandle:{0:X8}",
-                new UIntPtr(WindowHandle.ToPointer()).ToUInt64());
+                new UIntPtr(windowHandle.ToPointer()).ToUInt64());
             Console.Out.WriteLineColored(ConsoleColor.Yellow, "Context:{0:X8}",
                 new UIntPtr(Context.ToPointer()).ToUInt64());
             Console.Out.WriteLineColored(ConsoleColor.Yellow, "Version:{0}", GL.GetString(GL.GL_VERSION));
@@ -222,21 +219,16 @@ namespace CSharpPlatform.GL.Impl.Linux
             Console.Out.WriteLineColored(ConsoleColor.Yellow, "Renderer:{0}", GL.GetString(GL.GL_RENDERER));
         }
 
-        public delegate IntPtr CreateContextAttribsARB(IntPtr display, IntPtr fbconfig, IntPtr share_context,
+        public delegate IntPtr CreateContextAttribsARB(IntPtr display, IntPtr fbconfig, IntPtr shareContext,
             bool direct, int* attribs);
 
-        public GLContextSize Size
-        {
-            get { return new GLContextSize {Width = 0, Height = 0}; }
-        }
+        public GlContextSize Size => new GlContextSize {Width = 0, Height = 0};
 
         public IGlContext MakeCurrent()
         {
-            if (!GLX.glXMakeCurrent(Display, WindowHandle, Context))
-            {
-                GL.CheckError();
-                Console.Error.WriteLineColored(ConsoleColor.Red, "glXMakeCurrent failed");
-            }
+            if (GLX.glXMakeCurrent(Display, WindowHandle, Context)) return this;
+            GL.CheckError();
+            Console.Error.WriteLineColored(ConsoleColor.Red, "glXMakeCurrent failed");
             return this;
         }
 
@@ -253,16 +245,14 @@ namespace CSharpPlatform.GL.Impl.Linux
             return this;
         }
 
-        public void Dispose()
-        {
-            GLX.glXDestroyContext(Display, Context);
-        }
+        public void Dispose() => GLX.glXDestroyContext(Display, Context);
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    // ReSharper disable FieldCanBeMadeReadOnly.Local
     public struct XSetWindowAttributes
     {
-        public IntPtr background_pixmap;
+        public IntPtr BackgroundPixmap;
         public IntPtr background_pixel;
         public IntPtr border_pixmap;
         public IntPtr border_pixel;
@@ -334,21 +324,21 @@ namespace CSharpPlatform.GL.Impl.Linux
     [Flags]
     internal enum CreateWindowMask : long //: ulong
     {
-        CWBackPixmap = (1L << 0),
-        CWBackPixel = (1L << 1),
-        CWSaveUnder = (1L << 10),
-        CWEventMask = (1L << 11),
-        CWDontPropagate = (1L << 12),
-        CWColormap = (1L << 13),
-        CWCursor = (1L << 14),
-        CWBorderPixmap = (1L << 2),
-        CWBorderPixel = (1L << 3),
-        CWBitGravity = (1L << 4),
-        CWWinGravity = (1L << 5),
-        CWBackingStore = (1L << 6),
-        CWBackingPlanes = (1L << 7),
-        CWBackingPixel = (1L << 8),
-        CWOverrideRedirect = (1L << 9)
+        CwBackPixmap = 1L << 0,
+        CwBackPixel = 1L << 1,
+        CwSaveUnder = 1L << 10,
+        CwEventMask = 1L << 11,
+        CwDontPropagate = 1L << 12,
+        CwColormap = 1L << 13,
+        CwCursor = 1L << 14,
+        CwBorderPixmap = 1L << 2,
+        CwBorderPixel = 1L << 3,
+        CwBitGravity = 1L << 4,
+        CwWinGravity = 1L << 5,
+        CwBackingStore = 1L << 6,
+        CwBackingPlanes = 1L << 7,
+        CwBackingPixel = 1L << 8,
+        CwOverrideRedirect = 1L << 9
 
         //CWY    = (1<<1),
         //CWWidth    = (1<<2),

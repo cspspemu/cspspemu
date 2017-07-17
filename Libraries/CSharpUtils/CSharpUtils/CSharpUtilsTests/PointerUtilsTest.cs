@@ -9,7 +9,7 @@ using CSharpUtils.Extensions;
 namespace CSPspEmu.Tests
 {
     [TestFixture]
-    unsafe public class PointerUtilsTest
+    public unsafe class PointerUtilsTest
     {
         [Test]
         public void TestMemset()

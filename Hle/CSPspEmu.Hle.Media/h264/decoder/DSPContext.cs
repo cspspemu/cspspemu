@@ -312,7 +312,7 @@ namespace cscodec.h264.decoder
 		}
 
 		//	public void put_h264_chroma_mc8_c(uint8_t *dst/*align 8*/, uint8_t *src/*align 1*/, int stride, int h, int x, int y){\
-		unsafe public void put_h264_chroma_mc8_c(byte[] dst_base/*align 8*/, int dst_offset, byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
+		public unsafe void put_h264_chroma_mc8_c(byte[] dst_base/*align 8*/, int dst_offset, byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
 		{
 			fixed (byte* dst_base_ptr = dst_base)
 			fixed (byte* src_base_ptr = src_base)

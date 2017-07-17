@@ -179,7 +179,7 @@ namespace CSharpUtils.Getopt
         [Command("-?", "-h", "--help", "/?", "/h")]
         [CommandDefaultAttribute]
         [Description("Shows this help")]
-        virtual protected void ShowHelp()
+        protected virtual void ShowHelp()
         {
             var currentAssembly = Assembly.GetEntryAssembly();
             var versionInfo = FileVersionInfo.GetVersionInfo(currentAssembly.Location);

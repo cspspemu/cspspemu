@@ -1037,7 +1037,7 @@ namespace BrightIdeasSoftware
         /// <remarks>.NET will not allow column 0 to have any alignment except
         /// to the left. We can't change the basic behaviour of the listview,
         /// but when owner drawn, column 0 can now have other alignments.</remarks>
-        new public HorizontalAlignment TextAlign
+        public new HorizontalAlignment TextAlign
         {
             get { return this.textAlign.HasValue ? this.textAlign.Value : base.TextAlign; }
             set
@@ -1194,7 +1194,7 @@ namespace BrightIdeasSoftware
         [Category("ObjectListView"),
          Description("The width in pixels of this column"),
          DefaultValue(60)]
-        new public int Width
+        public new int Width
         {
             get { return base.Width; }
             set

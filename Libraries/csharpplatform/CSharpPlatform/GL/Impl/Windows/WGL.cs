@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
+// ReSharper disable UnusedMember.Global
 
-namespace CSharpPlatform.GL.Impl
+namespace CSharpPlatform.GL.Impl.Windows
 {
-    public class WGL
+    public class Wgl
     {
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
         public static extern IntPtr wglCreateContext(IntPtr hDc);
@@ -68,15 +69,15 @@ namespace CSharpPlatform.GL.Impl
         public static extern Boolean wglSwapLayerBuffers(IntPtr hdc, UInt32 fuFlags);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)]
-        public static extern Boolean wglUseFontBitmapsA(IntPtr hDC, Int32 first, Int32 count, Int32 listBase);
+        public static extern Boolean wglUseFontBitmapsA(IntPtr hDc, Int32 first, Int32 count, Int32 listBase);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)]
-        public static extern Boolean wglUseFontBitmapsW(IntPtr hDC, Int32 first, Int32 count, Int32 listBase);
+        public static extern Boolean wglUseFontBitmapsW(IntPtr hDc, Int32 first, Int32 count, Int32 listBase);
 
         //[SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)] public extern static unsafe Boolean wglUseFontOutlinesA(IntPtr hDC, Int32 first, Int32 count, Int32 listBase, float thickness, float deviation, Int32 fontMode, GlyphMetricsFloat* glyphMetrics);
         //[SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)] public extern static unsafe Boolean wglUseFontOutlinesW(IntPtr hDC, Int32 first, Int32 count, Int32 listBase, float thickness, float deviation, Int32 fontMode, GlyphMetricsFloat* glyphMetrics);
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean wglMakeContextCurrentEXT(IntPtr hDrawDC, IntPtr hReadDC, IntPtr hglrc);
+        public static extern Boolean wglMakeContextCurrentEXT(IntPtr hDrawDc, IntPtr hReadDc, IntPtr hglrc);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
         public static extern unsafe Boolean wglChoosePixelFormatEXT(IntPtr hdc, int* piAttribIList,
@@ -124,57 +125,54 @@ namespace CSharpPlatform.GL.Impl
     public enum PixelFormatDescriptorFlags
     {
         // PixelFormatDescriptor flags
-        DOUBLEBUFFER = 0x01,
-        STEREO = 0x02,
-        DRAW_TO_WINDOW = 0x04,
-        DRAW_TO_BITMAP = 0x08,
-        SUPPORT_GDI = 0x10,
-        SUPPORT_OPENGL = 0x20,
-        GENERIC_FORMAT = 0x40,
-        NEED_PALETTE = 0x80,
-        NEED_SYSTEM_PALETTE = 0x100,
-        SWAP_EXCHANGE = 0x200,
-        SWAP_COPY = 0x400,
-        SWAP_LAYER_BUFFERS = 0x800,
-        GENERIC_ACCELERATED = 0x1000,
-        SUPPORT_DIRECTDRAW = 0x2000,
-        SUPPORT_COMPOSITION = 0x8000,
+        Doublebuffer = 0x01,
+        Stereo = 0x02,
+        DrawToWindow = 0x04,
+        DrawToBitmap = 0x08,
+        SupportGdi = 0x10,
+        SupportOpengl = 0x20,
+        GenericFormat = 0x40,
+        NeedPalette = 0x80,
+        NeedSystemPalette = 0x100,
+        SwapExchange = 0x200,
+        SwapCopy = 0x400,
+        SwapLayerBuffers = 0x800,
+        GenericAccelerated = 0x1000,
+        SupportDirectdraw = 0x2000,
+        SupportComposition = 0x8000,
 
         // PixelFormatDescriptor flags for use in ChoosePixelFormat only
-        DEPTH_DONTCARE = 0x20000000,
-        DOUBLEBUFFER_DONTCARE = 0x40000000,
-        STEREO_DONTCARE = unchecked((int) 0x80000000)
+        DepthDontcare = 0x20000000,
+        DoublebufferDontcare = 0x40000000,
+        StereoDontcare = unchecked((int) 0x80000000)
     }
 
     //[DebuggerDisplay("{Width}x{Height}")]
-    public struct GLContextSize
+    public struct GlContextSize
     {
         public int Width;
         public int Height;
 
-        public override string ToString()
-        {
-            return String.Format("GLContextSize({0}x{1})", Width, Height);
-        }
+        public override string ToString() => $"GLContextSize({Width}x{Height})";
     }
 
-    public struct RECT
+    public struct Rect
     {
-        public int left;
-        public int top;
-        public int right;
-        public int bottom;
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
     }
 
-    public unsafe struct BITMAP
+    public unsafe struct Bitmap
     {
-        public uint bmType;
-        public uint bmWidth;
-        public uint bmHeight;
-        public uint bmWidthBytes;
-        public uint bmPlanes;
-        public uint bmBitsPixel;
-        public void* bmBits;
+        public uint BmType;
+        public uint BmWidth;
+        public uint BmHeight;
+        public uint BmWidthBytes;
+        public uint BmPlanes;
+        public uint BmBitsPixel;
+        public void* BmBits;
     }
 
     [Flags]
@@ -281,9 +279,9 @@ namespace CSharpPlatform.GL.Impl
         VRedraw = 0x0001,
         HRedraw = 0x0002,
         DoubleClicks = 0x0008,
-        OwnDC = 0x0020,
-        ClassDC = 0x0040,
-        ParentDC = 0x0080,
+        OwnDc = 0x0020,
+        ClassDc = 0x0040,
+        ParentDc = 0x0080,
         NoClose = 0x0200,
         SaveBits = 0x0800,
         ByteAlignClient = 0x1000,
@@ -320,7 +318,7 @@ namespace CSharpPlatform.GL.Impl
         public IntPtr ClassName;
         public IntPtr IconSm;
 
-        public static uint SizeInBytes = (uint) Marshal.SizeOf(default(ExtendedWindowClass));
+        public static readonly uint SizeInBytes = (uint) Marshal.SizeOf(default(ExtendedWindowClass));
     }
 
     public enum WindowClass : uint

@@ -1,6 +1,6 @@
 ﻿namespace CSPspEmu.Hle.Modules.threadman
 {
-    unsafe public struct SceLwMutexWorkarea
+    public unsafe struct SceLwMutexWorkarea
     {
         public int lockLevel;
         public int lockThread;
@@ -10,7 +10,7 @@
         public fixed int pad[3];
     }
 
-    unsafe public struct SceKernelLwMutexInfo
+    public unsafe struct SceKernelLwMutexInfo
     {
         public SceSize size;
         public fixed byte _name[32];

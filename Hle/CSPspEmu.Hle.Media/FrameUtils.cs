@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace cscodec
 {
-	unsafe public class FrameUtils
+	public unsafe class FrameUtils
 	{
 		public static Bitmap imageFromFrameWithoutEdges(AVFrame f)
 		{

@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CSharpUtils.Drawing;
+using CSPspEmu.Core.Cpu.Dynarec.Ast;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -38,7 +39,7 @@ namespace CSPspEmu.Gui.Winforms
 
             public MethodCacheInfo MethodCacheInfo
             {
-                get { return MethodCache.GetForPC(PC); }
+                get { return MethodCache.GetForPc(PC); }
             }
 
             public Color ItemColor
@@ -72,7 +73,7 @@ namespace CSPspEmu.Gui.Winforms
             PcListBox.SuspendLayout();
             foreach (var PC in CpuProcessor.MethodCache.PCs.OrderBy(Item => Item))
             {
-                var Entry = CpuProcessor.MethodCache.GetForPC(PC);
+                var Entry = CpuProcessor.MethodCache.GetForPc(PC);
                 if (Entry.AstTree != null)
                 {
                     PcListBox.Items.Add(new PCItem()
@@ -120,7 +121,7 @@ namespace CSPspEmu.Gui.Winforms
                 InfoLines.Add(String.Format("TimeOptimize: {0}",
                     MethodCacheInfo.DynarecFunction.TimeOptimize.TotalMilliseconds));
                 InfoLines.Add(String.Format("TimeGenerateIL: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeGenerateIL.TotalMilliseconds));
+                    MethodCacheInfo.DynarecFunction.TimeGenerateIl.TotalMilliseconds));
                 InfoLines.Add(String.Format("TimeCreateDelegate: {0}",
                     MethodCacheInfo.DynarecFunction.TimeCreateDelegate.TotalMilliseconds));
                 InfoLines.Add(String.Format("TimeLinking: {0}",
@@ -148,7 +149,7 @@ namespace CSPspEmu.Gui.Winforms
                     case "IL":
                         if (Node != null)
                         {
-                            OutString = Node.ToILString<Action<CpuThreadState>>();
+                            OutString = Node.ToIlString<Action<CpuThreadState>>();
                         }
                         break;
                     case "Ast":
@@ -218,13 +219,13 @@ namespace CSPspEmu.Gui.Winforms
 
                 foreach (var PC in CpuProcessor.MethodCache.PCs.OrderBy(Item => Item))
                 {
-                    var Entry = CpuProcessor.MethodCache.GetForPC(PC);
+                    var Entry = CpuProcessor.MethodCache.GetForPc(PC);
                     if (Entry.AstTree != null)
                     {
                         var MethodBuilder = TypeBuilder.DefineMethod("Method_" + Entry.Name,
                             MethodAttributes.Public | MethodAttributes.Static, typeof(void),
                             new[] {typeof(CpuThreadState)});
-                        Entry.AstTree.GenerateIL(MethodBuilder, MethodBuilder.GetILGenerator());
+                        Entry.AstTree.GenerateIl(MethodBuilder, MethodBuilder.GetILGenerator());
                         //MethodBuilder.CreateDelegate(typeof(Action<CpuThreadState>));
                     }
 

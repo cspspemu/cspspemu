@@ -9,18 +9,12 @@ using CSharpUtils;
 using CSharpUtils.Streams;
 using CSharpUtils.Arrays;
 
-//using CSPspEmu.Core.Memory;
-//using CSPspEmu.Core.Utils;
-//using CSharpUtils.Arrays;
-//using CSharpUtils.Streams;
-//using CSharpUtils;
-
 namespace CSPspEmu.Core.Cpu.Assembler
 {
     public class AssemblerResult
     {
         public IArray<Instruction> Instructions;
-        public Dictionary<String, uint> Labels = new Dictionary<String, uint>();
+        public Dictionary<string, uint> Labels = new Dictionary<string, uint>();
         public List<AssemblerPatch> Patches = new List<AssemblerPatch>();
     }
 
@@ -35,7 +29,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
     {
         public uint Address;
         public AssemblerPatchType Type;
-        public String LabelName;
+        public string LabelName;
     }
 
     public partial class MipsAssembler
@@ -43,7 +37,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
         protected Stream OutputStream;
         protected BinaryWriter BinaryWriter;
         protected BinaryReader BinaryReader;
-        protected Dictionary<String, InstructionInfo> Instructions;
+        protected Dictionary<string, InstructionInfo> Instructions;
 
         public static AssemblerResult StaticAssembleInstructions(string program)
         {
@@ -123,15 +117,15 @@ namespace CSPspEmu.Core.Cpu.Assembler
                     vfpuPrefix.DestinationMask(index, false);
                     vfpuPrefix.DestinationSaturation(index, 3);
                     break;
-                default: throw (new NotImplementedException($"Invalid RegisterName {registerName}"));
+                default: throw new NotImplementedException($"Invalid RegisterName {registerName}");
             }
         }
 
         public static void ParseAndUpdateVfprSourceTargetPrefix(int index, string registerName,
             ref VfpuPrefix vfpuPrefix)
         {
-            int SetIndex = index;
-            bool IsConstant;
+            int setIndex;
+            bool isConstant;
 
             registerName = registerName.Replace(" ", "");
 
@@ -150,172 +144,169 @@ namespace CSPspEmu.Core.Cpu.Assembler
             switch (registerName)
             {
                 case "x":
-                    IsConstant = false;
-                    SetIndex = 0;
+                    isConstant = false;
+                    setIndex = 0;
                     break;
                 case "y":
-                    IsConstant = false;
-                    SetIndex = 1;
+                    isConstant = false;
+                    setIndex = 1;
                     break;
                 case "z":
-                    IsConstant = false;
-                    SetIndex = 2;
+                    isConstant = false;
+                    setIndex = 2;
                     break;
                 case "w":
-                    IsConstant = false;
-                    SetIndex = 3;
+                    isConstant = false;
+                    setIndex = 3;
                     break;
                 case "3":
-                    IsConstant = true;
-                    SetIndex = 0;
+                    isConstant = true;
+                    setIndex = 0;
                     vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "0":
-                    IsConstant = true;
-                    SetIndex = 0;
+                    isConstant = true;
+                    setIndex = 0;
                     vfpuPrefix.SourceAbsolute(index, false);
                     break;
                 case "1/3":
-                    IsConstant = true;
-                    SetIndex = 1;
+                    isConstant = true;
+                    setIndex = 1;
                     vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "1":
-                    IsConstant = true;
-                    SetIndex = 1;
+                    isConstant = true;
+                    setIndex = 1;
                     vfpuPrefix.SourceAbsolute(index, false);
                     break;
                 case "1/4":
-                    IsConstant = true;
-                    SetIndex = 2;
+                    isConstant = true;
+                    setIndex = 2;
                     vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "2":
-                    IsConstant = true;
-                    SetIndex = 2;
+                    isConstant = true;
+                    setIndex = 2;
                     vfpuPrefix.SourceAbsolute(index, false);
                     break;
                 case "1/6":
-                    IsConstant = true;
-                    SetIndex = 3;
+                    isConstant = true;
+                    setIndex = 3;
                     vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "1/2":
-                    IsConstant = true;
-                    SetIndex = 3;
+                    isConstant = true;
+                    setIndex = 3;
                     vfpuPrefix.SourceAbsolute(index, false);
                     break;
-                default: throw new NotImplementedException(String.Format("Invalid RegisterName {0}", registerName));
+                default: throw new NotImplementedException(string.Format("Invalid RegisterName {0}", registerName));
             }
 
-            vfpuPrefix.SourceConstant(index, IsConstant);
-            vfpuPrefix.SourceIndex(index, (uint) SetIndex);
+            vfpuPrefix.SourceConstant(index, isConstant);
+            vfpuPrefix.SourceIndex(index, (uint) setIndex);
         }
 
-        public static uint ParseVfprConstantName(string RegisterName)
+        public static uint ParseVfprConstantName(string registerName)
         {
-            return (uint) VfpuConstants.GetConstantIndexByName(RegisterName);
+            return (uint) VfpuConstants.GetConstantIndexByName(registerName);
         }
 
         public class ParseVfprOffsetInfo
         {
             public int Offset;
-            public int RS;
+            public int Rs;
         }
 
-        public static ParseVfprOffsetInfo ParseVfprOffset(int VfpuSize, string Str)
+        public static ParseVfprOffsetInfo ParseVfprOffset(int vfpuSize, string str)
         {
-            var Parts = Str.Split('+');
+            var parts = str.Split('+');
             return new ParseVfprOffsetInfo()
             {
-                Offset = (Parts.Length > 1) ? ParseIntegerConstant(Parts.First()) : 0,
-                RS = ParseGprName(Parts.Last()),
+                Offset = (parts.Length > 1) ? ParseIntegerConstant(parts.First()) : 0,
+                Rs = ParseGprName(parts.Last()),
             };
         }
 
-        public static int ParseVfprName(int VfpuSize, string RegisterName)
+        public static int ParseVfprName(int vfpuSize, string registerName)
         {
-            return VfpuRegisterInfo.Parse(VfpuSize, RegisterName).RegisterIndex;
+            return VfpuRegisterInfo.Parse(vfpuSize, registerName).RegisterIndex;
         }
 
-        public static int ParseFprName(string RegisterName)
+        public static int ParseFprName(string registerName)
         {
-            if (RegisterName[0] == 'f')
+            if (registerName[0] == 'f')
+                return Convert.ToInt32(registerName.Substr(1));
+            throw new InvalidDataException();
+        }
+
+        public static int ParseGprName(string registerName)
+        {
+            if (registerName[0] == 'r')
             {
-                return Convert.ToInt32(RegisterName.Substr(1));
+                return Convert.ToInt32(registerName.Substr(1));
             }
-            throw (new InvalidDataException());
+            throw new InvalidDataException($"Invalid Register Name \'{registerName}\'");
         }
 
-        public static int ParseGprName(string RegisterName)
+        public static int ParseIntegerConstant(string value)
         {
-            if (RegisterName[0] == 'r')
-            {
-                return Convert.ToInt32(RegisterName.Substr(1));
-            }
-            throw(new InvalidDataException("Invalid Register Name '" + RegisterName + "'"));
+            return NumberUtils.ParseIntegerConstant(value);
         }
 
-        public static int ParseIntegerConstant(String Value)
+        public Instruction AssembleInstruction(string line)
         {
-            return NumberUtils.ParseIntegerConstant(Value);
+            return AssembleInstructions(line)[0];
         }
 
-        public Instruction AssembleInstruction(String Line)
+        public Instruction[] AssembleInstructions(string line)
         {
-            return AssembleInstructions(Line)[0];
+            uint pc = 0;
+            return AssembleInstructions(ref pc, line, null);
         }
 
-        public Instruction[] AssembleInstructions(String Line)
+        public Instruction[] AssembleInstructions(ref uint pc, string line, List<AssemblerPatch> patches)
         {
-            uint PC = 0;
-            return AssembleInstructions(ref PC, Line, null);
-        }
+            line = line.Trim();
+            if (line.Length == 0) return new Instruction[] { };
+            int vfpuSize = 0;
+            var lineTokens = line.Split(new[] {' ', '\t'}, 2);
+            var instructionName = lineTokens[0].ToLower();
+            InstructionInfo instructionInfo;
 
-        public Instruction[] AssembleInstructions(ref uint PC, String Line, List<AssemblerPatch> Patches)
-        {
-            Line = Line.Trim();
-            if (Line.Length == 0) return new Instruction[] { };
-            string InstructionSuffix = "";
-            int VfpuSize = 0;
-            var LineTokens = Line.Split(new char[] {' ', '\t'}, 2);
-            var InstructionName = LineTokens[0].ToLower();
-            InstructionInfo InstructionInfo;
+            if (instructionName.EndsWith(".s")) vfpuSize = 1;
+            if (instructionName.EndsWith(".p")) vfpuSize = 2;
+            if (instructionName.EndsWith(".t")) vfpuSize = 3;
+            if (instructionName.EndsWith(".q")) vfpuSize = 4;
 
-            if (InstructionName.EndsWith(".s")) VfpuSize = 1;
-            if (InstructionName.EndsWith(".p")) VfpuSize = 2;
-            if (InstructionName.EndsWith(".t")) VfpuSize = 3;
-            if (InstructionName.EndsWith(".q")) VfpuSize = 4;
-
-            if (!Instructions.ContainsKey(InstructionName))
+            if (!Instructions.ContainsKey(instructionName))
             {
                 // Vfpu instruction with suffix.
-                if (VfpuSize > 0)
+                if (vfpuSize > 0)
                 {
-                    InstructionSuffix = InstructionName.Substr(-2);
-                    InstructionName = InstructionName.Substr(0, -2);
+                    instructionName.Substr(-2);
+                    instructionName = instructionName.Substr(0, -2);
                 }
             }
 
-            if (Instructions.TryGetValue(InstructionName, out InstructionInfo))
+            if (Instructions.TryGetValue(instructionName, out instructionInfo))
             {
-                var Instruction = new Instruction()
+                var instruction = new Instruction()
                 {
-                    Value = InstructionInfo.Value & InstructionInfo.Mask,
+                    Value = instructionInfo.Value & instructionInfo.Mask,
                 };
 
-                if (VfpuSize > 0)
+                if (vfpuSize > 0)
                 {
-                    Instruction.ONE_TWO = VfpuSize;
+                    instruction.ONE_TWO = vfpuSize;
                 }
 
-                var Matches = Matcher(InstructionInfo.AsmEncoding, (LineTokens.Length > 1) ? LineTokens[1] : "");
-                foreach (var Match in Matches)
+                var matches = Matcher(instructionInfo.AsmEncoding, (lineTokens.Length > 1) ? lineTokens[1] : "");
+                foreach (var match in matches)
                 {
-                    var Key = Match.Key;
-                    var Value = Match.Value;
+                    var key = match.Key;
+                    var value = match.Value;
 
-                    switch (Key)
+                    switch (key)
                     {
                         // VFPU
                         // Vector registers
@@ -324,7 +315,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         case "%zt":
                         case "%zq":
                         case "%zm":
-                            Instruction.VD = ParseVfprName(VfpuSize, Value);
+                            instruction.VD = ParseVfprName(vfpuSize, value);
                             break;
                         case "%ys":
                         case "%yp":
@@ -333,39 +324,39 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         case "%ym":
                         case "%yn":
                         case "%tym":
-                            if (Key == "%tym")
+                            if (key == "%tym")
                             {
-                                Value = ((Value[0] == 'M') ? 'E' : 'M') + Value.Substring(1);
+                                value = ((value[0] == 'M') ? 'E' : 'M') + value.Substring(1);
                             }
-                            Instruction.VS = ParseVfprName(VfpuSize, Value);
+                            instruction.VS = ParseVfprName(vfpuSize, value);
                             break;
                         case "%xs":
                         case "%xp":
                         case "%xt":
                         case "%xq":
                         case "%xm":
-                            Instruction.VT = ParseVfprName(VfpuSize, Value);
+                            instruction.VT = ParseVfprName(vfpuSize, value);
                             break;
                         case "%vk":
-                            Instruction.IMM5 = ParseVfprConstantName(Value);
+                            instruction.IMM5 = ParseVfprConstantName(value);
                             break;
 
                         case "%vr":
-                            Instruction.IMM5 = ParseVfprRotate(Value);
+                            instruction.IMM5 = ParseVfprRotate(value);
                             break;
 
                         //case "%zm": throw(new NotImplementedException("zm"));
 
                         // sv.q %Xq, %Y
                         case "%Xq":
-                            Instruction.VT5_1 = ParseVfprName(VfpuSize, Value);
+                            instruction.VT5_1 = ParseVfprName(vfpuSize, value);
                             break;
                         case "%Y":
                         {
-                            var Info = ParseVfprOffset(VfpuSize, Value);
-                            if ((Info.Offset % 4) != 0) throw(new Exception("Offset must be multiple of 4"));
-                            Instruction.IMM14 = Info.Offset / 4;
-                            Instruction.RS = Info.RS;
+                            var info = ParseVfprOffset(vfpuSize, value);
+                            if ((info.Offset % 4) != 0) throw(new Exception("Offset must be multiple of 4"));
+                            instruction.IMM14 = info.Offset / 4;
+                            instruction.RS = info.Rs;
                         }
                             break;
 
@@ -375,10 +366,10 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         case "%vp2":
                         case "%vp3":
                         {
-                            int Index = int.Parse(Key.Substr(-1));
-                            VfpuPrefix VfpuPrefix = Instruction.Value;
-                            ParseAndUpdateVfprSourceTargetPrefix(Index, Value, ref VfpuPrefix);
-                            Instruction.Value = VfpuPrefix;
+                            var index = int.Parse(key.Substr(-1));
+                            VfpuPrefix vfpuPrefix = instruction.Value;
+                            ParseAndUpdateVfprSourceTargetPrefix(index, value, ref vfpuPrefix);
+                            instruction.Value = vfpuPrefix;
                         }
                             break;
                         // VFPU: prefixes (destination)
@@ -387,10 +378,10 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         case "%vp6":
                         case "%vp7":
                         {
-                            int Index = int.Parse(Key.Substr(-1)) - 4;
-                            VfpuDestinationPrefix VfpuPrefix = Instruction.Value;
-                            ParseAndUpdateVfprDestinationPrefix(Index, Value, ref VfpuPrefix);
-                            Instruction.Value = VfpuPrefix;
+                            var index = int.Parse(key.Substr(-1)) - 4;
+                            VfpuDestinationPrefix vfpuPrefix = instruction.Value;
+                            ParseAndUpdateVfprDestinationPrefix(index, value, ref vfpuPrefix);
+                            instruction.Value = vfpuPrefix;
                         }
                             break;
 
@@ -398,73 +389,74 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
                         // FPU
                         case "%S":
-                            Instruction.FS = ParseFprName(Value);
+                            instruction.FS = ParseFprName(value);
                             break;
                         case "%D":
-                            Instruction.FD = ParseFprName(Value);
+                            instruction.FD = ParseFprName(value);
                             break;
                         case "%T":
-                            Instruction.FT = ParseFprName(Value);
+                            instruction.FT = ParseFprName(value);
                             break;
 
                         // CPU
                         case "%J":
                         case "%s":
-                            Instruction.RS = ParseGprName(Value);
+                            instruction.RS = ParseGprName(value);
                             break;
                         case "%d":
-                            Instruction.RD = ParseGprName(Value);
+                            instruction.RD = ParseGprName(value);
                             break;
                         case "%t":
-                            Instruction.RT = ParseGprName(Value);
+                            instruction.RT = ParseGprName(value);
                             break;
 
                         case "%a":
-                            Instruction.POS = (uint) ParseIntegerConstant(Value);
+                            instruction.POS = (uint) ParseIntegerConstant(value);
                             break;
                         case "%ne":
-                            Instruction.SIZE_E = (uint) ParseIntegerConstant(Value);
+                            instruction.SIZE_E = (uint) ParseIntegerConstant(value);
                             break;
                         case "%ni":
-                            Instruction.SIZE_I = (uint) ParseIntegerConstant(Value);
+                            instruction.SIZE_I = (uint) ParseIntegerConstant(value);
                             break;
 
                         case "%p":
-                            Instruction.RD = (int) ParseIntegerConstant(Value);
+                            instruction.RD = ParseIntegerConstant(value);
                             break;
 
                         case "%c":
                         case "%C":
-                            Instruction.CODE = (uint) ParseIntegerConstant(Value);
+                            instruction.CODE = (uint) ParseIntegerConstant(value);
                             break;
                         case "%vi":
                         case "%i":
-                            Instruction.IMM = ParseIntegerConstant(Value);
+                            instruction.IMM = ParseIntegerConstant(value);
                             break;
                         case "%I":
-                            Instruction.IMMU = (uint) ParseIntegerConstant(Value);
+                            instruction.IMMU = (uint) ParseIntegerConstant(value);
                             break;
 
                         case "%j":
-                            Patches.Add(new AssemblerPatch()
+                            patches.Add(new AssemblerPatch()
                             {
-                                Address = PC,
-                                LabelName = Value,
+                                Address = pc,
+                                LabelName = value,
                                 Type = AssemblerPatchType.Abs26
                             });
                             break;
                         case "%O":
-                            Patches.Add(new AssemblerPatch()
+                            patches.Add(new AssemblerPatch()
                             {
-                                Address = PC,
-                                LabelName = Value,
+                                Address = pc,
+                                LabelName = value,
                                 Type = AssemblerPatchType.Rel16
                             });
                             break;
 
                         default:
-                            throw (new InvalidDataException("Unknown format '" + Key + "' <-- (" +
-                                                            InstructionInfo.AsmEncoding + ")"));
+                            throw new InvalidDataException(
+                                $"Unknown format \'{key}\' <-- ({instructionInfo.AsmEncoding})"
+                            );
                     }
                 }
                 /*
@@ -476,46 +468,46 @@ namespace CSPspEmu.Core.Cpu.Assembler
                 {
                 }
                 */
-                PC += 4;
-                return new Instruction[] {Instruction};
+                pc += 4;
+                return new[] {instruction};
             }
             else
             {
-                switch (InstructionName)
+                switch (instructionName)
                 {
                     case "nop":
                     {
                         //return AssembleInstructions(ref PC, "sll r0, r0, r0");
-                        return AssembleInstructions(ref PC, "and r0, r0, r0", Patches);
+                        return AssembleInstructions(ref pc, "and r0, r0, r0", patches);
                     }
                     case "b":
                     {
-                        var Info = Matcher("%O", LineTokens[1]);
-                        return AssembleInstructions(ref PC, "beq r0, r0, " + Info["%O"], Patches);
+                        var info = Matcher("%O", lineTokens[1]);
+                        return AssembleInstructions(ref pc, $"beq r0, r0, {info["%O"]}", patches);
                     }
                     case "li":
                     {
-                        var Info = Matcher("%d, %i", LineTokens[1]);
-                        var DestReg = Info["%d"];
-                        var Value = ParseIntegerConstant(Info["%i"]);
+                        var info = Matcher("%d, %i", lineTokens[1]);
+                        var destReg = info["%d"];
+                        var value = ParseIntegerConstant(info["%i"]);
                         // Needs LUI
-                        if ((short) Value != Value)
+                        if ((short) value != value)
                         {
-                            var List = new List<Instruction>();
-                            List.AddRange(AssembleInstructions(ref PC,
-                                "lui " + DestReg + ", " + ((Value >> 16) & 0xFFFF), Patches));
-                            List.AddRange(AssembleInstructions(ref PC,
-                                "ori " + DestReg + ", " + DestReg + ", " + (Value & 0xFFFF), Patches));
+                            var list = new List<Instruction>();
+                            list.AddRange(AssembleInstructions(ref pc,
+                                "lui " + destReg + ", " + ((value >> 16) & 0xFFFF), patches));
+                            list.AddRange(AssembleInstructions(ref pc,
+                                "ori " + destReg + ", " + destReg + ", " + (value & 0xFFFF), patches));
                             //Console.WriteLine(List.ToJson());
-                            return List.ToArray();
+                            return list.ToArray();
                         }
                         else
                         {
-                            return AssembleInstructions(ref PC, "addi " + DestReg + ", r0, " + Value, Patches);
+                            return AssembleInstructions(ref pc, "addi " + destReg + ", r0, " + value, patches);
                         }
                     }
                     default:
-                        throw (new InvalidOperationException("Unknown instruction type '" + InstructionName + "'"));
+                        throw (new InvalidOperationException("Unknown instruction type '" + instructionName + "'"));
                 }
             }
         }
@@ -553,83 +545,80 @@ namespace CSPspEmu.Core.Cpu.Assembler
          * %? - Indicates vmmul special exception
          */
 
-        public void Assemble(String Lines, AssemblerResult AssemblerResult = null)
+        public void Assemble(string lines, AssemblerResult assemblerResult = null)
         {
-            if (AssemblerResult == null) AssemblerResult = new AssemblerResult();
+            if (assemblerResult == null) assemblerResult = new AssemblerResult();
 
-            var Labels = AssemblerResult.Labels;
-            var Patches = AssemblerResult.Patches;
+            var labels = assemblerResult.Labels;
+            var patches = assemblerResult.Patches;
 
-            foreach (var Line in Lines.Split(new char[] {'\n'}).Select(Str => Str.Trim()).Where(Str => Str.Length > 0))
+            foreach (var line in lines.Split('\n').Select(str => str.Trim()).Where(str => str.Length > 0))
             {
                 // Strip comments.
-                var Parts = Line.Split(new string[] {";", "#"}, 2, StringSplitOptions.None);
-                var RealLine = Parts[0].Trim();
+                var parts = line.Split(new[] {";", "#"}, 2, StringSplitOptions.None);
+                var realLine = parts[0].Trim();
 
                 // Directive
-                if (Line[0] == '.')
+                if (line[0] == '.')
                 {
-                    var LineTokens = Line.Split(new char[] {' ', '\t'}, 2);
-                    switch (LineTokens[0])
+                    var lineTokens = line.Split(new[] {' ', '\t'}, 2);
+                    switch (lineTokens[0])
                     {
                         case ".code":
-                            OutputStream.Position = ParseIntegerConstant(LineTokens[1]);
+                            OutputStream.Position = ParseIntegerConstant(lineTokens[1]);
                             break;
                         default:
-                            throw (new NotImplementedException("Unsupported directive '" + LineTokens[0] + "'"));
+                            throw (new NotImplementedException("Unsupported directive '" + lineTokens[0] + "'"));
                     }
                 }
                 else
                 {
                     // Label
-                    if (RealLine.EndsWith(":"))
+                    if (realLine.EndsWith(":"))
                     {
-                        Labels[RealLine.Substr(0, -1).Trim()] = (uint) OutputStream.Position;
+                        labels[realLine.Substr(0, -1).Trim()] = (uint) OutputStream.Position;
                     }
                     // Instruction
                     else
                     {
-                        uint PC = (uint) OutputStream.Position;
-                        var Instructions = AssembleInstructions(ref PC, RealLine, Patches);
-                        foreach (var Instruction in Instructions)
+                        var pc = (uint) OutputStream.Position;
+                        var instructions = AssembleInstructions(ref pc, realLine, patches);
+                        foreach (var instruction in instructions)
                         {
-                            BinaryWriter.Write(Instruction.Value);
+                            BinaryWriter.Write(instruction.Value);
                         }
                     }
                 }
             }
 
-            foreach (var Patch in Patches)
+            foreach (var patch in patches)
             {
-                if (Labels.ContainsKey(Patch.LabelName))
+                if (!labels.ContainsKey(patch.LabelName))
                 {
-                    var LabelAddress = Labels[Patch.LabelName];
-                    Instruction Instruction;
+                    throw new KeyNotFoundException($"Can't find label '{patch.LabelName}'");
+                }
+                
+                var labelAddress = labels[patch.LabelName];
 
-                    OutputStream.Position = Patch.Address;
-                    Instruction = (Instruction) BinaryReader.ReadUInt32();
-                    {
-                        switch (Patch.Type)
-                        {
-                            case AssemblerPatchType.Rel16:
-                                Instruction.IMM = ((int) LabelAddress - (int) Patch.Address - 4) / 4;
-                                break;
-                            case AssemblerPatchType.Abs26:
-                                Instruction.JUMP_Bits = (LabelAddress & PspMemory.MemoryMask) / 4;
-                                Console.Write("0x{0:X} : {1}", Instruction.JUMP_Bits, Patch.LabelName);
-                                break;
-                            case AssemblerPatchType.Abs32:
-                                Instruction.Value = LabelAddress;
-                                break;
-                        }
-                    }
-                    OutputStream.Position = Patch.Address;
-                    BinaryWriter.Write(Instruction.Value);
-                }
-                else
+                OutputStream.Position = patch.Address;
+                var instruction = (Instruction) BinaryReader.ReadUInt32();
                 {
-                    throw(new KeyNotFoundException("Can't find label '" + Patch.LabelName + "'"));
+                    switch (patch.Type)
+                    {
+                        case AssemblerPatchType.Rel16:
+                            instruction.IMM = ((int) labelAddress - (int) patch.Address - 4) / 4;
+                            break;
+                        case AssemblerPatchType.Abs26:
+                            instruction.JUMP_Bits = (labelAddress & PspMemory.MemoryMask) / 4;
+                            Console.Write("0x{0:X} : {1}", instruction.JUMP_Bits, patch.LabelName);
+                            break;
+                        case AssemblerPatchType.Abs32:
+                            instruction.Value = labelAddress;
+                            break;
+                    }
                 }
+                OutputStream.Position = patch.Address;
+                BinaryWriter.Write(instruction.Value);
             }
         }
     }

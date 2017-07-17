@@ -2,9 +2,9 @@ using System;
 
 namespace CSPspEmuLLETest
 {
-    static public class TransferUtils
+    public static class TransferUtils
     {
-        static public void Transfer<T>(Dma.Direction direction, ref T deviceValue, ref uint memoryValue)
+        public static void Transfer<T>(Dma.Direction direction, ref T deviceValue, ref uint memoryValue)
         {
             if (direction == Dma.Direction.Read)
             {
@@ -16,7 +16,7 @@ namespace CSPspEmuLLETest
             }
         }
 
-        static public void TransferToArray(Dma.Direction direction, byte[] array, int offset, int size,
+        public static void TransferToArray(Dma.Direction direction, byte[] array, int offset, int size,
             ref uint memoryValue)
         {
             if (direction == Dma.Direction.Read)

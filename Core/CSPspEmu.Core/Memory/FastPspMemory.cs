@@ -6,14 +6,14 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Memory
 {
-    public unsafe sealed class FastPspMemory : PspMemory
+    public sealed unsafe class FastPspMemory : PspMemory
     {
-        override public bool HasFixedGlobalAddress
+        public override bool HasFixedGlobalAddress
         {
             get { return true; }
         }
 
-        override public IntPtr FixedGlobalAddress
+        public override IntPtr FixedGlobalAddress
         {
             get { return new IntPtr(_Base); }
         }

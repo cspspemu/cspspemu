@@ -214,8 +214,8 @@ namespace CSPspEmu.Core.Gpu
 
         public AutoResetEvent ListEnqueuedEvent = new AutoResetEvent(false);
 
-        volatile private GpuDisplayList CurrentGpuDisplayList = null;
-        volatile private GpuDisplayList LastProcessedGpuDisplayList = null;
+        private volatile GpuDisplayList CurrentGpuDisplayList = null;
+        private volatile GpuDisplayList LastProcessedGpuDisplayList = null;
         public bool UsingGe { get; private set; }
 
         /// <summary>

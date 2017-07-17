@@ -77,7 +77,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="modelObject">The model object to consider</param>
         /// <returns>Returns true if the model will be included by the filter</returns>
-        virtual public bool Filter(object modelObject)
+        public virtual bool Filter(object modelObject)
         {
             return true;
         }
@@ -113,7 +113,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="modelObject"></param>
         /// <returns></returns>
-        virtual public bool Filter(object modelObject)
+        public virtual bool Filter(object modelObject)
         {
             return this.Predicate == null ? true : this.Predicate(modelObject);
         }
@@ -161,7 +161,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="modelObject"></param>
         /// <returns>True if the object is included by the filter</returns>
-        virtual public bool Filter(object modelObject)
+        public virtual bool Filter(object modelObject)
         {
             if (this.Filters == null || this.Filters.Count == 0)
                 return true;
@@ -276,7 +276,7 @@ namespace BrightIdeasSoftware
         /// Gets or sets the delegate that will be used to extract values
         /// from model objects
         /// </summary>
-        virtual public AspectGetterDelegate ValueGetter
+        public virtual AspectGetterDelegate ValueGetter
         {
             get { return valueGetter; }
             set { valueGetter = value; }
@@ -288,7 +288,7 @@ namespace BrightIdeasSoftware
         /// Gets or sets the list of values that the value extracted from
         /// the model object must match in order to be included.
         /// </summary>
-        virtual public IList PossibleValues
+        public virtual IList PossibleValues
         {
             get { return possibleValues; }
             set { possibleValues = value; }
@@ -412,7 +412,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="modelObjects">The collection of model objects that the list will possibly display</param>
         /// <returns>The filtered collection that holds the model objects that will be displayed.</returns>
-        virtual public IEnumerable Filter(IEnumerable modelObjects)
+        public virtual IEnumerable Filter(IEnumerable modelObjects)
         {
             return modelObjects;
         }
