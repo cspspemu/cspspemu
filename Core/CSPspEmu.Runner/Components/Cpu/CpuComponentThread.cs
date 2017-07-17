@@ -10,7 +10,6 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Loader;
@@ -29,6 +28,7 @@ using CSPspEmu.Hle.Vfs.Zip;
 using CSPspEmu.Resources;
 using CSPspEmu.Hle.Formats.Archive;
 using System.Reflection;
+using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Interop;
 using CSPspEmu.Hle.Vfs.Emulator;
 

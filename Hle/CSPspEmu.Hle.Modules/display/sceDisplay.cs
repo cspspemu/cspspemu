@@ -1,12 +1,11 @@
 ﻿using System;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Display;
-using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Components.Display;
+using CSPspEmu.Core.Components.Rtc;
 
 namespace CSPspEmu.Hle.Modules.display
 {
@@ -123,7 +122,7 @@ namespace CSPspEmu.Hle.Modules.display
                 case PspDisplay.SyncMode.Immediate:
                     UpdateInfo();
                     break;
-                case Core.Display.PspDisplay.SyncMode.NextFrame:
+                case PspDisplay.SyncMode.NextFrame:
                     ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplaySetFrameBuf",
                         null, (WakeUp) =>
                         {
@@ -173,7 +172,7 @@ namespace CSPspEmu.Hle.Modules.display
         [HlePspNotImplemented(Notice = false)]
         public int sceDisplayGetAccumulatedHcount()
         {
-            return (int) (sceDisplayGetCurrentHcount() + sceDisplayGetVcount() * PspDisplay.hCountPerVblank);
+            return (int) (sceDisplayGetCurrentHcount() + sceDisplayGetVcount() * PspDisplay.HCountPerVblank);
         }
 
         /// <summary>

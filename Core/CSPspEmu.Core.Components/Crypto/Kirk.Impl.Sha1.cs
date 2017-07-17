@@ -1,14 +1,14 @@
 ﻿using System.Security.Cryptography;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Crypto
+namespace CSPspEmu.Core.Components.Crypto
 {
     public unsafe partial class Kirk
     {
         /// <summary>
         /// SIZE: 0004
         /// </summary>
-        public struct KIRK_SHA1_HEADER
+        public struct KirkSha1Header
         {
             /// <summary>
             /// 0000 - Size of the input data source where will be generated the hash from.
@@ -21,40 +21,40 @@ namespace CSPspEmu.Core.Crypto
         /// 
         /// Command: 11, 0xB
         /// </summary>
-        /// <param name="OutputBuffer"></param>
-        /// <param name="InputBuffer"></param>
-        /// <param name="InputSize"></param>
+        /// <param name="outputBuffer"></param>
+        /// <param name="inputBuffer"></param>
+        /// <param name="inputSize"></param>
         /// <returns></returns>
-        public void KirkSha1(byte* OutputBuffer, byte* InputBuffer, int InputSize)
+        public void KirkSha1(byte* outputBuffer, byte* inputBuffer, int inputSize)
         {
             //CheckInitialized();
 
-            var Header = (KIRK_SHA1_HEADER*) InputBuffer;
-            if (InputSize == 0 || Header->DataSize == 0)
+            var header = (KirkSha1Header*) inputBuffer;
+            if (inputSize == 0 || header->DataSize == 0)
             {
-                throw(new KirkException(ResultEnum.PSP_KIRK_DATA_SIZE_IS_ZERO));
+                throw(new KirkException(ResultEnum.PspKirkDataSizeIsZero));
             }
 
             //Size <<= 4;
             //Size >>= 4;
-            InputSize &= 0x0FFFFFFF;
-            InputSize = (InputSize < Header->DataSize) ? InputSize : Header->DataSize;
+            inputSize &= 0x0FFFFFFF;
+            inputSize = (inputSize < header->DataSize) ? inputSize : header->DataSize;
 
-            var Sha1Hash = Sha1(
-                PointerUtils.PointerToByteArray(InputBuffer + 4, InputSize)
+            var sha1Hash = Sha1(
+                PointerUtils.PointerToByteArray(inputBuffer + 4, inputSize)
             );
 
-            PointerUtils.Memcpy(OutputBuffer, Sha1Hash, Sha1Hash.Length);
+            PointerUtils.Memcpy(outputBuffer, sha1Hash, sha1Hash.Length);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Input"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static byte[] Sha1(byte[] Input)
+        public static byte[] Sha1(byte[] input)
         {
-            return (new SHA1CryptoServiceProvider()).ComputeHash(Input);
+            return (new SHA1CryptoServiceProvider()).ComputeHash(input);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
-using CSPspEmu.Core.Crypto;
 using NUnit.Framework;
+using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 
 namespace CSPspEmu.Core.Tests.Crypto
 {

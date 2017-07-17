@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
         protected void _Generate(AstNodeStmPspInstruction PspInstruction)
         {
             Generate(PspInstruction.Statement);
-            Output.Write(String.Format(" // 0x{0:X8}: {1}", PspInstruction.DisassembledResult.InstructionPC,
+            Output.Write(String.Format(" // 0x{0:X8}: {1}", PspInstruction.DisassembledResult.InstructionPc,
                 PspInstruction.DisassembledResult.AssemblyLine));
         }
     }

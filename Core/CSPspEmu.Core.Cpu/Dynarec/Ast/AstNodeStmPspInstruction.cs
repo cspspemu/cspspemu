@@ -27,7 +27,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
             {
                 return new Dictionary<string, string>()
                 {
-                    {"Address", String.Format("0x{0:X8}", DisassembledResult.InstructionPC)},
+                    {"Address", String.Format("0x{0:X8}", DisassembledResult.InstructionPc)},
                     {"Instruction", DisassembledResult.ToString()},
                 };
             }

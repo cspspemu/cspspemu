@@ -1,6 +1,6 @@
 ﻿using System;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Rtc;
+using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr

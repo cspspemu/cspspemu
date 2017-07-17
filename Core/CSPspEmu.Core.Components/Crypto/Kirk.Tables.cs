@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CSPspEmu.Core.Crypto
+namespace CSPspEmu.Core.Components.Crypto
 {
     public unsafe partial class Kirk
     {
@@ -11,17 +11,17 @@ namespace CSPspEmu.Core.Crypto
         {
             public ResultEnum Result;
 
-            public KirkException(ResultEnum Result, string Message = "")
-                : base(String.Format("KirkException: {0} : {1}", Result, Message))
+            public KirkException(ResultEnum result, string message = "")
+                : base($"KirkException: {result} : {message}")
             {
-                this.Result = Result;
+                Result = result;
             }
         }
 
         /// <summary>
         /// SIZE: 0014
         /// </summary>
-        public struct KIRK_AES128CBC_HEADER
+        public struct KirkAes128CbcHeader
         {
             /// <summary>
             /// 0000 - 
@@ -52,27 +52,27 @@ namespace CSPspEmu.Core.Crypto
         /// <summary>
         /// SIZE: 0090
         /// </summary>
-        public struct AES128CMACHeader
+        public struct Aes128CmacHeader
         {
             /// <summary>
             /// 0000 -
             /// </summary>
-            public fixed byte AES_key[16];
+            public fixed byte AesKey[16];
 
             /// <summary>
             /// 0010 -
             /// </summary>
-            public fixed byte CMAC_key[16];
+            public fixed byte CmacKey[16];
 
             /// <summary>
             /// 0020 -
             /// </summary>
-            public fixed byte CMAC_header_hash[16];
+            public fixed byte CmacHeaderHash[16];
 
             /// <summary>
             /// 0030 -
             /// </summary>
-            public fixed byte CMAC_data_hash[16];
+            public fixed byte CmacDataHash[16];
 
             /// <summary>
             /// 0040 -
@@ -87,7 +87,7 @@ namespace CSPspEmu.Core.Crypto
             /// <summary>
             /// 0061 -
             /// </summary>
-            public byte UseECDSAhash;
+            public byte UseEcdsAhash;
 
             /// <summary>
             /// 0064 -
@@ -118,7 +118,7 @@ namespace CSPspEmu.Core.Crypto
         /// <summary>
         /// "mode" in header
         /// </summary>
-        public enum KirkMode : int
+        public enum KirkMode
         {
             /// <summary>
             /// KIRK_MODE_CMD1 = 1
@@ -160,7 +160,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 1, 0x01
             /// </summary>
-            PSP_KIRK_CMD_DECRYPT_PRIVATE = 0x1,
+            PspKirkCmdDecryptPrivate = 0x1,
 
             /// <summary>
             /// Used for key type 3 (blacklisting), encrypts and signs data with a ECDSA signature.
@@ -169,7 +169,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 2, 0x02
             /// </summary>
-            PSP_KIRK_CMD_ENCRYPT_SIGN = 0x2,
+            PspKirkCmdEncryptSign = 0x2,
 
             /// <summary>
             /// Used for key type 3 (blacklisting), decrypts and signs data with a ECDSA signature.
@@ -178,7 +178,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 3, 0x03
             /// </summary>
-            PSP_KIRK_CMD_DECRYPT_SIGN = 0x3,
+            PspKirkCmdDecryptSign = 0x3,
 
             /// <summary>
             /// Key table based encryption used for general purposes by several modules.
@@ -189,7 +189,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 4, 0x04
             /// </summary>
-            PSP_KIRK_CMD_ENCRYPT = 0x4,
+            PspKirkCmdEncrypt = 0x4,
 
             /// <summary>
             /// Fuse ID based encryption used for general purposes by several modules.
@@ -200,7 +200,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 5, 0x05
             /// </summary>
-            PSP_KIRK_CMD_ENCRYPT_FUSE = 0x5,
+            PspKirkCmdEncryptFuse = 0x5,
 
             /// <summary>
             /// User specified ID based encryption used for general purposes by several modules.
@@ -211,7 +211,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 6, 0x06
             /// </summary>
-            PSP_KIRK_CMD_ENCRYPT_USER = 0x6,
+            PspKirkCmdEncryptUser = 0x6,
 
             /// <summary>
             /// Key table based decryption used for general purposes by several modules.
@@ -222,7 +222,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 7, 0x07
             /// </summary>
-            PSP_KIRK_CMD_DECRYPT = 0x7,
+            PspKirkCmdDecrypt = 0x7,
 
             /// <summary>
             /// Fuse ID based decryption used for general purposes by several modules.
@@ -233,7 +233,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 8, 0x08
             /// </summary>
-            PSP_KIRK_CMD_DECRYPT_FUSE = 0x8,
+            PspKirkCmdDecryptFuse = 0x8,
 
             /// <summary>
             /// User specified ID based decryption used for general purposes by several modules.
@@ -244,7 +244,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 9, 0x09
             /// </summary>
-            PSP_KIRK_CMD_DECRYPT_USER = 0x9,
+            PspKirkCmdDecryptUser = 0x9,
 
             /// <summary>
             /// Private signature (SCE) checking command.
@@ -255,7 +255,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 10, 0x0A
             /// </summary>
-            PSP_KIRK_CMD_PRIV_SIG_CHECK = 0xA,
+            PspKirkCmdPrivSigCheck = 0xA,
 
             /// <summary>
             /// SHA1 hash generating command.
@@ -266,7 +266,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 11, 0x0B
             /// </summary>
-            PSP_KIRK_CMD_SHA1_HASH = 0xB,
+            PspKirkCmdSha1Hash = 0xB,
 
             /// <summary>
             /// ECDSA key generating mul1 command. 
@@ -275,7 +275,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 12, 0x0C
             /// </summary>
-            PSP_KIRK_CMD_ECDSA_GEN_KEYS = 0xC,
+            PspKirkCmdEcdsaGenKeys = 0xC,
 
             /// <summary>
             /// ECDSA key generating mul2 command. 
@@ -284,7 +284,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 13, 0x0D
             /// </summary>
-            PSP_KIRK_CMD_ECDSA_MULTIPLY_POINT = 0xD,
+            PspKirkCmdEcdsaMultiplyPoint = 0xD,
 
             /// <summary>
             /// Random number generating command. 
@@ -293,7 +293,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 14, 0x0E
             /// </summary>
-            PSP_KIRK_CMD_PRNG = 0xE,
+            PspKirkCmdPrng = 0xE,
 
             /// <summary>
             /// KIRK initialization command.
@@ -302,7 +302,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 15, 0x0F
             /// </summary>
-            PSP_KIRK_CMD_INIT = 0xF,
+            PspKirkCmdInit = 0xF,
 
             /// <summary>
             /// ECDSA signing command.
@@ -310,7 +310,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 16, 0x10
             /// </summary>
-            PSP_KIRK_CMD_ECDSA_SIGN = 0x10,
+            PspKirkCmdEcdsaSign = 0x10,
 
             /// <summary>
             /// ECDSA checking command.
@@ -319,7 +319,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 17, 0x11
             /// </summary>
-            PSP_KIRK_CMD_ECDSA_VERIFY = 0x11,
+            PspKirkCmdEcdsaVerify = 0x11,
 
             /// <summary>
             /// Certificate checking command.
@@ -328,7 +328,7 @@ namespace CSPspEmu.Core.Crypto
             /// 
             /// Code: 18, 0x12
             /// </summary>
-            PSP_KIRK_CMD_CERT_VERIFY = 0x12,
+            PspKirkCmdCertVerify = 0x12,
         }
 
         /// <summary>
@@ -339,102 +339,102 @@ namespace CSPspEmu.Core.Crypto
             /// <summary>
             /// KIRK_OPERATION_SUCCESS
             /// </summary>
-            OK = 0,
+            Ok = 0,
 
             /// <summary>
             /// KIRK_NOT_ENABLED
             /// </summary>
-            PSP_KIRK_NOT_ENABLED = 0x1,
+            PspKirkNotEnabled = 0x1,
 
             /// <summary>
             /// KIRK_INVALID_MODE
             /// </summary>
-            PSP_KIRK_INVALID_MODE = 0x2,
+            PspKirkInvalidMode = 0x2,
 
             /// <summary>
             /// KIRK_HEADER_HASH_INVALID
             /// </summary>
-            PSP_KIRK_INVALID_HEADER_HASH = 0x3,
+            PspKirkInvalidHeaderHash = 0x3,
 
             /// <summary>
             /// KIRK_DATA_HASH_INVALID
             /// </summary>
-            PSP_KIRK_INVALID_DATA_HASH = 0x4,
+            PspKirkInvalidDataHash = 0x4,
 
             /// <summary>
             /// KIRK_SIG_CHECK_INVALID
             /// </summary>
-            PSP_KIRK_INVALID_SIG_CHECK = 0x5,
+            PspKirkInvalidSigCheck = 0x5,
 
             /// <summary>
             /// KIRK_UNK_1
             /// </summary>
-            PSP_KIRK_UNK1 = 0x6,
+            PspKirkUnk1 = 0x6,
 
             /// <summary>
             /// KIRK_UNK_2
             /// </summary>
-            PSP_KIRK_UNK2 = 0x7,
+            PspKirkUnk2 = 0x7,
 
             /// <summary>
             /// KIRK_UNK_3
             /// </summary>
-            PSP_KIRK_UNK3 = 0x8,
+            PspKirkUnk3 = 0x8,
 
             /// <summary>
             /// KIRK_UNK_4
             /// </summary>
-            PSP_KIRK_UNK4 = 0x9,
+            PspKirkUnk4 = 0x9,
 
             /// <summary>
             /// KIRK_UNK_5
             /// </summary>
-            PSP_KIRK_UNK5 = 0xA,
+            PspKirkUnk5 = 0xA,
 
             /// <summary>
             /// KIRK_UNK_6
             /// </summary>
-            PSP_KIRK_UNK6 = 0xB,
+            PspKirkUnk6 = 0xB,
 
             /// <summary>
             /// KIRK_NOT_INITIALIZED
             /// </summary>
-            PSP_KIRK_NOT_INIT = 0xC,
+            PspKirkNotInit = 0xC,
 
             /// <summary>
             /// KIRK_INVALID_OPERATION
             /// </summary>
-            PSP_KIRK_INVALID_OPERATION = 0xD,
+            PspKirkInvalidOperation = 0xD,
 
             /// <summary>
             /// KIRK_INVALID_SEED_CODE
             /// </summary>
-            PSP_KIRK_INVALID_SEED = 0xE,
+            PspKirkInvalidSeed = 0xE,
 
             /// <summary>
             /// KIRK_INVALID_SIZE
             /// </summary>
-            PSP_KIRK_INVALID_SIZE = 0xF,
+            PspKirkInvalidSize = 0xF,
 
             /// <summary>
             /// KIRK_DATA_SIZE_ZERO
             /// </summary>
-            PSP_KIRK_DATA_SIZE_IS_ZERO = 0x10,
+            PspKirkDataSizeIsZero = 0x10,
 
             /// <summary>
             /// SUBCWR_NOT_16_ALGINED
             /// </summary>
-            PSP_SUBCWR_NOT_16_ALGINED = 0x90A,
+            PspSubcwrNot16Algined = 0x90A,
 
             /// <summary>
             /// SUBCWR_HEADER_HASH_INVALID
             /// </summary>
-            PSP_SUBCWR_HEADER_HASH_INVALID = 0x920,
+            PspSubcwrHeaderHashInvalid = 0x920,
 
             /// <summary>
             /// SUBCWR_BUFFER_TOO_SMALL
             /// </summary>
-            PSP_SUBCWR_BUFFER_TOO_SMALL = 0x1000,
+            PspSubcwrBufferTooSmall = 0x1000,
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpUtils;
-using CSPspEmu.Core.Crypto;
+using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 
 namespace CSPspEmuLLETest
 {
@@ -71,7 +71,7 @@ namespace CSPspEmuLLETest
                     }
                     */
 
-                    this._kirkResult = (uint) Kirk.sceUtilsBufferCopyWithRange(destinationPtr, -1, sourcePtr, -1, 1);
+                    this._kirkResult = (uint) Kirk.SceUtilsBufferCopyWithRange(destinationPtr, -1, sourcePtr, -1, 1);
 
                     Console.WriteLine("Output:");
                     ArrayUtils.HexDump(PointerUtils.PointerToByteArray(destinationPtr, 0x200));

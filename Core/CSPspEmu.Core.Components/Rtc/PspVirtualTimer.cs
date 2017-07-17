@@ -1,7 +1,7 @@
 ﻿using System;
 using CSharpUtils.Extensions;
 
-namespace CSPspEmu.Core.Rtc
+namespace CSPspEmu.Core.Components.Rtc
 {
     public class PspVirtualTimer
     {
@@ -17,7 +17,7 @@ namespace CSPspEmu.Core.Rtc
                 {
                     lock (this)
                     {
-                        this._DateTime = value;
+                        _DateTime = value;
                         if (!OnList)
                         {
                             PspRtc.Timers.AddLast(this);
@@ -26,7 +26,7 @@ namespace CSPspEmu.Core.Rtc
                     }
                 }
             }
-            get { return _DateTime; }
+            get => _DateTime;
         }
 
         public bool OnList;
@@ -34,24 +34,9 @@ namespace CSPspEmu.Core.Rtc
         internal Action Callback;
         public bool Enabled;
 
-        internal PspVirtualTimer(PspRtc PspRtc)
-        {
-            this.PspRtc = PspRtc;
-        }
-
-        public void SetIn(TimeSpan TimeSpan)
-        {
-            this.DateTime = DateTime.UtcNow + TimeSpan;
-        }
-
-        public void SetAt(DateTime DateTime)
-        {
-            this.DateTime = DateTime;
-        }
-
-        public override string ToString()
-        {
-            return this.ToStringDefault();
-        }
+        internal PspVirtualTimer(PspRtc pspRtc) => PspRtc = pspRtc;
+        public void SetIn(TimeSpan timeSpan) => DateTime = DateTime.UtcNow + timeSpan;
+        public void SetAt(DateTime dateTime) => DateTime = dateTime;
+        public override string ToString() => this.ToStringDefault();
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Rtc;
 using CSharpUtils;
+using CSPspEmu.Core.Components.Rtc;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

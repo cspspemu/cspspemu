@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CSPspEmu.Core.Crypto
+namespace CSPspEmu.Core.Components.Crypto
 {
     public unsafe partial class Kirk
     {
@@ -12,9 +12,9 @@ namespace CSPspEmu.Core.Crypto
         /// <param name="Out"></param>
         /// <param name="outsize"></param>
         /// <returns></returns>
-        public void executeKIRKCmd12(byte* Out, int outsize)
+        public void ExecuteKirkCmd12(byte* Out, int outsize)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -27,11 +27,11 @@ namespace CSPspEmu.Core.Crypto
         /// <param name="In"></param>
         /// <param name="insize"></param>
         /// <returns></returns>
-        public void executeKIRKCmd13(byte* Out, int outsize, byte* In, int insize)
+        public void ExecuteKirkCmd13(byte* Out, int outsize, byte* In, int insize)
         {
             //var ecdsa = ECDsa.Create();
             //ecdsa.
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace CSPspEmu.Core.Crypto
         /// <param name="In"></param>
         /// <param name="insize"></param>
         /// <returns></returns>
-        public void executeKIRKCmd16(byte* Out, int outsize, byte* In, int insize)
+        public void ExecuteKirkCmd16(byte* Out, int outsize, byte* In, int insize)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace CSPspEmu.Core.Crypto
         /// <param name="In"></param>
         /// <param name="insize"></param>
         /// <returns></returns>
-        public void executeKIRKCmd17(byte* In, int insize)
+        public void ExecuteKirkCmd17(byte* In, int insize)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

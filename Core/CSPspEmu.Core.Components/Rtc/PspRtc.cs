@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Rtc
+namespace CSPspEmu.Core.Components.Rtc
 {
     public unsafe class PspRtc
     {
@@ -15,72 +15,41 @@ namespace CSPspEmu.Core.Rtc
         protected PspTimeStruct StartTime;
         protected PspTimeStruct CurrentTime;
 
-        public PspTimeStruct ElapsedTime
-        {
-            get { return _ElapsedTime; }
-        }
+        public PspTimeStruct ElapsedTime;
 
-        protected PspTimeStruct _ElapsedTime;
+        public TimeSpan Elapsed => CurrentDateTime - StartDateTime;
+        public uint UnixTimeStamp => (uint) (CurrentDateTime - new DateTime(1970, 1, 1)).TotalSeconds;
+        public PspRtc() => Start();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan Elapsed
-        {
-            get { return CurrentDateTime - StartDateTime; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public uint UnixTimeStamp
-        {
-            get { return (uint) (CurrentDateTime - new DateTime(1970, 1, 1)).TotalSeconds; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public PspRtc()
-        {
-            Start();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public void Start()
         {
-            this.StartDateTime = DateTime.UtcNow;
-            this.StartTime.SetToNow();
+            StartDateTime = DateTime.UtcNow;
+            StartTime.SetToNow();
         }
 
         protected virtual void UpdateInternal()
         {
             CurrentTime.SetToNow();
-            this.CurrentDateTime = DateTime.UtcNow;
+            CurrentDateTime = DateTime.UtcNow;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void Update()
         {
             UpdateInternal();
-            _ElapsedTime.TotalMicroseconds = CurrentTime.TotalMicroseconds - StartTime.TotalMicroseconds;
+            ElapsedTime.TotalMicroseconds = CurrentTime.TotalMicroseconds - StartTime.TotalMicroseconds;
 
             lock (Timers)
             {
                 RetryLoop:
-                foreach (var Timer in Timers)
+                foreach (var timer in Timers)
                 {
-                    lock (Timer)
+                    lock (timer)
                     {
-                        if (Timer.Enabled && this.CurrentDateTime >= Timer.DateTime)
+                        if (timer.Enabled && CurrentDateTime >= timer.DateTime)
                         {
-                            Timers.Remove(Timer);
-                            Timer.Callback();
-                            Timer.OnList = false;
+                            Timers.Remove(timer);
+                            timer.Callback();
+                            timer.OnList = false;
                             goto RetryLoop;
                         }
                     }
@@ -88,58 +57,35 @@ namespace CSPspEmu.Core.Rtc
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Callback"></param>
-        /// <returns></returns>
-        public PspVirtualTimer CreateVirtualTimer(Action Callback)
+        public PspVirtualTimer CreateVirtualTimer(Action callback) => new PspVirtualTimer(this)
         {
-            return new PspVirtualTimer(this)
-            {
-                Callback = Callback,
-            };
-        }
+            Callback = callback,
+        };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="TimeSpan"></param>
-        /// <param name="Callback"></param>
-        public PspVirtualTimer RegisterTimerInOnce(TimeSpan TimeSpan, Action Callback)
+        public PspVirtualTimer RegisterTimerInOnce(TimeSpan timeSpan, Action callback)
         {
-            Logger.Notice("RegisterTimerInOnce: " + TimeSpan);
+            Logger.Notice("RegisterTimerInOnce: " + timeSpan);
             Update();
-            return RegisterTimerAtOnce(CurrentDateTime + TimeSpan, Callback);
+            return RegisterTimerAtOnce(CurrentDateTime + timeSpan, callback);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="DateTime"></param>
-        /// <param name="Callback"></param>
-        public PspVirtualTimer RegisterTimerAtOnce(DateTime DateTime, Action Callback)
+        public PspVirtualTimer RegisterTimerAtOnce(DateTime dateTime, Action callback)
         {
             lock (Timers)
             {
-                Logger.Notice("RegisterTimerAtOnce: " + DateTime);
-                var VirtualTimer = CreateVirtualTimer(Callback);
-                VirtualTimer.SetAt(DateTime);
-                VirtualTimer.Enabled = true;
-                return VirtualTimer;
+                Logger.Notice("RegisterTimerAtOnce: " + dateTime);
+                var virtualTimer = CreateVirtualTimer(callback);
+                virtualTimer.SetAt(dateTime);
+                virtualTimer.Enabled = true;
+                return virtualTimer;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Timeout"></param>
-        /// <param name="WakeUpCallback"></param>
-        public void RegisterTimeout(uint* Timeout, Action WakeUpCallback)
+        public void RegisterTimeout(uint* timeout, Action wakeUpCallback)
         {
-            if (Timeout != null)
+            if (timeout != null)
             {
-                RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*Timeout), () => { WakeUpCallback(); });
+                RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*timeout), wakeUpCallback);
             }
         }
     }

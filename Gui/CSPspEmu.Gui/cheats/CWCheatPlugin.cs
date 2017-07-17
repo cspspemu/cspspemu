@@ -1,5 +1,4 @@
 ﻿using CSharpUtils;
-using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Inject;
 using System;
@@ -8,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSPspEmu.Core.Components.Display;
 
 namespace CSPspEmu.cheats
 {

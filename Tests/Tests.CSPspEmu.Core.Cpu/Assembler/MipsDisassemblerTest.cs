@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Tests.Cpu.Assembler
         public void DisassembleRegisterInstruction()
         {
             Assert.AreEqual(@"sll r0, r0, 0",
-                new MipsDisassembler().Disassemble(PC: 0x00000000, Instruction: 0x00000000).ToString());
+                new MipsDisassembler().Disassemble(pc: 0x00000000, instruction: 0x00000000).ToString());
         }
 
         [Test]
@@ -33,11 +33,11 @@ namespace CSPspEmu.Core.Tests.Cpu.Assembler
             Assert.AreEqual((uint) 0, AssemblerResult.Labels["label1"]);
 
             Assert.AreEqual(@"j 0x00000004",
-                new MipsDisassembler().Disassemble(PC: 0 * 4, Instruction: AssemblerResult.Instructions[0]).ToString());
+                new MipsDisassembler().Disassemble(pc: 0 * 4, instruction: AssemblerResult.Instructions[0]).ToString());
             Assert.AreEqual(@"j 0x00000000",
-                new MipsDisassembler().Disassemble(PC: 1 * 4, Instruction: AssemblerResult.Instructions[1]).ToString());
+                new MipsDisassembler().Disassemble(pc: 1 * 4, instruction: AssemblerResult.Instructions[1]).ToString());
             Assert.AreEqual(@"and r0, r0, r0",
-                new MipsDisassembler().Disassemble(PC: 2 * 4, Instruction: AssemblerResult.Instructions[2]).ToString());
+                new MipsDisassembler().Disassemble(pc: 2 * 4, instruction: AssemblerResult.Instructions[2]).ToString());
         }
     }
 }

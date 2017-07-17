@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Components.Ipl;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 

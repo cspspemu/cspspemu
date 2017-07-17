@@ -1,13 +1,13 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Components.Rtc;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

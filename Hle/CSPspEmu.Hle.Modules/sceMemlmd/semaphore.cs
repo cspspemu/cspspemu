@@ -1,7 +1,7 @@
 ﻿using System;
-using CSPspEmu.Core.Crypto;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
+using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 
 namespace CSPspEmu.Hle.Modules.kirk
 {
@@ -44,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.kirk
         public int sceUtilsBufferCopyWithRange(byte* OutputBuffer, int OutputSize, byte* InputBuffer, int InputSize,
             int Command)
         {
-            return Kirk.sceUtilsBufferCopyWithRange(OutputBuffer, OutputSize, InputBuffer, InputSize, Command);
+            return Kirk.SceUtilsBufferCopyWithRange(OutputBuffer, OutputSize, InputBuffer, InputSize, Command);
         }
 
         /// <summary>

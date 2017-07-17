@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core;
 using System.Security.Cryptography;
 using CSharpUtils;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Components.Rtc;
 
 namespace CSPspEmu.Hle.Modules.utils
 {

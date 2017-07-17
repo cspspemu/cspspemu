@@ -2,7 +2,6 @@
 //using System.Drawing.Imaging;
 using System.Text;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Components.Display;
 using System.Drawing.Imaging;
 

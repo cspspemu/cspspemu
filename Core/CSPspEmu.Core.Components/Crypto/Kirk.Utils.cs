@@ -4,58 +4,58 @@ using System.Security.Cryptography;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 
-namespace CSPspEmu.Core.Crypto
+namespace CSPspEmu.Core.Components.Crypto
 {
     public unsafe partial class Kirk
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Input"></param>
-        /// <param name="Key"></param>
-        /// <param name="IV"></param>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
         /// <returns></returns>
-        public static byte[] DecryptAes(byte[] Input, byte[] Key, byte[] IV = null)
+        public static byte[] DecryptAes(byte[] input, byte[] key, byte[] iv = null)
         {
-            if (IV == null) IV = new byte[16];
+            if (iv == null) iv = new byte[16];
 
-            Logger.Notice("DecryptAes({0}, {1}, {2})", Input.Length, Key.Length, IV.Length);
+            Logger.Notice("DecryptAes({0}, {1}, {2})", input.Length, key.Length, iv.Length);
 
-            using (var AES = Aes.Create())
+            using (var aes = CreateAes())
             {
-                AES.Padding = PaddingMode.Zeros;
-                var Decryptor = AES.CreateDecryptor(Key, IV);
+                aes.Padding = PaddingMode.Zeros;
+                var decryptor = aes.CreateDecryptor(key, iv);
 
-                int DataSize = Input.Length;
+                var dataSize = input.Length;
 
-                if ((DataSize % 16) != 0)
+                if ((dataSize % 16) != 0)
                 {
-                    var Input2 = new byte[MathUtils.NextAligned(Input.Length, 16)];
-                    Array.Copy(Input, Input2, Input.Length);
-                    Input = Input2;
+                    var input2 = new byte[MathUtils.NextAligned(input.Length, 16)];
+                    Array.Copy(input, input2, input.Length);
+                    input = input2;
                 }
 
-                return new CryptoStream(new MemoryStream(Input), Decryptor, CryptoStreamMode.Read).ReadBytes(DataSize);
+                return new CryptoStream(new MemoryStream(input), decryptor, CryptoStreamMode.Read).ReadBytes(dataSize);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Input"></param>
-        /// <param name="Key"></param>
-        /// <param name="IV"></param>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
         /// <returns></returns>
-        public static byte[] EncryptAes(byte[] Input, byte[] Key, byte[] IV = null)
+        public static byte[] EncryptAes(byte[] input, byte[] key, byte[] iv = null)
         {
-            if (IV == null) IV = new byte[16];
+            if (iv == null) iv = new byte[16];
 
-            using (var AES = Aes.Create())
+            using (var aes = CreateAes())
             {
-                AES.Padding = PaddingMode.Zeros;
-                var Encryptor = AES.CreateEncryptor(Key, IV);
+                aes.Padding = PaddingMode.Zeros;
+                var encryptor = aes.CreateEncryptor(key, iv);
 
-                return new CryptoStream(new MemoryStream(Input), Encryptor, CryptoStreamMode.Read).ReadAll(
+                return new CryptoStream(new MemoryStream(input), encryptor, CryptoStreamMode.Read).ReadAll(
                     dispose: true);
             }
         }
@@ -63,15 +63,17 @@ namespace CSPspEmu.Core.Crypto
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Key"></param>
-        /// <param name="Input"></param>
-        /// <param name="Output"></param>
-        /// <param name="Size"></param>
-        public static void DecryptAes(byte[] Key, byte* Input, byte* Output, int Size)
+        /// <param name="key"></param>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="size"></param>
+        public static void DecryptAes(byte[] key, byte* input, byte* output, int size)
         {
-            var InputArray = PointerUtils.PointerToByteArray(Input, Size);
-            var OutputArray = DecryptAes(InputArray, Key);
-            PointerUtils.ByteArrayToPointer(OutputArray, Output);
+            var inputArray = PointerUtils.PointerToByteArray(input, size);
+            var outputArray = DecryptAes(inputArray, key);
+            PointerUtils.ByteArrayToPointer(outputArray, output);
         }
+
+        private static Aes CreateAes() => Aes.Create() ?? throw new Exception("Can't find AES");
     }
 }

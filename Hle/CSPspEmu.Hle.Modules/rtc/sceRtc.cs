@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
 using CSharpUtils;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Components.Rtc;
 
 namespace CSPspEmu.Hle.Modules.rtc
 {

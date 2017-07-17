@@ -2,8 +2,8 @@
 using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core.Display;
 using CSharpUtils;
+using CSPspEmu.Core.Components.Display;
 
 namespace CSPspEmu.Runner.Components.Display
 {

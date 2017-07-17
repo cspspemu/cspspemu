@@ -14,7 +14,6 @@ using System.Windows.Forms;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Display;
 using CSPspEmu.Resources;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Types;

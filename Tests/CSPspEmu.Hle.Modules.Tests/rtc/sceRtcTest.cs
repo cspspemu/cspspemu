@@ -5,9 +5,9 @@ using System.Linq;
 using NUnit.Framework;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Modules.rtc;
-using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Vfs;
 using CSharpUtils;
+using CSPspEmu.Core.Components.Rtc;
 using NUnit.Framework;
 
 namespace CSPspEmu.Hle.Modules.Tests.rtc

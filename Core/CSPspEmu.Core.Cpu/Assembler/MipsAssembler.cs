@@ -26,9 +26,9 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
     public enum AssemblerPatchType
     {
-        REL_16 = 0,
-        ABS_26 = 1,
-        ABS_32 = 2,
+        Rel16 = 0,
+        Abs26 = 1,
+        Abs32 = 2,
     }
 
     public class AssemblerPatch
@@ -38,116 +38,116 @@ namespace CSPspEmu.Core.Cpu.Assembler
         public String LabelName;
     }
 
-    public unsafe partial class MipsAssembler
+    public partial class MipsAssembler
     {
         protected Stream OutputStream;
         protected BinaryWriter BinaryWriter;
         protected BinaryReader BinaryReader;
         protected Dictionary<String, InstructionInfo> Instructions;
 
-        public static AssemblerResult StaticAssembleInstructions(string Program)
+        public static AssemblerResult StaticAssembleInstructions(string program)
         {
-            var Memory = new MemoryStream();
-            var Result = new AssemblerResult()
+            var memory = new MemoryStream();
+            var result = new AssemblerResult()
             {
-                Instructions = new StreamStructArrayWrapper<Instruction>(Memory),
+                Instructions = new StreamStructArrayWrapper<Instruction>(memory),
             };
-            var MipsAssembler = new MipsAssembler(Memory);
-            MipsAssembler.Assemble(Program, Result);
-            return Result;
+            var mipsAssembler = new MipsAssembler(memory);
+            mipsAssembler.Assemble(program, result);
+            return result;
         }
 
-        public MipsAssembler(Stream OutputStream)
+        public MipsAssembler(Stream outputStream)
         {
-            this.Instructions = InstructionTable.ALL.ToDictionary((InstructionInfo) => InstructionInfo.Name);
-            this.OutputStream = OutputStream;
-            this.BinaryWriter = new BinaryWriter(this.OutputStream);
-            this.BinaryReader = new BinaryReader(this.OutputStream);
+            Instructions = InstructionTable.ALL.ToDictionary(instructionInfo => instructionInfo.Name);
+            OutputStream = outputStream;
+            BinaryWriter = new BinaryWriter(OutputStream);
+            BinaryReader = new BinaryReader(OutputStream);
         }
 
-        public static uint ParseVfprRotate(string Format)
+        public static uint ParseVfprRotate(string format)
         {
             //return 0;
-            var Parts = Format.Trim('[', ']').Split(',').Select(Item => Item.Trim()).ToArray();
+            var parts = format.Trim('[', ']').Split(',').Select(item => item.Trim()).ToArray();
             uint imm5 = 0;
-            int CosIndex = -1;
-            int SinIndex = -1;
-            bool NegatedSin = false;
-            for (int Index = 0; Index < Parts.Length; Index++)
+            var cosIndex = -1;
+            var sinIndex = -1;
+            var negatedSin = false;
+            for (var index = 0; index < parts.Length; index++)
             {
-                var Part = Parts[Index];
-                switch (Part)
+                var part = parts[index];
+                switch (part)
                 {
                     case "c":
-                        if (CosIndex != -1) throw (new Exception("Can't put cosine twice"));
-                        CosIndex = Index;
+                        if (cosIndex != -1) throw new Exception("Can't put cosine twice");
+                        cosIndex = index;
                         break;
                     case "-s":
                     case "s":
-                        if (SinIndex != -1) throw (new Exception("Can't put sine twice"));
-                        SinIndex = Index;
-                        if (Part == "-s") NegatedSin = true;
+                        if (sinIndex != -1) throw new Exception("Can't put sine twice");
+                        sinIndex = index;
+                        if (part == "-s") negatedSin = true;
                         break;
                     case "0":
                         break;
                     default:
-                        throw(new NotImplementedException(Part));
+                        throw new NotImplementedException(part);
                 }
             }
 
-            if (CosIndex == -1) throw(new Exception("Didn't set cosine"));
-            if (SinIndex == -1) throw (new Exception("Didn't set sine"));
+            if (cosIndex == -1) throw(new Exception("Didn't set cosine"));
+            if (sinIndex == -1) throw (new Exception("Didn't set sine"));
 
-            BitUtils.Insert(ref imm5, 0, 2, (uint) CosIndex);
-            BitUtils.Insert(ref imm5, 2, 2, (uint) SinIndex);
-            BitUtils.Insert(ref imm5, 4, 1, NegatedSin ? 1U : 0U);
+            BitUtils.Insert(ref imm5, 0, 2, (uint) cosIndex);
+            BitUtils.Insert(ref imm5, 2, 2, (uint) sinIndex);
+            BitUtils.Insert(ref imm5, 4, 1, negatedSin ? 1U : 0U);
             //Console.WriteLine(Format);
             //throw (new NotImplementedException("ParseVfprRotate"));
             return imm5;
         }
 
-        public static void ParseAndUpdateVfprDestinationPrefix(int Index, string RegisterName,
-            ref VfpuDestinationPrefix VfpuPrefix)
+        public static void ParseAndUpdateVfprDestinationPrefix(int index, string registerName,
+            ref VfpuDestinationPrefix vfpuPrefix)
         {
-            switch (RegisterName)
+            switch (registerName)
             {
                 case "m":
                 case "M":
-                    VfpuPrefix.DestinationMask(Index, true);
+                    vfpuPrefix.DestinationMask(index, true);
                     break;
                 case "0:1":
-                    VfpuPrefix.DestinationMask(Index, false);
-                    VfpuPrefix.DestinationSaturation(Index, 1);
+                    vfpuPrefix.DestinationMask(index, false);
+                    vfpuPrefix.DestinationSaturation(index, 1);
                     break;
                 case "-1:1":
-                    VfpuPrefix.DestinationMask(Index, false);
-                    VfpuPrefix.DestinationSaturation(Index, 3);
+                    vfpuPrefix.DestinationMask(index, false);
+                    vfpuPrefix.DestinationSaturation(index, 3);
                     break;
-                default: throw (new NotImplementedException(String.Format("Invalid RegisterName {0}", RegisterName)));
+                default: throw (new NotImplementedException($"Invalid RegisterName {registerName}"));
             }
         }
 
-        public static void ParseAndUpdateVfprSourceTargetPrefix(int Index, string RegisterName,
-            ref VfpuPrefix VfpuPrefix)
+        public static void ParseAndUpdateVfprSourceTargetPrefix(int index, string registerName,
+            ref VfpuPrefix vfpuPrefix)
         {
-            int SetIndex = Index;
+            int SetIndex = index;
             bool IsConstant;
 
-            RegisterName = RegisterName.Replace(" ", "");
+            registerName = registerName.Replace(" ", "");
 
-            if (RegisterName.StartsWith("-"))
+            if (registerName.StartsWith("-"))
             {
-                RegisterName = RegisterName.Substr(1);
-                VfpuPrefix.SourceNegate(Index, true);
+                registerName = registerName.Substr(1);
+                vfpuPrefix.SourceNegate(index, true);
             }
 
-            if (RegisterName.StartsWith("|") && RegisterName.EndsWith("|"))
+            if (registerName.StartsWith("|") && registerName.EndsWith("|"))
             {
-                RegisterName = RegisterName.Substr(1, -1);
-                VfpuPrefix.SourceAbsolute(Index, true);
+                registerName = registerName.Substr(1, -1);
+                vfpuPrefix.SourceAbsolute(index, true);
             }
 
-            switch (RegisterName)
+            switch (registerName)
             {
                 case "x":
                     IsConstant = false;
@@ -168,48 +168,48 @@ namespace CSPspEmu.Core.Cpu.Assembler
                 case "3":
                     IsConstant = true;
                     SetIndex = 0;
-                    VfpuPrefix.SourceAbsolute(Index, true);
+                    vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "0":
                     IsConstant = true;
                     SetIndex = 0;
-                    VfpuPrefix.SourceAbsolute(Index, false);
+                    vfpuPrefix.SourceAbsolute(index, false);
                     break;
                 case "1/3":
                     IsConstant = true;
                     SetIndex = 1;
-                    VfpuPrefix.SourceAbsolute(Index, true);
+                    vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "1":
                     IsConstant = true;
                     SetIndex = 1;
-                    VfpuPrefix.SourceAbsolute(Index, false);
+                    vfpuPrefix.SourceAbsolute(index, false);
                     break;
                 case "1/4":
                     IsConstant = true;
                     SetIndex = 2;
-                    VfpuPrefix.SourceAbsolute(Index, true);
+                    vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "2":
                     IsConstant = true;
                     SetIndex = 2;
-                    VfpuPrefix.SourceAbsolute(Index, false);
+                    vfpuPrefix.SourceAbsolute(index, false);
                     break;
                 case "1/6":
                     IsConstant = true;
                     SetIndex = 3;
-                    VfpuPrefix.SourceAbsolute(Index, true);
+                    vfpuPrefix.SourceAbsolute(index, true);
                     break;
                 case "1/2":
                     IsConstant = true;
                     SetIndex = 3;
-                    VfpuPrefix.SourceAbsolute(Index, false);
+                    vfpuPrefix.SourceAbsolute(index, false);
                     break;
-                default: throw(new NotImplementedException(String.Format("Invalid RegisterName {0}", RegisterName)));
+                default: throw new NotImplementedException(String.Format("Invalid RegisterName {0}", registerName));
             }
 
-            VfpuPrefix.SourceConstant(Index, IsConstant);
-            VfpuPrefix.SourceIndex(Index, (uint) SetIndex);
+            vfpuPrefix.SourceConstant(index, IsConstant);
+            vfpuPrefix.SourceIndex(index, (uint) SetIndex);
         }
 
         public static uint ParseVfprConstantName(string RegisterName)
@@ -450,7 +450,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                             {
                                 Address = PC,
                                 LabelName = Value,
-                                Type = AssemblerPatchType.ABS_26
+                                Type = AssemblerPatchType.Abs26
                             });
                             break;
                         case "%O":
@@ -458,7 +458,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                             {
                                 Address = PC,
                                 LabelName = Value,
-                                Type = AssemblerPatchType.REL_16
+                                Type = AssemblerPatchType.Rel16
                             });
                             break;
 
@@ -611,14 +611,14 @@ namespace CSPspEmu.Core.Cpu.Assembler
                     {
                         switch (Patch.Type)
                         {
-                            case AssemblerPatchType.REL_16:
+                            case AssemblerPatchType.Rel16:
                                 Instruction.IMM = ((int) LabelAddress - (int) Patch.Address - 4) / 4;
                                 break;
-                            case AssemblerPatchType.ABS_26:
+                            case AssemblerPatchType.Abs26:
                                 Instruction.JUMP_Bits = (LabelAddress & PspMemory.MemoryMask) / 4;
                                 Console.Write("0x{0:X} : {1}", Instruction.JUMP_Bits, Patch.LabelName);
                                 break;
-                            case AssemblerPatchType.ABS_32:
+                            case AssemblerPatchType.Abs32:
                                 Instruction.Value = LabelAddress;
                                 break;
                         }

@@ -3,7 +3,6 @@
 using cscodec;
 using cscodec.h264.player;
 using CSharpUtils;
-using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
@@ -19,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CSharpUtils.Drawing.Extensions;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Utils.Utils;
 
 namespace CSPspEmu.Hle.Modules.mpeg

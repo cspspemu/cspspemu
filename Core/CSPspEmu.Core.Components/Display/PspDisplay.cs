@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Types;
-using System.Collections.Generic;
 using CSPspEmu.Utils.Utils;
 
-namespace CSPspEmu.Core.Display
+namespace CSPspEmu.Core.Components.Display
 {
     public class PspDisplay
     {
@@ -16,15 +15,15 @@ namespace CSPspEmu.Core.Display
         public const double PixelsInARow = 525;
         public const double VsyncRow = 272;
         public const double NumberOfRows = 286;
-        public const float hCountPerVblank = 285.72f;
+        public const float HCountPerVblank = 285.72f;
 
 
         public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;
         public const double VerticalSyncHertz = HorizontalSyncHertz / NumberOfRows;
 
-        [Inject] PspRtc PspRtc;
+        [Inject] PspRtc _pspRtc;
 
-        [Inject] PspMemory Memory;
+        [Inject] PspMemory _memory;
 
         private PspDisplay()
         {
@@ -42,7 +41,7 @@ namespace CSPspEmu.Core.Display
             Height = 272,
         };
 
-        public enum SyncMode : int
+        public enum SyncMode
         {
             Immediate = 0,
             NextFrame = 1,
@@ -63,39 +62,36 @@ namespace CSPspEmu.Core.Display
             public int Width;
             public int Height;
 
-            public int BufferWidthHeightCount
-            {
-                get { return BufferWidth * Height; }
-            }
+            public int BufferWidthHeightCount => BufferWidth * Height;
         }
 
-        private DateTime StartDrawTime;
+        private DateTime _startDrawTime;
 
-        static public event Action DrawEvent;
+        public static event Action DrawEvent;
 
         public void TriggerDrawStart()
         {
-            StartDrawTime = DateTime.UtcNow;
-            if (DrawEvent != null) DrawEvent();
+            _startDrawTime = DateTime.UtcNow;
+            DrawEvent?.Invoke();
         }
 
         public int GetHCount()
         {
-            var ElaspedTime = DateTime.UtcNow - StartDrawTime;
-            return (int) (ElaspedTime.TotalSeconds / (1 / HorizontalSyncHertz));
+            var elaspedTime = DateTime.UtcNow - _startDrawTime;
+            return (int) (elaspedTime.TotalSeconds / (1 / HorizontalSyncHertz));
         }
 
-        static public event Action VBlankCallback;
+        public static event Action VBlankCallback;
 
-        public void VBlankCallbackOnce(Action Callback)
+        public void VBlankCallbackOnce(Action callback)
         {
-            Action Callback2 = null;
-            Callback2 = () =>
+            void Action()
             {
-                VBlankCallback -= Callback2;
-                Callback();
-            };
-            VBlankCallback += Callback2;
+                VBlankCallback -= Action;
+                callback();
+            }
+
+            VBlankCallback += Action;
         }
 
         public void TriggerVBlankStart()
@@ -115,16 +111,12 @@ namespace CSPspEmu.Core.Display
         public PspWaitEvent VBlankEvent = new PspWaitEvent();
         public event Action VBlankEventCall;
 
-        private int _VblankCount = 0;
+        private int _vblankCount;
 
         public int VblankCount
         {
-            set { _VblankCount = value; }
-            get
-            {
-                //this.HlePspRtc.Elapsed
-                return _VblankCount;
-            }
+            set => _vblankCount = value;
+            get => _vblankCount;
         }
 
         public unsafe Bitmap TakeScreenshot()
@@ -133,7 +125,7 @@ namespace CSPspEmu.Core.Display
                 CurrentInfo.PixelFormat,
                 CurrentInfo.BufferWidth,
                 CurrentInfo.Height,
-                (byte*) Memory.PspAddressToPointerSafe(
+                (byte*) _memory.PspAddressToPointerSafe(
                     CurrentInfo.FrameAddress,
                     PixelFormatDecoder.GetPixelsSize(CurrentInfo.PixelFormat,
                         CurrentInfo.BufferWidth * CurrentInfo.Height)

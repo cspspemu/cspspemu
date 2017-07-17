@@ -3,7 +3,6 @@ using CSharpPlatform.GL;
 using CSharpPlatform.GL.Utils;
 using CSharpUtils;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;
@@ -19,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CSharpUtils.Drawing.Extensions;
+using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Utils.Utils;
 
 namespace CSPspEmu.Gui

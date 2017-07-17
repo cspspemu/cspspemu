@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using CSharpUtils;
-using CSPspEmu.Core.Crypto;
 using CSPspEmu.Utils;
+using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -49,12 +49,12 @@ namespace CSPspEmu.Hle.Formats
                 pl2[3] = codeExtra;
                 pl2[4] = 0xA0;
 
-                var ret = Kirk.hleUtilsBufferCopyWithRange(
+                var ret = Kirk.HleUtilsBufferCopyWithRange(
                     buffer2,
                     20 + 0xA0,
                     buffer2,
                     20 + 0xA0,
-                    Kirk.CommandEnum.PSP_KIRK_CMD_DECRYPT
+                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt
                 );
 
                 if (ret != 0)
@@ -90,8 +90,8 @@ namespace CSPspEmu.Hle.Formats
                 PointerUtils.Memset(pbOut, 0x55, 0x40);
 
                 // step3 demangle in place
-                var h7_header = (Kirk.KIRK_AES128CBC_HEADER*) &pbOut[0x2C];
-                h7_header->Mode = Core.Crypto.Kirk.KirkMode.DecryptCbc;
+                var h7_header = (Kirk.KirkAes128CbcHeader*) &pbOut[0x2C];
+                h7_header->Mode = Core.Components.Crypto.Kirk.KirkMode.DecryptCbc;
                 h7_header->Unknown4 = 0;
                 h7_header->Unknown8 = 0;
                 h7_header->KeySeed = pti.code; // initial seed for PRX
@@ -118,12 +118,12 @@ namespace CSPspEmu.Hle.Formats
                     pbOut[0x40 + iXOR] = (byte) (pbOut[0x40 + iXOR] ^ pti.key[0x14 + iXOR]);
                 }
 
-                var ret = Kirk.hleUtilsBufferCopyWithRange(
+                var ret = Kirk.HleUtilsBufferCopyWithRange(
                     pbOut + 0x2C,
                     20 + 0x70,
                     pbOut + 0x2C,
                     20 + 0x70,
-                    Kirk.CommandEnum.PSP_KIRK_CMD_DECRYPT
+                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt
                 );
 
                 if (ret != 0)
@@ -145,12 +145,12 @@ namespace CSPspEmu.Hle.Formats
 
                 // step4: do the actual decryption of code block
                 //  point 0x40 bytes into the buffer to key info
-                ret = Kirk.hleUtilsBufferCopyWithRange(
+                ret = Kirk.HleUtilsBufferCopyWithRange(
                     pbOut,
                     cbTotal,
                     pbOut + 0x40,
                     cbTotal - 0x40,
-                    Kirk.CommandEnum.PSP_KIRK_CMD_DECRYPT_PRIVATE
+                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecryptPrivate
                 );
 
                 if (ret != 0)
@@ -173,8 +173,8 @@ namespace CSPspEmu.Hle.Formats
             buf[3] = (uint) code;
             buf[4] = (uint) size;
 
-            if (Kirk.hleUtilsBufferCopyWithRange((byte*) buf, size + 0x14, (byte*) buf, size + 0x14,
-                    Kirk.CommandEnum.PSP_KIRK_CMD_DECRYPT) != Kirk.ResultEnum.OK)
+            if (Kirk.HleUtilsBufferCopyWithRange((byte*) buf, size + 0x14, (byte*) buf, size + 0x14,
+                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt) != Core.Components.Crypto.Kirk.ResultEnum.Ok)
             {
                 return -1;
             }
@@ -266,8 +266,8 @@ namespace CSPspEmu.Hle.Formats
                 PointerUtils.Memcpy(outbuf + 0x08, tmp2, 0x10);
 
                 /* sha-1 */
-                if (Kirk.hleUtilsBufferCopyWithRange(outbuf, 3000000, outbuf, 3000000,
-                        Core.Crypto.Kirk.CommandEnum.PSP_KIRK_CMD_SHA1_HASH) != Core.Crypto.Kirk.ResultEnum.OK)
+                if (Kirk.HleUtilsBufferCopyWithRange(outbuf, 3000000, outbuf, 3000000,
+                        Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdSha1Hash) != Core.Components.Crypto.Kirk.ResultEnum.Ok)
                 {
                     throw (new InvalidDataException("error in sceUtilsBufferCopyWithRange 0xB, "));
                 }
@@ -301,8 +301,8 @@ namespace CSPspEmu.Hle.Formats
                 PointerUtils.Memset(outbuf + 0xC0, 0, 0x10);
 
                 // the real decryption
-                var ret = Kirk.hleUtilsBufferCopyWithRange(outbuf, size, outbuf + 0x40, size - 0x40,
-                    Core.Crypto.Kirk.CommandEnum.PSP_KIRK_CMD_DECRYPT_PRIVATE);
+                var ret = Kirk.HleUtilsBufferCopyWithRange(outbuf, size, outbuf + 0x40, size - 0x40,
+                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecryptPrivate);
                 if (ret != 0)
                 {
                     throw (new InvalidDataException(

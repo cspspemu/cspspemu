@@ -1,7 +1,7 @@
 ﻿using System;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Rtc
+namespace CSPspEmu.Core.Components.Rtc
 {
     public struct PspTimeStruct
     {
@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Rtc
 
         public long TotalMicroseconds;
 
-        public void SetToDateTime(DateTime DateTime)
+        public void SetToDateTime(DateTime dateTime)
         {
             //DateTime.GetTotalMicroseconds();
             //var Seconds = (uint)(DateTime - Platform.UnixStart).TotalSeconds;
@@ -18,15 +18,15 @@ namespace CSPspEmu.Core.Rtc
 
         public void SetToNow()
         {
-            var PrevTotalMicroseconds = TotalMicroseconds;
-            var CurrentTotalMicroseconds = Platform.CurrentUnixMicroseconds;
+            var prevTotalMicroseconds = TotalMicroseconds;
+            var currentTotalMicroseconds = Platform.CurrentUnixMicroseconds;
 
-            if (CurrentTotalMicroseconds < PrevTotalMicroseconds)
+            if (currentTotalMicroseconds < prevTotalMicroseconds)
             {
-                Logger.Error("Total Microseconds overflow Prev({0}), Now({1})", PrevTotalMicroseconds,
-                    CurrentTotalMicroseconds);
+                Logger.Error("Total Microseconds overflow Prev({0}), Now({1})", prevTotalMicroseconds,
+                    currentTotalMicroseconds);
             }
-            this.TotalMicroseconds = CurrentTotalMicroseconds;
+            TotalMicroseconds = currentTotalMicroseconds;
         }
     }
 }

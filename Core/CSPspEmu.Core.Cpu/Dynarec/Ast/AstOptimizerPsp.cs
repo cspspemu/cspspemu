@@ -71,7 +71,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
                     var DisassembledResult = PspInstructionNode.DisassembledResult;
                     var InstructionInfo = DisassembledResult.InstructionInfo;
                     var Instruction = DisassembledResult.Instruction;
-                    var PC = DisassembledResult.InstructionPC;
+                    var PC = DisassembledResult.InstructionPc;
 
                     // A branch instruction. It breaks the optimization.
                     if ((InstructionInfo.InstructionType &
