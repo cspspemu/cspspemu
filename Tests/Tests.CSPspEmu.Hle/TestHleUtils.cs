@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Audio.Impl.Null;
 using CSPspEmu.Core.Gpu.Impl.Null;
 
 [InjectMap(typeof(PspMemory), typeof(LazyPspMemory))]

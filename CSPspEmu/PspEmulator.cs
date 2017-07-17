@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 //using CSPspEmu.Core.Audio.Impl.Openal;
-using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Gpu;

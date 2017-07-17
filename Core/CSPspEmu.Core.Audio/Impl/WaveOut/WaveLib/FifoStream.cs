@@ -11,78 +11,61 @@
 //  Copyright (C) 1999-2003 Ianier Munoz. All Rights Reserved.
 
 using System;
-using System.IO;
 using System.Collections;
+using System.IO;
 
-namespace WaveLib
+namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
 {
     public class FifoStream : Stream
     {
         private const int BlockSize = 65536;
         private const int MaxBlocksInCache = (3 * 1024 * 1024) / BlockSize;
 
-        private int m_Size;
-        private int m_RPos;
-        private int m_WPos;
-        private Stack m_UsedBlocks = new Stack();
-        private ArrayList m_Blocks = new ArrayList();
+        private int _mSize;
+        private int _mRPos;
+        private int _mWPos;
+        private readonly Stack _mUsedBlocks = new Stack();
+        private readonly ArrayList _mBlocks = new ArrayList();
 
-        private byte[] AllocBlock()
-        {
-            byte[] Result = null;
-            Result = m_UsedBlocks.Count > 0 ? (byte[]) m_UsedBlocks.Pop() : new byte[BlockSize];
-            return Result;
-        }
+        private byte[] AllocBlock() => _mUsedBlocks.Count > 0 ? (byte[]) _mUsedBlocks.Pop() : new byte[BlockSize];
 
         private void FreeBlock(byte[] block)
         {
-            if (m_UsedBlocks.Count < MaxBlocksInCache)
-                m_UsedBlocks.Push(block);
+            if (_mUsedBlocks.Count < MaxBlocksInCache)
+                _mUsedBlocks.Push(block);
         }
 
         private byte[] GetWBlock()
         {
-            byte[] Result = null;
-            if (m_WPos < BlockSize && m_Blocks.Count > 0)
-                Result = (byte[]) m_Blocks[m_Blocks.Count - 1];
+            byte[] result;
+            if (_mWPos < BlockSize && _mBlocks.Count > 0)
+                result = (byte[]) _mBlocks[_mBlocks.Count - 1];
             else
             {
-                Result = AllocBlock();
-                m_Blocks.Add(Result);
-                m_WPos = 0;
+                result = AllocBlock();
+                _mBlocks.Add(result);
+                _mWPos = 0;
             }
-            return Result;
+            return result;
         }
 
         // Stream members
-        public override bool CanRead
-        {
-            get { return true; }
-        }
-
-        public override bool CanSeek
-        {
-            get { return false; }
-        }
-
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => true;
 
         public override long Length
         {
             get
             {
-                lock (this)
-                    return m_Size;
+                lock (this)return _mSize;
             }
         }
 
         public override long Position
         {
-            get { throw new InvalidOperationException(); }
-            set { throw new InvalidOperationException(); }
+            get => throw new InvalidOperationException();
+            set => throw new InvalidOperationException();
         }
 
         public override void Close()
@@ -94,12 +77,12 @@ namespace WaveLib
         {
             lock (this)
             {
-                foreach (byte[] block in m_Blocks)
+                foreach (byte[] block in _mBlocks)
                     FreeBlock(block);
-                m_Blocks.Clear();
-                m_RPos = 0;
-                m_WPos = 0;
-                m_Size = 0;
+                _mBlocks.Clear();
+                _mRPos = 0;
+                _mWPos = 0;
+                _mSize = 0;
             }
         }
 
@@ -117,9 +100,9 @@ namespace WaveLib
         {
             lock (this)
             {
-                int Result = Peek(buf, ofs, count);
-                Advance(Result);
-                return Result;
+                int result = Peek(buf, ofs, count);
+                Advance(result);
+                return result;
             }
         }
 
@@ -127,15 +110,15 @@ namespace WaveLib
         {
             lock (this)
             {
-                int Left = count;
-                while (Left > 0)
+                var left = count;
+                while (left > 0)
                 {
-                    int ToWrite = Math.Min(BlockSize - m_WPos, Left);
-                    Array.Copy(buf, ofs + count - Left, GetWBlock(), m_WPos, ToWrite);
-                    m_WPos += ToWrite;
-                    Left -= ToWrite;
+                    var toWrite = Math.Min(BlockSize - _mWPos, left);
+                    Array.Copy(buf, ofs + count - left, GetWBlock(), _mWPos, toWrite);
+                    _mWPos += toWrite;
+                    left -= toWrite;
                 }
-                m_Size += count;
+                _mSize += count;
             }
         }
 
@@ -144,23 +127,23 @@ namespace WaveLib
         {
             lock (this)
             {
-                int SizeLeft = count;
-                while (SizeLeft > 0 && m_Size > 0)
+                var sizeLeft = count;
+                while (sizeLeft > 0 && _mSize > 0)
                 {
-                    if (m_RPos == BlockSize)
+                    if (_mRPos == BlockSize)
                     {
-                        m_RPos = 0;
-                        FreeBlock((byte[]) m_Blocks[0]);
-                        m_Blocks.RemoveAt(0);
+                        _mRPos = 0;
+                        FreeBlock((byte[]) _mBlocks[0]);
+                        _mBlocks.RemoveAt(0);
                     }
-                    int ToFeed = m_Blocks.Count == 1
-                        ? Math.Min(m_WPos - m_RPos, SizeLeft)
-                        : Math.Min(BlockSize - m_RPos, SizeLeft);
-                    m_RPos += ToFeed;
-                    SizeLeft -= ToFeed;
-                    m_Size -= ToFeed;
+                    var toFeed = _mBlocks.Count == 1
+                        ? Math.Min(_mWPos - _mRPos, sizeLeft)
+                        : Math.Min(BlockSize - _mRPos, sizeLeft);
+                    _mRPos += toFeed;
+                    sizeLeft -= toFeed;
+                    _mSize -= toFeed;
                 }
-                return count - SizeLeft;
+                return count - sizeLeft;
             }
         }
 
@@ -168,26 +151,26 @@ namespace WaveLib
         {
             lock (this)
             {
-                int SizeLeft = count;
-                int TempBlockPos = m_RPos;
-                int TempSize = m_Size;
+                var sizeLeft = count;
+                var tempBlockPos = _mRPos;
+                var tempSize = _mSize;
 
-                int CurrentBlock = 0;
-                while (SizeLeft > 0 && TempSize > 0)
+                var currentBlock = 0;
+                while (sizeLeft > 0 && tempSize > 0)
                 {
-                    if (TempBlockPos == BlockSize)
+                    if (tempBlockPos == BlockSize)
                     {
-                        TempBlockPos = 0;
-                        CurrentBlock++;
+                        tempBlockPos = 0;
+                        currentBlock++;
                     }
-                    int Upper = CurrentBlock < m_Blocks.Count - 1 ? BlockSize : m_WPos;
-                    int ToFeed = Math.Min(Upper - TempBlockPos, SizeLeft);
-                    Array.Copy((byte[]) m_Blocks[CurrentBlock], TempBlockPos, buf, ofs + count - SizeLeft, ToFeed);
-                    SizeLeft -= ToFeed;
-                    TempBlockPos += ToFeed;
-                    TempSize -= ToFeed;
+                    var upper = currentBlock < _mBlocks.Count - 1 ? BlockSize : _mWPos;
+                    var toFeed = Math.Min(upper - tempBlockPos, sizeLeft);
+                    Array.Copy((byte[]) _mBlocks[currentBlock], tempBlockPos, buf, ofs + count - sizeLeft, toFeed);
+                    sizeLeft -= toFeed;
+                    tempBlockPos += toFeed;
+                    tempSize -= toFeed;
                 }
-                return count - SizeLeft;
+                return count - sizeLeft;
             }
         }
     }

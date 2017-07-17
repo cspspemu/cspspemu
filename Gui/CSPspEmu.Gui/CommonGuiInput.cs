@@ -1,6 +1,5 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Types;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Components.Controller;
 
 namespace CSPspEmu.Gui
 {

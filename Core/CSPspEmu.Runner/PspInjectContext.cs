@@ -11,6 +11,8 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules;
 using System;
 using System.Collections.Generic;
+using CSPspEmu.Core.Audio.Impl.Alsa;
+using CSPspEmu.Core.Audio.Impl.Null;
 using CSPspEmu.Core.Gpu.Impl.Null;
 
 namespace CSPspEmu.Runner

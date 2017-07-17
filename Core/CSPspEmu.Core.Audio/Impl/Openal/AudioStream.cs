@@ -6,7 +6,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
     /// <summary>
     /// 48 Samples 1 ms
     /// </summary>
-    unsafe internal sealed class AudioStream
+    internal sealed unsafe class AudioStream
     {
         public const int Frequency = 44100;
         //public const int Frequency = 48000;
@@ -21,142 +21,135 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
         public uint[] BufferIds;
         public uint SourceId;
 
-        private static void ALEnforce(string AT = "Unknown")
+        private static void AlEnforce(string at = "Unknown")
         {
-            var Error = AL.alGetError();
-            if (Error != AL.AL_NO_ERROR)
+            var error = AL.alGetError();
+            if (error != AL.AL_NO_ERROR)
             {
-                Console.Error.WriteLine("ALEnforce: " + AL.alGetErrorString(Error) + "(" + Error + ") : " + AT);
+                Console.Error.WriteLine("ALEnforce: " + AL.alGetErrorString(error) + "(" + error + ") : " + at);
                 //throw (new Exception("Error: " + AL.GetErrorString(Error)));
             }
         }
 
-        private static T ALEnforce<T>(T Input)
+        private static T AlEnforce<T>(T input)
         {
-            ALEnforce();
-            return Input;
+            AlEnforce();
+            return input;
         }
 
         public AudioStream()
         {
-            this.BufferIds = new uint[NumberOfBuffers];
+            BufferIds = new uint[NumberOfBuffers];
 
-            fixed (uint* BufferIdsPtr = this.BufferIds)
-            fixed (uint* SourceIdPtr = &this.SourceId)
+            fixed (uint* bufferIdsPtr = BufferIds)
+            fixed (uint* sourceIdPtr = &SourceId)
             {
-                AL.alGenBuffers(NumberOfBuffers, BufferIdsPtr);
-                ALEnforce();
-                AL.alGenSources(1, SourceIdPtr);
-                ALEnforce();
+                AL.alGenBuffers(NumberOfBuffers, bufferIdsPtr);
+                AlEnforce();
+                AL.alGenSources(1, sourceIdPtr);
+                AlEnforce();
             }
 
             AL.alSourcef(SourceId, AL.AL_PITCH, 1f);
-            ALEnforce();
+            AlEnforce();
             AL.alSourcef(SourceId, AL.AL_GAIN, 1f);
-            ALEnforce();
+            AlEnforce();
             AL.alSourcef(SourceId, AL.AL_ROLLOFF_FACTOR, 0f);
-            ALEnforce();
+            AlEnforce();
             AL.alSource3f(SourceId, AL.AL_VELOCITY, 0f, 0f, 0f);
-            ALEnforce();
+            AlEnforce();
             AL.alSource3f(SourceId, AL.AL_POSITION, 0f, 0f, 0f);
-            ALEnforce();
+            AlEnforce();
             //AL.Source(SourceId, ALSourceb.Looping, true); ALEnforce();
         }
 
         ~AudioStream()
         {
-            fixed (uint* SourceIdPtr = &this.SourceId)
-            fixed (uint* BufferIdsPtr = this.BufferIds)
+            fixed (uint* sourceIdPtr = &SourceId)
+            fixed (uint* bufferIdsPtr = BufferIds)
             {
-                AL.alDeleteSources(1, SourceIdPtr);
-                AL.alDeleteBuffers(this.BufferIds.Length, BufferIdsPtr);
+                AL.alDeleteSources(1, sourceIdPtr);
+                AL.alDeleteBuffers(this.BufferIds.Length, bufferIdsPtr);
             }
         }
 
         private void Start()
         {
-            foreach (var _BufferId in BufferIds)
+            foreach (var bufferId2 in BufferIds)
             {
-                uint BufferId = _BufferId;
-                ReadStream(BufferId);
-                AL.alSourceQueueBuffers(SourceId, 1, &BufferId);
-                ALEnforce();
+                var bufferId = bufferId2;
+                ReadStream(bufferId);
+                AL.alSourceQueueBuffers(SourceId, 1, &bufferId);
+                AlEnforce();
             }
             AL.alSourcePlay(SourceId);
-            ALEnforce();
+            AlEnforce();
         }
 
         public bool IsPlaying
         {
             get
             {
-                int SourceState;
-                AL.alGetSourcei(SourceId, AL.AL_SOURCE_STATE, &SourceState);
-                return SourceState == AL.AL_PLAYING;
+                int sourceState;
+                AL.alGetSourcei(SourceId, AL.AL_SOURCE_STATE, &sourceState);
+                return sourceState == AL.AL_PLAYING;
             }
         }
 
-        public void Update(Action<short[]> ReadStreamCallback)
+        public void Update(Action<short[]> readStreamCallback)
         {
-            int Processed = -1;
+            var processed = -1;
 
-            fixed (uint* SourceIdPointer = &this.SourceId)
+            fixed (uint* sourceIdPointer = &SourceId)
             {
                 if (!IsPlaying)
                 {
-                    AL.alDeleteSources(1, SourceIdPointer);
-                    ALEnforce();
-                    AL.alGenSources(1, SourceIdPointer);
-                    ALEnforce();
+                    AL.alDeleteSources(1, sourceIdPointer);
+                    AlEnforce();
+                    AL.alGenSources(1, sourceIdPointer);
+                    AlEnforce();
                     //AL.SourceStop(SourceId);
                     Start();
                     //AL.SourcePlay(SourceId); ALEnforce();
                 }
 
-                AL.alGetSourcei(SourceId, AL.AL_BUFFERS_PROCESSED, &Processed);
-                ALEnforce();
+                AL.alGetSourcei(SourceId, AL.AL_BUFFERS_PROCESSED, &processed);
+                AlEnforce();
 
-                while (Processed-- > 0)
+                while (processed-- > 0)
                 {
-                    uint DequeuedBufferId = 0;
-                    AL.alSourceUnqueueBuffers(SourceId, 1, &DequeuedBufferId);
+                    uint dequeuedBufferId = 0;
+                    AL.alSourceUnqueueBuffers(SourceId, 1, &dequeuedBufferId);
                     {
-                        ReadStream(DequeuedBufferId, ReadStreamCallback);
+                        ReadStream(dequeuedBufferId, readStreamCallback);
                     }
-                    AL.alSourceQueueBuffers(SourceId, 1, &DequeuedBufferId);
-                    ALEnforce();
+                    AL.alSourceQueueBuffers(SourceId, 1, &dequeuedBufferId);
+                    AlEnforce();
                 }
             }
         }
 
-        private short[] BufferData = null;
+        private short[] _bufferData;
 
-        private void ReadStream(uint BufferId, Action<short[]> ReadStreamCallback = null)
+        private void ReadStream(uint bufferId, Action<short[]> readStreamCallback = null)
         {
             //short[] BufferData;
 
-            const int ReadSamples = SamplesPerBuffer;
-            if (BufferData == null || BufferData.Length != ReadSamples)
+            const int readSamples = SamplesPerBuffer;
+            if (_bufferData == null || _bufferData.Length != readSamples)
             {
-                BufferData = new short[ReadSamples];
+                _bufferData = new short[readSamples];
                 //Console.WriteLine("Created buffer");
             }
 
-            if (ReadStreamCallback != null)
-            {
-                ReadStreamCallback(BufferData);
-                //if (BufferData.Any(Item => Item != 0)) foreach (var C in BufferData) Console.Write("{0},", C);
-            }
-            else
-            {
-                //BufferData = new short[ReadSamples];
-            }
+            readStreamCallback?.Invoke(_bufferData);
+            //if (BufferData.Any(Item => Item != 0)) foreach (var C in BufferData) Console.Write("{0},", C);
 
-            fixed (short* BufferDataPtr = BufferData)
+            fixed (short* bufferDataPtr = _bufferData)
             {
-                AL.alBufferData(BufferId, AL.AL_FORMAT_STEREO16, BufferDataPtr, BufferData.Length * sizeof(short),
+                AL.alBufferData(bufferId, AL.AL_FORMAT_STEREO16, bufferDataPtr, _bufferData.Length * sizeof(short),
                     Frequency);
-                ALEnforce("ReadStream");
+                AlEnforce("ReadStream");
             }
         }
 

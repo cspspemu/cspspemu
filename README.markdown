@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/soywiz/cspspemu.svg?branch=master)](https://travis-ci.org/soywiz/cspspemu)
 
+Cleanups by Project Rider
+
 ![Kaiten Patissier PSP](http://soywiz.github.com/cspspemu/screenshoots/kaiten_patissier.png)
 
 A PSP Emulator for >= .NET 4.5 made in C# by soywiz - Carlos Ballesteros Velasco

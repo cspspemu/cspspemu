@@ -14,7 +14,6 @@ using System.Windows.Forms;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Resources;
 using CSPspEmu.Core.Cpu;
@@ -29,6 +28,7 @@ using System.Threading.Tasks;
 using CSharpPlatform.GL.Impl;
 using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Components.Controller;
 
 namespace CSPspEmu.Gui.Winforms
 {

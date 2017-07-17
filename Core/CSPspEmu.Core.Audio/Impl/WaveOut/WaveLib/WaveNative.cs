@@ -13,7 +13,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WaveLib
+namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
 {
     public enum WaveFormats
     {
@@ -48,21 +48,21 @@ namespace WaveLib
     internal class WaveNative
     {
         // consts
-        public const int MMSYSERR_NOERROR = 0; // no error
+        public const int MmsyserrNoerror = 0; // no error
 
-        public const int MM_WOM_OPEN = 0x3BB;
-        public const int MM_WOM_CLOSE = 0x3BC;
-        public const int MM_WOM_DONE = 0x3BD;
+        public const int MmWomOpen = 0x3BB;
+        public const int MmWomClose = 0x3BC;
+        public const int MmWomDone = 0x3BD;
 
-        public const int MM_WIM_OPEN = 0x3BE;
-        public const int MM_WIM_CLOSE = 0x3BF;
-        public const int MM_WIM_DATA = 0x3C0;
+        public const int MmWimOpen = 0x3BE;
+        public const int MmWimClose = 0x3BF;
+        public const int MmWimData = 0x3C0;
 
-        public const int CALLBACK_FUNCTION = 0x00030000; // dwCallback is a FARPROC 
+        public const int CallbackFunction = 0x00030000; // dwCallback is a FARPROC 
 
-        public const int TIME_MS = 0x0001; // time in milliseconds 
-        public const int TIME_SAMPLES = 0x0002; // number of wave samples 
-        public const int TIME_BYTES = 0x0004; // current byte offset 
+        public const int TimeMs = 0x0001; // time in milliseconds 
+        public const int TimeSamples = 0x0002; // number of wave samples 
+        public const int TimeBytes = 0x0004; // current byte offset 
 
         // callbacks
         public delegate void WaveDelegate(IntPtr hdrvr, int uMsg, int dwUser, ref WaveHdr wavhdr, int dwParam2);
@@ -82,73 +82,73 @@ namespace WaveLib
             public int reserved; // reserved for driver
         }
 
-        private const string mmdll = "winmm.dll";
+        private const string Mmdll = "winmm.dll";
 
         // WaveOut calls
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutGetNumDevs();
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutPrepareHeader(IntPtr hWaveOut, ref WaveHdr lpWaveOutHdr, int uSize);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutUnprepareHeader(IntPtr hWaveOut, ref WaveHdr lpWaveOutHdr, int uSize);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutWrite(IntPtr hWaveOut, ref WaveHdr lpWaveOutHdr, int uSize);
 
-        [DllImport(mmdll)]
-        public static extern int waveOutOpen(out IntPtr hWaveOut, int uDeviceID, WaveFormat lpFormat,
+        [DllImport(Mmdll)]
+        public static extern int waveOutOpen(out IntPtr hWaveOut, int uDeviceId, WaveFormat lpFormat,
             WaveDelegate dwCallback, int dwInstance, int dwFlags);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutReset(IntPtr hWaveOut);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutClose(IntPtr hWaveOut);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutPause(IntPtr hWaveOut);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutRestart(IntPtr hWaveOut);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutGetPosition(IntPtr hWaveOut, out int lpInfo, int uSize);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutSetVolume(IntPtr hWaveOut, int dwVolume);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveOutGetVolume(IntPtr hWaveOut, out int dwVolume);
 
         // WaveIn calls
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInGetNumDevs();
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInAddBuffer(IntPtr hwi, ref WaveHdr pwh, int cbwh);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInClose(IntPtr hwi);
 
-        [DllImport(mmdll)]
-        public static extern int waveInOpen(out IntPtr phwi, int uDeviceID, WaveFormat lpFormat,
+        [DllImport(Mmdll)]
+        public static extern int waveInOpen(out IntPtr phwi, int uDeviceId, WaveFormat lpFormat,
             WaveDelegate dwCallback, int dwInstance, int dwFlags);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInPrepareHeader(IntPtr hWaveIn, ref WaveHdr lpWaveInHdr, int uSize);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInUnprepareHeader(IntPtr hWaveIn, ref WaveHdr lpWaveInHdr, int uSize);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInReset(IntPtr hwi);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInStart(IntPtr hwi);
 
-        [DllImport(mmdll)]
+        [DllImport(Mmdll)]
         public static extern int waveInStop(IntPtr hwi);
     }
 }

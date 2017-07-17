@@ -14,23 +14,17 @@ namespace CSPspEmu.Core.Crypto
 		}
 #endif
 
-        private static uint GETuint(byte* pt)
-        {
-            return (((uint) (pt)[0] << 24) ^ ((uint) (pt)[1] << 16) ^ ((uint) (pt)[2] << 8) ^ ((uint) (pt)[3]));
-        }
+        private static uint GeTuint(byte* pt) => (((uint) (pt)[0] << 24) ^ ((uint) (pt)[1] << 16) ^ ((uint) (pt)[2] << 8) ^ ((uint) (pt)[3]));
 
         //memcpy(block_buff, src, 16);
-        public static void memcpy(byte* dst, byte* src, int count)
-        {
-            PointerUtils.Memcpy(dst, src, count);
-        }
+        public static void Memcpy(byte* dst, byte* src, int count) => PointerUtils.Memcpy(dst, src, count);
 
-        public static int memcmp(byte* str1, byte* str2, int count)
+        public static int Memcmp(byte* str1, byte* str2, int count)
         {
-            for (int n = 0; n < count; n++)
+            for (var n = 0; n < count; n++)
             {
-                byte c1 = str1[n];
-                byte c2 = str2[n];
+                var c1 = str1[n];
+                var c2 = str2[n];
                 if (c1 > c2) return -1;
                 if (c1 < c2) return +1;
             }
@@ -38,10 +32,7 @@ namespace CSPspEmu.Core.Crypto
         }
 
 
-        public static void memcpy(void* dst, void* src, int count)
-        {
-            memcpy((byte*) dst, (byte*) src, count);
-        }
+        public static void Memcpy(void* dst, void* src, int count) => Memcpy((byte*) dst, (byte*) src, count);
 
 #if false
 		private static void PUTuint(byte[] ct, uint st) {
@@ -52,7 +43,7 @@ namespace CSPspEmu.Core.Crypto
 		}
 #else
 
-        private static void PUTuint(byte* ct, uint st)
+        private static void PuTuint(byte* ct, uint st)
         {
             (ct)[0] = (byte) ((st) >> 24);
             (ct)[1] = (byte) ((st) >> 16);
@@ -68,15 +59,15 @@ namespace CSPspEmu.Core.Crypto
         /// <param name="cipherKey"></param>
         /// <param name="keyBits"></param>
         /// <returns>the number of rounds for the given cipher key size.</returns>
-        public static int rijndaelKeySetupEnc(uint* rk /*4*(Nr + 1)*/, byte* cipherKey, int keyBits)
+        public static int RijndaelKeySetupEnc(uint* rk /*4*(Nr + 1)*/, byte* cipherKey, int keyBits)
         {
-            int i = 0;
+            var i = 0;
             uint temp;
 
-            rk[0] = GETuint(cipherKey);
-            rk[1] = GETuint(cipherKey + 4);
-            rk[2] = GETuint(cipherKey + 8);
-            rk[3] = GETuint(cipherKey + 12);
+            rk[0] = GeTuint(cipherKey);
+            rk[1] = GeTuint(cipherKey + 4);
+            rk[2] = GeTuint(cipherKey + 8);
+            rk[3] = GeTuint(cipherKey + 12);
             if (keyBits == 128)
             {
                 for (;;)
@@ -98,8 +89,8 @@ namespace CSPspEmu.Core.Crypto
                     rk += 4;
                 }
             }
-            rk[4] = GETuint(cipherKey + 16);
-            rk[5] = GETuint(cipherKey + 20);
+            rk[4] = GeTuint(cipherKey + 16);
+            rk[5] = GeTuint(cipherKey + 20);
             if (keyBits == 192)
             {
                 for (;;)
@@ -123,8 +114,8 @@ namespace CSPspEmu.Core.Crypto
                     rk += 6;
                 }
             }
-            rk[6] = GETuint(cipherKey + 24);
-            rk[7] = GETuint(cipherKey + 28);
+            rk[6] = GeTuint(cipherKey + 24);
+            rk[7] = GeTuint(cipherKey + 28);
             if (keyBits == 256)
             {
                 for (;;)
@@ -171,7 +162,7 @@ namespace CSPspEmu.Core.Crypto
             uint temp;
 
             /* expand the cipher key: */
-            Nr = rijndaelKeySetupEnc(rk, cipherKey, keyBits);
+            Nr = RijndaelKeySetupEnc(rk, cipherKey, keyBits);
 
             /* invert the order of the round keys: */
             for (i = 0, j = 4 * Nr; i < j; i += 4, j -= 4)
@@ -226,10 +217,10 @@ namespace CSPspEmu.Core.Crypto
 
             // map byte array block to cipher state
             // and add initial round key:
-            s0 = GETuint(pt) ^ rk[0];
-            s1 = GETuint(pt + 4) ^ rk[1];
-            s2 = GETuint(pt + 8) ^ rk[2];
-            s3 = GETuint(pt + 12) ^ rk[3];
+            s0 = GeTuint(pt) ^ rk[0];
+            s1 = GeTuint(pt + 4) ^ rk[1];
+            s2 = GeTuint(pt + 8) ^ rk[2];
+            s3 = GeTuint(pt + 12) ^ rk[3];
 #if FULL_UNROLL // round 1:
 			t0 = Te0[s0 >> 24] ^ Te1[(s1 >> 16) & 0xff] ^ Te2[(s2 >>  8) & 0xff] ^ Te3[s3 & 0xff] ^ rk[ 4];
 			t1 = Te0[s1 >> 24] ^ Te1[(s2 >> 16) & 0xff] ^ Te2[(s3 >>  8) & 0xff] ^ Te3[s0 & 0xff] ^ rk[ 5];
@@ -370,28 +361,28 @@ namespace CSPspEmu.Core.Crypto
                 (Te4[(t2 >> 8) & 0xff] & 0x0000ff00) ^
                 (Te4[(t3) & 0xff] & 0x000000ff) ^
                 rk[0];
-            PUTuint(ct, s0);
+            PuTuint(ct, s0);
             s1 =
                 (Te4[(t1 >> 24)] & 0xff000000) ^
                 (Te4[(t2 >> 16) & 0xff] & 0x00ff0000) ^
                 (Te4[(t3 >> 8) & 0xff] & 0x0000ff00) ^
                 (Te4[(t0) & 0xff] & 0x000000ff) ^
                 rk[1];
-            PUTuint(ct + 4, s1);
+            PuTuint(ct + 4, s1);
             s2 =
                 (Te4[(t2 >> 24)] & 0xff000000) ^
                 (Te4[(t3 >> 16) & 0xff] & 0x00ff0000) ^
                 (Te4[(t0 >> 8) & 0xff] & 0x0000ff00) ^
                 (Te4[(t1) & 0xff] & 0x000000ff) ^
                 rk[2];
-            PUTuint(ct + 8, s2);
+            PuTuint(ct + 8, s2);
             s3 =
                 (Te4[(t3 >> 24)] & 0xff000000) ^
                 (Te4[(t0 >> 16) & 0xff] & 0x00ff0000) ^
                 (Te4[(t1 >> 8) & 0xff] & 0x0000ff00) ^
                 (Te4[(t2) & 0xff] & 0x000000ff) ^
                 rk[3];
-            PUTuint(ct + 12, s3);
+            PuTuint(ct + 12, s3);
         }
 
         public static void rijndaelDecrypt(uint* rk /*4*(Nr + 1)*/, int Nr, byte* ct, byte*pt)
@@ -403,10 +394,10 @@ namespace CSPspEmu.Core.Crypto
 
             // map byte array block to cipher state
             // and add initial round key:
-            s0 = GETuint(ct) ^ rk[0];
-            s1 = GETuint(ct + 4) ^ rk[1];
-            s2 = GETuint(ct + 8) ^ rk[2];
-            s3 = GETuint(ct + 12) ^ rk[3];
+            s0 = GeTuint(ct) ^ rk[0];
+            s1 = GeTuint(ct + 4) ^ rk[1];
+            s2 = GeTuint(ct + 8) ^ rk[2];
+            s3 = GeTuint(ct + 12) ^ rk[3];
 #if FULL_UNROLL
             
 			t0 = Td0[s0 >> 24] ^ Td1[(s3 >> 16) & 0xff] ^ Td2[(s2 >>  8) & 0xff] ^ Td3[s1 & 0xff] ^ rk[ 4]; // round 1:
@@ -552,28 +543,28 @@ namespace CSPspEmu.Core.Crypto
                 (Td4[(t2 >> 8) & 0xff] & 0x0000ff00) ^
                 (Td4[(t1) & 0xff] & 0x000000ff) ^
                 rk[0];
-            PUTuint(pt, s0);
+            PuTuint(pt, s0);
             s1 =
                 (Td4[(t1 >> 24)] & 0xff000000) ^
                 (Td4[(t0 >> 16) & 0xff] & 0x00ff0000) ^
                 (Td4[(t3 >> 8) & 0xff] & 0x0000ff00) ^
                 (Td4[(t2) & 0xff] & 0x000000ff) ^
                 rk[1];
-            PUTuint(pt + 4, s1);
+            PuTuint(pt + 4, s1);
             s2 =
                 (Td4[(t2 >> 24)] & 0xff000000) ^
                 (Td4[(t1 >> 16) & 0xff] & 0x00ff0000) ^
                 (Td4[(t0 >> 8) & 0xff] & 0x0000ff00) ^
                 (Td4[(t3) & 0xff] & 0x000000ff) ^
                 rk[2];
-            PUTuint(pt + 8, s2);
+            PuTuint(pt + 8, s2);
             s3 =
                 (Td4[(t3 >> 24)] & 0xff000000) ^
                 (Td4[(t2 >> 16) & 0xff] & 0x00ff0000) ^
                 (Td4[(t1 >> 8) & 0xff] & 0x0000ff00) ^
                 (Td4[(t0) & 0xff] & 0x000000ff) ^
                 rk[3];
-            PUTuint(pt + 12, s3);
+            PuTuint(pt + 12, s3);
         }
 
         /* setup key context for encryption only */
@@ -581,7 +572,7 @@ namespace CSPspEmu.Core.Crypto
         {
             int rounds;
 
-            rounds = rijndaelKeySetupEnc(ctx->ek, key, bits);
+            rounds = RijndaelKeySetupEnc(ctx->ek, key, bits);
             if (rounds == 0)
                 return -1;
 
@@ -596,7 +587,7 @@ namespace CSPspEmu.Core.Crypto
         {
             int rounds;
 
-            rounds = rijndaelKeySetupEnc(ctx->ek, key, bits);
+            rounds = RijndaelKeySetupEnc(ctx->ek, key, bits);
             if (rounds == 0)
                 return -1;
             if (rijndaelKeySetupDec(ctx->dk, key, bits) != rounds)
@@ -651,13 +642,13 @@ namespace CSPspEmu.Core.Crypto
                 for (i = 0; i < size; i += 16)
                 {
                     //step 1: copy block to dst
-                    memcpy(dst, src, 16);
+                    Memcpy(dst, src, 16);
                     //step 2: XOR with previous block
                     if (i != 0) xor_128(dst, block_buff, dst);
                     //step 3: encrypt the block -> it land in block buffer
                     AES_encrypt(ctx, dst, block_buff);
                     //step 4: copy back the encrypted block to destination
-                    memcpy(dst, block_buff, 16);
+                    Memcpy(dst, block_buff, 16);
 
                     dst += 16;
                     src += 16;
@@ -667,13 +658,13 @@ namespace CSPspEmu.Core.Crypto
 
         public static void AES_cbc_decrypt(AES_ctx* ctx, byte* src, byte* dst, int size)
         {
-            var _block_buff = new byte[16];
-            var _block_buff_previous = new byte[16];
-            fixed (byte* block_buff = _block_buff)
-            fixed (byte* block_buff_previous = _block_buff_previous)
+            var blockBuff = new byte[16];
+            var blockBuffPrevious = new byte[16];
+            fixed (byte* block_buff = blockBuff)
+            fixed (byte* block_buff_previous = blockBuffPrevious)
             {
-                memcpy(block_buff, src, 16);
-                memcpy(block_buff_previous, src, 16);
+                Memcpy(block_buff, src, 16);
+                Memcpy(block_buff_previous, src, 16);
                 AES_decrypt(ctx, src, dst);
 
                 dst += 16;
@@ -683,15 +674,15 @@ namespace CSPspEmu.Core.Crypto
                 for (i = 16; i < size; i += 16)
                 {
                     //step1: backup current block for next block decrypt
-                    memcpy(block_buff, src, 16);
+                    Memcpy(block_buff, src, 16);
                     //step2: copy current block to destination
-                    memcpy(dst, src, 16);
+                    Memcpy(dst, src, 16);
                     //step3: decrypt current buffer in place
                     AES_decrypt(ctx, dst, dst);
                     //step4: XOR current buffer with previous buffer
                     xor_128(dst, block_buff_previous, dst);
                     //step5: swap buffers
-                    memcpy(block_buff_previous, block_buff, 16);
+                    Memcpy(block_buff_previous, block_buff, 16);
 
                     dst += 16;
                     src += 16;

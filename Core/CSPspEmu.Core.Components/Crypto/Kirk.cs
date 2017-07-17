@@ -66,7 +66,7 @@ namespace CSPspEmu.Core.Crypto
 
                 AES128CMACHeader* header = (AES128CMACHeader*) outbuff;
 
-                Crypto.memcpy(outbuff, inbuff, size);
+                Crypto.Memcpy(outbuff, inbuff, size);
 
                 if (header->Mode != KirkMode.Cmd1)
                 {
@@ -98,8 +98,8 @@ namespace CSPspEmu.Core.Crypto
 
                 Crypto.AES_CMAC(&cmac_key, outbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
 
-                Crypto.memcpy(header->CMAC_header_hash, cmac_header_hash, 16);
-                Crypto.memcpy(header->CMAC_data_hash, cmac_data_hash, 16);
+                Crypto.Memcpy(header->CMAC_header_hash, cmac_header_hash, 16);
+                Crypto.Memcpy(header->CMAC_data_hash, cmac_data_hash, 16);
 
                 //ENCRYPT KEYS
                 Crypto.AES_cbc_encrypt(aes_kirk1_ptr, inbuff, outbuff, 16 * 2);
@@ -311,12 +311,12 @@ namespace CSPspEmu.Core.Crypto
                 if ((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
                 Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header.DataOffset, cmac_data_hash);
 
-                if (Crypto.memcmp(cmac_header_hash, header.CMAC_header_hash, 16) != 0)
+                if (Crypto.Memcmp(cmac_header_hash, header.CMAC_header_hash, 16) != 0)
                 {
                     Logger.Error("header hash invalid");
                     throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));
                 }
-                if (Crypto.memcmp(cmac_data_hash, header.CMAC_data_hash, 16) != 0)
+                if (Crypto.Memcmp(cmac_data_hash, header.CMAC_data_hash, 16) != 0)
                 {
                     Logger.Error("data hash invalid");
                     throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));
@@ -411,8 +411,8 @@ namespace CSPspEmu.Core.Crypto
             var _buffer = new byte[size];
             fixed (byte* buffer = _buffer)
             {
-                Crypto.memcpy(buffer, header, sizeof(AES128CMACHeader));
-                Crypto.memcpy(buffer + sizeof(AES128CMACHeader), inbuff, header->DataSize);
+                Crypto.Memcpy(buffer, header, sizeof(AES128CMACHeader));
+                Crypto.Memcpy(buffer + sizeof(AES128CMACHeader), inbuff, header->DataSize);
                 kirk_CMD1(outbuff, buffer, size, true);
             }
         }
@@ -486,7 +486,7 @@ namespace CSPspEmu.Core.Crypto
                     32); //decrypt AES & CMAC key to temp buffer
                 Crypto.AES_set_key(&cmac_key, keys.CMAC, 128);
                 Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30, cmac_header_hash);
-                if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
+                if (Crypto.Memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
                 {
                     throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_HEADER_HASH));
                 }
@@ -496,7 +496,7 @@ namespace CSPspEmu.Core.Crypto
                 if ((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
                 Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
 
-                if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
+                if (Crypto.Memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
                 {
                     //printf("data hash invalid, correcting...\n");
                 }
@@ -507,7 +507,7 @@ namespace CSPspEmu.Core.Crypto
                     //return 100;
                 }
                 // Forge collision for data hash
-                Crypto.memcpy(cmac_data_hash, header->CMAC_data_hash, 0x10);
+                Crypto.Memcpy(cmac_data_hash, header->CMAC_data_hash, 0x10);
                 Crypto.AES_CMAC_forge(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
                 //printf("Last row in bad file should be :\n"); for(i=0;i<0x10;i++) printf("%02x", cmac_data_hash[i]);
                 //printf("\n\n");

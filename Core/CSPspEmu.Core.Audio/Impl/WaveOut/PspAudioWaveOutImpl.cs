@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using CSharpUtils;
-using WaveLib;
+using CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib;
 
 namespace CSPspEmu.Core.Audio.Impl.WaveOut
 {
@@ -26,12 +26,12 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
         public const int SamplesPerBuffer = (int) (SamplesPerMillisecond * BufferMilliseconds * NumberOfChannels);
         public const int BufferSize = (int) SamplesPerBuffer;
 
-        private bool Initialized = false;
-        private static IntPtr WaveOutHandle = IntPtr.Zero;
+        private bool _initialized = false;
+        private static IntPtr _waveOutHandle = IntPtr.Zero;
 
         private ConcurrentQueue<short[]> Queue = new ConcurrentQueue<short[]>();
 
-        private WaveOutPlayer m_Player;
+        private WaveOutPlayer _mPlayer;
 
 
         private void BufferFillEventHandler(IntPtr data, int size)
@@ -41,7 +41,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
                 short[] Result;
                 while (!Queue.TryDequeue(out Result))
                 {
-                    if (m_Player.Disposing) return;
+                    if (_mPlayer.Disposing) return;
                 }
                 Marshal.Copy(Result, 0, data, size / 2);
             }
@@ -51,16 +51,16 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
             }
         }
 
-        public override void Update(Action<short[]> ReadStream)
+        public override void Update(Action<short[]> readStream)
         {
-            if (Initialized)
+            if (_initialized)
             {
                 while (Queue.Count < 2)
                 {
-                    var Data = new short[BufferSize / 2];
-                    ReadStream(Data);
+                    var data = new short[BufferSize / 2];
+                    readStream(data);
                     //for (int n = 0; n < Data.Length; n++) Console.Write(Data[n]);
-                    Queue.Enqueue(Data);
+                    Queue.Enqueue(data);
                 }
             }
         }
@@ -81,29 +81,19 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
         void IInjectInitialize.Initialize()
         {
             Console.WriteLine("PspAudioWaveOutImpl.Initialize()!");
-            if (m_Player == null)
+            if (_mPlayer == null)
             {
-                m_Player = new WaveOutPlayer(-1, new WaveFormat(rate: Frequency, bits: 16, channels: NumberOfChannels),
+                _mPlayer = new WaveOutPlayer(-1, new WaveFormat(rate: Frequency, bits: 16, channels: NumberOfChannels),
                     BufferSize, NumberOfBuffers, BufferFillEventHandler);
             }
-            Initialized = true;
+            _initialized = true;
         }
 
-        public PspAudioWaveOutImpl()
+        public override PluginInfo PluginInfo => new PluginInfo
         {
-        }
-
-        public override PluginInfo PluginInfo
-        {
-            get
-            {
-                return new PluginInfo()
-                {
-                    Name = "WaveOut",
-                    Version = "1.0",
-                };
-            }
-        }
+            Name = "WaveOut",
+            Version = "1.0",
+        };
 
         public override bool IsWorking
         {

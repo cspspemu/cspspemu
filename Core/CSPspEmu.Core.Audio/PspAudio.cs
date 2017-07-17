@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CSPspEmu.Core.Audio
 {
-    unsafe public sealed class PspAudio : IInjectInitialize, IDisposable
+    public sealed unsafe class PspAudio : IInjectInitialize, IDisposable
     {
         /// <summary>
         /// Output formats for PSP audio.

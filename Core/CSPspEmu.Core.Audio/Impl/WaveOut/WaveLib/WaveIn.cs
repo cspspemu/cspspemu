@@ -11,16 +11,16 @@
 //  Copyright (C) 1999-2003 Ianier Munoz. All Rights Reserved.
 
 using System;
-using System.Threading;
 using System.Runtime.InteropServices;
+using System.Threading;
 
-namespace WaveLib
+namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
 {
     internal class WaveInHelper
     {
         public static void Try(int err)
         {
-            if (err != WaveNative.MMSYSERR_NOERROR)
+            if (err != WaveNative.MmsyserrNoerror)
                 throw new Exception(err.ToString());
         }
     }
@@ -34,16 +34,16 @@ namespace WaveLib
         private AutoResetEvent m_RecordEvent = new AutoResetEvent(false);
         private IntPtr m_WaveIn;
 
-        private WaveNative.WaveHdr m_Header;
-        private byte[] m_HeaderData;
-        private GCHandle m_HeaderHandle;
-        private GCHandle m_HeaderDataHandle;
+        private WaveNative.WaveHdr _mHeader;
+        private readonly byte[] _mHeaderData;
+        private GCHandle _mHeaderHandle;
+        private GCHandle _mHeaderDataHandle;
 
-        private bool m_Recording;
+        private bool _mRecording;
 
         internal static void WaveInProc(IntPtr hdrvr, int uMsg, int dwUser, ref WaveNative.WaveHdr wavhdr, int dwParam2)
         {
-            if (uMsg == WaveNative.MM_WIM_DATA)
+            if (uMsg == WaveNative.MmWimData)
             {
                 try
                 {
@@ -53,6 +53,7 @@ namespace WaveLib
                 }
                 catch
                 {
+                    // ignored
                 }
             }
         }
@@ -61,13 +62,13 @@ namespace WaveLib
         {
             m_WaveIn = waveInHandle;
 
-            m_HeaderHandle = GCHandle.Alloc(m_Header, GCHandleType.Pinned);
-            m_Header.dwUser = (IntPtr) GCHandle.Alloc(this);
-            m_HeaderData = new byte[size];
-            m_HeaderDataHandle = GCHandle.Alloc(m_HeaderData, GCHandleType.Pinned);
-            m_Header.lpData = m_HeaderDataHandle.AddrOfPinnedObject();
-            m_Header.dwBufferLength = size;
-            WaveInHelper.Try(WaveNative.waveInPrepareHeader(m_WaveIn, ref m_Header, Marshal.SizeOf(m_Header)));
+            _mHeaderHandle = GCHandle.Alloc(_mHeader, GCHandleType.Pinned);
+            _mHeader.dwUser = (IntPtr) GCHandle.Alloc(this);
+            _mHeaderData = new byte[size];
+            _mHeaderDataHandle = GCHandle.Alloc(_mHeaderData, GCHandleType.Pinned);
+            _mHeader.lpData = _mHeaderDataHandle.AddrOfPinnedObject();
+            _mHeader.dwBufferLength = size;
+            WaveInHelper.Try(WaveNative.waveInPrepareHeader(m_WaveIn, ref _mHeader, Marshal.SizeOf(_mHeader)));
         }
 
         ~WaveInBuffer()
@@ -77,43 +78,36 @@ namespace WaveLib
 
         public void Dispose()
         {
-            if (m_Header.lpData != IntPtr.Zero)
+            if (_mHeader.lpData != IntPtr.Zero)
             {
-                WaveNative.waveInUnprepareHeader(m_WaveIn, ref m_Header, Marshal.SizeOf(m_Header));
-                m_HeaderHandle.Free();
-                m_Header.lpData = IntPtr.Zero;
+                WaveNative.waveInUnprepareHeader(m_WaveIn, ref _mHeader, Marshal.SizeOf(_mHeader));
+                _mHeaderHandle.Free();
+                _mHeader.lpData = IntPtr.Zero;
             }
             m_RecordEvent.Close();
-            if (m_HeaderDataHandle.IsAllocated)
-                m_HeaderDataHandle.Free();
+            if (_mHeaderDataHandle.IsAllocated)
+                _mHeaderDataHandle.Free();
             GC.SuppressFinalize(this);
         }
 
-        public int Size
-        {
-            get { return m_Header.dwBufferLength; }
-        }
-
-        public IntPtr Data
-        {
-            get { return m_Header.lpData; }
-        }
+        public int Size => _mHeader.dwBufferLength;
+        public IntPtr Data => _mHeader.lpData;
 
         public bool Record()
         {
             lock (this)
             {
                 m_RecordEvent.Reset();
-                m_Recording = WaveNative.waveInAddBuffer(m_WaveIn, ref m_Header, Marshal.SizeOf(m_Header)) ==
-                              WaveNative.MMSYSERR_NOERROR;
-                return m_Recording;
+                _mRecording = WaveNative.waveInAddBuffer(m_WaveIn, ref _mHeader, Marshal.SizeOf(_mHeader)) ==
+                              WaveNative.MmsyserrNoerror;
+                return _mRecording;
             }
         }
 
         public void WaitFor()
         {
-            if (m_Recording)
-                m_Recording = m_RecordEvent.WaitOne();
+            if (_mRecording)
+                _mRecording = m_RecordEvent.WaitOne();
             else
                 Thread.Sleep(0);
         }
@@ -121,42 +115,38 @@ namespace WaveLib
         private void OnCompleted()
         {
             m_RecordEvent.Set();
-            m_Recording = false;
+            _mRecording = false;
         }
     }
 
     public class WaveInRecorder : IDisposable
     {
-        private IntPtr m_WaveIn;
-        private WaveInBuffer m_Buffers; // linked list
-        private WaveInBuffer m_CurrentBuffer;
-        private Thread m_Thread;
-        private BufferDoneEventHandler m_DoneProc;
-        private bool m_Finished;
+        private IntPtr _mWaveIn;
+        private WaveInBuffer _mBuffers; // linked list
+        private WaveInBuffer _mCurrentBuffer;
+        private Thread _mThread;
+        private BufferDoneEventHandler _mDoneProc;
+        private bool _mFinished;
 
-        private WaveNative.WaveDelegate m_BufferProc = new WaveNative.WaveDelegate(WaveInBuffer.WaveInProc);
+        private readonly WaveNative.WaveDelegate _mBufferProc = WaveInBuffer.WaveInProc;
 
-        public static int DeviceCount
-        {
-            get { return WaveNative.waveInGetNumDevs(); }
-        }
+        public static int DeviceCount => WaveNative.waveInGetNumDevs();
 
         public WaveInRecorder(int device, WaveFormat format, int bufferSize, int bufferCount,
             BufferDoneEventHandler doneProc)
         {
-            m_DoneProc = doneProc;
-            WaveInHelper.Try(WaveNative.waveInOpen(out m_WaveIn, device, format, m_BufferProc, 0,
-                WaveNative.CALLBACK_FUNCTION));
+            _mDoneProc = doneProc;
+            WaveInHelper.Try(WaveNative.waveInOpen(out _mWaveIn, device, format, _mBufferProc, 0,
+                WaveNative.CallbackFunction));
             AllocateBuffers(bufferSize, bufferCount);
-            for (int i = 0; i < bufferCount; i++)
+            for (var i = 0; i < bufferCount; i++)
             {
                 SelectNextBuffer();
-                m_CurrentBuffer.Record();
+                _mCurrentBuffer.Record();
             }
-            WaveInHelper.Try(WaveNative.waveInStart(m_WaveIn));
-            m_Thread = new Thread(new ThreadStart(ThreadProc));
-            m_Thread.IsBackground = true;
-            m_Thread.Start();
+            WaveInHelper.Try(WaveNative.waveInStart(_mWaveIn));
+            _mThread = new Thread(ThreadProc) {IsBackground = true};
+            _mThread.Start();
         }
 
         ~WaveInRecorder()
@@ -166,23 +156,23 @@ namespace WaveLib
 
         public void Dispose()
         {
-            if (m_Thread != null)
+            if (_mThread != null)
                 try
                 {
-                    m_Finished = true;
-                    if (m_WaveIn != IntPtr.Zero)
-                        WaveNative.waveInReset(m_WaveIn);
+                    _mFinished = true;
+                    if (_mWaveIn != IntPtr.Zero)
+                        WaveNative.waveInReset(_mWaveIn);
                     WaitForAllBuffers();
-                    m_Thread.Join();
-                    m_DoneProc = null;
+                    _mThread.Join();
+                    _mDoneProc = null;
                     FreeBuffers();
-                    if (m_WaveIn != IntPtr.Zero)
-                        WaveNative.waveInClose(m_WaveIn);
+                    if (_mWaveIn != IntPtr.Zero)
+                        WaveNative.waveInClose(_mWaveIn);
                 }
                 finally
                 {
-                    m_Thread = null;
-                    m_WaveIn = IntPtr.Zero;
+                    _mThread = null;
+                    _mWaveIn = IntPtr.Zero;
                 }
             GC.SuppressFinalize(this);
         }
@@ -192,12 +182,12 @@ namespace WaveLib
             Console.WriteLine("WaveIn.Start()");
             try
             {
-                while (!m_Finished)
+                while (!_mFinished)
                 {
                     Advance();
-                    if (m_DoneProc != null && !m_Finished)
-                        m_DoneProc(m_CurrentBuffer.Data, m_CurrentBuffer.Size);
-                    m_CurrentBuffer.Record();
+                    if (_mDoneProc != null && !_mFinished)
+                        _mDoneProc(_mCurrentBuffer.Data, _mCurrentBuffer.Size);
+                    _mCurrentBuffer.Record();
                 }
             }
             finally
@@ -211,60 +201,58 @@ namespace WaveLib
             FreeBuffers();
             if (bufferCount > 0)
             {
-                m_Buffers = new WaveInBuffer(m_WaveIn, bufferSize);
-                WaveInBuffer Prev = m_Buffers;
+                _mBuffers = new WaveInBuffer(_mWaveIn, bufferSize);
+                var prev = _mBuffers;
                 try
                 {
-                    for (int i = 1; i < bufferCount; i++)
+                    for (var i = 1; i < bufferCount; i++)
                     {
-                        WaveInBuffer Buf = new WaveInBuffer(m_WaveIn, bufferSize);
-                        Prev.NextBuffer = Buf;
-                        Prev = Buf;
+                        var buf = new WaveInBuffer(_mWaveIn, bufferSize);
+                        prev.NextBuffer = buf;
+                        prev = buf;
                     }
                 }
                 finally
                 {
-                    Prev.NextBuffer = m_Buffers;
+                    prev.NextBuffer = _mBuffers;
                 }
             }
         }
 
         private void FreeBuffers()
         {
-            m_CurrentBuffer = null;
-            if (m_Buffers != null)
-            {
-                WaveInBuffer First = m_Buffers;
-                m_Buffers = null;
+            _mCurrentBuffer = null;
+            if (_mBuffers == null) return;
+            var first = _mBuffers;
+            _mBuffers = null;
 
-                WaveInBuffer Current = First;
-                do
-                {
-                    WaveInBuffer Next = Current.NextBuffer;
-                    Current.Dispose();
-                    Current = Next;
-                } while (Current != First);
-            }
+            var current = first;
+            do
+            {
+                var next = current.NextBuffer;
+                current.Dispose();
+                current = next;
+            } while (current != first);
         }
 
         private void Advance()
         {
             SelectNextBuffer();
-            m_CurrentBuffer.WaitFor();
+            _mCurrentBuffer.WaitFor();
         }
 
         private void SelectNextBuffer()
         {
-            m_CurrentBuffer = m_CurrentBuffer == null ? m_Buffers : m_CurrentBuffer.NextBuffer;
+            _mCurrentBuffer = _mCurrentBuffer == null ? _mBuffers : _mCurrentBuffer.NextBuffer;
         }
 
         private void WaitForAllBuffers()
         {
-            WaveInBuffer Buf = m_Buffers;
-            while (Buf.NextBuffer != m_Buffers)
+            var buf = _mBuffers;
+            while (buf.NextBuffer != _mBuffers)
             {
-                Buf.WaitFor();
-                Buf = Buf.NextBuffer;
+                buf.WaitFor();
+                buf = buf.NextBuffer;
             }
         }
     }

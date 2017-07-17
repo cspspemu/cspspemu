@@ -1,9 +1,9 @@
-﻿using CSharpUtils;
-using CSPspEmu.Core.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CSharpUtils;
+using CSPspEmu.Core.Types;
 
-namespace CSPspEmu.Core.Controller
+namespace CSPspEmu.Core.Components.Controller
 {
     public class PspController
     {
@@ -27,28 +27,28 @@ namespace CSPspEmu.Core.Controller
             {
                 //Console.WriteLine("PspController");
             });
-            for (int n = 0; n < MaxStoredFrames; n++)
+            for (var n = 0; n < MaxStoredFrames; n++)
             {
                 InsertSceCtrlData(default(SceCtrlData).Init());
             }
         }
 
-        public void InsertSceCtrlData(SceCtrlData SceCtrlData)
+        public void InsertSceCtrlData(SceCtrlData sceCtrlData)
         {
             lock (this)
             {
-                SceCtrlData.TimeStamp = LastTimestamp++;
-                SceCtrlDataBuffer.Add(SceCtrlData);
+                sceCtrlData.TimeStamp = LastTimestamp++;
+                SceCtrlDataBuffer.Add(sceCtrlData);
                 if (SceCtrlDataBuffer.Count > MaxStoredFrames) SceCtrlDataBuffer.RemoveAt(0);
             }
             LatchSamplingCount++;
         }
 
-        public SceCtrlData GetSceCtrlDataAt(int Index)
+        public SceCtrlData GetSceCtrlDataAt(int index)
         {
             lock (this)
             {
-                return SceCtrlDataBuffer[SceCtrlDataBuffer.Count - Index - 1];
+                return SceCtrlDataBuffer[SceCtrlDataBuffer.Count - index - 1];
             }
         }
     }

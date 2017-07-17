@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CSPspEmu.Core.Audio
+namespace CSPspEmu.Core.Audio.Impl.Null
 {
     public class AudioImplNull : PspAudioImpl
     {
@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Audio
         {
         }
 
-        public override void Update(Action<short[]> ReadStream)
+        public override void Update(Action<short[]> readStream)
         {
             //throw new NotImplementedException();
         }
@@ -18,21 +18,12 @@ namespace CSPspEmu.Core.Audio
             //throw new NotImplementedException();
         }
 
-        public override PluginInfo PluginInfo
+        public override PluginInfo PluginInfo => new PluginInfo
         {
-            get
-            {
-                return new PluginInfo()
-                {
-                    Name = "Null",
-                    Version = "1.0",
-                };
-            }
-        }
+            Name = "Null",
+            Version = "1.0",
+        };
 
-        public override bool IsWorking
-        {
-            get { return true; }
-        }
+        public override bool IsWorking => true;
     }
 }
