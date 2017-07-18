@@ -73,7 +73,7 @@ namespace BrightIdeasSoftware
         /// Create a Munger that works on the given aspect name
         /// </summary>
         /// <param name="aspectName">The name of the </param>
-        public Munger(String aspectName)
+        public Munger(string aspectName)
         {
             this.AspectName = aspectName;
         }
@@ -179,7 +179,7 @@ namespace BrightIdeasSoftware
         /// <remarks>If the aspect name is null or empty, this will return null.</remarks>
         /// <param name="target">The object that will be peeked</param>
         /// <returns>The value read from the target</returns>
-        public Object GetValue(Object target)
+        public object GetValue(object target)
         {
             if (this.Parts.Count == 0)
                 return null;
@@ -193,7 +193,7 @@ namespace BrightIdeasSoftware
                 if (Munger.IgnoreMissingAspects)
                     return null;
 
-                return String.Format("'{0}' is not a parameter-less method, property or field of type '{1}'",
+                return string.Format("'{0}' is not a parameter-less method, property or field of type '{1}'",
                     ex.Munger.AspectName, ex.Target.GetType());
             }
         }
@@ -205,7 +205,7 @@ namespace BrightIdeasSoftware
         /// <remarks>If the aspect name is null or empty, this will return null.</remarks>
         /// <param name="target">The object that will be peeked</param>
         /// <returns>The value read from the target</returns>
-        public Object GetValueEx(Object target)
+        public object GetValueEx(object target)
         {
             if (this.Parts.Count == 0)
                 return null;
@@ -231,7 +231,7 @@ namespace BrightIdeasSoftware
         /// <param name="target">The object that will be poked</param>
         /// <param name="value">The value that will be poked into the target</param>
         /// <returns>bool indicating whether the put worked</returns>
-        public bool PutValue(Object target, Object value)
+        public bool PutValue(object target, object value)
         {
             if (this.Parts.Count == 0)
                 return false;
@@ -295,7 +295,7 @@ namespace BrightIdeasSoftware
         private IList<SimpleMunger> BuildParts(string aspect)
         {
             List<SimpleMunger> parts = new List<SimpleMunger>();
-            if (!String.IsNullOrEmpty(aspect))
+            if (!string.IsNullOrEmpty(aspect))
             {
                 foreach (string part in aspect.Split('.'))
                 {
@@ -326,10 +326,10 @@ namespace BrightIdeasSoftware
         {
             //TODO: How should we report this error?
             System.Diagnostics.Debug.WriteLine("PutValue failed");
-            System.Diagnostics.Debug.WriteLine(String.Format("- Culprit aspect: {0}", ex.Munger.AspectName));
-            System.Diagnostics.Debug.WriteLine(String.Format("- Target: {0} of type {1}", ex.Target,
+            System.Diagnostics.Debug.WriteLine(string.Format("- Culprit aspect: {0}", ex.Munger.AspectName));
+            System.Diagnostics.Debug.WriteLine(string.Format("- Target: {0} of type {1}", ex.Target,
                 ex.Target.GetType()));
-            System.Diagnostics.Debug.WriteLine(String.Format("- Inner exception: {0}", ex.InnerException));
+            System.Diagnostics.Debug.WriteLine(string.Format("- Inner exception: {0}", ex.InnerException));
         }
 
         #endregion
@@ -349,7 +349,7 @@ namespace BrightIdeasSoftware
         /// Create a SimpleMunger
         /// </summary>
         /// <param name="aspectName"></param>
-        public SimpleMunger(String aspectName)
+        public SimpleMunger(string aspectName)
         {
             this.aspectName = aspectName;
         }
@@ -387,7 +387,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public Object GetValue(Object target)
+        public object GetValue(object target)
         {
             if (target == null)
                 return null;

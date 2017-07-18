@@ -22,7 +22,7 @@ namespace CSharpPlatform.GL
                 case OS.Windows: return WinGLContext.FromWindowHandle(windowHandle);
                 case OS.Linux: return LinuxGlContext.FromWindowHandle(windowHandle);
                 case OS.Android: return AndroidGLContext.FromWindowHandle(windowHandle);
-                default: throw (new NotImplementedException(String.Format("Not implemented OS: {0}", Platform.OS)));
+                default: throw (new NotImplementedException(string.Format("Not implemented OS: {0}", Platform.OS)));
             }
         }
     }

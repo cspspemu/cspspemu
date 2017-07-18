@@ -1,47 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu.VFpu
 {
     public static class VfpuConstants
     {
-        public static string GetRegisterNameByIndex(VfpuRegisterType Type, int Size, uint Register)
+        public static string GetRegisterNameByIndex(VfpuRegisterType type, int size, uint register)
         {
-            var RegisterName = GetRegisterNames(Type, Size)[Register];
-            if (RegisterName == "")
-                throw (new InvalidOperationException(String.Format("Invalid register {0}, {1}, {2}", Type, Size,
-                    Register)));
-            return RegisterName;
+            var registerName = GetRegisterNames(type, size)[register];
+            if (registerName == "")
+                throw new InvalidOperationException($"Invalid register {type}, {size}, {register}");
+            return registerName;
         }
 
-        public static uint GetRegisterIndexByName(VfpuRegisterType Type, int Size, string Name)
+        public static uint GetRegisterIndexByName(VfpuRegisterType type, int size, string name)
         {
             // @TODO: Create a dictionary.
-            var Names = GetRegisterNames(Type, Size);
-            return (uint) Array.IndexOf(Names, Name);
+            var names = GetRegisterNames(type, size);
+            return (uint) Array.IndexOf(names, name);
         }
 
-        private static string[] GetRegisterNames(VfpuRegisterType Type, int Size)
+        private static string[] GetRegisterNames(VfpuRegisterType type, int size)
         {
-            if (Type == VfpuRegisterType.Cell && Size == 1) return vfpu_sreg_names;
+            if (type == VfpuRegisterType.Cell && size == 1) return VfpuSregNames;
 
-            if (Type == VfpuRegisterType.Vector && Size == 2) return vfpu_vpreg_names;
-            if (Type == VfpuRegisterType.Vector && Size == 3) return vfpu_vtreg_names;
-            if (Type == VfpuRegisterType.Vector && Size == 4) return vfpu_vqreg_names;
+            if (type == VfpuRegisterType.Vector && size == 2) return VfpuVpregNames;
+            if (type == VfpuRegisterType.Vector && size == 3) return VfpuVtregNames;
+            if (type == VfpuRegisterType.Vector && size == 4) return VfpuVqregNames;
 
-            if (Type == VfpuRegisterType.Matrix && Size == 2) return vfpu_mpreg_names;
-            if (Type == VfpuRegisterType.Matrix && Size == 3) return vfpu_mtreg_names;
-            if (Type == VfpuRegisterType.Matrix && Size == 4) return vfpu_mqreg_names;
+            if (type == VfpuRegisterType.Matrix && size == 2) return VfpuMpregNames;
+            if (type == VfpuRegisterType.Matrix && size == 3) return VfpuMtregNames;
+            if (type == VfpuRegisterType.Matrix && size == 4) return VfpuMqregNames;
 
-            throw (new InvalidOperationException(String.Format("{0} + {1}", Type, Size)));
+            throw new InvalidOperationException($"{type} + {size}");
         }
 
         //static readonly string[] vfpu_sreg_names = Enumerable.Range(0, 128).Select(Index => String.Format("S{0}{1}{2}", (Index >> 2) & 7, (Index >> 0) & 3, (Index >> 5) & 3)).ToArray();
-        static readonly string[] vfpu_sreg_names =
+        static readonly string[] VfpuSregNames =
         {
             "S000", "S010", "S020", "S030", "S100", "S110", "S120", "S130",
             "S200", "S210", "S220", "S230", "S300", "S310", "S320", "S330",
@@ -61,7 +58,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
             "S603", "S613", "S623", "S633", "S703", "S713", "S723", "S733"
         };
 
-        static readonly string[] vfpu_vpreg_names =
+        static readonly string[] VfpuVpregNames =
         {
             "C000", "C010", "C020", "C030", "C100", "C110", "C120", "C130",
             "C200", "C210", "C220", "C230", "C300", "C310", "C320", "C330",
@@ -81,7 +78,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
             "R620", "R621", "R622", "R623", "R720", "R721", "R722", "R723"
         };
 
-        static readonly string[] vfpu_vtreg_names =
+        static readonly string[] VfpuVtregNames =
         {
             "C000", "C010", "C020", "C030", "C100", "C110", "C120", "C130",
             "C200", "C210", "C220", "C230", "C300", "C310", "C320", "C330",
@@ -101,7 +98,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
             "R610", "R611", "R612", "R613", "R710", "R711", "R712", "R713"
         };
 
-        static readonly string[] vfpu_vqreg_names =
+        static readonly string[] VfpuVqregNames =
         {
             "C000", "C010", "C020", "C030", "C100", "C110", "C120", "C130",
             "C200", "C210", "C220", "C230", "C300", "C310", "C320", "C330",
@@ -122,7 +119,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
             "R600", "R601", "R602", "R603", "R700", "R701", "R702", "R703",
         };
 
-        static readonly string[] vfpu_mpreg_names =
+        static readonly string[] VfpuMpregNames =
         {
             "M000", "M000", "M020", "M020", "M100", "M100", "M120", "M120",
             "M200", "M200", "M220", "M220", "M300", "M300", "M320", "M320",
@@ -142,7 +139,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
             "E620", "E620", "E622", "E622", "E720", "E720", "E722", "E722"
         };
 
-        static readonly string[] vfpu_mtreg_names =
+        static readonly string[] VfpuMtregNames =
         {
             "M000", "M010", "M000", "M010", "M100", "M110", "M100", "M110",
             "M200", "M210", "M200", "M210", "M300", "M310", "M300", "M310",
@@ -162,7 +159,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
             "E610", "E611", "E610", "E611", "E710", "E711", "E710", "E711"
         };
 
-        static readonly string[] vfpu_mqreg_names =
+        static readonly string[] VfpuMqregNames =
         {
             "M000", "M000", "M000", "M000", "M100", "M100", "M100", "M100",
             "M200", "M200", "M200", "M200", "M300", "M300", "M300", "M300",
@@ -329,10 +326,10 @@ namespace CSPspEmu.Core.Cpu.VFpu
             public readonly string Name;
             public readonly float Value;
 
-            internal Info(string Name, float Value)
+            internal Info(string name, float value)
             {
-                this.Name = Name;
-                this.Value = Value;
+                Name = name;
+                Value = value;
             }
         }
 
@@ -361,8 +358,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
         /// </summary>
         public static readonly Info[] Constants = new[]
         {
-            new Info("VFPU_ZERO", (float) 0.0f),
-            new Info("VFPU_HUGE", (float) 340282346638528859811704183484516925440f),
+            new Info("VFPU_ZERO", 0.0f),
+            new Info("VFPU_HUGE", 340282346638528859811704183484516925440f),
             new Info("VFPU_SQRT2", (float) (Math.Sqrt(2.0))),
             new Info("VFPU_SQRT1_2", (float) (Math.Sqrt(1.0 / 2.0))),
             new Info("VFPU_2_SQRTPI", (float) (2.0 / Math.Sqrt(Math.PI))),
@@ -384,23 +381,17 @@ namespace CSPspEmu.Core.Cpu.VFpu
         };
 
         private static readonly Dictionary<string, int> Indices = Enumerable.Range(0, Constants.Length)
-            .CreateDictionary(Index => Constants[Index].Name, Index => Index);
+            .CreateDictionary(index => Constants[index].Name, index => index);
 
-        public static Info GetConstantValueByIndex(int Index)
+        public static Info GetConstantValueByIndex(int index)
         {
-            if (Index < 0 || Index >= Constants.Length)
-                throw(new InvalidOperationException(String.Format("Invalid constant index '{0}'", Index)));
-            return Constants[Index];
+            if (index < 0 || index >= Constants.Length)
+                throw new InvalidOperationException($"Invalid constant index '{index}'");
+            return Constants[index];
         }
 
-        public static int GetConstantIndexByName(string Name)
-        {
-            return Indices[Name];
-        }
+        public static int GetConstantIndexByName(string name) => Indices[name];
 
-        public static Info GetConstantValueByName(string Name)
-        {
-            return GetConstantValueByIndex(GetConstantIndexByName(Name));
-        }
+        public static Info GetConstantValueByName(string name) => GetConstantValueByIndex(GetConstantIndexByName(name));
     }
 }

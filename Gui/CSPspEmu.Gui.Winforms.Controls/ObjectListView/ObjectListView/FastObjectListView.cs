@@ -339,7 +339,7 @@ namespace BrightIdeasSoftware
                 this.objectsToIndexMap[this.filteredObjectList[i]] = i;
         }
 
-        readonly Dictionary<Object, int> objectsToIndexMap = new Dictionary<Object, int>();
+        readonly Dictionary<object, int> objectsToIndexMap = new Dictionary<object, int>();
 
         /// <summary>
         /// Build our filtered list from our full list.

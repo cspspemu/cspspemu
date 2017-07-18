@@ -256,7 +256,7 @@ namespace BrightIdeasSoftware
         /// <param name="r">The bounds of the rendering</param>
         public virtual void Draw(ObjectListView olv, Graphics g, Rectangle r)
         {
-            if (String.IsNullOrEmpty(this.Text))
+            if (string.IsNullOrEmpty(this.Text))
                 return;
 
             Rectangle insetRect = r;
@@ -304,7 +304,7 @@ namespace BrightIdeasSoftware
         /// <param name="r">The bounds of the rendering</param>
         public override void Draw(ObjectListView olv, Graphics g, Rectangle r)
         {
-            if (String.IsNullOrEmpty(this.Text))
+            if (string.IsNullOrEmpty(this.Text))
                 return;
 
             // Calculate the bounds of the text, and then move it to where it should be

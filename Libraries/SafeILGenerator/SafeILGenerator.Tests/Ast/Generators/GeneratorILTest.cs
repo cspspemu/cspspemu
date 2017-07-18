@@ -51,7 +51,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
                 GeneratorIL.GenerateDelegate<Action>("Test", AstFunc)();
             });
 
-            var ExpectedOutput = String.Join("\r\n", new[]
+            var ExpectedOutput = string.Join("\r\n", new[]
             {
                 "Set: 777, 11",
                 "Set: 777, 12",

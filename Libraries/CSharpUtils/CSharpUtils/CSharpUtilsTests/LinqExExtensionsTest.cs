@@ -11,9 +11,9 @@ namespace CSharpUtilsTests
         public struct TestStruct
         {
             public int Index;
-            public String Title;
+            public string Title;
 
-            public TestStruct(String Title = "", int Index = 0)
+            public TestStruct(string Title = "", int Index = 0)
             {
                 this.Title = Title;
                 this.Index = Index;
@@ -21,7 +21,7 @@ namespace CSharpUtilsTests
 
             public override string ToString()
             {
-                return String.Format("TestStruct(Index:{0}, Title:'{1}')", Index, Title);
+                return string.Format("TestStruct(Index:{0}, Title:'{1}')", Index, Title);
             }
         }
 

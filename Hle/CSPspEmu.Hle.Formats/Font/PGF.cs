@@ -402,7 +402,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                 "PGF.Glyph(GlyphIndex={0}, Char='{1}', Width={2}, Height={3}, Left={4}, Top={5}, Flags={6})",
                 GlyphIndex, UnicodeChar, Width, Height, Left, Top, Flags
             );

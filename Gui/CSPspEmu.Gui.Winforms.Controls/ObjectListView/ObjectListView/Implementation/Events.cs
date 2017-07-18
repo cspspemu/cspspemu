@@ -927,12 +927,12 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// The model object of the row of the cell that is going to be or has been edited.
         /// </summary>
-        public Object RowObject
+        public object RowObject
         {
             get { return this.rowObject; }
         }
 
-        private Object rowObject;
+        private object rowObject;
 
         /// <summary>
         /// The listview item of the cell that is going to be or has been edited.
@@ -948,13 +948,13 @@ namespace BrightIdeasSoftware
         /// The data value of the cell as it stands in the control.
         /// </summary>
         /// <remarks>Only validate during Validating and Finishing events.</remarks>
-        public Object NewValue
+        public object NewValue
         {
             get { return this.newValue; }
             set { this.newValue = value; }
         }
 
-        private Object newValue;
+        private object newValue;
 
         /// <summary>
         /// The index of the cell that is going to be or has been edited.
@@ -969,12 +969,12 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// The data value of the cell before the edit operation began.
         /// </summary>
-        public Object Value
+        public object Value
         {
             get { return this.value; }
         }
 
-        private Object value;
+        private object value;
 
         /// <summary>
         /// The bounds of the cell that is going to be or has been edited.
@@ -2135,7 +2135,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// The model object of the row of the cell that is having its checkbox changed.
         /// </summary>
-        public Object RowObject
+        public object RowObject
         {
             get { return this.listViewItem.RowObject; }
         }

@@ -14,6 +14,7 @@ using CSPspEmu.Core.Cpu.Dynarec.Ast;
 using System.Diagnostics;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
+using CSPspEmu.Core.Cpu.Switch;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
@@ -92,7 +93,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                 if (!PspMemory.IsAddressValid(EntryPC))
                 {
-                    throw (new InvalidOperationException(String.Format("Trying to get invalid function 0x{0:X8}",
+                    throw (new InvalidOperationException(string.Format("Trying to get invalid function 0x{0:X8}",
                         EntryPC)));
                 }
             }
@@ -114,7 +115,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                 var Nodes = GenerateCode();
 
                 Nodes = ast.Statements(
-                    ast.Comment(String.Format("Function {0:X8}-{1:X8}. Entry: {2:X8}", MinPC, MaxPC, EntryPC)),
+                    ast.Comment(string.Format("Function {0:X8}-{1:X8}. Entry: {2:X8}", MinPC, MaxPC, EntryPC)),
                     //ast.DebugWrite(String.Format("Dynarec:PC:{0:X8}", EntryPC)),
                     //ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
                     ast.If(
@@ -196,7 +197,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                 Labels[EntryPC] = AstLabel.CreateLabel("EntryPoint");
 
-                uint EndPC = (uint) InstructionReader.EndPC;
+                var EndPC = InstructionReader.EndPc;
                 PC = EntryPC;
                 MinPC = uint.MaxValue;
                 MaxPC = uint.MinValue;
@@ -220,7 +221,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                         if (AnalyzedPC.Count > MaxNumberOfInstructions)
                         {
-                            throw (new InvalidDataException(String.Format("Code sequence too long: >= {0} at 0x{1:X8}",
+                            throw (new InvalidDataException(string.Format("Code sequence too long: >= {0} at 0x{1:X8}",
                                 MaxNumberOfInstructions, EntryPC)));
                         }
 
@@ -263,7 +264,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                                         {
                                             //Console.WriteLine("JumpAddress: {0:X8}", JumpAddress);
                                             LabelsJump[JumpAddress] =
-                                                AstLabel.CreateLabel(String.Format("Jump_0x{0:X8}", JumpAddress));
+                                                AstLabel.CreateLabel(string.Format("Jump_0x{0:X8}", JumpAddress));
                                             BranchesToAnalyze.Enqueue(JumpAddress);
                                         }
                                     }
@@ -281,7 +282,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                                 //Console.WriteLine("BranchAddress: {0:X8}", BranchAddress);
                                 UpdateMinMax(BranchAddress);
                                 Labels[BranchAddress] =
-                                    AstLabel.CreateLabel(String.Format("Label_0x{0:X8}", BranchAddress));
+                                    AstLabel.CreateLabel(string.Format("Label_0x{0:X8}", BranchAddress));
                                 BranchesToAnalyze.Enqueue(BranchAddress);
                             }
                         }

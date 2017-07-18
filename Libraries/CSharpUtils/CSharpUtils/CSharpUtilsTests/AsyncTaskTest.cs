@@ -11,14 +11,14 @@ namespace CSharpUtilsTests
         [Test]
         public void SimpleTest()
         {
-            var Result = new AsyncTask<String>(delegate() { return "Hello"; });
+            var Result = new AsyncTask<string>(delegate() { return "Hello"; });
             Assert.AreEqual("Hello", Result.Result);
         }
 
         [Test]
         public void Complex1Test()
         {
-            var Result = new AsyncTask<String>(delegate()
+            var Result = new AsyncTask<string>(delegate()
             {
                 Thread.Yield();
                 return "Test";
@@ -31,7 +31,7 @@ namespace CSharpUtilsTests
         [Test]
         public void Complex2Test()
         {
-            var Result = new AsyncTask<String>(delegate()
+            var Result = new AsyncTask<string>(delegate()
             {
                 Thread.Yield();
                 return "Test";

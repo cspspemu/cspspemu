@@ -14,7 +14,7 @@ namespace CSharpUtils.Containers.RedBlackTree
         RedBlackTreeWithStats<TElement> : ICollection<TElement>, ICloneable //, IOrderedQueryable<TElement>
     {
         internal Node BaseRootNode;
-        CountType _length;
+        int _length;
         IComparer<TElement> Comparer;
         bool AllowDuplicates = false;
         bool _concurrent;
@@ -470,14 +470,14 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public CountType CountLesserThanNode(Node node)
+        public int CountLesserThanNode(Node node)
         {
             if (node == null) return -1;
             if (node.ParentNode == null) return node.ChildCountLeft;
 
             //auto prev = node;
             var it = node;
-            CountType count = 0;
+            int count = 0;
             while (true)
             {
                 if (it.ParentNode == null) break;
@@ -505,20 +505,20 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public CountType GetNodePosition(Node node) => CountLesserThanNode(node);
+        public int GetNodePosition(Node node) => CountLesserThanNode(node);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        public CountType GetItemPosition(TElement element) => CountLesserThanNode(NonConcurrentFindNodeFromElement(element));
+        public int GetItemPosition(TElement element) => CountLesserThanNode(NonConcurrentFindNodeFromElement(element));
 
-        internal Node LocateNodeAtPosition(CountType positionToFind)
+        internal Node LocateNodeAtPosition(int positionToFind)
         {
             if (positionToFind < 0) throw(new Exception("Negative locateNodeAt"));
             Node current = BaseRootNode;
-            CountType currentPosition = BaseRootNode.ChildCountLeft;
+            int currentPosition = BaseRootNode.ChildCountLeft;
 
             //writefln("[AA---(%d)]", positionToFind);
 
@@ -574,7 +574,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
         }
 
-        CountType DebugValidateStatsNodeSubtree()
+        int DebugValidateStatsNodeSubtree()
         {
             return RealRootNode.DebugValidateStatsNodeSubtree();
         }
@@ -612,7 +612,7 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// <param name="array"></param>
         /// <param name="arrayIndex"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void CopyTo(TElement[] array, CountType arrayIndex)
+        public void CopyTo(TElement[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
@@ -620,7 +620,7 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// <summary>
         /// 
         /// </summary>
-        public CountType Count => _length;
+        public int Count => _length;
 
         /// <summary>
         /// 

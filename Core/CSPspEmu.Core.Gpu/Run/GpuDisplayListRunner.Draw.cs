@@ -4,6 +4,7 @@ using CSharpPlatform;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using System;
+using CSPspEmu.Core.Gpu.VertexReading;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -127,59 +128,32 @@ namespace CSPspEmu.Core.Gpu.Run
         //void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const void* vertices);
 
         // Vertex Type
-        public void OP_VTYPE()
-        {
-            GpuState->VertexState.Type.Value = Params24;
-            //gpu.state.vertexType.v  = command.extract!(uint, 0, 24);
-            //writefln("VTYPE:%032b", command.param24);
-            //writefln("     :%d", gpu.state.vertexType.position);
-        }
+        public void OP_VTYPE() => GpuState->VertexState.Type.Value = Params24;
 
-        //[GpuOpCodesNotImplemented]
-        // Reversed Normal
-        public void OP_RNORM()
-        {
-            GpuState->VertexState.Type.ReversedNormal = Bool1;
-        }
-
-
-        // Vertex List (Base Address)
-        public void OP_VADDR()
-        {
-            // + or |?
-            GpuState->VertexAddress = (
-                Params24
-            );
-        }
-
-        // Index List (Base Address)
-        public void OP_IADDR()
-        {
-            GpuState->IndexAddress = (
-                Params24
-            );
-        }
+        public void OP_RNORM() => GpuState->VertexState.Type.ReversedNormal = Bool1;
+        public void OP_VADDR() => GpuState->VertexAddress = Params24;
+        public void OP_IADDR() => GpuState->IndexAddress = Params24;
 
         /// <summary>
         /// Bezier Patch Kick
         /// </summary>
         public void OP_BEZIER()
         {
-            var UCount = Param8(0);
-            var VCount = Param8(8);
+            var uCount = Param8(0);
+            var vCount = Param8(8);
 
-            DrawBezier(UCount, VCount);
+            DrawBezier(uCount, vCount);
         }
 
         private static float[] BernsteinCoeff(float u)
         {
-            float uPow2 = u * u;
-            float uPow3 = uPow2 * u;
-            float u1 = 1 - u;
-            float u1Pow2 = u1 * u1;
-            float u1Pow3 = u1Pow2 * u1;
+            var uPow2 = u * u;
+            var uPow3 = uPow2 * u;
+            var u1 = 1 - u;
+            var u1Pow2 = u1 * u1;
+            var u1Pow3 = u1Pow2 * u1;
 
-            return new float[]
+            return new[]
             {
                 u1Pow3,
                 3 * u * u1Pow2,
@@ -196,40 +170,40 @@ namespace CSPspEmu.Core.Gpu.Run
             dest.Normal += src.Normal * f;
         }
 
-        private VertexInfo[,] GetControlPoints(int UCount, int VCount)
+        private VertexInfo[,] GetControlPoints(int uCount, int vCount)
         {
-            var ControlPoints = new VertexInfo[UCount, VCount];
+            var controlPoints = new VertexInfo[uCount, vCount];
 
-            var VertexPtr =
+            var vertexPtr =
                 (byte*) GpuDisplayList.GpuProcessor.Memory.PspAddressToPointerSafe(
-                    GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0);
-            var VertexReader = new VertexReader();
-            VertexReader.SetVertexTypeStruct(GpuState->VertexState.Type, VertexPtr);
+                    GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress));
+            var vertexReader = new VertexReader();
+            vertexReader.SetVertexTypeStruct(GpuState->VertexState.Type, vertexPtr);
 
-            for (int u = 0; u < UCount; u++)
+            for (var u = 0; u < uCount; u++)
             {
-                for (int v = 0; v < VCount; v++)
+                for (var v = 0; v < vCount; v++)
                 {
-                    ControlPoints[u, v] = VertexReader.ReadVertex(v * UCount + u);
+                    controlPoints[u, v] = vertexReader.ReadVertex(v * uCount + u);
                     //Console.WriteLine("getControlPoints({0}, {1}) : {2}", u, v, controlPoints[u, v]);
                 }
             }
-            return ControlPoints;
+            return controlPoints;
         }
 
-        private void DrawBezier(int UCount, int VCount)
+        private void DrawBezier(int uCount, int vCount)
         {
-            var DivS = GpuState->PatchState.DivS;
-            var DivT = GpuState->PatchState.DivT;
+            var divS = GpuState->PatchState.DivS;
+            var divT = GpuState->PatchState.DivT;
 
-            if ((UCount - 1) % 3 != 0 || (VCount - 1) % 3 != 0)
+            if ((uCount - 1) % 3 != 0 || (vCount - 1) % 3 != 0)
             {
-                Logger.Warning("Unsupported bezier parameters ucount=" + UCount + " vcount=" + VCount);
+                Logger.Warning("Unsupported bezier parameters ucount=" + uCount + " vcount=" + vCount);
                 return;
             }
-            if (DivS <= 0 || DivT <= 0)
+            if (divS <= 0 || divT <= 0)
             {
-                Logger.Warning("Unsupported bezier patches patch_div_s=" + DivS + " patch_div_t=" + DivT);
+                Logger.Warning("Unsupported bezier patches patch_div_s=" + divS + " patch_div_t=" + divT);
                 return;
             }
 
@@ -237,7 +211,7 @@ namespace CSPspEmu.Core.Gpu.Run
             //boolean useTexture = context.vinfo.texture != 0 || context.textureFlag.isEnabled();
             //boolean useNormal = context.lightingFlag.isEnabled();
 
-            var anchors = GetControlPoints(UCount, VCount);
+            var anchors = GetControlPoints(uCount, vCount);
 
             // Don't capture the ram if the vertex list is embedded in the display list. TODO handle stall_addr == 0 better
             // TODO may need to move inside the loop if indices are used, or find the largest index so we can calculate the size of the vertex list
@@ -249,33 +223,33 @@ namespace CSPspEmu.Core.Gpu.Run
             */
 
             // Generate patch VertexState.
-            var Patch = new VertexInfo[DivS + 1, DivT + 1];
+            var patch = new VertexInfo[divS + 1, divT + 1];
 
             // Number of patches in the U and V directions
-            int upcount = UCount / 3;
-            int vpcount = VCount / 3;
+            var upcount = uCount / 3;
+            var vpcount = vCount / 3;
 
-            float[][] ucoeff = new float[DivS + 1][];
+            var ucoeff = new float[divS + 1][];
 
-            for (int j = 0; j <= DivT; j++)
+            for (var j = 0; j <= divT; j++)
             {
-                float vglobal = (float) j * vpcount / (float) DivT;
+                var vglobal = (float) j * vpcount / divT;
 
-                int vpatch = (int) vglobal; // Patch number
-                float v = vglobal - vpatch;
-                if (j == DivT)
+                var vpatch = (int) vglobal; // Patch number
+                var v = vglobal - vpatch;
+                if (j == divT)
                 {
                     vpatch--;
                     v = 1.0f;
                 }
-                float[] vcoeff = BernsteinCoeff(v);
+                var vcoeff = BernsteinCoeff(v);
 
-                for (int i = 0; i <= DivS; i++)
+                for (var i = 0; i <= divS; i++)
                 {
-                    float uglobal = (float) i * upcount / (float) DivS;
-                    int upatch = (int) uglobal;
-                    float u = uglobal - upatch;
-                    if (i == DivS)
+                    var uglobal = (float) i * upcount / divS;
+                    var upatch = (int) uglobal;
+                    var u = uglobal - upatch;
+                    if (i == divS)
                     {
                         upatch--;
                         u = 1.0f;
@@ -286,9 +260,9 @@ namespace CSPspEmu.Core.Gpu.Run
                     p.Position = Vector4f.Zero;
                     p.Normal = Vector4f.Zero;
 
-                    for (int ii = 0; ii < 4; ++ii)
+                    for (var ii = 0; ii < 4; ++ii)
                     {
-                        for (int jj = 0; jj < 4; ++jj)
+                        for (var jj = 0; jj < 4; ++jj)
                         {
                             /*
                             Console.WriteLine(
@@ -309,7 +283,7 @@ namespace CSPspEmu.Core.Gpu.Run
                     p.Texture.X = uglobal;
                     p.Texture.Y = vglobal;
 
-                    Patch[i, j] = p;
+                    patch[i, j] = p;
 
                     /*
                     Console.WriteLine(
@@ -331,45 +305,45 @@ namespace CSPspEmu.Core.Gpu.Run
 
             GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
             GpuDisplayList.GpuProcessor.GpuImpl.DrawCurvedSurface(GlobalGpuState, GpuDisplayList.GpuStateStructPointer,
-                Patch, UCount, VCount);
+                patch, uCount, vCount);
         }
 
-        int PrimCount = 0;
+        int _primCount;
 
         /// <summary>
         /// Primitive Kick - draw PRIMitive
         /// </summary>
         public void OP_PRIM()
         {
-            var PrimitiveType = (GuPrimitiveType) Extract(16, 3);
-            var VertexCount = (ushort) Extract(0, 16);
+            var primitiveType = (GuPrimitiveType) Extract(16, 3);
+            var vertexCount = (ushort) Extract(0, 16);
 
 #if PRIM_BATCH
-            var NextInstruction = *(GpuInstruction*) GpuDisplayList.Memory.PspAddressToPointerUnsafe(PC + 4);
+            var nextInstruction = *(GpuInstruction*) GpuDisplayList.Memory.PspAddressToPointerUnsafe(Pc + 4);
 
-            if (PrimCount == 0)
+            if (_primCount == 0)
             {
                 GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
                 GpuDisplayList.GpuProcessor.GpuImpl.PrimStart(GlobalGpuState, GpuDisplayList.GpuStateStructPointer,
-                    PrimitiveType);
+                    primitiveType);
             }
 
-            if (VertexCount > 0)
+            if (vertexCount > 0)
             {
-                GpuDisplayList.GpuProcessor.GpuImpl.Prim(VertexCount);
+                GpuDisplayList.GpuProcessor.GpuImpl.Prim(vertexCount);
             }
 
-            if (NextInstruction.OpCode == GpuOpCodes.PRIM &&
-                ((GuPrimitiveType) BitUtils.Extract(NextInstruction.Params, 16, 3) == PrimitiveType))
+            if (nextInstruction.OpCode == GpuOpCodes.PRIM &&
+                ((GuPrimitiveType) BitUtils.Extract(nextInstruction.Params, 16, 3) == primitiveType))
             {
                 //Console.WriteLine();
-                PrimCount++;
+                _primCount++;
             }
             else
             {
                 //Console.WriteLine("{0:X8}", PC);
 
-                PrimCount = 0;
+                _primCount = 0;
                 GpuDisplayList.GpuProcessor.GpuImpl.PrimEnd();
             }
 #else

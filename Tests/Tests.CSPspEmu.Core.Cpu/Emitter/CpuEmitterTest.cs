@@ -144,7 +144,7 @@ namespace CSPspEmu.Core.Tests
                     {
                         CpuThreadState.GPR[InputOffset + m] = Numbers[m];
 
-                        Assembly += String.Format(
+                        Assembly += string.Format(
                             "{0} r{1}, r{2}, r{3}\n",
                             instructionName,
                             m + ResultOffset,
@@ -267,10 +267,10 @@ namespace CSPspEmu.Core.Tests
             {
                 foreach (var LeftNumber in Numbers)
                 {
-                    var Line = String.Format("{0}.{1}: ", instructionName, LeftNumber);
+                    var Line = string.Format("{0}.{1}: ", instructionName, LeftNumber);
                     foreach (var RightNumber in Numbers)
                     {
-                        Line += String.Format("{0},", Results.Dequeue());
+                        Line += string.Format("{0},", Results.Dequeue());
                     }
                     Console.WriteLine(Line);
                     //Assert.AreEqual(ExpectedLines.Dequeue(), Line);
@@ -307,7 +307,7 @@ namespace CSPspEmu.Core.Tests
                     {
                         CpuThreadState.GPR[InputOffset + m] = Numbers[m];
 
-                        Assembly += String.Format(
+                        Assembly += string.Format(
                             "{0} r{1}, r{2}, {3}\n",
                             instructionName,
                             m + ResultOffset,
@@ -394,10 +394,10 @@ namespace CSPspEmu.Core.Tests
             {
                 foreach (var LeftNumber in Numbers)
                 {
-                    var Line = String.Format("{0}.{1}: ", instructionName, LeftNumber);
+                    var Line = string.Format("{0}.{1}: ", instructionName, LeftNumber);
                     foreach (var RightNumber in Numbers)
                     {
-                        Line += String.Format("{0},", Results.Dequeue());
+                        Line += string.Format("{0},", Results.Dequeue());
                     }
                     //Console.WriteLine(Line);
                     Assert.AreEqual(ExpectedLines.Dequeue(), Line);
@@ -500,7 +500,7 @@ namespace CSPspEmu.Core.Tests
                 "r12",
             };
 
-            Func<String, String[], IEnumerable<int>> Generator = (String Branch, String[] RegsList) =>
+            Func<string, string[], IEnumerable<int>> Generator = (string Branch, string[] RegsList) =>
             {
                 var Results = new List<int>();
                 foreach (var Regs in RegsList)
@@ -833,10 +833,10 @@ namespace CSPspEmu.Core.Tests
 				seh r4, r11
 			");
 
-            Assert.AreEqual("66666681", String.Format("{0:X8}", CpuThreadState.GPR[1]));
-            Assert.AreEqual("FFFFFF81", String.Format("{0:X8}", CpuThreadState.GPR[2]));
-            Assert.AreEqual("66668123", String.Format("{0:X8}", CpuThreadState.GPR[3]));
-            Assert.AreEqual("FFFF8123", String.Format("{0:X8}", CpuThreadState.GPR[4]));
+            Assert.AreEqual("66666681", string.Format("{0:X8}", CpuThreadState.GPR[1]));
+            Assert.AreEqual("FFFFFF81", string.Format("{0:X8}", CpuThreadState.GPR[2]));
+            Assert.AreEqual("66668123", string.Format("{0:X8}", CpuThreadState.GPR[3]));
+            Assert.AreEqual("FFFF8123", string.Format("{0:X8}", CpuThreadState.GPR[4]));
         }
 
         [Test]
@@ -979,7 +979,7 @@ namespace CSPspEmu.Core.Tests
             ExecuteAssembly(@"c.lt.s f1, f1");
             Assert.AreEqual(false, CpuThreadState.Fcr31.CC);
 
-            Action<String> Gen = (INSTRUCTION_NAME) =>
+            Action<string> Gen = (INSTRUCTION_NAME) =>
             {
                 ExecuteAssembly(@"
 					li r1, -1
@@ -1028,9 +1028,9 @@ namespace CSPspEmu.Core.Tests
 				wsbh r2, r11
 			");
 
-            Assert.AreEqual("12345678", String.Format("{0:X8}", CpuThreadState.GPR[11]));
-            Assert.AreEqual("78563412", String.Format("{0:X8}", CpuThreadState.GPR[1]));
-            Assert.AreEqual("34127856", String.Format("{0:X8}", CpuThreadState.GPR[2]));
+            Assert.AreEqual("12345678", string.Format("{0:X8}", CpuThreadState.GPR[11]));
+            Assert.AreEqual("78563412", string.Format("{0:X8}", CpuThreadState.GPR[1]));
+            Assert.AreEqual("34127856", string.Format("{0:X8}", CpuThreadState.GPR[2]));
         }
 
         [Test]
@@ -1112,7 +1112,7 @@ namespace CSPspEmu.Core.Tests
                 var Instruction = (new MipsAssembler(new MemoryStream())).AssembleInstruction(Text);
                 *(uint*) DataPtr = (uint) Instruction;
             }
-            return String.Format("{0:X2}{1:X2}{2:X2}{3:X2}", Data[0], Data[1], Data[2], Data[3]);
+            return string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", Data[0], Data[1], Data[2], Data[3]);
         }
 
         private void TestAssembly(string Encoded, string Assembly)
@@ -1250,7 +1250,7 @@ namespace CSPspEmu.Core.Tests
 
             CpuThreadState.DumpVfpuRegisters(Console.Error);
 
-            Assert.AreEqual("1,2,3,4", String.Join(",", CpuThreadState.Vfpr[4, "C100"]));
+            Assert.AreEqual("1,2,3,4", string.Join(",", CpuThreadState.Vfpr[4, "C100"]));
         }
 
         [Test]
@@ -1273,9 +1273,9 @@ namespace CSPspEmu.Core.Tests
 			");
 
             Assert.AreEqual("810FFF0F,0A0F750F",
-                String.Join(",",
+                string.Join(",",
                     CpuThreadState.Vfpr["C010.p"]
-                        .Select(Item => String.Format("{0:X8}", MathFloat.ReinterpretFloatAsInt(Item)))));
+                        .Select(Item => string.Format("{0:X8}", MathFloat.ReinterpretFloatAsInt(Item)))));
 
             //Assert.AreEqual(0xFF0F, PtrOut[0]);
             //Assert.AreEqual(0x810F, PtrOut[1]);
@@ -1306,7 +1306,7 @@ namespace CSPspEmu.Core.Tests
 
             Iterate((ConstantName, n, Matrix, Column, Row) =>
             {
-                Assembly += String.Format(
+                Assembly += string.Format(
                     "vcst.s S{0}{1}{2}, {3}\n",
                     Matrix, Column, Row, ConstantName
                 );
@@ -1351,8 +1351,8 @@ namespace CSPspEmu.Core.Tests
 
             CpuThreadState.DumpVfpuRegisters(Console.Error);
 
-            Assert.AreEqual("51,62,73,84", String.Join(",", CpuThreadState.Vfpr[4, "C200"]));
-            Assert.AreEqual("-49,-58,-67,-76", String.Join(",", CpuThreadState.Vfpr[4, "C210"]));
+            Assert.AreEqual("51,62,73,84", string.Join(",", CpuThreadState.Vfpr[4, "C200"]));
+            Assert.AreEqual("-49,-58,-67,-76", string.Join(",", CpuThreadState.Vfpr[4, "C210"]));
         }
 
         [Test]
@@ -1378,9 +1378,9 @@ namespace CSPspEmu.Core.Tests
 
             CpuThreadState.DumpVfpuRegisters(Console.Error);
 
-            Assert.AreEqual("51,59,72,78", String.Join(",", CpuThreadState.Vfpr[4, "C200"]));
-            Assert.AreEqual("50,60.5,70.25,80.16666", String.Join(",", CpuThreadState.Vfpr[4, "C210"]));
-            Assert.AreEqual("0,2,-1,1", String.Join(",", CpuThreadState.Vfpr[4, "C220"]));
+            Assert.AreEqual("51,59,72,78", string.Join(",", CpuThreadState.Vfpr[4, "C200"]));
+            Assert.AreEqual("50,60.5,70.25,80.16666", string.Join(",", CpuThreadState.Vfpr[4, "C210"]));
+            Assert.AreEqual("0,2,-1,1", string.Join(",", CpuThreadState.Vfpr[4, "C220"]));
         }
 
         [Test]
@@ -1454,7 +1454,7 @@ namespace CSPspEmu.Core.Tests
             ExecuteAssembly(@"
 				lv.q    R000, 0x10+r10
 			");
-            Assert.AreEqual("1,2,3,4", String.Join(",", CpuThreadState.Vfpr[4, "R000"]));
+            Assert.AreEqual("1,2,3,4", string.Join(",", CpuThreadState.Vfpr[4, "R000"]));
         }
 
         [Test]
@@ -1501,7 +1501,7 @@ namespace CSPspEmu.Core.Tests
 				vmscl.q M100, E000, S200
 			");
 
-            Assert.AreEqual(",", String.Join(",", CpuThreadState.Vfpr["E000.q"]));
+            Assert.AreEqual(",", string.Join(",", CpuThreadState.Vfpr["E000.q"]));
         }
 
         [Test]
@@ -1528,8 +1528,8 @@ namespace CSPspEmu.Core.Tests
 				vrot.q	R600, S000, [c, 0, -s, 0]
 			");
 
-            Assert.AreEqual("0.9510565,0.309017", String.Join(",", CpuThreadState.Vfpr["R500.p"]));
-            Assert.AreEqual("0.9510565,0,-0.309017,0", String.Join(",", CpuThreadState.Vfpr["R600.q"]));
+            Assert.AreEqual("0.9510565,0.309017", string.Join(",", CpuThreadState.Vfpr["R500.p"]));
+            Assert.AreEqual("0.9510565,0,-0.309017,0", string.Join(",", CpuThreadState.Vfpr["R600.q"]));
         }
 
         [Test]
@@ -1563,12 +1563,12 @@ namespace CSPspEmu.Core.Tests
                 "618,644,670,696," +
                 "986,1028,1070,1112," +
                 "1354,1412,1470,1528",
-                String.Join(",", CpuThreadState.Vfpr["M000.q"])
+                string.Join(",", CpuThreadState.Vfpr["M000.q"])
             );
 
             Assert.AreEqual(
-                String.Join(",", CpuThreadState.Vfpr["M400.q"]),
-                String.Join(",", CpuThreadState.Vfpr["M000.q"])
+                string.Join(",", CpuThreadState.Vfpr["M400.q"]),
+                string.Join(",", CpuThreadState.Vfpr["M000.q"])
             );
         }
 
@@ -1589,7 +1589,7 @@ namespace CSPspEmu.Core.Tests
                 "0,0,1,0," +
                 "0,0,0,1"
                 ,
-                String.Join(",", CpuThreadState.Vfpr["M300.q"])
+                string.Join(",", CpuThreadState.Vfpr["M300.q"])
             );
 
             Assert.AreEqual(
@@ -1598,7 +1598,7 @@ namespace CSPspEmu.Core.Tests
                 "0,0,0,0," +
                 "0,0,0,0"
                 ,
-                String.Join(",", CpuThreadState.Vfpr["M400.q"])
+                string.Join(",", CpuThreadState.Vfpr["M400.q"])
             );
 
             Assert.AreEqual(
@@ -1607,7 +1607,7 @@ namespace CSPspEmu.Core.Tests
                 "1,1,1,1," +
                 "1,1,1,1"
                 ,
-                String.Join(",", CpuThreadState.Vfpr["M500.q"])
+                string.Join(",", CpuThreadState.Vfpr["M500.q"])
             );
         }
 
@@ -1637,7 +1637,7 @@ namespace CSPspEmu.Core.Tests
 
             CpuThreadState.DumpVfpuRegisters(Console.Error);
 
-            Func<string, string> GetLine = (string Name) => { return String.Join(",", CpuThreadState.Vfpr[4, Name]); };
+            Func<string, string> GetLine = (string Name) => { return string.Join(",", CpuThreadState.Vfpr[4, Name]); };
 
             Assert.AreEqual(Vector0, GetLine("R100"));
             Assert.AreEqual(Vector1, GetLine("R101"));
@@ -1835,11 +1835,11 @@ namespace CSPspEmu.Core.Tests
                 var Base = (uint) 0x08010000;
                 Memory.WriteSafe<uint>(Base + Offset, Value);
                 CpuThreadState.GPR[2] = (int) Base;
-                ExecuteAssembly(String.Format(@"
+                ExecuteAssembly(string.Format(@"
 					lwl r1, {0}(r2)
 					lwr r1, {1}(r2)
 				", Offset + 3, Offset + 0));
-                Assert.AreEqual(String.Format("{0:X8}", Value), String.Format("{0:X8}", CpuThreadState.GPR[1]));
+                Assert.AreEqual(string.Format("{0:X8}", Value), string.Format("{0:X8}", CpuThreadState.GPR[1]));
             }
         }
 
@@ -1851,12 +1851,12 @@ namespace CSPspEmu.Core.Tests
             var Base = (uint) 0x08010000;
             Memory.WriteSafe<uint>(Base + Offset, Value);
             CpuThreadState.GPR[2] = (int) Base;
-            ExecuteAssembly(String.Format(@"
+            ExecuteAssembly(string.Format(@"
 				lwl r1, {0}(r2)
 				sll r1, r1, 31
 				lwr r1, {1}(r2)
 			", Offset + 3, Offset + 0));
-            Assert.AreEqual(String.Format("{0:X8}", 0x21), String.Format("{0:X8}", CpuThreadState.GPR[1]));
+            Assert.AreEqual(string.Format("{0:X8}", 0x21), string.Format("{0:X8}", CpuThreadState.GPR[1]));
         }
 
         [Test]
@@ -1868,12 +1868,12 @@ namespace CSPspEmu.Core.Tests
             Memory.WriteSafe<uint>(Base + Offset, Value);
             Memory.WriteSafe<uint>(Base + Offset + 0x10, 0x00000000);
             CpuThreadState.GPR[2] = (int) Base;
-            ExecuteAssembly(String.Format(@"
+            ExecuteAssembly(string.Format(@"
 				lwl r1, {0}(r2)
 				addi r2, r2, 0x10
 				lwr r1, {1}(r2)
 			", Offset + 3, Offset + 0));
-            Assert.AreEqual(String.Format("{0:X8}", 0x87654300), String.Format("{0:X8}", CpuThreadState.GPR[1]));
+            Assert.AreEqual(string.Format("{0:X8}", 0x87654300), string.Format("{0:X8}", CpuThreadState.GPR[1]));
         }
 
         [Test]
@@ -1947,14 +1947,14 @@ namespace CSPspEmu.Core.Tests
             this.CpuThreadState = new CpuThreadState(this.CpuProcessor);
         }
 
-        protected void ExecuteAssembly(String Assembly, bool DoDebug = false, bool DoLog = false)
+        protected void ExecuteAssembly(string Assembly, bool DoDebug = false, bool DoLog = false)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
             CpuProcessor.MethodCache.FlushAll();
 
             uint StartOffset = PspMemory.ScratchPadOffset;
             Assembly =
-                String.Format(".code 0x{0:X8}\r\n", StartOffset) +
+                string.Format(".code 0x{0:X8}\r\n", StartOffset) +
                 Assembly +
                 "\r\nbreak 0\r\n"
                 ;
@@ -1964,7 +1964,7 @@ namespace CSPspEmu.Core.Tests
             try
             {
                 CpuThreadState.SP = PspMemory.MainSegment.High - 0x10;
-                CpuThreadState.ExecuteAT(PspMemory.ScratchPadOffset);
+                CpuThreadState.ExecuteAt(PspMemory.ScratchPadOffset);
             }
             catch (PspBreakException)
             {

@@ -23,7 +23,7 @@ namespace CSPspEmu.Core.Cpu.Table
         /// <summary>
         /// Example: 000000:rs:rt:rd:00000:100000
         /// </summary>
-        private string _BinaryEncoding;
+        private string _binaryEncoding;
 
         /// <summary>
         /// Example: %d, %s, %t
@@ -43,16 +43,16 @@ namespace CSPspEmu.Core.Cpu.Table
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Encoding"></param>
-        private void ParseBinaryEncoding(string Encoding)
+        /// <param name="encoding"></param>
+        private void ParseBinaryEncoding(string encoding)
         {
             Value = Mask = 0;
 
-            foreach (var Part in Encoding.Split(':'))
+            foreach (var part in encoding.Split(':'))
             {
-                if (Part[0] == '-' || Part[0] == '0' || Part[0] == '1')
+                if (part[0] == '-' || part[0] == '0' || part[0] == '1')
                 {
-                    foreach (var Char in Part)
+                    foreach (var Char in part)
                     {
                         Mask <<= 1;
                         Value <<= 1;
@@ -75,9 +75,9 @@ namespace CSPspEmu.Core.Cpu.Table
                 }
                 else
                 {
-                    int Displacement = 0;
+                    int displacement;
 
-                    switch (Part)
+                    switch (part)
                     {
                         case "cstw":
                         case "cstz":
@@ -98,7 +98,7 @@ namespace CSPspEmu.Core.Cpu.Table
                         case "one":
                         case "two":
                         case "vt1":
-                            Displacement = 1;
+                            displacement = 1;
                             break;
                         case "vt2":
                         case "satw":
@@ -109,14 +109,14 @@ namespace CSPspEmu.Core.Cpu.Table
                         case "swzz":
                         case "swzy":
                         case "swzx":
-                            Displacement = 2;
+                            displacement = 2;
                             break;
                         case "imm3":
-                            Displacement = 3;
+                            displacement = 3;
                             break;
                         case "imm4":
                         case "fcond":
-                            Displacement = 4;
+                            displacement = 4;
                             break;
                         case "c0dr":
                         case "c0cr":
@@ -133,52 +133,45 @@ namespace CSPspEmu.Core.Cpu.Table
                         case "fs":
                         case "fd":
                         case "ft":
-                            Displacement = 5;
+                            displacement = 5;
                             break;
                         case "vs":
                         case "vt":
                         case "vd":
                         case "imm7":
-                            Displacement = 7;
+                            displacement = 7;
                             break;
                         case "imm8":
-                            Displacement = 8;
+                            displacement = 8;
                             break;
                         case "imm14":
-                            Displacement = 14;
+                            displacement = 14;
                             break;
                         case "imm16":
-                            Displacement = 16;
+                            displacement = 16;
                             break;
                         case "imm20":
-                            Displacement = 20;
+                            displacement = 20;
                             break;
                         case "imm26":
-                            Displacement = 26;
+                            displacement = 26;
                             break;
                         default:
-                            throw(new Exception("Unknown part '" + Part + "'"));
+                            throw(new Exception("Unknown part '" + part + "'"));
                     }
 
-                    Mask <<= Displacement;
-                    Value <<= Displacement;
+                    Mask <<= displacement;
+                    Value <<= displacement;
                 }
             }
         }
 
         public string BinaryEncoding
         {
-            set
-            {
-                _BinaryEncoding = value;
-                ParseBinaryEncoding(_BinaryEncoding);
-            }
-            get { return _BinaryEncoding; }
+            set => ParseBinaryEncoding(_binaryEncoding = value);
+            get => _binaryEncoding;
         }
 
-        public override string ToString()
-        {
-            return String.Format("InstructionInfo({0} {1})", Name, AsmEncoding);
-        }
+        public override string ToString() => $"InstructionInfo({Name} {AsmEncoding})";
     }
 }

@@ -71,9 +71,9 @@ namespace CSharpPlatform.GL.Utils
             GL.glGetShaderiv(FragmentShader, GL.GL_COMPILE_STATUS, &FragmentShaderCompileStatus);
             var FragmentShaderInfo = GetShaderInfoLog(FragmentShader);
 
-            if (!String.IsNullOrEmpty(VertexShaderInfo))
+            if (!string.IsNullOrEmpty(VertexShaderInfo))
                 Console.Out.WriteLineColored(ConsoleColor.Blue, "{0}", VertexShaderInfo);
-            if (!String.IsNullOrEmpty(FragmentShaderInfo))
+            if (!string.IsNullOrEmpty(FragmentShaderInfo))
                 Console.Out.WriteLineColored(ConsoleColor.Blue, "{0}", FragmentShaderInfo);
 
             if (VertexShaderCompileStatus == 0 || FragmentShaderCompileStatus == 0)

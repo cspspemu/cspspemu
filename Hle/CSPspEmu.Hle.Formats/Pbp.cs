@@ -21,7 +21,7 @@ namespace CSPspEmu.Hle.Formats
             PsarData,
         }
 
-        public static readonly String[] Names = new[]
+        public static readonly string[] Names = new[]
             {"param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data"};
 
         public struct HeaderStruct
@@ -39,7 +39,7 @@ namespace CSPspEmu.Hle.Formats
 
         protected Stream Stream;
         protected HeaderStruct Header;
-        protected Dictionary<String, Stream> Files;
+        protected Dictionary<string, Stream> Files;
 
         public Pbp Load(Stream Stream)
         {
@@ -67,7 +67,7 @@ namespace CSPspEmu.Hle.Formats
             return Files.ContainsKey(Names[(int) Type]);
         }
 
-        public bool ContainsKey(String Key)
+        public bool ContainsKey(string Key)
         {
             return Files.ContainsKey(Key);
         }
@@ -77,7 +77,7 @@ namespace CSPspEmu.Hle.Formats
             get { return Files[Names[(int) Type]]; }
         }
 
-        public Stream this[String Key]
+        public Stream this[string Key]
         {
             get { return Files[Key]; }
         }

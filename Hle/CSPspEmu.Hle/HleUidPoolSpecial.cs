@@ -44,7 +44,7 @@ namespace CSPspEmu.Hle.Managers
             {
                 return (TKey) Enum.ToObject(typeof(TKey), Value);
             }
-            if (TKeyType == typeof(int)) return (TKey) (object) (Int32) Value;
+            if (TKeyType == typeof(int)) return (TKey) (object) (int) Value;
             return (TKey) (object) Value;
         }
 

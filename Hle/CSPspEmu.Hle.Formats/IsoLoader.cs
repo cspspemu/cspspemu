@@ -22,7 +22,7 @@ namespace CSPspEmu.Hle.Formats
                 case FormatDetector.SubType.Iso:
                     break;
                 default:
-                    throw (new InvalidDataException(String.Format("Can't set an ISO for '{0}' path '{1}'",
+                    throw (new InvalidDataException(string.Format("Can't set an ISO for '{0}' path '{1}'",
                         DetectedFormat, IsoFile)));
             }
 

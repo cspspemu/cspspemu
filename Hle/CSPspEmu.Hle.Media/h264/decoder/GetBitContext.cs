@@ -370,7 +370,7 @@ namespace cscodec.h264.decoder
 		/**
 		 * reads 0-32 bits as a signed integer.
 		 */
-		public /*inline*/ int get_sbits_long(int n, String message)
+		public /*inline*/ int get_sbits_long(int n, string message)
 		{
 			//return sign_extend(get_bits_long(n), n);
 			return (((int)get_bits_long(n, message)) << ((8 * 4) - n)) >> ((8 * 4) - n);
@@ -622,7 +622,7 @@ namespace cscodec.h264.decoder
 		 *                  = (max_vlc_length + bits - 1) / bits
 		 */
 		public int get_vlc2(short[][/*2*/] table_base, int table_offset,
-										  int bits, int max_depth, String message)
+										  int bits, int max_depth, string message)
 		{
 			int code;
 
@@ -740,7 +740,7 @@ namespace cscodec.h264.decoder
 		/**
 		 * read unsigned exp golomb code.
 		 */
-		public int get_ue_golomb(String message)
+		public int get_ue_golomb(string message)
 		{
 
 			/*unsigned */
@@ -796,7 +796,7 @@ namespace cscodec.h264.decoder
 		* read unsigned exp golomb code, constraint to a max of 31.
 		* the return value is undefined if the stored value exceeds 31.
 		*/
-		public int get_ue_golomb_31(String message)
+		public int get_ue_golomb_31(string message)
 		{
 			/*unsigned */
 			long buf;
@@ -833,7 +833,7 @@ namespace cscodec.h264.decoder
 		/**
 		 * read signed exp golomb code.
 		 */
-		public int get_se_golomb(String message)
+		public int get_se_golomb(string message)
 		{
 			/*unsigned */
 			long buf;

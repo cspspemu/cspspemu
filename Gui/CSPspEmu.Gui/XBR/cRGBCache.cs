@@ -42,7 +42,7 @@ namespace Imager
         /// <param name="key">The 32-bit color code.</param>
         /// <param name="factory">The factory that would calculate a result if it's not already in the cache.</param>
         /// <returns>The calculation result.</returns>
-        public byte GetOrAdd(dword key, Func<dword, byte> factory)
+        public byte GetOrAdd(uint key, Func<uint, byte> factory)
         {
             if (this._existsCache[key] != 0)
                 return (this._valueCache[key]);

@@ -30,6 +30,7 @@ using System.IO;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Utils;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;
+using CSPspEmu.Core.Gpu.VertexReading;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -192,7 +193,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             ShaderInfo.matrixWorldViewProjection.Set(_worldViewProjectionMatrix);
             ShaderInfo.matrixTexture.Set(_textureMatrix);
-            ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4f());
+            ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4F());
             ShaderInfo.hasPerVertexColor.Set(VertexType.HasColor);
             ShaderInfo.clearingMode.Set(GpuState->ClearingMode);
             ShaderInfo.hasTexture.Set(GpuState->TextureMappingState.Enabled);
@@ -480,7 +481,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         //	DrawVertices(GLGeometry.GL_TRIANGLES);
         //}
 
-        bool _doPrimStart = false;
+        bool _doPrimStart;
         VertexTypeStruct _cachedVertexType;
         GuPrimitiveType _primitiveType;
         GLRenderTarget _logicOpsRenderTarget;

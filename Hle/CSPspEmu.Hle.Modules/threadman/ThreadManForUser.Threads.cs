@@ -299,7 +299,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             bool TimedOut = false;
 
             ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None,
-                String.Format("sceKernelWaitThreadEnd('{0}')", ThreadToWaitEnd.Name), ThreadToWaitEnd, WakeUpCallback =>
+                string.Format("sceKernelWaitThreadEnd('{0}')", ThreadToWaitEnd.Name), ThreadToWaitEnd, WakeUpCallback =>
                 {
                     if (Timeout != null)
                     {
@@ -363,7 +363,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             var CurrentThread = ThreadManager.Current;
 
             CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer,
-                String.Format("sceKernelDelayThread({0}, {1})", DelayInMicroseconds, HandleCallbacks), null,
+                string.Format("sceKernelDelayThread({0}, {1})", DelayInMicroseconds, HandleCallbacks), null,
                 WakeUpCallback =>
                 {
                     PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds),

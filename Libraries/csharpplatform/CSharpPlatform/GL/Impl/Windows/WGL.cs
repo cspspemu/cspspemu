@@ -11,44 +11,44 @@ namespace CSharpPlatform.GL.Impl.Windows
         public static extern IntPtr wglCreateContext(IntPtr hDc);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean wglDeleteContext(IntPtr oldContext);
+        public static extern bool wglDeleteContext(IntPtr oldContext);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
         public static extern IntPtr wglGetCurrentContext();
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean wglMakeCurrent(IntPtr hDc, IntPtr newContext);
+        public static extern bool wglMakeCurrent(IntPtr hDc, IntPtr newContext);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean wglCopyContext(IntPtr hglrcSrc, IntPtr hglrcDst, UInt32 mask);
+        public static extern bool wglCopyContext(IntPtr hglrcSrc, IntPtr hglrcDst, uint mask);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
         public static extern unsafe int wglChoosePixelFormat(IntPtr hDc, PixelFormatDescriptor* pPfd);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern unsafe int wglDescribePixelFormat(IntPtr hdc, int ipfd, UInt32 cjpfd,
+        public static extern unsafe int wglDescribePixelFormat(IntPtr hdc, int ipfd, uint cjpfd,
             PixelFormatDescriptor* ppfd);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
         public static extern IntPtr wglGetCurrentDC();
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern IntPtr wglGetDefaultProcAddress(String lpszProc);
+        public static extern IntPtr wglGetDefaultProcAddress(string lpszProc);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern IntPtr wglGetProcAddress(String lpszProc);
+        public static extern IntPtr wglGetProcAddress(string lpszProc);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
         public static extern int wglGetPixelFormat(IntPtr hdc);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern unsafe Boolean wglSetPixelFormat(IntPtr hdc, int ipfd, PixelFormatDescriptor* ppfd);
+        public static extern unsafe bool wglSetPixelFormat(IntPtr hdc, int ipfd, PixelFormatDescriptor* ppfd);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean wglSwapBuffers(IntPtr hdc);
+        public static extern bool wglSwapBuffers(IntPtr hdc);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean wglShareLists(IntPtr hrcSrvShare, IntPtr hrcSrvSource);
+        public static extern bool wglShareLists(IntPtr hrcSrvShare, IntPtr hrcSrvSource);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
         public static extern IntPtr wglCreateLayerContext(IntPtr hDc, int level);
@@ -56,32 +56,32 @@ namespace CSharpPlatform.GL.Impl.Windows
         //[SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true)] public extern static unsafe Boolean wglDescribeLayerPlane(IntPtr hDc, int pixelFormat, int layerPlane, UInt32 nBytes, LayerPlaneDescriptor* plpd);
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true)]
         public static extern unsafe int wglSetLayerPaletteEntries(IntPtr hdc, int iLayerPlane, int iStart, int cEntries,
-            Int32* pcr);
+            int* pcr);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true)]
         public static extern unsafe int wglGetLayerPaletteEntries(IntPtr hdc, int iLayerPlane, int iStart, int cEntries,
-            Int32* pcr);
+            int* pcr);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true)]
-        public static extern Boolean wglRealizeLayerPalette(IntPtr hdc, int iLayerPlane, Boolean bRealize);
+        public static extern bool wglRealizeLayerPalette(IntPtr hdc, int iLayerPlane, bool bRealize);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true)]
-        public static extern Boolean wglSwapLayerBuffers(IntPtr hdc, UInt32 fuFlags);
+        public static extern bool wglSwapLayerBuffers(IntPtr hdc, uint fuFlags);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)]
-        public static extern Boolean wglUseFontBitmapsA(IntPtr hDc, Int32 first, Int32 count, Int32 listBase);
+        public static extern bool wglUseFontBitmapsA(IntPtr hDc, int first, int count, int listBase);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)]
-        public static extern Boolean wglUseFontBitmapsW(IntPtr hDc, Int32 first, Int32 count, Int32 listBase);
+        public static extern bool wglUseFontBitmapsW(IntPtr hDc, int first, int count, int listBase);
 
         //[SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)] public extern static unsafe Boolean wglUseFontOutlinesA(IntPtr hDC, Int32 first, Int32 count, Int32 listBase, float thickness, float deviation, Int32 fontMode, GlyphMetricsFloat* glyphMetrics);
         //[SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, CharSet = CharSet.Auto)] public extern static unsafe Boolean wglUseFontOutlinesW(IntPtr hDC, Int32 first, Int32 count, Int32 listBase, float thickness, float deviation, Int32 fontMode, GlyphMetricsFloat* glyphMetrics);
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean wglMakeContextCurrentEXT(IntPtr hDrawDc, IntPtr hReadDc, IntPtr hglrc);
+        public static extern bool wglMakeContextCurrentEXT(IntPtr hDrawDc, IntPtr hReadDc, IntPtr hglrc);
 
         [SuppressUnmanagedCodeSecurity, DllImport(GL.DllWindows, ExactSpelling = true, SetLastError = true)]
-        public static extern unsafe Boolean wglChoosePixelFormatEXT(IntPtr hdc, int* piAttribIList,
-            Single* pfAttribFList, UInt32 nMaxFormats, [Out] int* piFormats, [Out] UInt32* nNumFormats);
+        public static extern unsafe bool wglChoosePixelFormatEXT(IntPtr hdc, int* piAttribIList,
+            float* pfAttribFList, uint nMaxFormats, [Out] int* piFormats, [Out] uint* nNumFormats);
     }
 
     [StructLayout(LayoutKind.Sequential)]

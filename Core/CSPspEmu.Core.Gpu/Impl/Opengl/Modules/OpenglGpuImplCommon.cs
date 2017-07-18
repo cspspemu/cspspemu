@@ -1,10 +1,4 @@
-﻿using CSharpPlatform.GL;
-using CSPspEmu.Core.Gpu.State;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 {

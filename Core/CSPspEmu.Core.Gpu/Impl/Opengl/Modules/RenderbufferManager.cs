@@ -30,14 +30,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
             public DrawBufferKey DrawBufferKey;
             public GLRenderTarget RenderTarget;
             public int Width, Height;
-            private OpenglGpuImpl OpenglGpuImpl;
+            private readonly OpenglGpuImpl _openglGpuImpl;
             private int _currentScaleViewport;
-            private bool _mustUpdateRenderTarget = false;
-            private int _mustUpdateRenderTargetScaleViewport = 0;
+            private bool _mustUpdateRenderTarget;
+            private int _mustUpdateRenderTargetScaleViewport;
 
             public DrawBufferValue(OpenglGpuImpl openglGpuImpl, DrawBufferKey drawBufferKey)
             {
-                OpenglGpuImpl = openglGpuImpl;
+                _openglGpuImpl = openglGpuImpl;
                 DrawBufferKey = drawBufferKey;
 
                 openglGpuImpl.OnScaleViewport += UpdateTextures_External;
@@ -56,7 +56,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
                 _currentScaleViewport = scaleViewport;
                 _mustUpdateRenderTarget = false;
 
-                if (RenderTarget != null) RenderTarget.Dispose();
+                RenderTarget?.Dispose();
 
                 RenderTarget = GLRenderTarget.Create(
                     Width = 512 * scaleViewport,
@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
                 //Console.ReadKey();
             }
 
-            public bool Binded = false;
+            public bool Binded;
             public ManualResetEvent UnbindedEvent = new ManualResetEvent(false);
 
             public void WaitUnbinded()
@@ -105,7 +105,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
             public void Dispose()
             {
                 Unbind();
-                OpenglGpuImpl.OnScaleViewport -= UpdateTextures_External;
+                _openglGpuImpl.OnScaleViewport -= UpdateTextures_External;
                 RenderTarget.Dispose();
             }
 

@@ -18,35 +18,11 @@ namespace CSPspEmu.Core.Gpu.Run
         // void sceGuAmbientColor(unsigned int color); // OP_AMC + OP_AMA
         // void sceGuAmbient(unsigned int color); // OP_ALC + OP_ALA
 
-        // Diffuse Model Color
-        public void OP_DMC()
-        {
-            GpuState->LightingState.DiffuseModelColor.SetRGB_A1(Params24);
-        }
-
-        // Specular Model Color
-        public void OP_SMC()
-        {
-            GpuState->LightingState.SpecularModelColor.SetRGB_A1(Params24);
-        }
-
-        // Emissive Model Color
-        public void OP_EMC()
-        {
-            GpuState->LightingState.EmissiveModelColor.SetRGB_A1(Params24);
-        }
-
-        // Ambient Model Color/Alpha
-        // When lighting is off, this is like glColor*
-        public void OP_AMC()
-        {
-            GpuState->LightingState.AmbientModelColor.SetRGB(Params24);
-        }
-
-        public void OP_AMA()
-        {
-            GpuState->LightingState.AmbientModelColor.SetA(Params24);
-        }
+        public void OP_DMC() => GpuState->LightingState.DiffuseModelColor.SetRGB_A1(Params24);
+        public void OP_SMC() => GpuState->LightingState.SpecularModelColor.SetRGB_A1(Params24);
+        public void OP_EMC() => GpuState->LightingState.EmissiveModelColor.SetRGB_A1(Params24);
+        public void OP_AMC() => GpuState->LightingState.AmbientModelColor.SetRgb(Params24); // When lighting is off, this is like glColor*
+        public void OP_AMA() => GpuState->LightingState.AmbientModelColor.SetA(Params24);
 
         /**
          * Set which color components that the material will receive
@@ -60,17 +36,10 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuColorMaterial(int components); // OP_CMAT
         // Material Color
-        public void OP_CMAT()
-        {
-            GpuState->LightingState.MaterialColorComponents = (LightComponentsSet) BitUtils.Extract(Params24, 0, 8);
-        }
+        public void OP_CMAT() => GpuState->LightingState.MaterialColorComponents = (LightComponentsSet) BitUtils.Extract(Params24, 0, 8);
 
         // Alpha Blend Enable (GU_BLEND)
-        public void OP_ABE()
-        {
-            GpuState->BlendingState.Enabled = Bool1;
-            //Console.WriteLine("BLEND! : " + Bool1 + ", " + Params24);
-        }
+        public void OP_ABE() => GpuState->BlendingState.Enabled = Bool1;
 
         /**
          * Set the blending-mode
@@ -124,17 +93,8 @@ namespace CSPspEmu.Core.Gpu.Run
             */
         }
 
-        // source fix color
-        public void OP_SFIX()
-        {
-            GpuState->BlendingState.FixColorSource.SetRGB_A1(Params24);
-        }
-
-        // destination fix color
-        public void OP_DFIX()
-        {
-            GpuState->BlendingState.FixColorDestination.SetRGB_A1(Params24);
-        }
+        public void OP_SFIX() => GpuState->BlendingState.FixColorSource.SetRGB_A1(Params24);
+        public void OP_DFIX() => GpuState->BlendingState.FixColorDestination.SetRGB_A1(Params24);
 
         /**
          * Set mask for which bits of the pixels to write
@@ -152,19 +112,8 @@ namespace CSPspEmu.Core.Gpu.Run
             //Console.Error.WriteLine("OP_PMSKC");
         }
 
-        // Pixel MasK Alpha
-        public void OP_PMSKA()
-        {
-            GpuState->BlendingState.ColorMask.A = Param8(0);
-        }
-
-        // ColorTeST
-        public void OP_CTST()
-        {
-            GpuState->ColorTestState.Function = (ColorTestFunctionEnum) Extract(0, 2);
-            //Console.Error.WriteLine("OP_CTST");
-            //Console.Error.WriteLine("CTST: {0}", GpuState->ColorTestState.ToStringDefault());
-        }
+        public void OP_PMSKA() => GpuState->BlendingState.ColorMask.A = Param8(0);
+        public void OP_CTST() => GpuState->ColorTestState.Function = (ColorTestFunctionEnum) Extract(0, 2);
 
         // Color REFerence
         public void OP_CREF()

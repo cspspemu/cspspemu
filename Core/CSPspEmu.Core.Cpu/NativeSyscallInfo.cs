@@ -10,7 +10,7 @@ namespace CSPspEmu.Core.Cpu
     {
         public string Name
         {
-            get { return String.Format("{0}.{1} (0x{2:X8})", ModuleImportName, FunctionEntryName, NID); }
+            get { return string.Format("{0}.{1} (0x{2:X8})", ModuleImportName, FunctionEntryName, NID); }
         }
 
         public ILInstanceHolderPoolItem<Action<CpuThreadState>> PoolItem;

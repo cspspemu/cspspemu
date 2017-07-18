@@ -35,7 +35,7 @@ namespace SafeILGenerator.Ast.Utils
 
         public static string ToLiteral(string input) => '"' + ToLiteralRaw(input) + '"';
 
-        public static String CaptureOutput(Action action, bool capture = true)
+        public static string CaptureOutput(Action action, bool capture = true)
         {
             if (!capture)
             {

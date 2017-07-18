@@ -44,7 +44,7 @@ namespace Imager
         /// <summary>
         /// The value holding the red, green, blue and alpha component
         /// </summary>
-        private readonly dword _rgbBytes;
+        private readonly uint _rgbBytes;
 
         #region caches
 
@@ -508,7 +508,7 @@ namespace Imager
         /// Prevents a default instance of the <see cref="sPixel"/> struct from being created.
         /// </summary>
         /// <param name="rgbData">The RGB data.</param>
-        private sPixel(dword rgbData)
+        private sPixel(uint rgbData)
         {
             this._rgbBytes = rgbData;
         }
@@ -927,7 +927,7 @@ namespace Imager
         /// <returns>A new instance from the interpolated components.</returns>
         public static sPixel Interpolate(sPixel pixel1, sPixel pixel2, byte quantifier1, byte quantifier2)
         {
-            var total = (UInt16) (quantifier1 + quantifier2);
+            var total = (ushort) (quantifier1 + quantifier2);
             return (new sPixel(
                 (byte) ((pixel1.Red * quantifier1 + pixel2.Red * quantifier2) / total),
                 (byte) ((pixel1.Green * quantifier1 + pixel2.Green * quantifier2) / total),
@@ -949,7 +949,7 @@ namespace Imager
         public static sPixel Interpolate(sPixel pixel1, sPixel pixel2, sPixel pixel3, byte quantifier1,
             byte quantifier2, byte quantifier3)
         {
-            var total = (UInt16) (quantifier1 + quantifier2 + quantifier3);
+            var total = (ushort) (quantifier1 + quantifier2 + quantifier3);
             return (new sPixel(
                 (byte) ((pixel1.Red * quantifier1 + pixel2.Red * quantifier2 + pixel3.Red * quantifier3) / total),
                 (byte) ((pixel1.Green * quantifier1 + pixel2.Green * quantifier2 + pixel3.Green * quantifier3) / total),
@@ -973,7 +973,7 @@ namespace Imager
         public static sPixel Interpolate(sPixel pixel1, sPixel pixel2, sPixel pixel3, sPixel pixel4, byte quantifier1,
             byte quantifier2, byte quantifier3, byte quantifier4)
         {
-            var total = (UInt16) (quantifier1 + quantifier2 + quantifier3 + quantifier4);
+            var total = (ushort) (quantifier1 + quantifier2 + quantifier3 + quantifier4);
             return (new sPixel(
                 (byte) ((pixel1.Red * quantifier1 + pixel2.Red * quantifier2 + pixel3.Red * quantifier3 +
                          pixel4.Red * quantifier4) / total),
@@ -1012,7 +1012,7 @@ namespace Imager
         /// <param name="_">The streaming context.</param>
         public sPixel(SerializationInfo serializationInfo, StreamingContext _)
         {
-            this._rgbBytes = (dword) serializationInfo.GetValue("value", typeof(dword));
+            this._rgbBytes = (uint) serializationInfo.GetValue("value", typeof(uint));
         }
 
         /// <summary>

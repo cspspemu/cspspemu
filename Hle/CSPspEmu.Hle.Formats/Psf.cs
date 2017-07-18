@@ -38,7 +38,7 @@ namespace CSPspEmu.Hle.Formats
         public Stream ValuesStream;
         public HeaderStruct Header;
         public EntryStruct[] Entries;
-        public Dictionary<String, object> EntryDictionary;
+        public Dictionary<string, object> EntryDictionary;
 
         public Psf()
         {

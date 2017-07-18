@@ -305,19 +305,19 @@ namespace CSPspEmu.Core.Gpu
 
                                 switch (TextureCacheKey.ColorTestFunction)
                                 {
-                                    case ColorTestFunctionEnum.GU_ALWAYS:
+                                    case ColorTestFunctionEnum.GuAlways:
                                         EqualValue = 0xFF;
                                         NotEqualValue = 0xFF;
                                         break;
-                                    case ColorTestFunctionEnum.GU_NEVER:
+                                    case ColorTestFunctionEnum.GuNever:
                                         EqualValue = 0x00;
                                         NotEqualValue = 0x00;
                                         break;
-                                    case ColorTestFunctionEnum.GU_EQUAL:
+                                    case ColorTestFunctionEnum.GuEqual:
                                         EqualValue = 0xFF;
                                         NotEqualValue = 0x00;
                                         break;
-                                    case ColorTestFunctionEnum.GU_NOTEQUAL:
+                                    case ColorTestFunctionEnum.GuNotequal:
                                         EqualValue = 0x00;
                                         NotEqualValue = 0xFF;
                                         break;

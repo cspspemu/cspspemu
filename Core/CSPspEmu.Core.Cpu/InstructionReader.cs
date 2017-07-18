@@ -5,8 +5,8 @@ namespace CSPspEmu.Core.Cpu
 {
     public interface IInstructionReader
     {
-        Instruction this[uint Index] { get; set; }
-        uint EndPC { get; }
+        Instruction this[uint index] { get; set; }
+        uint EndPc { get; }
     }
 
     public class InstructionArrayReader : IInstructionReader
@@ -24,7 +24,7 @@ namespace CSPspEmu.Core.Cpu
             set { this.Instructions[(int) (Index / 4)] = value; }
         }
 
-        public uint EndPC
+        public uint EndPc
         {
             get { return (uint) ((Instructions.Length - 1) * 4); }
         }
@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Cpu
         }
 
 
-        public uint EndPC
+        public uint EndPc
         {
             get { return (uint) (Stream.Length - 4); }
         }

@@ -4,10 +4,7 @@ namespace CSPspEmu.Core.Audio.Impl.Null
 {
     public class AudioImplNull : PspAudioImpl
     {
-        public AudioImplNull()
-        {
-        }
-
+       
         public override void Update(Action<short[]> readStream)
         {
             //throw new NotImplementedException();

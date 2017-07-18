@@ -45,8 +45,8 @@ namespace CSPspEmu.Hle.Modules.libfont
             public FontRegistryEntry(int HorizontalSize, int VerticalSize, int HorizontalResolution,
                 int VerticalResolution, int ExtraAttributes, int Weight,
                 FamilyEnum Family, StyleEnum StyleStyle, ushort StyleSub, LanguageEnum Language,
-                ushort Region, ushort Country, String FileName,
-                String Name, uint Expire, int ShadowOption)
+                ushort Region, ushort Country, string FileName,
+                string Name, uint Expire, int ShadowOption)
             {
                 this.ExtraAttributes = ExtraAttributes;
                 this.ShadowOption = ShadowOption;
@@ -121,7 +121,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 
             public override string ToString()
             {
-                return String.Format(
+                return string.Format(
                     "FontCharInfo[Bitmap(W={0},H={1},L={2},T={3}), " +
                     "Metrics(W={4}, H={5}, Ascender={6}, Descender={7}, BearingH={8}x{9}, BearingV={10}x{11}, Advance={12}x{13})",
                     BitmapWidth, BitmapHeight, BitmapLeft, BitmapTop,

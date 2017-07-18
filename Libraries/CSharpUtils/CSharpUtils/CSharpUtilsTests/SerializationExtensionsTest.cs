@@ -13,7 +13,7 @@ namespace CSharpUtilsTests
         {
             Assert.AreEqual(
                 "{\"Hello\":1,\"World\":-1}",
-                new Dictionary<String, int>()
+                new Dictionary<string, int>()
                 {
                     {"Hello", 1},
                     {"World", -1},
@@ -23,7 +23,7 @@ namespace CSharpUtilsTests
 
         public struct SampleStruct
         {
-            public String Id;
+            public string Id;
             public int[] Values;
         }
 

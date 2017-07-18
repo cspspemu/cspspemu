@@ -195,7 +195,7 @@ namespace CSPspEmu
 
         [Inject] MessageBus MessageBus;
 
-        public void LoadFile(String FileName)
+        public void LoadFile(string FileName)
         {
             Console.WriteLine("LoadFile...{0}", FileName);
             CreateNewContextAndRemoveOldOne();

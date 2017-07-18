@@ -30,7 +30,7 @@ namespace CSPspEmu.Core.Types
 
         public override string ToString()
         {
-            return String.Format("RGBA({0},{1},{2},{3})", R, G, B, A);
+            return string.Format("RGBA({0},{1},{2},{3})", R, G, B, A);
         }
 
         public static OutputPixel OperationPerComponent(OutputPixel c1, OutputPixel c2, Func<byte, byte, byte> func)

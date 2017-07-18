@@ -378,19 +378,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
             Console.Error.WriteLine("Warning: _mfvc_impl");
             switch (vfpuControlRegister)
             {
-                case VfpuControlRegistersEnum.VFPU_PFXS: return cpuThreadState.PrefixSource.Value;
-                case VfpuControlRegistersEnum.VFPU_PFXT: return cpuThreadState.PrefixTarget.Value;
-                case VfpuControlRegistersEnum.VFPU_PFXD: return cpuThreadState.PrefixDestination.Value;
-                case VfpuControlRegistersEnum.VFPU_CC: return cpuThreadState.VFR_CC_Value;
-                case VfpuControlRegistersEnum.VFPU_RCX0:
+                case VfpuControlRegistersEnum.VfpuPfxs: return cpuThreadState.PrefixSource.Value;
+                case VfpuControlRegistersEnum.VfpuPfxt: return cpuThreadState.PrefixTarget.Value;
+                case VfpuControlRegistersEnum.VfpuPfxd: return cpuThreadState.PrefixDestination.Value;
+                case VfpuControlRegistersEnum.VfpuCc: return cpuThreadState.VFR_CC_Value;
+                case VfpuControlRegistersEnum.VfpuRcx0:
                     return (uint) MathFloat.ReinterpretFloatAsInt((float) (new Random().NextDouble()));
-                case VfpuControlRegistersEnum.VFPU_RCX1:
-                case VfpuControlRegistersEnum.VFPU_RCX2:
-                case VfpuControlRegistersEnum.VFPU_RCX3:
-                case VfpuControlRegistersEnum.VFPU_RCX4:
-                case VfpuControlRegistersEnum.VFPU_RCX5:
-                case VfpuControlRegistersEnum.VFPU_RCX6:
-                case VfpuControlRegistersEnum.VFPU_RCX7:
+                case VfpuControlRegistersEnum.VfpuRcx1:
+                case VfpuControlRegistersEnum.VfpuRcx2:
+                case VfpuControlRegistersEnum.VfpuRcx3:
+                case VfpuControlRegistersEnum.VfpuRcx4:
+                case VfpuControlRegistersEnum.VfpuRcx5:
+                case VfpuControlRegistersEnum.VfpuRcx6:
+                case VfpuControlRegistersEnum.VfpuRcx7:
                     return (uint) MathFloat.ReinterpretFloatAsInt(1.0f);
                 default:
                     throw (new NotImplementedException("_mfvc_impl: " + vfpuControlRegister));
@@ -403,28 +403,28 @@ namespace CSPspEmu.Core.Cpu.Emitter
             Console.Error.WriteLine("Warning: _mtvc_impl");
             switch (vfpuControlRegister)
             {
-                case VfpuControlRegistersEnum.VFPU_PFXS:
+                case VfpuControlRegistersEnum.VfpuPfxs:
                     cpuThreadState.PrefixSource.Value = value;
                     return;
-                case VfpuControlRegistersEnum.VFPU_PFXT:
+                case VfpuControlRegistersEnum.VfpuPfxt:
                     cpuThreadState.PrefixTarget.Value = value;
                     return;
-                case VfpuControlRegistersEnum.VFPU_PFXD:
+                case VfpuControlRegistersEnum.VfpuPfxd:
                     cpuThreadState.PrefixDestination.Value = value;
                     return;
-                case VfpuControlRegistersEnum.VFPU_CC:
+                case VfpuControlRegistersEnum.VfpuCc:
                     cpuThreadState.VFR_CC_Value = value;
                     return;
-                case VfpuControlRegistersEnum.VFPU_RCX0:
+                case VfpuControlRegistersEnum.VfpuRcx0:
                     new Random((int) value);
                     return;
-                case VfpuControlRegistersEnum.VFPU_RCX1:
-                case VfpuControlRegistersEnum.VFPU_RCX2:
-                case VfpuControlRegistersEnum.VFPU_RCX3:
-                case VfpuControlRegistersEnum.VFPU_RCX4:
-                case VfpuControlRegistersEnum.VFPU_RCX5:
-                case VfpuControlRegistersEnum.VFPU_RCX6:
-                case VfpuControlRegistersEnum.VFPU_RCX7:
+                case VfpuControlRegistersEnum.VfpuRcx1:
+                case VfpuControlRegistersEnum.VfpuRcx2:
+                case VfpuControlRegistersEnum.VfpuRcx3:
+                case VfpuControlRegistersEnum.VfpuRcx4:
+                case VfpuControlRegistersEnum.VfpuRcx5:
+                case VfpuControlRegistersEnum.VfpuRcx6:
+                case VfpuControlRegistersEnum.VfpuRcx7:
                     //(uint)MathFloat.ReinterpretFloatAsInt(1.0f) = Value;
                     return;
                 default:

@@ -496,7 +496,7 @@ namespace BrightIdeasSoftware
         {
             get
             {
-                if (!String.IsNullOrEmpty(this.GroupWithItemCountFormat))
+                if (!string.IsNullOrEmpty(this.GroupWithItemCountFormat))
                     return this.GroupWithItemCountFormat;
 
                 if (this.ListView != null)
@@ -549,7 +549,7 @@ namespace BrightIdeasSoftware
         {
             get
             {
-                if (!String.IsNullOrEmpty(this.GroupWithItemCountSingularFormat))
+                if (!string.IsNullOrEmpty(this.GroupWithItemCountSingularFormat))
                     return this.GroupWithItemCountSingularFormat;
 
                 if (this.ListView != null)
@@ -1078,15 +1078,15 @@ namespace BrightIdeasSoftware
         /// value will be ignored.</remarks>
         [Category("ObjectListView"),
          Description("The tooltip to show when the mouse is hovered over the header of this column"),
-         DefaultValue((String) null),
+         DefaultValue((string) null),
          Localizable(true)]
-        public String ToolTipText
+        public string ToolTipText
         {
             get { return toolTipText; }
             set { toolTipText = value; }
         }
 
-        private String toolTipText;
+        private string toolTipText;
 
         /// <summary>
         /// Should this column have a tri-state checkbox?
@@ -1322,7 +1322,7 @@ namespace BrightIdeasSoftware
             if (this.groupKeyGetter == null)
             {
                 object key = this.GetValue(rowObject);
-                String keyAsString = key as String;
+                string keyAsString = key as string;
                 if (keyAsString != null && this.UseInitialLetterForGroup)
                 {
                     if (keyAsString.Length > 0)
@@ -1339,7 +1339,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="rowObject">The row object that is being displayed</param>
         /// <returns>int or string or Image. int or string will be used as index into image list. null or -1 means no image</returns>
-        public Object GetImage(object rowObject)
+        public object GetImage(object rowObject)
         {
             if (this.CheckBoxes)
                 return this.GetCheckStateImage(rowObject);
@@ -1347,7 +1347,7 @@ namespace BrightIdeasSoftware
             if (this.ImageGetter != null)
                 return this.ImageGetter(rowObject);
 
-            if (!String.IsNullOrEmpty(this.ImageAspectName))
+            if (!string.IsNullOrEmpty(this.ImageAspectName))
             {
                 if (this.imageAspectMunger == null)
                     this.imageAspectMunger = new Munger(this.ImageAspectName);
@@ -1356,7 +1356,7 @@ namespace BrightIdeasSoftware
             }
 
             // I think this is wrong. ImageKey is meant for the image in the header, not in the rows
-            if (!String.IsNullOrEmpty(this.ImageKey))
+            if (!string.IsNullOrEmpty(this.ImageKey))
                 return this.ImageKey;
 
             return this.ImageIndex;
@@ -1369,7 +1369,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="rowObject"></param>
         /// <returns></returns>
-        public string GetCheckStateImage(Object rowObject)
+        public string GetCheckStateImage(object rowObject)
         {
             CheckState checkState = this.GetCheckState(rowObject);
 
@@ -1415,7 +1415,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="rowObject">The model object to be updated</param>
         /// <param name="newValue">The value to be put into the model</param>
-        public void PutAspectByName(Object rowObject, Object newValue)
+        public void PutAspectByName(object rowObject, object newValue)
         {
             if (this.aspectMunger == null)
                 this.aspectMunger = new Munger(this.AspectName);
@@ -1428,7 +1428,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="rowObject">The model object to be updated</param>
         /// <param name="newValue">The value to be put into the model</param>
-        public void PutValue(Object rowObject, Object newValue)
+        public void PutValue(object rowObject, object newValue)
         {
             if (this.aspectPutter == null)
                 this.PutAspectByName(rowObject, newValue);
@@ -1451,17 +1451,17 @@ namespace BrightIdeasSoftware
         {
             // Give the installed converter a chance to work (even if the value is null)
             if (this.AspectToStringConverter != null)
-                return this.AspectToStringConverter(value) ?? String.Empty;
+                return this.AspectToStringConverter(value) ?? string.Empty;
 
             // Without a converter, nulls become simple empty strings
             if (value == null)
-                return String.Empty;
+                return string.Empty;
 
             string fmt = this.AspectToStringFormat;
-            if (String.IsNullOrEmpty(fmt))
+            if (string.IsNullOrEmpty(fmt))
                 return value.ToString();
             else
-                return String.Format(fmt, value);
+                return string.Format(fmt, value);
         }
 
         #endregion
@@ -1592,7 +1592,7 @@ namespace BrightIdeasSoftware
             // Install a delegate that returns the index of the description to be shown
             this.GroupKeyGetter = delegate(object row)
             {
-                Object aspect = this.GetValue(row);
+                object aspect = this.GetValue(row);
                 if (aspect == null || aspect == System.DBNull.Value)
                     return -1;
                 IComparable comparable = (IComparable) aspect;

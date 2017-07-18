@@ -131,7 +131,7 @@ namespace cscodec.h264.decoder
 			} // try
 		}
 
-		public static void printDebugString(String msg)
+		public static void printDebugString(string msg)
 		{
 			if (!DEBUG_MODE) return;
 

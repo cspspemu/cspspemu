@@ -148,7 +148,7 @@ namespace CSPspEmu.Hle.Formats.Archive
             /// <returns></returns>
             public override string ToString()
             {
-                return String.Format("{0}:{1}", FileName, CompressedStream.Length);
+                return string.Format("{0}:{1}", FileName, CompressedStream.Length);
             }
         }
 
@@ -159,7 +159,7 @@ namespace CSPspEmu.Hle.Formats.Archive
         {
         }
 
-        public ZipArchive(String FileName, bool CaseInsensitive = true)
+        public ZipArchive(string FileName, bool CaseInsensitive = true)
         {
             Load(FileName, CaseInsensitive);
         }
@@ -174,7 +174,7 @@ namespace CSPspEmu.Hle.Formats.Archive
             return Load(File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), CaseInsensitive);
         }
 
-        public String NormalizePath(string FileName)
+        public string NormalizePath(string FileName)
         {
             var Return = '/' + FileName.Replace('\\', '/').Trim('/');
             if (CaseInsensitive) Return = Return.ToLower();
@@ -211,7 +211,7 @@ namespace CSPspEmu.Hle.Formats.Archive
             return this;
         }
 
-        public ZipEntry this[String FileName]
+        public ZipEntry this[string FileName]
         {
             get { return Entries[NormalizePath(FileName)]; }
         }

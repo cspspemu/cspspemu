@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using CSPspEmu.Core.Cpu.Switch;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -65,7 +66,7 @@ namespace CSPspEmu.Core.Tests
             Callback(Convert.ToUInt32("0100", 2), HandlerClass);
             Callback(Convert.ToUInt32("0110", 2), HandlerClass);
             Callback(Convert.ToUInt32("1110", 2), HandlerClass);
-            Assert.AreEqual("0,1,2,0,3,3,0", String.Join(",", HandlerClass.Values));
+            Assert.AreEqual("0,1,2,0,3,3,0", string.Join(",", HandlerClass.Values));
         }
     }
 }

@@ -358,7 +358,7 @@ namespace CSPspEmu.Hle.Formats
             /// <summary>
             /// ?
             /// </summary>
-            public String Name;
+            public string Name;
 
             /// <summary>
             /// ?

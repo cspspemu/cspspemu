@@ -31,24 +31,9 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->DitherMatrix[4 * n + 3] = (sbyte) BitUtils.ExtractSigned(Params24, 4 * 3, 4);
         }
 
-        public void OP_DTH0()
-        {
-            _OP_DTH(0);
-        }
-
-        public void OP_DTH1()
-        {
-            _OP_DTH(1);
-        }
-
-        public void OP_DTH2()
-        {
-            _OP_DTH(2);
-        }
-
-        public void OP_DTH3()
-        {
-            _OP_DTH(3);
-        }
+        public void OP_DTH0() => _OP_DTH(0);
+        public void OP_DTH1() => _OP_DTH(1);
+        public void OP_DTH2() => _OP_DTH(2);
+        public void OP_DTH3() => _OP_DTH(3);
     }
 }

@@ -41,7 +41,7 @@ namespace CSPspEmu.Hle.Vfs.Local
                 }
             }
 
-            return String.Join("/", Parts.Reverse());
+            return string.Join("/", Parts.Reverse());
         }
 
         protected string GetFullNormalizedAndSanitizedPath(string Path)

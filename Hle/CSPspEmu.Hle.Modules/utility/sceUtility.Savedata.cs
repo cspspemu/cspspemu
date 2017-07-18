@@ -231,8 +231,8 @@ namespace CSPspEmu.Hle.Modules.utility
             var SaveIcon0 = SavePathFolder + "/ICON0.PNG";
             var SavePic1 = SavePathFolder + "/PIC1.PNG";
 
-            Action<PspUtilitySavedataFileData, String> Save =
-                (PspUtilitySavedataFileData PspUtilitySavedataFileData, String FileName) =>
+            Action<PspUtilitySavedataFileData, string> Save =
+                (PspUtilitySavedataFileData PspUtilitySavedataFileData, string FileName) =>
                 {
                     if (PspUtilitySavedataFileData.Used)
                     {

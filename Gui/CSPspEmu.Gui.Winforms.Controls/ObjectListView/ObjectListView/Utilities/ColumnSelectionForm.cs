@@ -71,12 +71,12 @@ namespace BrightIdeasSoftware
             }
             this.RearrangableColumns.Sort(new SortByDisplayOrder(this));
 
-            this.objectListView1.BooleanCheckStateGetter = delegate(Object rowObject)
+            this.objectListView1.BooleanCheckStateGetter = delegate(object rowObject)
             {
                 return this.MapColumnToVisible[(OLVColumn) rowObject];
             };
 
-            this.objectListView1.BooleanCheckStatePutter = delegate(Object rowObject, bool newValue)
+            this.objectListView1.BooleanCheckStatePutter = delegate(object rowObject, bool newValue)
             {
                 // Some columns should always be shown, so ignore attempts to hide them
                 OLVColumn column = (OLVColumn) rowObject;

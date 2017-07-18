@@ -120,7 +120,7 @@ namespace BrightIdeasSoftware
 
             string keyAsString = this.ClusterKey as string;
             if (keyAsString != null)
-                return String.Compare(keyAsString, otherCluster.ClusterKey as string,
+                return string.Compare(keyAsString, otherCluster.ClusterKey as string,
                     StringComparison.CurrentCultureIgnoreCase);
 
             IComparable keyAsComparable = this.ClusterKey as IComparable;

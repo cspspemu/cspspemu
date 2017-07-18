@@ -24,44 +24,42 @@ namespace CSPspEmu.Core.Cpu
 
         private static Dictionary<CacheKey, MethodInfo> Cache = new Dictionary<CacheKey, MethodInfo>();
 
-        public static MethodInfo GetFastMemoryReader(IntPtr FixedGlobalAddress)
+        public static MethodInfo GetFastMemoryReader(IntPtr fixedGlobalAddress)
         {
-            var CacheKey = new CacheKey() {FixedGlobalAddress = FixedGlobalAddress};
-            if (!Cache.ContainsKey(CacheKey))
-            {
-                var DllName = "FastPspMemoryUtils_Gen.dll";
-                var TypeName = "Memory";
-                var MethodName = "Get";
-                var AssemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    new AssemblyName("FastPspMemoryUtils_Gen"), AssemblyBuilderAccess.RunAndCollect, DllName);
-                var ModuleBuilder = AssemblyBuilder.DefineDynamicModule(AssemblyBuilder.GetName().Name, DllName, true);
-                var TypeBuilder = ModuleBuilder.DefineType(TypeName,
-                    TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.Class);
-                var Method = TypeBuilder.DefineMethod(MethodName,
-                    MethodAttributes.Final | MethodAttributes.Public | MethodAttributes.Static,
-                    CallingConventions.Standard, typeof(void*), new[] {typeof(uint)});
-                Method.SetCustomAttribute(new CustomAttributeBuilder(
-                    typeof(MethodImplAttribute).GetConstructor(new Type[] {typeof(MethodImplOptions)}),
-                    new object[] {MethodImplOptions.AggressiveInlining}));
-                Method.SetCustomAttribute(new CustomAttributeBuilder(
-                    typeof(TargetedPatchingOptOutAttribute).GetConstructor(new Type[] {typeof(string)}),
-                    new object[] {"Performance critical to inline across NGen image boundaries"}));
-                //Method.GetILGenerator();
+            var cacheKey = new CacheKey {FixedGlobalAddress = fixedGlobalAddress};
+            if (Cache.ContainsKey(cacheKey)) return Cache[cacheKey];
+            const string dllName = "FastPspMemoryUtils_Gen.dll";
+            const string typeName = "Memory";
+            const string methodName = "Get";
+            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
+                new AssemblyName("FastPspMemoryUtils_Gen"), AssemblyBuilderAccess.RunAndCollect, dllName);
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyBuilder.GetName().Name, dllName, true);
+            var typeBuilder = moduleBuilder.DefineType(typeName,
+                TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.Class);
+            var method = typeBuilder.DefineMethod(methodName,
+                MethodAttributes.Final | MethodAttributes.Public | MethodAttributes.Static,
+                CallingConventions.Standard, typeof(void*), new[] {typeof(uint)});
+            method.SetCustomAttribute(new CustomAttributeBuilder(
+                typeof(MethodImplAttribute).GetConstructor(new[] {typeof(MethodImplOptions)}),
+                new object[] {MethodImplOptions.AggressiveInlining}));
+            method.SetCustomAttribute(new CustomAttributeBuilder(
+                typeof(TargetedPatchingOptOutAttribute).GetConstructor(new[] {typeof(string)}),
+                new object[] {"Performance critical to inline across NGen image boundaries"}));
+            //Method.GetILGenerator();
 
-                var AstTree = ast.Return(
-                    ast.Cast(
-                        typeof(void*),
-                        ast.Immediate(FixedGlobalAddress) + ast.Binary(ast.Argument<uint>(0), "&",
-                            ast.Immediate(FastPspMemory.FastMemoryMask))
-                    )
-                );
+            var astTree = ast.Return(
+                ast.Cast(
+                    typeof(void*),
+                    ast.Immediate(fixedGlobalAddress) + ast.Binary(ast.Argument<uint>(0), "&",
+                        ast.Immediate(FastPspMemory.FastMemoryMask))
+                )
+            );
 
-                new GeneratorIL().Reset().Init(Method, Method.GetILGenerator()).GenerateRoot(AstTree);
+            new GeneratorIL().Reset().Init(method, method.GetILGenerator()).GenerateRoot(astTree);
 
-                var Type = TypeBuilder.CreateType();
-                Cache[CacheKey] = Type.GetMethod(MethodName);
-            }
-            return Cache[CacheKey];
+            var type = typeBuilder.CreateType();
+            Cache[cacheKey] = type.GetMethod(methodName);
+            return Cache[cacheKey];
         }
     }
 }

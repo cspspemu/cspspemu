@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using CSharpPlatform.GL.Utils;
 using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.State
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct GpuMatrix4x4Struct
+    public unsafe struct GpuMatrix4X4Struct
     {
-        public static readonly int[] Indexes = new int[]
-        {
+        public static readonly int[] Indexes = {
             0, 1, 2, 3,
             4, 5, 6, 7,
             8, 9, 10, 11,
@@ -29,21 +27,18 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary>
         /// 
         /// </summary>
-        internal void Reset(uint Index = 0)
-        {
-            this.Index = Index;
-        }
+        internal void Reset(uint index = 0) => Index = index;
 
         public void Dump()
         {
-            fixed (float* ValuesPtr = Values)
+            fixed (float* valuesPtr = Values)
             {
                 Console.WriteLine("----------------------");
-                for (int y = 0; y < 4; y++)
+                for (var y = 0; y < 4; y++)
                 {
-                    for (int x = 0; x < 4; x++)
+                    for (var x = 0; x < 4; x++)
                     {
-                        Console.Write("{0}, ", ValuesPtr[y * 4 + x]);
+                        Console.Write("{0}, ", valuesPtr[y * 4 + x]);
                     }
                     Console.WriteLine("");
                 }
@@ -54,27 +49,27 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Value"></param>
-        internal void Write(float Value)
+        /// <param name="value"></param>
+        internal void Write(float value)
         {
             //if (Index < Indexes.Length)
             {
-                fixed (float* ValuesPtr = Values)
+                fixed (float* valuesPtr = Values)
                 {
-                    ValuesPtr[Indexes[Index++ % Indexes.Length]] = Value;
+                    valuesPtr[Indexes[Index++ % Indexes.Length]] = value;
                 }
             }
         }
 
         public void SetIdentity()
         {
-            fixed (float* ValuesPtr = Values)
+            fixed (float* valuesPtr = Values)
             {
-                for (int y = 0; y < 4; y++)
+                for (var y = 0; y < 4; y++)
                 {
-                    for (int x = 0; x < 4; x++)
+                    for (var x = 0; x < 4; x++)
                     {
-                        ValuesPtr[x + y * 4] = (x == y) ? 1 : 0;
+                        valuesPtr[x + y * 4] = (x == y) ? 1 : 0;
                     }
                 }
             }
@@ -84,13 +79,13 @@ namespace CSPspEmu.Core.Gpu.State
         {
             get
             {
-                fixed (float* ValuesPtr = Values)
+                fixed (float* valuesPtr = Values)
                 {
                     var Matrix4 = Matrix4F.Create(
-                        ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
-                        ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
-                        ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], ValuesPtr[11],
-                        ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], ValuesPtr[15]
+                        valuesPtr[0], valuesPtr[1], valuesPtr[2], valuesPtr[3],
+                        valuesPtr[4], valuesPtr[5], valuesPtr[6], valuesPtr[7],
+                        valuesPtr[8], valuesPtr[9], valuesPtr[10], valuesPtr[11],
+                        valuesPtr[12], valuesPtr[13], valuesPtr[14], valuesPtr[15]
                     );
                     //Matrix4.Transpose();
                     return Matrix4;
@@ -100,7 +95,7 @@ namespace CSPspEmu.Core.Gpu.State
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct GpuMatrix4x3Struct
+    public unsafe struct GpuMatrix4X3Struct
     {
         public static readonly int[] Indexes = new int[]
         {
@@ -123,25 +118,25 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary>
         /// 
         /// </summary>
-        internal void Reset(uint Index = 0)
+        internal void Reset(uint index = 0)
         {
-            fixed (float* ValuesPtr = Values)
+            fixed (float* valuesPtr = Values)
             {
-                ValuesPtr[15] = 1.0f;
+                valuesPtr[15] = 1.0f;
             }
-            this.Index = Index;
+            this.Index = index;
         }
 
         public void Dump()
         {
-            fixed (float* ValuesPtr = Values)
+            fixed (float* valuesPtr = Values)
             {
                 Console.WriteLine("----------------------");
-                for (int y = 0; y < 4; y++)
+                for (var y = 0; y < 4; y++)
                 {
-                    for (int x = 0; x < 4; x++)
+                    for (var x = 0; x < 4; x++)
                     {
-                        Console.Write("{0}, ", ValuesPtr[y * 4 + x]);
+                        Console.Write("{0}, ", valuesPtr[y * 4 + x]);
                     }
                     Console.WriteLine("");
                 }
@@ -152,25 +147,25 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Value"></param>
-        internal void Write(float Value)
+        /// <param name="value"></param>
+        internal void Write(float value)
         {
             //if (Index < Indexes.Length)
             {
-                fixed (float* ValuesPtr = Values)
+                fixed (float* valuesPtr = Values)
                 {
-                    ValuesPtr[Indexes[Index++ % Indexes.Length]] = Value;
+                    valuesPtr[Indexes[Index++ % Indexes.Length]] = value;
                 }
             }
         }
 
-        internal void WriteAt(int Index, float Value)
+        internal void WriteAt(int index, float value)
         {
             //if (Index < Indexes.Length)
             {
-                fixed (float* ValuesPtr = Values)
+                fixed (float* valuesPtr = Values)
                 {
-                    ValuesPtr[Indexes[Index]] = Value;
+                    valuesPtr[Indexes[index]] = value;
                 }
             }
         }
@@ -179,53 +174,53 @@ namespace CSPspEmu.Core.Gpu.State
         {
             get
             {
-                fixed (float* ValuesPtr = Values)
+                fixed (float* valuesPtr = Values)
                 {
-                    var Matrix4 = Matrix4F.Create(
+                    var matrix4 = Matrix4F.Create(
 #if false
 						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
 						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
 						ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], ValuesPtr[11],
 						ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], ValuesPtr[15]
 #else
-                        ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], 0,
-                        ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], 0,
-                        ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], 0,
-                        ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], 1.0f
+                        valuesPtr[0], valuesPtr[1], valuesPtr[2], 0,
+                        valuesPtr[4], valuesPtr[5], valuesPtr[6], 0,
+                        valuesPtr[8], valuesPtr[9], valuesPtr[10], 0,
+                        valuesPtr[12], valuesPtr[13], valuesPtr[14], 1.0f
 #endif
                     );
                     //Matrix4.Transpose();
-                    return Matrix4;
+                    return matrix4;
                 }
             }
         }
 
         public void SetLastColumn()
         {
-            fixed (float* ValuesPtr = Values)
+            fixed (float* valuesPtr = Values)
             {
-                ValuesPtr[3] = 0.0f;
-                ValuesPtr[7] = 0.0f;
-                ValuesPtr[11] = 0.0f;
-                ValuesPtr[15] = 1.0f;
+                valuesPtr[3] = 0.0f;
+                valuesPtr[7] = 0.0f;
+                valuesPtr[11] = 0.0f;
+                valuesPtr[15] = 1.0f;
             }
         }
 
-        public void SetPosition(int Column, int Row, float Value)
+        public void SetPosition(int column, int row, float value)
         {
-            fixed (float* ValuesPtr = Values)
+            fixed (float* valuesPtr = Values)
             {
-                ValuesPtr[Row * 4 + Column] = Value;
+                valuesPtr[row * 4 + column] = value;
             }
         }
 
         public void LoadIdentity()
         {
-            for (int Row = 0; Row < 4; Row++)
+            for (var row = 0; row < 4; row++)
             {
-                for (int Column = 0; Column < 4; Column++)
+                for (var column = 0; column < 4; column++)
                 {
-                    SetPosition(Column, Row, (Column == Row) ? 1f : 0f);
+                    SetPosition(column, row, (column == row) ? 1f : 0f);
                 }
             }
         }

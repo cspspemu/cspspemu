@@ -617,10 +617,10 @@ namespace BrightIdeasSoftware
             if (imageSelector == null || this.ListView == null || this.ListView.GroupImageList == null)
                 return -1;
 
-            if (imageSelector is Int32)
+            if (imageSelector is int)
                 return (int) imageSelector;
 
-            String imageSelectorAsString = imageSelector as String;
+            string imageSelectorAsString = imageSelector as string;
             if (imageSelectorAsString != null)
                 return this.ListView.GroupImageList.Images.IndexOfKey(imageSelectorAsString);
 
@@ -720,31 +720,31 @@ namespace BrightIdeasSoftware
                 group.mask ^= (uint) GroupMask.LVGF_GROUPID;
             }
 
-            if (!String.IsNullOrEmpty(this.Footer))
+            if (!string.IsNullOrEmpty(this.Footer))
             {
                 group.pszFooter = this.Footer;
                 group.mask ^= (uint) GroupMask.LVGF_FOOTER;
             }
 
-            if (!String.IsNullOrEmpty(this.Subtitle))
+            if (!string.IsNullOrEmpty(this.Subtitle))
             {
                 group.pszSubtitle = this.Subtitle;
                 group.mask ^= (uint) GroupMask.LVGF_SUBTITLE;
             }
 
-            if (!String.IsNullOrEmpty(this.Task))
+            if (!string.IsNullOrEmpty(this.Task))
             {
                 group.pszTask = this.Task;
                 group.mask ^= (uint) GroupMask.LVGF_TASK;
             }
 
-            if (!String.IsNullOrEmpty(this.TopDescription))
+            if (!string.IsNullOrEmpty(this.TopDescription))
             {
                 group.pszDescriptionTop = this.TopDescription;
                 group.mask ^= (uint) GroupMask.LVGF_DESCRIPTIONTOP;
             }
 
-            if (!String.IsNullOrEmpty(this.BottomDescription))
+            if (!string.IsNullOrEmpty(this.BottomDescription))
             {
                 group.pszDescriptionBottom = this.BottomDescription;
                 group.mask ^= (uint) GroupMask.LVGF_DESCRIPTIONBOTTOM;
@@ -764,7 +764,7 @@ namespace BrightIdeasSoftware
                 group.mask ^= (uint) GroupMask.LVGF_EXTENDEDIMAGE;
             }
 
-            if (!String.IsNullOrEmpty(this.SubsetTitle))
+            if (!string.IsNullOrEmpty(this.SubsetTitle))
             {
                 group.pszSubsetTitle = this.SubsetTitle;
                 group.mask ^= (uint) GroupMask.LVGF_SUBSET;

@@ -31,7 +31,7 @@ namespace CSharpPlatform.GL
         }
 
         [DllImport(GL.DllWindows, EntryPoint = "wglGetProcAddress", ExactSpelling = true)]
-        private static extern IntPtr wglGetProcAddress(String lpszProc);
+        private static extern IntPtr wglGetProcAddress(string lpszProc);
 
         [DllImport(GL.DllLinux, EntryPoint = "glXGetProcAddress")]
         private static extern IntPtr glxGetProcAddress([MarshalAs(UnmanagedType.LPTStr)] string procName);

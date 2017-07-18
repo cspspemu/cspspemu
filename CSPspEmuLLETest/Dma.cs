@@ -36,16 +36,16 @@ namespace CSPspEmuLLETest
 
             if ((dmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (dmaAddress < DmaEnum.NAND__DATA_PAGE_END))
             {
-                return String.Format("NAND__DATA_PAGE[{0}]", dmaAddress - DmaEnum.NAND__DATA_PAGE_START);
+                return string.Format("NAND__DATA_PAGE[{0}]", dmaAddress - DmaEnum.NAND__DATA_PAGE_START);
             }
 
             if (Enum.IsDefined(typeof(DmaEnum), address))
             {
-                reg = String.Format("{0}({1:X8})", (DmaEnum) address, (uint) address);
+                reg = string.Format("{0}({1:X8})", (DmaEnum) address, (uint) address);
             }
             else
             {
-                reg = String.Format("Unknown({0:X8})", (uint) address);
+                reg = string.Format("Unknown({0:X8})", (uint) address);
             }
 
             return reg;

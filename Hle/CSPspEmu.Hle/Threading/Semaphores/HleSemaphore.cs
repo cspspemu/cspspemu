@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Threading.Semaphores
             SceKernelSemaInfo.Size = sizeof(SceKernelSemaInfo);
         }
 
-        public String Name
+        public string Name
         {
             get
             {

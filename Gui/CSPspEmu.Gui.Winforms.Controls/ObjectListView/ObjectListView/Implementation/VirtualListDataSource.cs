@@ -50,7 +50,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="n">The index of the row whose object is to be returned.</param>
         /// <returns>The model object at the n'th row, or null if the fetching was unsuccessful.</returns>
-        Object GetNthObject(int n);
+        object GetNthObject(int n);
 
         /// <summary>
         /// Return the number of rows that should be visible in the virtual list
@@ -63,7 +63,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="model">The model object sought</param>
         /// <returns>The index of the row showing the model, or -1 if the object could not be found.</returns>
-        int GetObjectIndex(Object model);
+        int GetObjectIndex(object model);
 
         /// <summary>
         /// The ListView is about to request the given range of items. Do

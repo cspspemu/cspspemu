@@ -73,10 +73,10 @@ namespace CSharpPlatform.AL
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCcontext* alcCreateContext(ALCdevice*device, ALCint* attrlist);
+    public unsafe delegate ALCcontext* alcCreateContext(ALCdevice*device, int* attrlist);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCboolean alcMakeContextCurrent(ALCcontext*context);
+    public unsafe delegate bool alcMakeContextCurrent(ALCcontext*context);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public unsafe delegate void alcProcessContext(ALCcontext*context);
@@ -94,35 +94,35 @@ namespace CSharpPlatform.AL
     public unsafe delegate ALCdevice* alcGetContextsDevice(ALCcontext*context);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCdevice* alcOpenDevice(ALCchar*devicename);
+    public unsafe delegate ALCdevice* alcOpenDevice(byte*devicename);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCboolean alcCloseDevice(ALCdevice*device);
+    public unsafe delegate bool alcCloseDevice(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCenum alcGetError(ALCdevice*device);
+    public unsafe delegate int alcGetError(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCboolean alcIsExtensionPresent(ALCdevice*device, ALCchar*extname);
+    public unsafe delegate bool alcIsExtensionPresent(ALCdevice*device, byte*extname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void* alcGetProcAddress(ALCdevice*device, ALCchar*funcname);
+    public unsafe delegate void* alcGetProcAddress(ALCdevice*device, byte*funcname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCenum alcGetEnumValue(ALCdevice*device, ALCchar*enumname);
+    public unsafe delegate int alcGetEnumValue(ALCdevice*device, byte*enumname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCchar* alcGetString(ALCdevice*device, ALCenum param);
+    public unsafe delegate byte* alcGetString(ALCdevice*device, int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alcGetIntegerv(ALCdevice*device, ALCenum param, ALCsizei size, ALCint*data);
+    public unsafe delegate void alcGetIntegerv(ALCdevice*device, int param, int size, int*data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCdevice* alcCaptureOpenDevice(ALCchar*devicename, ALCuint frequency, ALCenum format,
-        ALCsizei buffersize);
+    public unsafe delegate ALCdevice* alcCaptureOpenDevice(byte*devicename, uint frequency, int format,
+        int buffersize);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALCboolean alcCaptureCloseDevice(ALCdevice*device);
+    public unsafe delegate bool alcCaptureCloseDevice(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public unsafe delegate void alcCaptureStart(ALCdevice*device);
@@ -131,5 +131,5 @@ namespace CSharpPlatform.AL
     public unsafe delegate void alcCaptureStop(ALCdevice*device);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alcCaptureSamples(ALCdevice*device, void*buffer, ALCsizei samples);
+    public unsafe delegate void alcCaptureSamples(ALCdevice*device, void*buffer, int samples);
 }

@@ -116,7 +116,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			//SaveToWav("output.wav");
 		}
 
-		public void SaveToWav(String FileName)
+		public void SaveToWav(string FileName)
 		{
 			var WaveStream = new WaveStream();
 			WaveStream.WriteWave(FileName, GetAllDecodedSamples());

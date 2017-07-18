@@ -153,7 +153,7 @@ namespace CSharpUtils.Getopt
             }
             catch (Exception)
             {
-                throw (new Exception(String.Format("Argument {0} requires a {1}", name, typeof(TType))));
+                throw (new Exception(string.Format("Argument {0} requires a {1}", name, typeof(TType))));
             }
         }
 

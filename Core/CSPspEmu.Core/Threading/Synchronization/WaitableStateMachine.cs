@@ -73,7 +73,7 @@ namespace CSPspEmu.Core.Threading.Synchronization
             lock (Notifications)
             {
                 if (Debug)
-                    Console.WriteLine(String.Format("CallbackOnStateOnce({0}, Callback). Current: {1}", ExpectedValue,
+                    Console.WriteLine(string.Format("CallbackOnStateOnce({0}, Callback). Current: {1}", ExpectedValue,
                         Value));
 
                 if (Value.Equals(ExpectedValue))

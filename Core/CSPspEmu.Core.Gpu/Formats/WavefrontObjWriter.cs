@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CSharpPlatform;
-using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {
@@ -91,7 +90,7 @@ namespace CSPspEmu.Core.Gpu.Formats
         }
         */
 
-        public void AddFace(params int[] indices) => WriteLine($"f {String.Join(" ", indices)}");
+        public void AddFace(params int[] indices) => WriteLine($"f {string.Join(" ", indices)}");
         public void StartComment(string text) => WriteLine($"# {text}");
         public void StartObject(string name) => WriteLine("o " + name);
 

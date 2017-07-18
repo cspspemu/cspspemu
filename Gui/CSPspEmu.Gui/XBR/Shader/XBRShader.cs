@@ -16,7 +16,7 @@ namespace CSPspEmu.Gui.XBR.Shader
 
         public XBRShader()
         {
-            Console.WriteLine("{0}", String.Join("\n", Assembly.GetExecutingAssembly().GetManifestResourceNames()));
+            Console.WriteLine("{0}", string.Join("\n", Assembly.GetExecutingAssembly().GetManifestResourceNames()));
             Shader = new GLShader(
                 GLShaderFilter.DefaultVertexShader,
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Gui.XBR.Shader.Shader_2xBR.frag")

@@ -64,7 +64,7 @@ namespace CSharpPlatform
 
         public override string ToString()
         {
-            return String.Format("RectangleF({0}, {1}, {2}, {3})", Left, Top, Width, Height);
+            return string.Format("RectangleF({0}, {1}, {2}, {3})", Left, Top, Width, Height);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace CSPspEmu.Hle
         [Inject] PspMemory PspMemory;
 
         public bool Allocated;
-        public String Name;
+        public string Name;
 
         public void* GetLowPointerSafe<TType>()
         {
@@ -309,7 +309,7 @@ namespace CSPspEmu.Hle
 					Console.WriteLine("");
 #endif
                 throw (new MemoryPartitionNoMemoryException(
-                    String.Format(
+                    string.Format(
                         "Can't allocate Size={0} : AllocateAnchor={1} : Position=0x{2:X}",
                         Size, AllocateAnchor, Position
                     )
@@ -319,8 +319,8 @@ namespace CSPspEmu.Hle
 
         public void Dump(MemoryPartition Mark = null, int Level = 0)
         {
-            Console.Write(new String(' ', Level * 2));
-            Console.WriteLine(String.Format(
+            Console.Write(new string(' ', Level * 2));
+            Console.WriteLine(string.Format(
                 "MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Size={3}, Name='{4}'){5}",
                 Low,
                 High,
@@ -347,17 +347,17 @@ namespace CSPspEmu.Hle
         {
             if ((_ChildPartitions != null) && _ChildPartitions.Count > 0)
             {
-                return String.Format(
+                return string.Format(
                     "MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', Size={4}, ChildPartitions=[{5}])",
                     Low, High, Allocated,
                     Name,
                     Size,
-                    String.Join(",", _ChildPartitions)
+                    string.Join(",", _ChildPartitions)
                 );
             }
             else
             {
-                return String.Format(
+                return string.Format(
                     "MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', Size={4})",
                     Low, High, Allocated,
                     Name,

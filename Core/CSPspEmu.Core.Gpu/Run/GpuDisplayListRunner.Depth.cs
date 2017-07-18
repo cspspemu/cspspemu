@@ -14,10 +14,7 @@ namespace CSPspEmu.Core.Gpu.Run
         // void sceGuDepthBuffer(void* zbp, int zbw);
 
         // Depth Buffer Pointer
-        public void OP_ZBP()
-        {
-            GpuState->DepthBufferState.LowAddress = Params24;
-        }
+        public void OP_ZBP() => GpuState->DepthBufferState.LowAddress = Params24;
 
         // Depth Buffer Width
         public void OP_ZBW()
@@ -27,11 +24,7 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuDisplayList.GpuProcessor.MarkDepthBufferLoad();
         }
 
-        // depth (Z) Test Enable (GU_DEPTH_TEST)
-        public void OP_ZTE()
-        {
-            GpuState->DepthTestState.Enabled = Bool1;
-        }
+        public void OP_ZTE() => GpuState->DepthTestState.Enabled = Bool1;
 
         /**
          * Select which depth-test function to use
@@ -49,16 +42,10 @@ namespace CSPspEmu.Core.Gpu.Run
          * @param function - Depth test function to use
          **/
         // void sceGuDepthFunc(int function); // OP_ZTST
-        public void OP_ZTST()
-        {
-            GpuState->DepthTestState.Function = (TestFunctionEnum) Param8(0);
-        }
+        public void OP_ZTST() => GpuState->DepthTestState.Function = (TestFunctionEnum) Param8(0);
 
         // Alpha Test Enable (GU_ALPHA_TEST) glAlphaFunc(GL_GREATER, 0.03f);
-        public void OP_ATE()
-        {
-            GpuState->AlphaTestState.Enabled = Bool1;
-        }
+        public void OP_ATE() => GpuState->AlphaTestState.Enabled = Bool1;
 
         /**
          * Set the alpha test parameters
@@ -86,10 +73,7 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         // Stencil Test Enable (GL_STENCIL_TEST)
-        public void OP_STE()
-        {
-            GpuState->StencilState.Enabled = Bool1;
-        }
+        public void OP_STE() => GpuState->StencilState.Enabled = Bool1;
 
         /**
          * Set stencil function and reference value for stencil testing
@@ -154,10 +138,7 @@ namespace CSPspEmu.Core.Gpu.Run
         // void sceGuDepthMask(int mask);
 
         // glDepthMask
-        public void OP_ZMSK()
-        {
-            GpuState->DepthTestState.Mask = Param16(0);
-        }
+        public void OP_ZMSK() => GpuState->DepthTestState.Mask = Param16(0);
 
         /**
          * Set which range to use for depth calculations.
@@ -174,14 +155,8 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuDepthRange(int near, int far); // OP_NEARZ + OP_FARZ
         // void sceGuDepthOffset(unsigned int offset);
-        public void OP_NEARZ()
-        {
-            GpuState->DepthTestState.RangeFar = ((float) (ushort) Param16(0)) / (float) ushort.MaxValue;
-        }
+        public void OP_NEARZ() => GpuState->DepthTestState.RangeFar = ((float) Param16(0)) / ushort.MaxValue;
 
-        public void OP_FARZ()
-        {
-            GpuState->DepthTestState.RangeNear = ((float) (ushort) Param16(0)) / (float) ushort.MaxValue;
-        }
+        public void OP_FARZ() => GpuState->DepthTestState.RangeNear = ((float) Param16(0)) / ushort.MaxValue;
     }
 }

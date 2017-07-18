@@ -9,7 +9,7 @@ namespace SafeILGenerator.Tests
 {
     public class TestUtils
     {
-        public static String CaptureOutput(Action Action, bool Capture = true)
+        public static string CaptureOutput(Action Action, bool Capture = true)
         {
             if (Capture)
             {

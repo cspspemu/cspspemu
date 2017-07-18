@@ -53,7 +53,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Create a OLVListItem for the given row object, represented by the given string and image
         /// </summary>
-        public OLVListItem(object rowObject, string text, Object image)
+        public OLVListItem(object rowObject, string text, object image)
             : base(text, -1)
         {
             this.rowObject = rowObject;
@@ -229,22 +229,22 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <remarks><para>This can be an Image, a string or an int. A string or an int will
         /// be used as an index into the small image list.</para></remarks>
-        public Object ImageSelector
+        public object ImageSelector
         {
             get { return imageSelector; }
             set
             {
                 imageSelector = value;
-                if (value is Int32)
-                    this.ImageIndex = (Int32) value;
-                else if (value is String)
-                    this.ImageKey = (String) value;
+                if (value is int)
+                    this.ImageIndex = (int) value;
+                else if (value is string)
+                    this.ImageKey = (string) value;
                 else
                     this.ImageIndex = -1;
             }
         }
 
-        private Object imageSelector;
+        private object imageSelector;
 
         /// <summary>
         /// Gets or sets the the model object that is source of the data for this list item.

@@ -63,7 +63,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
         [HlePspNotImplemented]
         public void sceKernelIcacheClearAll()
         {
-            CpuProcessor.sceKernelIcacheInvalidateAll();
+            CpuProcessor.SceKernelIcacheInvalidateAll();
             //unimplemented();
         }
 

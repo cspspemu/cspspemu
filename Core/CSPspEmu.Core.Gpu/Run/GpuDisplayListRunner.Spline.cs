@@ -2,37 +2,6 @@
 {
     public sealed unsafe partial class GpuDisplayListRunner
     {
-        /**
-          * Draw bezier surface
-          *
-          * @param vtype    - Vertex type, look at sceGuDrawArray() for vertex definition
-          * @param ucount   - Number of vertices used in the U direction
-          * @param vcount   - Number of vertices used in the V direction
-          * @param indices  - Pointer to index buffer
-          * @param vertices - Pointer to vertex buffer
-        **/
-        //void sceGuDrawBezier(int vtype, int ucount, int vcount, const void* indices, const void* vertices);
-
-        /**
-          * Set dividing for patches (beziers and splines)
-          *
-          * @param ulevel - Number of division on u direction
-          * @param vlevel - Number of division on v direction
-        **/
-        //void sceGuPatchDivide(unsigned int ulevel, unsigned int vlevel);
-
-        //void sceGuPatchFrontFace(unsigned int a0);
-
-        /**
-          * Set primitive for patches (beziers and splines)
-          *
-          * @param prim - Desired primitive type (GU_POINTS | GU_LINE_STRIP | GU_TRIANGLE_STRIP)
-        **/
-        //void sceGuPatchPrim(int prim);
-
-        //void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, const void* indices, const void* vertices);
-
-        // ReSharper disable once UnusedMember.Global
         public void OP_PSUB()
         {
             GpuState->PatchState.DivS = Param8(0);
@@ -60,9 +29,6 @@
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void OP_PFACE()
-        {
-            GpuState->PatchCullingState.FaceFlag = (Params24 != 0);
-        }
+        public void OP_PFACE() => GpuState->PatchCullingState.FaceFlag = (Params24 != 0);
     }
 }

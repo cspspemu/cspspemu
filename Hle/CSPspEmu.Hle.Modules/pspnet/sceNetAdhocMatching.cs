@@ -359,7 +359,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 
                 public override string ToString()
                 {
-                    return String.Format("Matching.Header({0}, {1}, {2}, {3})", Event, FromMacAddress, ToMacAddress,
+                    return string.Format("Matching.Header({0}, {1}, {2}, {3})", Event, FromMacAddress, ToMacAddress,
                         DataLength);
                 }
             }

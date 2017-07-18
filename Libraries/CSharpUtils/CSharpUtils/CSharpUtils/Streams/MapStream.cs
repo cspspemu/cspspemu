@@ -51,7 +51,7 @@ namespace CSharpUtils.Streams
             /// <returns></returns>
             public override string ToString()
             {
-                return String.Format("StreamEntry({0}, {1}, {2})", Position, Length, Stream);
+                return string.Format("StreamEntry({0}, {1}, {2})", Position, Length, Stream);
             }
         }
 

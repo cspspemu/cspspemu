@@ -707,7 +707,7 @@ namespace BrightIdeasSoftware
         /// <param name="transparency">How opaque should be text be</param>
         public virtual void DrawText(Graphics g, Rectangle r, string s, int transparency)
         {
-            if (String.IsNullOrEmpty(s))
+            if (string.IsNullOrEmpty(s))
                 return;
 
             Rectangle textRect = this.CalculateTextBounds(g, r, s);

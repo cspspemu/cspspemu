@@ -94,7 +94,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
             {
                 Parts[n] = "%02X".Sprintf((uint) MacAddress[n]);
             }
-            PointerUtils.StoreStringOnPtr(String.Join(":", Parts), Encoding.UTF8, (byte*) OutputString);
+            PointerUtils.StoreStringOnPtr(string.Join(":", Parts), Encoding.UTF8, (byte*) OutputString);
 
             return 0;
             //throw (new NotImplementedException());

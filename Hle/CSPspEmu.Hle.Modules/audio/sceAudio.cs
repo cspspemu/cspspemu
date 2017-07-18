@@ -140,7 +140,7 @@ namespace CSPspEmu.Hle.Modules.audio
             short* Buffer, bool Blocking)
         {
             ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio,
-                String.Format("_sceAudioOutputPannedBlocking({0}, Volume({1}, {2}), Blocking({3}))", Channel,
+                string.Format("_sceAudioOutputPannedBlocking({0}, Volume({1}, {2}), Blocking({3}))", Channel,
                     LeftVolume, RightVolume, Blocking), Channel, WakeUpCallback =>
                 {
                     Channel.Write(Buffer, LeftVolume, RightVolume, () =>
@@ -500,7 +500,7 @@ namespace CSPspEmu.Hle.Modules.audio
         [HlePspFunction(NID = 0x38553111, FirmwareVersion = 150)]
         public int sceAudioSRCChReserve(int SampleCount, int Frequency, int Channels)
         {
-            if (Frequency != 44100) throw (new Exception(String.Format("sceAudioSRCChReserve: {0}", Frequency)));
+            if (Frequency != 44100) throw (new Exception(string.Format("sceAudioSRCChReserve: {0}", Frequency)));
             var ValidFrequencies = new int[] {0, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 48000};
             if (!ValidFrequencies.Contains(Frequency))
                 throw(new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_FREQUENCY));

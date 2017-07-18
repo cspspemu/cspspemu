@@ -187,7 +187,7 @@ namespace CSharpUtils.Getopt
             Console.WriteLine(
                 "{0} - {1} - {2} - {3} - {4}",
                 versionInfo.FileDescription,
-                String.Join(".", versionInfo.FileVersion.Split('.').Take(2)),
+                string.Join(".", versionInfo.FileVersion.Split('.').Take(2)),
                 versionInfo.Comments,
                 versionInfo.CompanyName,
                 versionInfo.LegalCopyright

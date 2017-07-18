@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSPspEmu.Core.Cpu.Switch;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
 using SafeILGenerator.Ast;

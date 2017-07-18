@@ -149,7 +149,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
                     *((int*) OutputPointer) = DisplayConfig.Enabled ? 1 : 0;
                     break;
                 case EmulatorDevclEnum.SendOutput:
-                    var OutputString = new String((sbyte*) InputPointer, 0, InputLength, Encoding.ASCII);
+                    var OutputString = new string((sbyte*) InputPointer, 0, InputLength, Encoding.ASCII);
                     this.HleOutputHandler.Output(OutputString);
                     //Console.Error.WriteLine("{0}", OutputString);
                     break;
@@ -160,7 +160,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
                         throw (new Exception("PspHleRunningConfig.FileNameBase is empty"));
                     this.PspDisplay.TakeScreenshot()
                         .Save(
-                            String.Format("{0}.lastoutput.{1}.png", PspHleRunningConfig.FileNameBase,
+                            string.Format("{0}.lastoutput.{1}.png", PspHleRunningConfig.FileNameBase,
                                 ScreenShotCount++), ImageFormat.Png);
                     break;
                 default:

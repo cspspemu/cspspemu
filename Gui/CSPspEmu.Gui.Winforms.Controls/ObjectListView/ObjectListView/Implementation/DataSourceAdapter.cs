@@ -104,7 +104,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Get or set the DataSource that will be displayed in this list view.
         /// </summary>
-        public virtual Object DataSource
+        public virtual object DataSource
         {
             get { return dataSource; }
             set
@@ -114,7 +114,7 @@ namespace BrightIdeasSoftware
             }
         }
 
-        private Object dataSource;
+        private object dataSource;
 
         /// <summary>
         /// Gets or sets the name of the list or table in the data source for which the DataListView is displaying data.
@@ -341,7 +341,7 @@ namespace BrightIdeasSoftware
 
             // If our column is a BLOB, it could be an image, so assign a renderer to draw it.
             // CONSIDER: Is this a common enough case to warrant this code?
-            if (property.PropertyType == typeof(System.Byte[]))
+            if (property.PropertyType == typeof(byte[]))
                 column.Renderer = new ImageRenderer();
         }
 
@@ -354,7 +354,7 @@ namespace BrightIdeasSoftware
             foreach (OLVColumn x in this.ListView.AllColumns)
             {
                 OLVColumn column = x; // stack based variable accessible from closures
-                if (column.AspectGetter == null && !String.IsNullOrEmpty(column.AspectName))
+                if (column.AspectGetter == null && !string.IsNullOrEmpty(column.AspectName))
                 {
                     column.AspectGetter = delegate(object row)
                     {
@@ -365,7 +365,7 @@ namespace BrightIdeasSoftware
                         return (drv.Row.RowState == DataRowState.Detached) ? null : drv[column.AspectName];
                     };
                 }
-                if (column.IsEditable && column.AspectPutter == null && !String.IsNullOrEmpty(column.AspectName))
+                if (column.IsEditable && column.AspectPutter == null && !string.IsNullOrEmpty(column.AspectName))
                 {
                     column.AspectPutter = delegate(object row, object newValue)
                     {
@@ -485,7 +485,7 @@ namespace BrightIdeasSoftware
             // the second creation.) We detect this by seeing if this is a view on a row in a
             // DataTable, and if it is, testing to see if it's a new row under creation.
 
-            Object newRow = this.CurrencyManager.List[e.NewIndex];
+            object newRow = this.CurrencyManager.List[e.NewIndex];
             DataRowView drv = newRow as DataRowView;
             if (drv == null || !drv.IsNew)
             {
@@ -518,7 +518,7 @@ namespace BrightIdeasSoftware
             // A single item has changed, so just refresh that.
             //System.Diagnostics.Debug.WriteLine(String.Format("HandleListChangedItemChanged: {0}, {1}", e.NewIndex, e.PropertyDescriptor.Name));
 
-            Object changedRow = this.CurrencyManager.List[e.NewIndex];
+            object changedRow = this.CurrencyManager.List[e.NewIndex];
             this.ListView.RefreshObject(changedRow);
         }
 

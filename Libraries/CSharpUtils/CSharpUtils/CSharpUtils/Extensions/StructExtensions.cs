@@ -37,7 +37,7 @@ namespace CSharpUtils.Extensions
             }
             if (structType == typeof(string))
             {
-                return "\"" + (Struct as String).EscapeString() + "\"";
+                return "\"" + (Struct as string).EscapeString() + "\"";
             }
             if (structType.IsEnum)
             {

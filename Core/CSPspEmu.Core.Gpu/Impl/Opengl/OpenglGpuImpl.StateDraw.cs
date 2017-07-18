@@ -282,12 +282,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 return GL.GL_CONSTANT_COLOR;
             };
 
-            if (blendingState->FunctionSource == GuBlendingFactorSource.GU_FIX)
+            if (blendingState->FunctionSource == GuBlendingFactorSource.GuFix)
             {
                 openglFunctionSource = getBlendFix(blendingState->FixColorSource);
             }
 
-            if (blendingState->FunctionDestination == GuBlendingFactorDestination.GU_FIX)
+            if (blendingState->FunctionDestination == GuBlendingFactorDestination.GuFix)
             {
                 if (((int) openglFunctionSource == GL.GL_CONSTANT_COLOR) &&
                     (blendingState->FixColorSource + blendingState->FixColorDestination).IsColorf(1, 1, 1))
@@ -359,13 +359,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
                 switch (textureMappingState->TextureMapMode)
                 {
-                    case TextureMapMode.GU_TEXTURE_COORDS:
+                    case TextureMapMode.GuTextureCoords:
                         _textureMatrix = _textureMatrix
                                 .Translate(textureState->OffsetU, textureState->OffsetV, 0)
                                 .Scale(textureState->ScaleU, textureState->ScaleV, 1)
                             ;
                         break;
-                    case TextureMapMode.GU_TEXTURE_MATRIX:
+                    case TextureMapMode.GuTextureMatrix:
                         switch (gpuState->TextureMappingState.TextureProjectionMapMode)
                         {
                             default:
@@ -374,7 +374,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                                 break;
                         }
                         break;
-                    case TextureMapMode.GU_ENVIRONMENT_MAP:
+                    case TextureMapMode.GuEnvironmentMap:
                         Console.Error.WriteLine("NotImplemented: GU_ENVIRONMENT_MAP");
                         break;
                     default:

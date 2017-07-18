@@ -1,7 +1,4 @@
-﻿using CSharpUtils;
-using CSPspEmu.Core.Cpu.VFpu;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using CSharpUtils.Extensions;
 
@@ -15,10 +12,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
 
     public sealed class VfpuUtils
     {
-        public static string GetRegisterName(int Matrix, int Column, int Row)
-        {
-            return "VFR" + GetIndexCell(Matrix, Column, Row);
-        }
+        public static string GetRegisterName(int matrix, int column, int row) =>
+            "VFR" + GetIndexCell(matrix, column, row);
 
         //public static int GetIndexCell(int Matrix, int Column, int Row, bool Transposed)
         //{
@@ -32,104 +27,80 @@ namespace CSPspEmu.Core.Cpu.VFpu
         //	}
         //}
 
-        public static int GetIndexCell(VfpuCell Cell)
-        {
-            return GetIndexCell(Cell.Matrix, Cell.Column, Cell.Row);
-        }
+        public static int GetIndexCell(VfpuCell cell) => GetIndexCell(cell.Matrix, cell.Column, cell.Row);
 
-        public static int GetIndexCell(int Matrix, int Column, int Row)
+        public static int GetIndexCell(int matrix, int column, int row)
         {
             //public int S_COLUMN { get { return get(0, 2); } set { set(0, 2, value); } }
             //public int S_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
             //public int S_ROW { get { return get(5, 2); } set { set(5, 2, value); } }
 
-            if (Matrix < 0 || Matrix >= 8 || Column < 0 || Column >= 4 || Row < 0 || Row >= 4)
+            if (matrix < 0 || matrix >= 8 || column < 0 || column >= 4 || row < 0 || row >= 4)
             {
-                throw (new InvalidOperationException(String.Format("Matrix: {0}, Column: {1}, Row: {2}", Matrix, Column,
-                    Row)));
+                throw new InvalidOperationException($"Matrix: {matrix}, Column: {column}, Row: {row}");
             }
 
             //return Row * 16 + Matrix * 4 + Column;
             //return Matrix * 16 + Column * 4 + Row;
-            return Matrix * 16 + Row * 4 + Column;
+            return matrix * 16 + row * 4 + column;
         }
 
-        public static int[] GetIndices(VfpuRegisterInfo RegisterInfo)
-        {
-            return _GetIndices(RegisterInfo).ToArray();
-        }
+        public static int[] GetIndices(VfpuRegisterInfo registerInfo) => _GetIndices(registerInfo).ToArray();
 
-        public static int GetIndexCell(VfpuRegisterInt Register)
-        {
-            return GetIndexCell(VfpuRegisterInfo.FromVfpuRegisterInt(VfpuRegisterType.Cell, 1, Register));
-        }
+        public static int GetIndexCell(VfpuRegisterInt register) =>
+            GetIndexCell(VfpuRegisterInfo.FromVfpuRegisterInt(VfpuRegisterType.Cell, 1, register));
 
-        public static int[] GetIndicesVector(int Size, VfpuRegisterInt Register)
-        {
-            return GetIndicesVector(VfpuRegisterInfo.FromVfpuRegisterInt(VfpuRegisterType.Vector, Size, Register));
-        }
+        public static int[] GetIndicesVector(int size, VfpuRegisterInt register) =>
+            GetIndicesVector(VfpuRegisterInfo.FromVfpuRegisterInt(VfpuRegisterType.Vector, size, register));
 
-        public static int[,] GetIndicesMatrix(int Size, VfpuRegisterInt Register)
-        {
-            return GetIndicesMatrix(VfpuRegisterInfo.FromVfpuRegisterInt(VfpuRegisterType.Matrix, Size, Register));
-        }
+        public static int[,] GetIndicesMatrix(int size, VfpuRegisterInt register) =>
+            GetIndicesMatrix(VfpuRegisterInfo.FromVfpuRegisterInt(VfpuRegisterType.Matrix, size, register));
 
-        public static int GetIndexCell(VfpuRegisterInfo RegisterInfo)
-        {
-            return GetIndexCell(RegisterInfo.GetCellOffset(0));
-        }
+        public static int GetIndexCell(VfpuRegisterInfo registerInfo) => GetIndexCell(registerInfo.GetCellOffset(0));
 
-        public static int[] GetIndicesVector(VfpuRegisterInfo RegisterInfo)
-        {
-            return Enumerable.Range(0, RegisterInfo.Size)
-                .Select(Offset => GetIndexCell(RegisterInfo.GetCellOffset(Offset))).ToArray();
-        }
+        public static int[] GetIndicesVector(VfpuRegisterInfo registerInfo) => Enumerable.Range(0, registerInfo.Size)
+            .Select(offset => GetIndexCell(registerInfo.GetCellOffset(offset))).ToArray();
 
-        public static int[,] GetIndicesMatrix(VfpuRegisterInfo RegisterInfo)
+        public static int[,] GetIndicesMatrix(VfpuRegisterInfo registerInfo)
         {
-            var IndicesMatrix = new int[RegisterInfo.Size, RegisterInfo.Size];
+            var indicesMatrix = new int[registerInfo.Size, registerInfo.Size];
 
-            for (int Row = 0; Row < RegisterInfo.Size; Row++)
+            for (var row = 0; row < registerInfo.Size; row++)
             {
-                for (int Column = 0; Column < RegisterInfo.Size; Column++)
+                for (var column = 0; column < registerInfo.Size; column++)
                 {
-                    IndicesMatrix[Column, Row] = (int) GetIndexCell(RegisterInfo.GetCellOffset(Column, Row));
+                    indicesMatrix[column, row] = GetIndexCell(registerInfo.GetCellOffset(column, row));
                 }
             }
 
-            return IndicesMatrix;
+            return indicesMatrix;
         }
 
-        private static int[] _GetIndices(VfpuRegisterInfo RegisterInfo)
+        private static int[] _GetIndices(VfpuRegisterInfo registerInfo)
         {
-            switch (RegisterInfo.RegisterType)
+            switch (registerInfo.RegisterType)
             {
-                case VfpuRegisterType.Cell: return new[] {(int) GetIndexCell(RegisterInfo)};
-                case VfpuRegisterType.Vector: return GetIndicesVector(RegisterInfo);
-                case VfpuRegisterType.Matrix: return GetIndicesMatrix(RegisterInfo).Compact();
+                case VfpuRegisterType.Cell: return new[] {GetIndexCell(registerInfo)};
+                case VfpuRegisterType.Vector: return GetIndicesVector(registerInfo);
+                case VfpuRegisterType.Matrix: return GetIndicesMatrix(registerInfo).Compact();
                 default:
-                    throw (new NotImplementedException(String.Format("Invalid vfpu registry name {0}('{1}')",
-                        RegisterInfo.RegisterIndex, RegisterInfo.Name)));
+                    throw (new NotImplementedException(string.Format("Invalid vfpu registry name {0}('{1}')",
+                        registerInfo.RegisterIndex, registerInfo.Name)));
             }
         }
 
-        public static int GetSizeBySuffix(string NameWithSufix)
+        public static int GetSizeBySuffix(string nameWithSufix)
         {
-            if (NameWithSufix.EndsWith(".s")) return 1;
-            if (NameWithSufix.EndsWith(".p")) return 2;
-            if (NameWithSufix.EndsWith(".t")) return 3;
-            if (NameWithSufix.EndsWith(".q")) return 4;
+            if (nameWithSufix.EndsWith(".s")) return 1;
+            if (nameWithSufix.EndsWith(".p")) return 2;
+            if (nameWithSufix.EndsWith(".t")) return 3;
+            if (nameWithSufix.EndsWith(".q")) return 4;
             throw (new Exception("Register doesn't have sufix"));
         }
 
-        public static int[] GetIndices(string NameWithSufix)
-        {
-            return GetIndices(GetSizeBySuffix(NameWithSufix), NameWithSufix.Substr(0, -2));
-        }
+        public static int[] GetIndices(string nameWithSufix) =>
+            GetIndices(GetSizeBySuffix(nameWithSufix), nameWithSufix.Substr(0, -2));
 
-        public static int[] GetIndices(int Size, string Name)
-        {
-            return GetIndices(VfpuRegisterInfo.Parse(Size, Name));
-        }
+        public static int[] GetIndices(int size, string name) => GetIndices(VfpuRegisterInfo.Parse(size, name));
     }
 }

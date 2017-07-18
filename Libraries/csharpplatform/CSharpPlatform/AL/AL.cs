@@ -41,68 +41,68 @@ namespace CSharpPlatform.AL
         public const int AL_NONE = 0;
         public const int AL_FALSE = 0;
         public const int AL_TRUE = 1;
-        public const ALenum AL_SOURCE_RELATIVE = 0x202;
-        public const ALenum AL_CONE_INNER_ANGLE = 0x1001;
-        public const ALenum AL_CONE_OUTER_ANGLE = 0x1002;
-        public const ALenum AL_PITCH = 0x1003;
-        public const ALenum AL_POSITION = 0x1004;
-        public const ALenum AL_DIRECTION = 0x1005;
-        public const ALenum AL_VELOCITY = 0x1006;
-        public const ALenum AL_LOOPING = 0x1007;
-        public const ALenum AL_BUFFER = 0x1009;
-        public const ALenum AL_GAIN = 0x100A;
-        public const ALenum AL_MIN_GAIN = 0x100D;
-        public const ALenum AL_MAX_GAIN = 0x100E;
-        public const ALenum AL_ORIENTATION = 0x100F;
-        public const ALenum AL_SOURCE_STATE = 0x1010;
-        public const ALenum AL_INITIAL = 0x1011;
-        public const ALenum AL_PLAYING = 0x1012;
-        public const ALenum AL_PAUSED = 0x1013;
-        public const ALenum AL_STOPPED = 0x1014;
-        public const ALenum AL_BUFFERS_QUEUED = 0x1015;
-        public const ALenum AL_BUFFERS_PROCESSED = 0x1016;
-        public const ALenum AL_SEC_OFFSET = 0x1024;
-        public const ALenum AL_SAMPLE_OFFSET = 0x1025;
-        public const ALenum AL_BYTE_OFFSET = 0x1026;
-        public const ALenum AL_SOURCE_TYPE = 0x1027;
-        public const ALenum AL_STATIC = 0x1028;
-        public const ALenum AL_STREAMING = 0x1029;
-        public const ALenum AL_UNDETERMINED = 0x1030;
-        public const ALenum AL_FORMAT_MONO8 = 0x1100;
-        public const ALenum AL_FORMAT_MONO16 = 0x1101;
-        public const ALenum AL_FORMAT_STEREO8 = 0x1102;
-        public const ALenum AL_FORMAT_STEREO16 = 0x1103;
-        public const ALenum AL_REFERENCE_DISTANCE = 0x1020;
-        public const ALenum AL_ROLLOFF_FACTOR = 0x1021;
-        public const ALenum AL_CONE_OUTER_GAIN = 0x1022;
-        public const ALenum AL_MAX_DISTANCE = 0x1023;
-        public const ALenum AL_FREQUENCY = 0x2001;
-        public const ALenum AL_BITS = 0x2002;
-        public const ALenum AL_CHANNELS = 0x2003;
-        public const ALenum AL_SIZE = 0x2004;
-        public const ALenum AL_UNUSED = 0x2010;
-        public const ALenum AL_PENDING = 0x2011;
-        public const ALenum AL_PROCESSED = 0x2012;
-        public const ALenum AL_NO_ERROR = AL_FALSE;
-        public const ALenum AL_INVALID_NAME = 0xA001;
-        public const ALenum AL_INVALID_ENUM = 0xA002;
-        public const ALenum AL_INVALID_VALUE = 0xA003;
-        public const ALenum AL_INVALID_OPERATION = 0xA004;
-        public const ALenum AL_OUT_OF_MEMORY = 0xA005;
-        public const ALenum AL_VENDOR = 0xB001;
-        public const ALenum AL_VERSION = 0xB002;
-        public const ALenum AL_RENDERER = 0xB003;
-        public const ALenum AL_EXTENSIONS = 0xB004;
-        public const ALenum AL_DOPPLER_FACTOR = 0xC000;
-        public const ALenum AL_DOPPLER_VELOCITY = 0xC001;
-        public const ALenum AL_SPEED_OF_SOUND = 0xC003;
-        public const ALenum AL_DISTANCE_MODEL = 0xD000;
-        public const ALenum AL_INVERSE_DISTANCE = 0xD001;
-        public const ALenum AL_INVERSE_DISTANCE_CLAMPED = 0xD002;
-        public const ALenum AL_LINEAR_DISTANCE = 0xD003;
-        public const ALenum AL_LINEAR_DISTANCE_CLAMPED = 0xD004;
-        public const ALenum AL_EXPONENT_DISTANCE = 0xD005;
-        public const ALenum AL_EXPONENT_DISTANCE_CLAMPED = 0xD006;
+        public const int AL_SOURCE_RELATIVE = 0x202;
+        public const int AL_CONE_INNER_ANGLE = 0x1001;
+        public const int AL_CONE_OUTER_ANGLE = 0x1002;
+        public const int AL_PITCH = 0x1003;
+        public const int AL_POSITION = 0x1004;
+        public const int AL_DIRECTION = 0x1005;
+        public const int AL_VELOCITY = 0x1006;
+        public const int AL_LOOPING = 0x1007;
+        public const int AL_BUFFER = 0x1009;
+        public const int AL_GAIN = 0x100A;
+        public const int AL_MIN_GAIN = 0x100D;
+        public const int AL_MAX_GAIN = 0x100E;
+        public const int AL_ORIENTATION = 0x100F;
+        public const int AL_SOURCE_STATE = 0x1010;
+        public const int AL_INITIAL = 0x1011;
+        public const int AL_PLAYING = 0x1012;
+        public const int AL_PAUSED = 0x1013;
+        public const int AL_STOPPED = 0x1014;
+        public const int AL_BUFFERS_QUEUED = 0x1015;
+        public const int AL_BUFFERS_PROCESSED = 0x1016;
+        public const int AL_SEC_OFFSET = 0x1024;
+        public const int AL_SAMPLE_OFFSET = 0x1025;
+        public const int AL_BYTE_OFFSET = 0x1026;
+        public const int AL_SOURCE_TYPE = 0x1027;
+        public const int AL_STATIC = 0x1028;
+        public const int AL_STREAMING = 0x1029;
+        public const int AL_UNDETERMINED = 0x1030;
+        public const int AL_FORMAT_MONO8 = 0x1100;
+        public const int AL_FORMAT_MONO16 = 0x1101;
+        public const int AL_FORMAT_STEREO8 = 0x1102;
+        public const int AL_FORMAT_STEREO16 = 0x1103;
+        public const int AL_REFERENCE_DISTANCE = 0x1020;
+        public const int AL_ROLLOFF_FACTOR = 0x1021;
+        public const int AL_CONE_OUTER_GAIN = 0x1022;
+        public const int AL_MAX_DISTANCE = 0x1023;
+        public const int AL_FREQUENCY = 0x2001;
+        public const int AL_BITS = 0x2002;
+        public const int AL_CHANNELS = 0x2003;
+        public const int AL_SIZE = 0x2004;
+        public const int AL_UNUSED = 0x2010;
+        public const int AL_PENDING = 0x2011;
+        public const int AL_PROCESSED = 0x2012;
+        public const int AL_NO_ERROR = AL_FALSE;
+        public const int AL_INVALID_NAME = 0xA001;
+        public const int AL_INVALID_ENUM = 0xA002;
+        public const int AL_INVALID_VALUE = 0xA003;
+        public const int AL_INVALID_OPERATION = 0xA004;
+        public const int AL_OUT_OF_MEMORY = 0xA005;
+        public const int AL_VENDOR = 0xB001;
+        public const int AL_VERSION = 0xB002;
+        public const int AL_RENDERER = 0xB003;
+        public const int AL_EXTENSIONS = 0xB004;
+        public const int AL_DOPPLER_FACTOR = 0xC000;
+        public const int AL_DOPPLER_VELOCITY = 0xC001;
+        public const int AL_SPEED_OF_SOUND = 0xC003;
+        public const int AL_DISTANCE_MODEL = 0xD000;
+        public const int AL_INVERSE_DISTANCE = 0xD001;
+        public const int AL_INVERSE_DISTANCE_CLAMPED = 0xD002;
+        public const int AL_LINEAR_DISTANCE = 0xD003;
+        public const int AL_LINEAR_DISTANCE_CLAMPED = 0xD004;
+        public const int AL_EXPONENT_DISTANCE = 0xD005;
+        public const int AL_EXPONENT_DISTANCE_CLAMPED = 0xD006;
 
         public static readonly alGetError alGetError;
         public static readonly alSourcef alSourcef;
@@ -174,218 +174,218 @@ namespace CSharpPlatform.AL
         public static readonly alGetBuffer3i alGetBuffer3i;
         public static readonly alGetBufferiv alGetBufferiv;
 
-        public static string alGetErrorString(ALenum error)
+        public static string alGetErrorString(int error)
         {
             return "Unknown(" + error + ")";
         }
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALenum alGetError();
+    public unsafe delegate int alGetError();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourcef(ALuint sid, ALenum param, ALfloat value);
+    public unsafe delegate void alSourcef(uint sid, int param, float value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSource3f(ALuint sid, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
+    public unsafe delegate void alSource3f(uint sid, int param, float value1, float value2, float value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGenSources(ALsizei n, ALuint* sources);
+    public unsafe delegate void alGenSources(int n, uint* sources);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alDeleteSources(ALsizei n, ALuint* sources);
+    public unsafe delegate void alDeleteSources(int n, uint* sources);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALboolean alIsSource(ALuint sid);
+    public unsafe delegate bool alIsSource(uint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alEnable(ALenum capability);
+    public unsafe delegate void alEnable(int capability);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alDisable(ALenum capability);
+    public unsafe delegate void alDisable(int capability);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALboolean alIsEnabled(ALenum capability);
+    public unsafe delegate bool alIsEnabled(int capability);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetSourcei(ALuint sid, ALenum param, ALint* value);
+    public unsafe delegate void alGetSourcei(uint sid, int param, int* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alBufferData(ALuint bid, ALenum format, void* data, ALsizei size, ALsizei freq);
+    public unsafe delegate void alBufferData(uint bid, int format, void* data, int size, int freq);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALchar* alGetString(ALenum param);
+    public unsafe delegate byte* alGetString(int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetBooleanv(ALenum param, ALboolean* data);
+    public unsafe delegate void alGetBooleanv(int param, bool* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetIntegerv(ALenum param, ALint* data);
+    public unsafe delegate void alGetIntegerv(int param, int* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetFloatv(ALenum param, ALfloat* data);
+    public unsafe delegate void alGetFloatv(int param, float* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetDoublev(ALenum param, ALdouble* data);
+    public unsafe delegate void alGetDoublev(int param, double* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALboolean alGetBoolean(ALenum param);
+    public unsafe delegate bool alGetBoolean(int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALint alGetInteger(ALenum param);
+    public unsafe delegate int alGetInteger(int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALfloat alGetFloat(ALenum param);
+    public unsafe delegate float alGetFloat(int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALdouble alGetDouble(ALenum param);
+    public unsafe delegate double alGetDouble(int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALboolean alIsExtensionPresent(ALchar* extname);
+    public unsafe delegate bool alIsExtensionPresent(byte* extname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void* alGetProcAddress(ALchar* fname);
+    public unsafe delegate void* alGetProcAddress(byte* fname);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALenum alGetEnumValue(ALchar* ename);
+    public unsafe delegate int alGetEnumValue(byte* ename);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alListenerf(ALenum param, ALfloat value);
+    public unsafe delegate void alListenerf(int param, float value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alListener3f(ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
+    public unsafe delegate void alListener3f(int param, float value1, float value2, float value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alListenerfv(ALenum param, ALfloat* values);
+    public unsafe delegate void alListenerfv(int param, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alListeneri(ALenum param, ALint value);
+    public unsafe delegate void alListeneri(int param, int value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alListener3i(ALenum param, ALint value1, ALint value2, ALint value3);
+    public unsafe delegate void alListener3i(int param, int value1, int value2, int value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alListeneriv(ALenum param, ALint* values);
+    public unsafe delegate void alListeneriv(int param, int* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetListenerf(ALenum param, ALfloat* value);
+    public unsafe delegate void alGetListenerf(int param, float* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetListener3f(ALenum param, ALfloat*value1, ALfloat*value2, ALfloat*value3);
+    public unsafe delegate void alGetListener3f(int param, float*value1, float*value2, float*value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetListenerfv(ALenum param, ALfloat* values);
+    public unsafe delegate void alGetListenerfv(int param, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetListeneri(ALenum param, ALint* value);
+    public unsafe delegate void alGetListeneri(int param, int* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetListener3i(ALenum param, ALint*value1, ALint*value2, ALint*value3);
+    public unsafe delegate void alGetListener3i(int param, int*value1, int*value2, int*value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetListeneriv(ALenum param, ALint* values);
+    public unsafe delegate void alGetListeneriv(int param, int* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourcefv(ALuint sid, ALenum param, ALfloat* values);
+    public unsafe delegate void alSourcefv(uint sid, int param, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourcei(ALuint sid, ALenum param, ALint value);
+    public unsafe delegate void alSourcei(uint sid, int param, int value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSource3i(ALuint sid, ALenum param, ALint value1, ALint value2, ALint value3);
+    public unsafe delegate void alSource3i(uint sid, int param, int value1, int value2, int value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourceiv(ALuint sid, ALenum param, ALint* values);
+    public unsafe delegate void alSourceiv(uint sid, int param, int* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetSourcef(ALuint sid, ALenum param, ALfloat* value);
+    public unsafe delegate void alGetSourcef(uint sid, int param, float* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetSource3f(ALuint sid, ALenum param, ALfloat* value1, ALfloat* value2,
-        ALfloat* value3);
+    public unsafe delegate void alGetSource3f(uint sid, int param, float* value1, float* value2,
+        float* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetSourcefv(ALuint sid, ALenum param, ALfloat* values);
+    public unsafe delegate void alGetSourcefv(uint sid, int param, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetSource3i(ALuint sid, ALenum param, ALint* value1, ALint* value2, ALint* value3);
+    public unsafe delegate void alGetSource3i(uint sid, int param, int* value1, int* value2, int* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetSourceiv(ALuint sid, ALenum param, ALint* values);
+    public unsafe delegate void alGetSourceiv(uint sid, int param, int* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourcePlayv(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourcePlayv(int ns, uint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourceStopv(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourceStopv(int ns, uint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourceRewindv(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourceRewindv(int ns, uint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourcePausev(ALsizei ns, ALuint*sids);
+    public unsafe delegate void alSourcePausev(int ns, uint*sids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourcePlay(ALuint sid);
+    public unsafe delegate void alSourcePlay(uint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourceStop(ALuint sid);
+    public unsafe delegate void alSourceStop(uint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourceRewind(ALuint sid);
+    public unsafe delegate void alSourceRewind(uint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourcePause(ALuint sid);
+    public unsafe delegate void alSourcePause(uint sid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourceQueueBuffers(ALuint sid, ALsizei numEntries, ALuint*bids);
+    public unsafe delegate void alSourceQueueBuffers(uint sid, int numEntries, uint*bids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alSourceUnqueueBuffers(ALuint sid, ALsizei numEntries, ALuint*bids);
+    public unsafe delegate void alSourceUnqueueBuffers(uint sid, int numEntries, uint*bids);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGenBuffers(ALsizei n, ALuint* buffers);
+    public unsafe delegate void alGenBuffers(int n, uint* buffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alDeleteBuffers(ALsizei n, ALuint* buffers);
+    public unsafe delegate void alDeleteBuffers(int n, uint* buffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate ALboolean alIsBuffer(ALuint bid);
+    public unsafe delegate bool alIsBuffer(uint bid);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alBufferf(ALuint bid, ALenum param, ALfloat value);
+    public unsafe delegate void alBufferf(uint bid, int param, float value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alBuffer3f(ALuint bid, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3);
+    public unsafe delegate void alBuffer3f(uint bid, int param, float value1, float value2, float value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alBufferfv(ALuint bid, ALenum param, ALfloat* values);
+    public unsafe delegate void alBufferfv(uint bid, int param, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alBufferi(ALuint bid, ALenum param, ALint value);
+    public unsafe delegate void alBufferi(uint bid, int param, int value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alBuffer3i(ALuint bid, ALenum param, ALint value1, ALint value2, ALint value3);
+    public unsafe delegate void alBuffer3i(uint bid, int param, int value1, int value2, int value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alBufferiv(ALuint bid, ALenum param, ALint* values);
+    public unsafe delegate void alBufferiv(uint bid, int param, int* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetBufferf(ALuint bid, ALenum param, ALfloat* value);
+    public unsafe delegate void alGetBufferf(uint bid, int param, float* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetBuffer3f(ALuint bid, ALenum param, ALfloat* value1, ALfloat* value2,
-        ALfloat* value3);
+    public unsafe delegate void alGetBuffer3f(uint bid, int param, float* value1, float* value2,
+        float* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetBufferfv(ALuint bid, ALenum param, ALfloat* values);
+    public unsafe delegate void alGetBufferfv(uint bid, int param, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetBufferi(ALuint bid, ALenum param, ALint* value);
+    public unsafe delegate void alGetBufferi(uint bid, int param, int* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetBuffer3i(ALuint bid, ALenum param, ALint* value1, ALint* value2, ALint* value3);
+    public unsafe delegate void alGetBuffer3i(uint bid, int param, int* value1, int* value2, int* value3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void alGetBufferiv(ALuint bid, ALenum param, ALint* values);
+    public unsafe delegate void alGetBufferiv(uint bid, int param, int* values);
 }

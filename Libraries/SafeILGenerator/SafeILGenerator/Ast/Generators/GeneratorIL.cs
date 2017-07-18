@@ -71,7 +71,7 @@ namespace SafeILGenerator.Ast.Generators
 
         public string GenerateToString(MethodInfo methodInfo, AstNode astNode)
         {
-            return String.Join("\n", GenerateToStringList(methodInfo, astNode));
+            return string.Join("\n", GenerateToStringList(methodInfo, astNode));
         }
 
         public string[] GenerateToStringList(MethodInfo methodInfo, AstNode astNode)
@@ -113,7 +113,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (GenerateLines)
             {
-                Lines.Add(String.Format("  {0} {1}", opCode, param));
+                Lines.Add(string.Format("  {0} {1}", opCode, param));
             }
         }
 
@@ -121,7 +121,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (GenerateLines)
             {
-                Lines.Add(String.Format("; {0}", text));
+                Lines.Add(string.Format("; {0}", text));
             }
         }
 
@@ -133,7 +133,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (GenerateLines)
             {
-                Lines.Add(String.Format("Label_{0}:;", label.Name));
+                Lines.Add(string.Format("Label_{0}:;", label.Name));
             }
         }
 
@@ -331,7 +331,7 @@ namespace SafeILGenerator.Ast.Generators
             }
             else
             {
-                throw (new NotImplementedException(String.Format("Can't handle immediate type {0}", itemType)));
+                throw (new NotImplementedException(string.Format("Can't handle immediate type {0}", itemType)));
             }
         }
 
@@ -587,7 +587,7 @@ namespace SafeILGenerator.Ast.Generators
 
             if (expressionType != MethodInfo.ReturnType)
             {
-                throw (new Exception(String.Format("Return type mismatch {0} != {1}", expressionType,
+                throw (new Exception(string.Format("Return type mismatch {0} != {1}", expressionType,
                     MethodInfo.ReturnType)));
             }
 
@@ -615,7 +615,7 @@ namespace SafeILGenerator.Ast.Generators
                     Emit(OpCodes.Call, call.MethodInfo);
                     break;
                 default:
-                    throw (new Exception(String.Format("Can't handle calling convention {0}",
+                    throw (new Exception(string.Format("Can't handle calling convention {0}",
                         call.MethodInfo.CallingConvention)));
             }
         }
@@ -700,7 +700,7 @@ namespace SafeILGenerator.Ast.Generators
         protected virtual void _Generate(AstNodeExprTerop terop)
         {
             if (terop.True.Type != terop.False.Type)
-                throw (new InvalidOperationException(String.Format("AstNodeExprTerop '?:' types must match {0} != {1}",
+                throw (new InvalidOperationException(string.Format("AstNodeExprTerop '?:' types must match {0} != {1}",
                     terop.True.Type, terop.False.Type)));
             var ternaryType = terop.True.Type;
             var ternaryTempAstLocal = AstLocal.Create(ternaryType);

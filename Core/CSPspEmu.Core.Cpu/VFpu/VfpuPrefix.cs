@@ -6,47 +6,39 @@ namespace CSPspEmu.Core.Cpu.VFpu
 {
     public interface IVfpuPrefixCommon
     {
-        void EnableAndSetValueAndPc(uint Value, uint PC);
+        void EnableAndSetValueAndPc(uint value, uint pc);
     }
 
     public class VfpuPrefix : IVfpuPrefixCommon
     {
-        public uint DeclaredPC;
-        public uint UsedPC;
+        public uint DeclaredPc;
+        public uint UsedPc;
         public uint Value;
         public bool Enabled;
         public int UsedCount;
 
         internal void Consume()
         {
-            this.Enabled = false;
+            Enabled = false;
         }
 
-        public void CheckPrefixUsage(uint PC)
+        public void CheckPrefixUsage(uint pc)
         {
             // Disable the prefix once it have been used.
-            if (this.Enabled)
+            if (!Enabled) return;
+            if (UsedCount > 0 && UsedPc != pc)
             {
-                if (this.UsedCount > 0 && this.UsedPC != PC)
-                {
-                    this.Enabled = false;
-                    //Console.WriteLine("VfpuPrefix.Enabled = false | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
-                }
-
-                this.UsedPC = PC;
-                this.UsedCount++;
+                Enabled = false;
+                //Console.WriteLine("VfpuPrefix.Enabled = false | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
             }
+
+            UsedPc = pc;
+            UsedCount++;
         }
 
-        public static implicit operator uint(VfpuPrefix Value)
-        {
-            return Value.Value;
-        }
+        public static implicit operator uint(VfpuPrefix value) => value.Value;
 
-        public static implicit operator VfpuPrefix(uint Value)
-        {
-            return new VfpuPrefix() {Value = Value};
-        }
+        public static implicit operator VfpuPrefix(uint value) => new VfpuPrefix() {Value = value};
 
         // swz(xyzw)
         //assert(i >= 0 && i < 4);
@@ -56,56 +48,35 @@ namespace CSPspEmu.Core.Cpu.VFpu
             return BitUtils.Extract(Value, 0 + i * 2, 2);
         }
 
-        public void SourceIndex(int i, uint ValueToInsert)
-        {
-            BitUtils.Insert(ref Value, 0 + i * 2, 2, ValueToInsert);
-        }
+        public void SourceIndex(int i, uint valueToInsert) => BitUtils.Insert(ref Value, 0 + i * 2, 2, valueToInsert);
 
         // abs(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (8 + i * 1)) & 1;
-        public bool SourceAbsolute(int i)
-        {
-            return BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
-        }
+        public bool SourceAbsolute(int i) => BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
 
-        public void SourceAbsolute(int i, bool ValueToInsert)
-        {
-            BitUtils.Insert(ref Value, 8 + i * 1, 1, ValueToInsert ? 1U : 0U);
-        }
+        public void SourceAbsolute(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 8 + i * 1, 1, valueToInsert ? 1U : 0U);
 
         // cst(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (12 + i * 1)) & 1;
-        public bool SourceConstant(int i)
-        {
-            return BitUtils.Extract(Value, 12 + i * 1, 1) != 0;
-        }
+        public bool SourceConstant(int i) => BitUtils.Extract(Value, 12 + i * 1, 1) != 0;
 
-        public void SourceConstant(int i, bool ValueToInsert)
-        {
-            BitUtils.Insert(ref Value, 12 + i * 1, 1, ValueToInsert ? 1U : 0U);
-        }
+        public void SourceConstant(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 12 + i * 1, 1, valueToInsert ? 1U : 0U);
 
         // neg(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (16 + i * 1)) & 1;
-        public bool SourceNegate(int i)
-        {
-            return BitUtils.Extract(Value, 16 + i * 1, 1) != 0;
-        }
+        public bool SourceNegate(int i) => BitUtils.Extract(Value, 16 + i * 1, 1) != 0;
 
-        public void SourceNegate(int i, bool ValueToInsert)
-        {
-            BitUtils.Insert(ref Value, 16 + i * 1, 1, ValueToInsert ? 1U : 0U);
-        }
+        public void SourceNegate(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 16 + i * 1, 1, valueToInsert ? 1U : 0U);
 
-        public void EnableAndSetValueAndPc(uint Value, uint PC)
+        public void EnableAndSetValueAndPc(uint value, uint pc)
         {
-            this.Enabled = true;
-            this.Value = Value;
-            this.DeclaredPC = PC;
-            this.UsedCount = 0;
+            Enabled = true;
+            Value = value;
+            DeclaredPc = pc;
+            UsedCount = 0;
             //Console.WriteLine("VfpuPrefix.Enabled = true | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
         }
 
@@ -113,126 +84,98 @@ namespace CSPspEmu.Core.Cpu.VFpu
         {
             get
             {
-                var Parts = new List<string>();
-                for (int Index = 0; Index < 4; Index++)
+                var parts = new List<string>();
+                for (var index = 0; index < 4; index++)
                 {
-                    string Part = "";
-                    if (SourceConstant(Index))
+                    string part;
+                    if (SourceConstant(index))
                     {
-                        switch (SourceIndex(Index))
+                        switch (SourceIndex(index))
                         {
                             case 0:
-                                Part = SourceAbsolute(Index) ? "3" : "0";
+                                part = SourceAbsolute(index) ? "3" : "0";
                                 break;
                             case 1:
-                                Part = SourceAbsolute(Index) ? "1/3" : "1";
+                                part = SourceAbsolute(index) ? "1/3" : "1";
                                 break;
                             case 2:
-                                Part = SourceAbsolute(Index) ? "1/4" : "2";
+                                part = SourceAbsolute(index) ? "1/4" : "2";
                                 break;
                             case 3:
-                                Part = SourceAbsolute(Index) ? "1/6" : "1/2";
+                                part = SourceAbsolute(index) ? "1/6" : "1/2";
                                 break;
                             default: throw (new InvalidOperationException());
                         }
                     }
                     else
                     {
-                        Part = ComponentNames[SourceIndex(Index)];
-                        if (SourceAbsolute(Index)) Part = "|" + Part + "|";
-                        if (SourceNegate(Index)) Part = "-" + Part;
+                        part = ComponentNames[SourceIndex(index)];
+                        if (SourceAbsolute(index)) part = "|" + part + "|";
+                        if (SourceNegate(index)) part = "-" + part;
                     }
 
-                    Parts.Add(Part);
+                    parts.Add(part);
                 }
-                return "[" + String.Join(", ", Parts) + "]";
+                return "[" + string.Join(", ", parts) + "]";
             }
         }
 
 
-        public static readonly string[] ComponentNames = new string[] {"x", "y", "z", "w"};
+        public static readonly string[] ComponentNames = {"x", "y", "z", "w"};
 
-        public override string ToString()
-        {
-            return String.Format(
-                "VfpuPrefix(Enabled={0}, UsedPC=0x{1:X}, DeclaredPC=0x{2:X})({3})",
-                Enabled, UsedPC, DeclaredPC, Format
-            );
-        }
+        public override string ToString() =>
+            $"VfpuPrefix(Enabled={Enabled}, UsedPC=0x{UsedPc:X}, DeclaredPC=0x{DeclaredPc:X})({Format})";
 
-        public bool IsValidIndex(int Index)
-        {
-            return (Index >= 0) && (Index < 4);
-        }
+        public bool IsValidIndex(int index) => (index >= 0) && (index < 4);
     }
 
     public class VfpuDestinationPrefix : IVfpuPrefixCommon
     {
-        public uint DeclaredPC;
-        public uint UsedPC;
+        public uint DeclaredPc;
+        public uint UsedPc;
         public uint Value;
         public bool Enabled;
         public int UsedCount;
 
-        public void CheckPrefixUsage(uint PC)
+        public void CheckPrefixUsage(uint pc)
         {
             //Console.WriteLine("VfpuDestinationPrefix.CheckPrefixUsage | {0:X8} : {1:X8} | {2:X8} | {3} | {4}", Value, DeclaredPC, PC, Enabled, UsedCount);
             // Disable the prefix once it have been used.
-            if (this.Enabled)
+            if (!Enabled) return;
+            if (UsedCount > 0 && UsedPc != pc)
             {
-                if (this.UsedCount > 0 && this.UsedPC != PC)
-                {
-                    this.Enabled = false;
-                    //Console.WriteLine("VfpuDestinationPrefix.Enabled = false | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
-                }
-
-                this.UsedPC = PC;
-                this.UsedCount++;
+                Enabled = false;
+                //Console.WriteLine("VfpuDestinationPrefix.Enabled = false | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
             }
+
+            UsedPc = pc;
+            UsedCount++;
         }
 
-        public static implicit operator uint(VfpuDestinationPrefix Value)
-        {
-            return Value.Value;
-        }
+        public static implicit operator uint(VfpuDestinationPrefix value) => value.Value;
 
-        public static implicit operator VfpuDestinationPrefix(uint Value)
-        {
-            return new VfpuDestinationPrefix() {Value = Value};
-        }
+        public static implicit operator VfpuDestinationPrefix(uint value) => new VfpuDestinationPrefix() {Value = value};
 
         // sat(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (0 + i * 2)) & 3;
-        public uint DestinationSaturation(int i)
-        {
-            return BitUtils.Extract(Value, 0 + i * 2, 2);
-        }
+        public uint DestinationSaturation(int i) => BitUtils.Extract(Value, 0 + i * 2, 2);
 
-        public void DestinationSaturation(int i, uint ValueToInsert)
-        {
-            BitUtils.Insert(ref Value, 0 + i * 2, 2, ValueToInsert);
-        }
+        public void DestinationSaturation(int i, uint valueToInsert) => BitUtils.Insert(ref Value, 0 + i * 2, 2, valueToInsert);
 
         // msk(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (8 + i * 1)) & 1;
-        public bool DestinationMask(int i)
-        {
-            return BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
-        }
+        public bool DestinationMask(int i) => BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
 
-        public void DestinationMask(int i, bool ValueToInsert)
-        {
-            BitUtils.Insert(ref Value, 8 + i * 1, 1, ValueToInsert ? 1U : 0U);
-        }
+        public void DestinationMask(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 8 + i * 1, 1, valueToInsert ? 1U : 0U);
 
-        public void EnableAndSetValueAndPc(uint Value, uint PC)
+        public void EnableAndSetValueAndPc(uint value, uint pc)
         {
-            this.Enabled = true;
-            this.Value = Value;
-            this.DeclaredPC = PC;
-            this.UsedCount = 0;
+            Enabled = true;
+            Value = value;
+            DeclaredPc = pc;
+            UsedCount = 0;
             //Console.WriteLine("VfpuDestinationPrefix.Enabled = true | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
         }
 
@@ -240,45 +183,36 @@ namespace CSPspEmu.Core.Cpu.VFpu
         {
             get
             {
-                var Parts = new List<string>();
-                for (int Index = 0; Index < 4; Index++)
+                var parts = new List<string>();
+                for (var index = 0; index < 4; index++)
                 {
-                    string Part = "";
-                    if (!DestinationMask(Index))
+                    string part;
+                    if (!DestinationMask(index))
                     {
-                        switch (DestinationSaturation(Index))
+                        switch (DestinationSaturation(index))
                         {
                             case 1:
-                                Part = "0:1";
+                                part = "0:1";
                                 break;
                             case 3:
-                                Part = "-1:1";
+                                part = "-1:1";
                                 break;
                             default: throw (new InvalidOperationException());
                         }
                     }
                     else
                     {
-                        Part = "M";
+                        part = "M";
                     }
 
-                    Parts.Add(Part);
+                    parts.Add(part);
                 }
-                return "[" + String.Join(", ", Parts) + "]";
+                return "[" + string.Join(", ", parts) + "]";
             }
         }
 
-        public override string ToString()
-        {
-            return String.Format(
-                "VfpuDestinationPrefix(Enabled={0}, UsedPC=0x{1:X}, DeclaredPC=0x{2:X})({3})",
-                Enabled, UsedPC, DeclaredPC, Format
-            );
-        }
+        public override string ToString() => $"VfpuDestinationPrefix(Enabled={Enabled}, UsedPC=0x{UsedPc:X}, DeclaredPC=0x{DeclaredPc:X})({Format})";
 
-        public bool IsValidIndex(int Index)
-        {
-            return (Index >= 0) && (Index < 4);
-        }
+        public bool IsValidIndex(int index) => (index >= 0) && (index < 4);
     }
 }

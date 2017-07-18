@@ -1,9 +1,4 @@
 ﻿using CSharpUtils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -16,20 +11,11 @@ namespace CSPspEmu.Core.Cpu
     {
         public ushort Value;
 
-        public bool Sign
-        {
-            get { return BitUtils.Extract(Value, 15, 1) != 0; }
-        }
+        public bool Sign => BitUtils.Extract(Value, 15, 1) != 0;
 
-        public uint Exponent
-        {
-            get { return BitUtils.Extract(Value, 10, 5); }
-        }
+        public uint Exponent => BitUtils.Extract(Value, 10, 5);
 
-        public uint Fraction
-        {
-            get { return BitUtils.Extract(Value, 0, 10); }
-        }
+        public uint Fraction => BitUtils.Extract(Value, 0, 10);
     }
 
     public class HalfFloat
@@ -82,9 +68,9 @@ namespace CSPspEmu.Core.Cpu
         public static int FloatToHalfFloat(float Float)
         {
             var i = MathFloat.ReinterpretFloatAsInt(Float);
-            int s = ((i >> 16) & 0x00008000); // sign
-            int e = ((i >> 23) & 0x000000ff) - (127 - 15); // exponent
-            int f = ((i >> 0) & 0x007fffff); // fraction
+            var s = ((i >> 16) & 0x00008000); // sign
+            var e = ((i >> 23) & 0x000000ff) - (127 - 15); // exponent
+            var f = ((i >> 0) & 0x007fffff); // fraction
 
             // need to handle NaNs and Inf?
             if (e <= 0)
@@ -122,9 +108,9 @@ namespace CSPspEmu.Core.Cpu
 
         public static float ToFloat(int imm16)
         {
-            int s = (imm16 >> 15) & 0x00000001; // Sign
-            int e = (imm16 >> 10) & 0x0000001f; // Exponent
-            int f = (imm16 >> 0) & 0x000003ff; // Fraction
+            var s = (imm16 >> 15) & 0x00000001; // Sign
+            var e = (imm16 >> 10) & 0x0000001f; // Exponent
+            var f = (imm16 >> 0) & 0x000003ff; // Fraction
 
             // Need to handle 0x7C00 INF and 0xFC00 -INF?
             if (e == 0)

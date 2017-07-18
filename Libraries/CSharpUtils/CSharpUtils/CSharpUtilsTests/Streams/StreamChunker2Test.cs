@@ -12,12 +12,12 @@ namespace CSharpUtilsTests.Streams
     {
         protected string BList(params string[] strings)
         {
-            return String.Join(",", strings);
+            return string.Join(",", strings);
         }
 
         protected string ChunkStr(string Array, string ValueToFind)
         {
-            return String.Join(",", StreamChunker2.SplitInChunks(
+            return string.Join(",", StreamChunker2.SplitInChunks(
                 new MemoryStream(Encoding.ASCII.GetBytes(Array)),
                 Encoding.ASCII.GetBytes(ValueToFind)
             ).Select((Item) => Encoding.ASCII.GetString(Item)).ToArray());

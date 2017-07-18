@@ -1,4 +1,5 @@
 ﻿using System;
+using CSPspEmu.Core.Cpu.Switch;
 using CSPspEmu.Core.Cpu.Table;
 
 // ReSharper disable InconsistentNaming
@@ -14,7 +15,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
             EmitLookupGenerator.GenerateInfoDelegate(
                 EmitLookupGenerator.GenerateSwitchDelegateReturn<DynarecBranchAnalyzer, JumpFlags>(
                     "_GetBranchInfo",
-                    InstructionTable.ALL, ThrowOnUnexistent: false
+                    InstructionTable.ALL, throwOnUnexistent: false
                 ),
                 new DynarecBranchAnalyzer()
             );

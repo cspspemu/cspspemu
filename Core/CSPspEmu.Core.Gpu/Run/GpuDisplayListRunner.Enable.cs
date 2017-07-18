@@ -35,52 +35,11 @@
 
         // (GU_SCISSOR_TEST) // OP_SCISSOR1 + OP_SCISSOR2
 
-        /// <summary>
-        /// Backface Culling Enable (GU_CULL_FACE)
-        /// </summary>
-        public void OP_BCE()
-        {
-            GpuState->BackfaceCullingState.Enabled = Bool1;
-        }
-
-        /// <summary>
-        /// DiThering Enable (GU_DITHER)
-        /// </summary>
-        public void OP_DTE()
-        {
-            GpuState->DitheringState.Enabled = Bool1;
-        }
-
-        /// <summary>
-        /// Clip Plane Enable (GU_CLIP_PLANES/GL_CLIP_PLANE0)
-        /// </summary>
-        public void OP_CPE()
-        {
-            GpuState->ClipPlaneState.Enabled = Bool1;
-        }
-
-        /// <summary>
-        /// AnitAliasing Enable (GU_LINE_SMOOTH?)
-        /// </summary>
-        public void OP_AAE()
-        {
-            GpuState->LineSmoothState.Enabled = Bool1;
-        }
-
-        /// <summary>
-        /// Patch Cull Enable (GU_PATCH_CULL_FACE)
-        /// </summary>
-        public void OP_PCE()
-        {
-            GpuState->PatchCullingState.Enabled = Bool1;
-        }
-
-        /// <summary>
-        /// Color Test Enable (GU_COLOR_TEST)
-        /// </summary>
-        public void OP_CTE()
-        {
-            GpuState->ColorTestState.Enabled = Bool1;
-        }
+        public void OP_BCE() => GpuState->BackfaceCullingState.Enabled = Bool1;
+        public void OP_DTE() => GpuState->DitheringState.Enabled = Bool1;
+        public void OP_CPE() => GpuState->ClipPlaneState.Enabled = Bool1;
+        public void OP_AAE() => GpuState->LineSmoothState.Enabled = Bool1;
+        public void OP_PCE() => GpuState->PatchCullingState.Enabled = Bool1;
+        public void OP_CTE() => GpuState->ColorTestState.Enabled = Bool1;
     }
 }

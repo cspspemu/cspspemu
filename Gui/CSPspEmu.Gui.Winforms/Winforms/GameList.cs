@@ -138,7 +138,7 @@ namespace CSPspEmu.Gui.Winforms
         public event Action<GameEntry, bool> EntryAdded;
         static XmlSerializer Serializer = new XmlSerializer(typeof(GameEntry));
 
-        public static String GetHash(string IsoFile)
+        public static string GetHash(string IsoFile)
         {
             var IsoFileInfo = new FileInfo(IsoFile);
             return BitConverter
@@ -187,7 +187,7 @@ namespace CSPspEmu.Gui.Winforms
 
                             if (!FileSystem.FileExists("/PSP_GAME/PARAM.SFO"))
                             {
-                                throw (new Exception(String.Format("Not a PSP ISO '{0}'", IsoFile)));
+                                throw (new Exception(string.Format("Not a PSP ISO '{0}'", IsoFile)));
                             }
 
                             ParamSfo = new Psf(new MemoryStream(FileSystem.OpenRead("/PSP_GAME/PARAM.SFO").ReadAll()));

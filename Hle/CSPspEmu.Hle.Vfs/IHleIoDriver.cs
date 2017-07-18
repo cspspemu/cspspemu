@@ -275,7 +275,7 @@ namespace CSPspEmu.Hle.Vfs
 
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                 "ScePspDateTime(Year={0}, Month={1}, Day={2}, Hour={3}, Minute={4}, Second={5}, Microsecond={6})",
                 Year, Month, Day, Hour, Minute, Second, Microsecond
             );
@@ -334,7 +334,7 @@ namespace CSPspEmu.Hle.Vfs
 
         public override string ToString()
         {
-            return String.Format("SceIoStat({0}, {1})", Mode, Size);
+            return string.Format("SceIoStat({0}, {1})", Mode, Size);
         }
     }
 
@@ -384,7 +384,7 @@ namespace CSPspEmu.Hle.Vfs
 
         public override string ToString()
         {
-            return String.Format("HleIoDirent('{0}', {1})", Name, Stat);
+            return string.Format("HleIoDirent('{0}', {1})", Name, Stat);
         }
     }
 

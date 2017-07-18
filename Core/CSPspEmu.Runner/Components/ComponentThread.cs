@@ -20,7 +20,7 @@ namespace CSPspEmu.Runner.Components
         protected AutoResetEvent ResumeEvent = new AutoResetEvent(false);
 
         public readonly TaskQueue ThreadTaskQueue = new TaskQueue();
-        protected abstract String ThreadName { get; }
+        protected abstract string ThreadName { get; }
 
         protected ComponentThread()
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CSPspEmu.Core.Gpu.State;
 using CSharpPlatform;
 
@@ -7,16 +6,16 @@ namespace CSPspEmu.Core.Gpu.Formats
 {
     public unsafe class PspWavefrontObjWriter
     {
-        WavefrontObjWriter WavefrontObjWriter;
+        readonly WavefrontObjWriter _wavefrontObjWriter;
 
-        public PspWavefrontObjWriter(WavefrontObjWriter wavefrontObjWriter) => WavefrontObjWriter = wavefrontObjWriter;
-        public void End() => WavefrontObjWriter.End();
+        public PspWavefrontObjWriter(WavefrontObjWriter wavefrontObjWriter) => _wavefrontObjWriter = wavefrontObjWriter;
+        public void End() => _wavefrontObjWriter.End();
 
-        GuPrimitiveType _currentPrimitiveType;
-        List<int> PrimitiveIndices = new List<int>();
-        Matrix4F _modelMatrix = default(Matrix4F);
-        GpuStateStruct* _gpuState;
-        VertexTypeStruct _vertexType;
+        private GuPrimitiveType _currentPrimitiveType;
+        private readonly List<int> _primitiveIndices = new List<int>();
+        private Matrix4F _modelMatrix = default(Matrix4F);
+        private GpuStateStruct* _gpuState;
+        private VertexTypeStruct _vertexType;
 
         public void StartPrimitive(GpuStateStruct* gpuState, GuPrimitiveType primitiveType, uint vertexAddress,
             int vertexCount, ref VertexTypeStruct vertexType)
@@ -29,9 +28,9 @@ namespace CSPspEmu.Core.Gpu.Formats
             _modelMatrix.Multiply(worldMatrix);
 
             _currentPrimitiveType = primitiveType;
-            WavefrontObjWriter.StartComment(
-                $"Start: {_currentPrimitiveType} : VertexAddress: 0x{vertexAddress:X} : {vertexCount} : {this._vertexType}");
-            PrimitiveIndices.Clear();
+            _wavefrontObjWriter.StartComment(
+                $"Start: {_currentPrimitiveType} : VertexAddress: 0x{vertexAddress:X} : {vertexCount} : {_vertexType}");
+            _primitiveIndices.Clear();
 
             //throw new NotImplementedException();
             /*
@@ -52,7 +51,7 @@ namespace CSPspEmu.Core.Gpu.Formats
                 //Vector = GLVector3.Transform(Vector, ModelMatrix);
             }
 
-            PrimitiveIndices.Add(WavefrontObjWriter.AddVertex(vector));
+            _primitiveIndices.Add(_wavefrontObjWriter.AddVertex(vector));
             //throw new NotImplementedException();
         }
 
@@ -61,26 +60,26 @@ namespace CSPspEmu.Core.Gpu.Formats
             switch (_currentPrimitiveType)
             {
                 case GuPrimitiveType.Sprites:
-                    WavefrontObjWriter.AddFaces(4, PrimitiveIndices);
+                    _wavefrontObjWriter.AddFaces(4, _primitiveIndices);
                     break;
                 case GuPrimitiveType.Triangles:
-                    WavefrontObjWriter.AddFaces(3, PrimitiveIndices);
+                    _wavefrontObjWriter.AddFaces(3, _primitiveIndices);
                     break;
                 case GuPrimitiveType.TriangleStrip:
                 {
-                    var indices = PrimitiveIndices.ToArray();
+                    var indices = _primitiveIndices.ToArray();
                     var triangleCount = indices.Length - 2;
                     for (var n = 0; n < triangleCount; n++)
                     {
-                        WavefrontObjWriter.AddFace(indices[n + 0], indices[n + 1], indices[n + 2]);
+                        _wavefrontObjWriter.AddFace(indices[n + 0], indices[n + 1], indices[n + 2]);
                     }
                 }
                     break;
                 default:
-                    WavefrontObjWriter.StartComment("Can't handle primitive type: " + _currentPrimitiveType);
+                    _wavefrontObjWriter.StartComment("Can't handle primitive type: " + _currentPrimitiveType);
                     break;
             }
-            WavefrontObjWriter.StartComment("End: " + _currentPrimitiveType);
+            _wavefrontObjWriter.StartComment("End: " + _currentPrimitiveType);
             //throw new NotImplementedException();
         }
     }

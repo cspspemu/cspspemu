@@ -2,11 +2,6 @@
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.InstructionCache
 {
@@ -17,41 +12,28 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// <summary>
         /// 
         /// </summary>
-        private DynarecFunction _DynarecFunction;
+        private DynarecFunction _dynarecFunction;
 
         /// <summary>
         /// 
         /// </summary>
-        private Action<CpuThreadState> FunctionDelegate;
+        private Action<CpuThreadState> _functionDelegate;
 
-        public DynarecFunction DynarecFunction
+        public DynarecFunction DynarecFunction => _dynarecFunction;
+
+        public void SetDynarecFunction(DynarecFunction dynarecFunction)
         {
-            get { return _DynarecFunction; }
+            _dynarecFunction = dynarecFunction;
+            _functionDelegate = dynarecFunction.Delegate;
+            StaticField.Value = dynarecFunction.Delegate;
         }
 
-        public void SetDynarecFunction(DynarecFunction DynarecFunction)
-        {
-            _DynarecFunction = DynarecFunction;
-            FunctionDelegate = DynarecFunction.Delegate;
-            StaticField.Value = DynarecFunction.Delegate;
-        }
-
-        public bool HasSpecialName
-        {
-            get { return (DynarecFunction != null) && !String.IsNullOrEmpty(DynarecFunction.Name); }
-        }
+        public bool HasSpecialName => (DynarecFunction != null) && !string.IsNullOrEmpty(DynarecFunction.Name);
 
         /// <summary>
         /// 
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                if (HasSpecialName) return DynarecFunction.Name;
-                return String.Format("0x{0:X8}", EntryPC);
-            }
-        }
+        public string Name => HasSpecialName ? DynarecFunction.Name : $"0x{EntryPc:X8}";
 
         /// <summary>
         /// 
@@ -77,68 +59,50 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         {
         }
 
-        public MethodCacheInfo(MethodCache MethodCache, Action<CpuThreadState> DelegateGeneratorForPC, uint PC)
+        public MethodCacheInfo(MethodCache methodCache, Action<CpuThreadState> delegateGeneratorForPc, uint pc)
         {
-            this.MethodCache = MethodCache;
-            FunctionDelegate = DelegateGeneratorForPC;
-            StaticField = IlInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC);
-            this.PC = PC;
+            MethodCache = methodCache;
+            _functionDelegate = delegateGeneratorForPc;
+            StaticField = IlInstanceHolder.TAlloc(delegateGeneratorForPc);
+            Pc = pc;
         }
 
         /// <summary>
         /// EntryPoint setted first.
         /// </summary>
-        public uint PC;
+        public uint Pc;
 
         /// <summary>
         /// EntryPoint for this function.
         /// </summary>
-        public uint EntryPC
-        {
-            get { return DynarecFunction.EntryPc; }
-        }
+        public uint EntryPc => DynarecFunction.EntryPc;
 
         /// <summary>
         /// Address of the start of the function. Usually is equal to EntryPC but not always.
         /// </summary>
-        public uint MinPC
-        {
-            get { return DynarecFunction.MinPc; }
-        }
+        public uint MinPc => DynarecFunction.MinPc;
 
         /// <summary>
         /// Last address with code for this function.
         /// </summary>
-        public uint MaxPC
-        {
-            get { return DynarecFunction.MaxPc; }
-        }
+        public uint MaxPc => DynarecFunction.MaxPc;
 
         /// <summary>
         /// 
         /// </summary>
-        public uint TotalInstructions
-        {
-            get { return (DynarecFunction.MaxPc - DynarecFunction.MinPc) / 7; }
-        }
+        public uint TotalInstructions => (DynarecFunction.MaxPc - DynarecFunction.MinPc) / 7;
 
         /// <summary>
         /// Ast for this function.
         /// </summary>
-        public AstNodeStm AstTree
-        {
-            get { return DynarecFunction != null ? DynarecFunction.AstNode : null; }
-        }
+        public AstNodeStm AstTree => DynarecFunction?.AstNode;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CpuThreadState"></param>
+        /// <param name="cpuThreadState"></param>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CallDelegate(CpuThreadState CpuThreadState)
-        {
-            FunctionDelegate(CpuThreadState);
-        }
+        public void CallDelegate(CpuThreadState cpuThreadState) => _functionDelegate(cpuThreadState);
 
         /// <summary>
         /// 

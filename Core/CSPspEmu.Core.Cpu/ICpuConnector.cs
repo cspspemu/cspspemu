@@ -7,6 +7,6 @@ namespace CSPspEmu.Core.Cpu
 {
     public interface ICpuConnector
     {
-        void Yield(CpuThreadState CpuThreadState);
+        void Yield(CpuThreadState cpuThreadState);
     }
 }

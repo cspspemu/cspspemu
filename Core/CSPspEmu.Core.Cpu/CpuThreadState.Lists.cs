@@ -46,27 +46,24 @@ namespace CSPspEmu.Core.Cpu
         {
             public CpuThreadState CpuThreadState;
 
-            private int NameToIndex(string Name)
+            private int NameToIndex(string name) => Array.IndexOf(RegisterMnemonicNames, name);
+
+            public int this[string name]
             {
-                return Array.IndexOf(CpuThreadState.RegisterMnemonicNames, Name);
+                get => this[NameToIndex(name)];
+                set => this[NameToIndex(name)] = value;
             }
 
-            public int this[string Name]
-            {
-                get { return this[NameToIndex(Name)]; }
-                set { this[NameToIndex(Name)] = value; }
-            }
-
-            public int this[int Index]
+            public int this[int index]
             {
                 get
                 {
-                    fixed (uint* PTR = &CpuThreadState.GPR0) return (int) PTR[Index];
+                    fixed (uint* ptr = &CpuThreadState.GPR0) return (int) ptr[index];
                 }
                 set
                 {
-                    if (Index == 0) return;
-                    fixed (uint* PTR = &CpuThreadState.GPR0) PTR[Index] = (uint) value;
+                    if (index == 0) return;
+                    fixed (uint* ptr = &CpuThreadState.GPR0) ptr[index] = (uint) value;
                 }
             }
         }
@@ -75,15 +72,15 @@ namespace CSPspEmu.Core.Cpu
         {
             public CpuThreadState CpuThreadState;
 
-            public uint this[int Index]
+            public uint this[int index]
             {
                 get
                 {
-                    fixed (uint* PTR = &CpuThreadState.C0R0) return (uint) PTR[Index];
+                    fixed (uint* ptr = &CpuThreadState.C0R0) return ptr[index];
                 }
                 set
                 {
-                    fixed (uint* PTR = &CpuThreadState.C0R0) PTR[Index] = (uint) value;
+                    fixed (uint* ptr = &CpuThreadState.C0R0) ptr[index] = value;
                 }
             }
         }
@@ -92,15 +89,15 @@ namespace CSPspEmu.Core.Cpu
         {
             public CpuThreadState CpuThreadState;
 
-            public float this[int Index]
+            public float this[int index]
             {
                 get
                 {
-                    fixed (float* PTR = &CpuThreadState.FPR0) return PTR[Index];
+                    fixed (float* ptr = &CpuThreadState.FPR0) return ptr[index];
                 }
                 set
                 {
-                    fixed (float* PTR = &CpuThreadState.FPR0) PTR[Index] = value;
+                    fixed (float* ptr = &CpuThreadState.FPR0) ptr[index] = value;
                 }
             }
         }
@@ -109,15 +106,15 @@ namespace CSPspEmu.Core.Cpu
         {
             public CpuThreadState CpuThreadState;
 
-            public int this[int Index]
+            public int this[int index]
             {
                 get
                 {
-                    fixed (float* PTR = &CpuThreadState.FPR0) return ((int*) PTR)[Index];
+                    fixed (float* ptr = &CpuThreadState.FPR0) return ((int*) ptr)[index];
                 }
                 set
                 {
-                    fixed (float* PTR = &CpuThreadState.FPR0) ((int*) PTR)[Index] = value;
+                    fixed (float* ptr = &CpuThreadState.FPR0) ((int*) ptr)[index] = value;
                 }
             }
         }
@@ -126,47 +123,47 @@ namespace CSPspEmu.Core.Cpu
         {
             public CpuThreadState CpuThreadState;
 
-            public float this[int Index]
+            public float this[int index]
             {
                 get
                 {
-                    fixed (float* PTR = &CpuThreadState.VFR0) return PTR[Index];
+                    fixed (float* ptr = &CpuThreadState.VFR0) return ptr[index];
                 }
                 set
                 {
-                    fixed (float* PTR = &CpuThreadState.VFR0) PTR[Index] = value;
+                    fixed (float* ptr = &CpuThreadState.VFR0) ptr[index] = value;
                 }
             }
 
-            public float this[int Matrix, int Column, int Row]
+            public float this[int matrix, int column, int row]
             {
-                get { return this[VfpuUtils.GetIndexCell(Matrix, Column, Row)]; }
-                set { this[VfpuUtils.GetIndexCell(Matrix, Column, Row)] = value; }
+                get => this[VfpuUtils.GetIndexCell(matrix, column, row)];
+                set => this[VfpuUtils.GetIndexCell(matrix, column, row)] = value;
             }
 
-            public float[] this[string NameWithSufix]
+            public float[] this[string nameWithSufix]
             {
-                get { return VfpuUtils.GetIndices(NameWithSufix).Select(Item => this[Item]).ToArray(); }
+                get { return VfpuUtils.GetIndices(nameWithSufix).Select(item => this[item]).ToArray(); }
                 set
                 {
-                    var Indices = VfpuUtils.GetIndices(NameWithSufix);
-                    for (int n = 0; n < value.Length; n++) this[Indices[n]] = value[n];
+                    var indices = VfpuUtils.GetIndices(nameWithSufix);
+                    for (var n = 0; n < value.Length; n++) this[indices[n]] = value[n];
                 }
             }
 
-            public float[] this[int Size, string Name]
+            public float[] this[int size, string name]
             {
-                get { return VfpuUtils.GetIndices(Size, Name).Select(Item => this[Item]).ToArray(); }
+                get { return VfpuUtils.GetIndices(size, name).Select(item => this[item]).ToArray(); }
                 set
                 {
-                    var Indices = VfpuUtils.GetIndices(Size, Name);
-                    for (int n = 0; n < value.Length; n++) this[Indices[n]] = value[n];
+                    var indices = VfpuUtils.GetIndices(size, name);
+                    for (var n = 0; n < value.Length; n++) this[indices[n]] = value[n];
                 }
             }
 
-            public void ClearAll(float Value = 0f)
+            public void ClearAll(float value = 0f)
             {
-                for (int n = 0; n < 128; n++) this[n] = Value;
+                for (var n = 0; n < 128; n++) this[n] = value;
             }
         }
     }

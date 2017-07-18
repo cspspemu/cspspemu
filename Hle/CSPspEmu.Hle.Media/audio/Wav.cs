@@ -70,7 +70,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			new BinaryWriter(ChunkSizeStream).Write((uint)ChunkLength);
 		}
 
-		public void WriteWave(String FileName, StereoShortSoundSample[] Samples)
+		public void WriteWave(string FileName, StereoShortSoundSample[] Samples)
 		{
 			using (var Stream = File.Open(FileName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
 			{

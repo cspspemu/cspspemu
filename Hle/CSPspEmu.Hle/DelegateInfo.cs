@@ -21,13 +21,13 @@ namespace CSPspEmu.Hle
         {
             try
             {
-                return String.Format(
+                return string.Format(
                     "{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}",
                     CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, (Thread != null) ? Thread.Name : "-");
             }
             catch (Exception Exception)
             {
-                return String.Format("Invalid DelegateInfo : " + Exception);
+                return string.Format("Invalid DelegateInfo : " + Exception);
             }
             //return this.ToStringDefault();
         }

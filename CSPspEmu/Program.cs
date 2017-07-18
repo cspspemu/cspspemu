@@ -72,7 +72,7 @@ namespace CSPspEmu
             //var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\1.png"));
             var bitmapIn = new Bitmap(Image.FromFile(@"C:\temp\in.png"));
 
-            Console.WriteLine("{0}", String.Join("\n", Assembly.GetExecutingAssembly().GetManifestResourceNames()));
+            Console.WriteLine("{0}", string.Join("\n", Assembly.GetExecutingAssembly().GetManifestResourceNames()));
 
             var textureOut = new XBRShader().Process(GlTextureCreateFromBitmap(bitmapIn));
 
@@ -255,7 +255,7 @@ namespace CSPspEmu
                     {
                         using (var encryptedStream = File.OpenRead(encryptedFile))
                         {
-                            var decryptedFile = String.Format("{0}.decrypted", encryptedFile);
+                            var decryptedFile = string.Format("{0}.decrypted", encryptedFile);
                             Console.Write("'{0}' -> '{1}'...", encryptedFile, decryptedFile);
 
                             var encryptedData = encryptedStream.ReadAll();
@@ -332,18 +332,18 @@ namespace CSPspEmu
             }
             Console.WriteLine("ImageRuntimeVersion: {0}", Assembly.GetExecutingAssembly().ImageRuntimeVersion);
 
-#if !RELEASE
-            try
-            {
-                Console.OutputEncoding = Encoding.UTF8;
-                Console.SetWindowSize(160, 60);
-                Console.SetBufferSize(160, 2000);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-#endif
+//#if !RELEASE
+//            try
+//            {
+//                Console.OutputEncoding = Encoding.UTF8;
+//                Console.SetWindowSize(160, 60);
+//                Console.SetBufferSize(160, 2000);
+//            }
+//            catch (Exception e)
+//            {
+//                Console.WriteLine(e);
+//            }
+//#endif
 
             /*
             foreach (var NI in NetworkInterface.GetAllNetworkInterfaces())

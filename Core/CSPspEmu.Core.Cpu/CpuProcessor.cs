@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
-using SafeILGenerator.Utils;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
@@ -24,14 +23,14 @@ namespace CSPspEmu.Core.Cpu
 
         [Inject] public DynarecFunctionCompiler DynarecFunctionCompiler;
 
-        [Inject] public IInterruptManager IInterruptManager;
+        [Inject] public IInterruptManager InterruptManager;
 
         [Inject] public MethodCache MethodCache;
 
         public Dictionary<uint, NativeSyscallInfo> RegisteredNativeSyscallMethods =
             new Dictionary<uint, NativeSyscallInfo>();
 
-        private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls =
+        private readonly Dictionary<int, Action<CpuThreadState, int>> _registeredNativeSyscalls =
             new Dictionary<int, Action<CpuThreadState, int>>();
 
         public HashSet<uint> NativeBreakpoints = new HashSet<uint>();
@@ -42,68 +41,55 @@ namespace CSPspEmu.Core.Cpu
         public volatile bool InterruptEnabled = true;
         public volatile bool InterruptFlag = false;
 
-        public void ExecuteInterrupt(CpuThreadState CpuThreadState)
+        public void ExecuteInterrupt(CpuThreadState cpuThreadState)
         {
             if (InterruptEnabled && InterruptFlag)
             {
-                IInterruptManager.Interrupt(CpuThreadState);
+                InterruptManager.Interrupt(cpuThreadState);
             }
         }
 
-        private CpuProcessor()
-        {
-        }
+        public CpuProcessor RegisterNativeSyscall(int code, Action callback) =>
+            RegisterNativeSyscall(code, (_, processor) => callback());
 
-        public CpuProcessor RegisterNativeSyscall(int Code, Action Callback)
+        public CpuProcessor RegisterNativeSyscall(int code, Action<CpuThreadState, int> callback)
         {
-            return RegisterNativeSyscall(Code, (_Code, _Processor) => Callback());
-        }
-
-        public CpuProcessor RegisterNativeSyscall(int Code, Action<CpuThreadState, int> Callback)
-        {
-            RegisteredNativeSyscalls[Code] = Callback;
+            _registeredNativeSyscalls[code] = callback;
             return this;
         }
 
-        public Action<CpuThreadState, int> GetSyscall(int Code)
+        public Action<CpuThreadState, int> GetSyscall(int code)
         {
-            Action<CpuThreadState, int> Callback;
-            if (RegisteredNativeSyscalls.TryGetValue(Code, out Callback))
+            Action<CpuThreadState, int> callback;
+            return _registeredNativeSyscalls.TryGetValue(code, out callback) ? callback : null;
+        }
+
+        public void Syscall(int code, CpuThreadState cpuThreadState)
+        {
+            Action<CpuThreadState, int> callback;
+            if ((callback = GetSyscall(code)) != null)
             {
-                return Callback;
+                callback(cpuThreadState, code);
             }
             else
             {
-                return null;
+                Console.WriteLine("Undefined syscall: {0:X6} at 0x{1:X8}", code, cpuThreadState.PC);
             }
         }
 
-        public void Syscall(int Code, CpuThreadState CpuThreadState)
-        {
-            Action<CpuThreadState, int> Callback;
-            if ((Callback = GetSyscall(Code)) != null)
-            {
-                Callback(CpuThreadState, Code);
-            }
-            else
-            {
-                Console.WriteLine("Undefined syscall: {0:X6} at 0x{1:X8}", Code, CpuThreadState.PC);
-            }
-        }
-
-        public void sceKernelDcacheWritebackInvalidateAll()
+        public void SceKernelDcacheWritebackInvalidateAll()
         {
         }
 
-        public void sceKernelDcacheWritebackRange(uint Address, int Size)
+        public void SceKernelDcacheWritebackRange(uint address, int size)
         {
         }
 
-        public void sceKernelDcacheWritebackInvalidateRange(uint Address, int Size)
+        public void SceKernelDcacheWritebackInvalidateRange(uint address, int size)
         {
         }
 
-        public void sceKernelDcacheInvalidateRange(uint Address, int Size)
+        public void SceKernelDcacheInvalidateRange(uint address, int size)
         {
         }
 
@@ -111,29 +97,24 @@ namespace CSPspEmu.Core.Cpu
         /// 
         /// </summary>
         /// <returns></returns>
-        public void sceKernelDcacheWritebackAll()
+        public void SceKernelDcacheWritebackAll()
         {
         }
 
-        public void sceKernelIcacheInvalidateAll()
-        {
-            MethodCache.FlushAll();
-        }
+        public void SceKernelIcacheInvalidateAll() => MethodCache.FlushAll();
 
-        public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
-        {
-            MethodCache.FlushRange(Address, Address + Size);
-        }
+        public void SceKernelIcacheInvalidateRange(uint address, uint size) =>
+            MethodCache.FlushRange(address, address + size);
 
-        public static void DebugCurrentThread(CpuThreadState CpuThreadState)
+        public static void DebugCurrentThread(CpuThreadState cpuThreadState)
         {
-            var CpuProcessor = CpuThreadState.CpuProcessor;
+            var cpuProcessor = cpuThreadState.CpuProcessor;
             Console.Error.WriteLine("*******************************************");
             Console.Error.WriteLine("* DebugCurrentThread **********************");
             Console.Error.WriteLine("*******************************************");
-            CpuProcessor.DebugCurrentThreadEvent();
+            cpuProcessor.DebugCurrentThreadEvent();
             Console.Error.WriteLine("*******************************************");
-            CpuThreadState.DumpRegisters();
+            cpuThreadState.DumpRegisters();
             Console.Error.WriteLine("*******************************************");
         }
     }

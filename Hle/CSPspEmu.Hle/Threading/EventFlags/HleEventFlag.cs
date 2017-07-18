@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 
             public override string ToString()
             {
-                return String.Format(
+                return string.Format(
                     "HleEventFlag.WaitThread({0}, {1}, {2})",
                     HleThread, BitsToMatch, WaitType
                 );

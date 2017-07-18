@@ -305,7 +305,7 @@ namespace BrightIdeasSoftware
         /// <param name="column"></param>
         /// <param name="modelObject"></param>
         /// <returns></returns>
-        public delegate String TypedCellToolTipGetterDelegate(OLVColumn column, T modelObject);
+        public delegate string TypedCellToolTipGetterDelegate(OLVColumn column, T modelObject);
 
         /// <summary>
         /// Gets or sets the cell tooltip getter
@@ -317,7 +317,7 @@ namespace BrightIdeasSoftware
                 if (value == null)
                     this.olv.CellToolTipGetter = null;
                 else
-                    this.olv.CellToolTipGetter = delegate(OLVColumn col, Object x) { return value(col, (T) x); };
+                    this.olv.CellToolTipGetter = delegate(OLVColumn col, object x) { return value(col, (T) x); };
             }
         }
 
@@ -365,28 +365,28 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="rowObject"></param>
         /// <returns></returns>
-        public delegate Object TypedAspectGetterDelegate(T rowObject);
+        public delegate object TypedAspectGetterDelegate(T rowObject);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rowObject"></param>
         /// <param name="newValue"></param>
-        public delegate void TypedAspectPutterDelegate(T rowObject, Object newValue);
+        public delegate void TypedAspectPutterDelegate(T rowObject, object newValue);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rowObject"></param>
         /// <returns></returns>
-        public delegate Object TypedGroupKeyGetterDelegate(T rowObject);
+        public delegate object TypedGroupKeyGetterDelegate(T rowObject);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rowObject"></param>
         /// <returns></returns>
-        public delegate Object TypedImageGetterDelegate(T rowObject);
+        public delegate object TypedImageGetterDelegate(T rowObject);
 
         /// <summary>
         /// 
@@ -484,7 +484,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public void GenerateAspectGetter()
         {
-            if (!String.IsNullOrEmpty(this.column.AspectName))
+            if (!string.IsNullOrEmpty(this.column.AspectName))
                 this.AspectGetter = this.GenerateAspectGetter(typeof(T), this.column.AspectName);
         }
 
@@ -498,8 +498,8 @@ namespace BrightIdeasSoftware
         /// <returns>A typed delegate</returns>
         private TypedAspectGetterDelegate GenerateAspectGetter(Type type, string path)
         {
-            DynamicMethod getter = new DynamicMethod(String.Empty,
-                typeof(Object), new Type[] {type}, type, true);
+            DynamicMethod getter = new DynamicMethod(string.Empty,
+                typeof(object), new Type[] {type}, type, true);
             this.GenerateIL(type, path, getter.GetILGenerator());
             return (TypedAspectGetterDelegate) getter.CreateDelegate(typeof(TypedAspectGetterDelegate));
         }
@@ -556,7 +556,7 @@ namespace BrightIdeasSoftware
                     il.Emit(OpCodes.Ldnull);
                 else
                     il.Emit(OpCodes.Ldstr,
-                        String.Format("'{0}' is not a parameter-less method, property or field of type '{1}'", pathPart,
+                        string.Format("'{0}' is not a parameter-less method, property or field of type '{1}'", pathPart,
                             type.FullName));
                 return null;
             }

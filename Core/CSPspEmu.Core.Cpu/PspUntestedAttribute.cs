@@ -1,9 +1,12 @@
 ﻿using System;
 
-public sealed class PspTestedAttribute : Attribute
+namespace CSPspEmu.Core.Cpu
 {
-}
+    public sealed class PspTestedAttribute : Attribute
+    {
+    }
 
-public sealed class PspUntestedAttribute : Attribute
-{
+    public sealed class PspUntestedAttribute : Attribute
+    {
+    }
 }

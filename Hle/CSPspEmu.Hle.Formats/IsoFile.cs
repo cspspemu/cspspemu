@@ -303,7 +303,7 @@ namespace CSPspEmu.Hle.Formats
 
         public override string ToString()
         {
-            return String.Format("Iso.Date({0})", DateTime);
+            return string.Format("Iso.Date({0})", DateTime);
         }
     }
 
@@ -401,7 +401,7 @@ namespace CSPspEmu.Hle.Formats
 
         public override string ToString()
         {
-            return String.Format("DirectoryRecord(Length={0})", Length);
+            return string.Format("DirectoryRecord(Length={0})", Length);
         }
     }
 
@@ -519,7 +519,7 @@ namespace CSPspEmu.Hle.Formats
 
             if (!_childsByNameUpperCase.ContainsKey(ChildName))
             {
-                throw (new FileNotFoundException(String.Format("Can't find '{0}' on '{1}'", ChildName, this)));
+                throw (new FileNotFoundException(string.Format("Can't find '{0}' on '{1}'", ChildName, this)));
             }
             return _childsByNameUpperCase[ChildName];
         }
@@ -582,7 +582,7 @@ namespace CSPspEmu.Hle.Formats
 
         public override string ToString()
         {
-            return String.Format("IsoNode('{0}', {1})", FullPath, DirectoryRecord);
+            return string.Format("IsoNode('{0}', {1})", FullPath, DirectoryRecord);
         }
 
         public void Dispose()

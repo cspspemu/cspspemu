@@ -63,7 +63,7 @@ namespace CSPspEmu.Hle.Loader
         }
 
         public HleModuleGuest LoadModule(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition,
-            HleModuleManager ModuleManager, String GameTitle, string ModuleName, bool IsMainModule)
+            HleModuleManager ModuleManager, string GameTitle, string ModuleName, bool IsMainModule)
         {
             this.HleModuleGuest = InjectContext.NewInstance<HleModuleGuest>();
 
@@ -446,7 +446,7 @@ namespace CSPspEmu.Hle.Loader
 
             foreach (var ModuleExport in ModuleExports)
             {
-                String ModuleExportName = "";
+                string ModuleExportName = "";
 
                 try
                 {
@@ -546,7 +546,7 @@ namespace CSPspEmu.Hle.Loader
 
             foreach (var ModuleImport in ModuleImports)
             {
-                String ModuleImportName = "INVALID";
+                string ModuleImportName = "INVALID";
                 try
                 {
                     ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name);

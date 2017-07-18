@@ -171,7 +171,7 @@ namespace BrightIdeasSoftware
         public virtual string GetClusterDisplayLabel(ICluster cluster)
         {
             string s = this.Column.ValueToString(cluster.ClusterKey) ?? NULL_LABEL;
-            if (String.IsNullOrEmpty(s))
+            if (string.IsNullOrEmpty(s))
                 s = EMPTY_LABEL;
             return this.ApplyDisplayFormat(cluster, s);
         }
@@ -197,7 +197,7 @@ namespace BrightIdeasSoftware
         protected virtual string ApplyDisplayFormat(ICluster cluster, string s)
         {
             string format = (cluster.Count == 1) ? this.DisplayLabelFormatSingular : this.DisplayLabelFormatPlural;
-            return String.IsNullOrEmpty(format) ? s : String.Format(format, s, cluster.Count);
+            return string.IsNullOrEmpty(format) ? s : string.Format(format, s, cluster.Count);
         }
 
         #endregion

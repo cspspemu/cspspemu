@@ -7,7 +7,7 @@ namespace CSharpPlatform.GL.Impl.Linux
 {
     public unsafe class LinuxGlContext : IGlContext
     {
-        private static Object Lock = new Object();
+        private static object Lock = new object();
         public static IntPtr DefaultDisplay;
 
         public static int DefaultScreen;

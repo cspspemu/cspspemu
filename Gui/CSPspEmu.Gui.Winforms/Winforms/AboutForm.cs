@@ -121,7 +121,7 @@ namespace CSPspEmu.Gui.Winforms
 
             public override string ToString()
             {
-                return String.Format("{0}", Name);
+                return string.Format("{0}", Name);
             }
         }
 
@@ -131,7 +131,7 @@ namespace CSPspEmu.Gui.Winforms
 
             public override string ToString()
             {
-                return String.Format("{0} : {1}", Language, Name);
+                return string.Format("{0} : {1}", Language, Name);
             }
         }
 
@@ -146,13 +146,13 @@ namespace CSPspEmu.Gui.Winforms
 
             public override string ToString()
             {
-                if (String.IsNullOrEmpty(Author))
+                if (string.IsNullOrEmpty(Author))
                 {
-                    return String.Format("{0}", Name);
+                    return string.Format("{0}", Name);
                 }
                 else
                 {
-                    return String.Format("{0}: {1}", Name, Author);
+                    return string.Format("{0}: {1}", Name, Author);
                 }
             }
         }

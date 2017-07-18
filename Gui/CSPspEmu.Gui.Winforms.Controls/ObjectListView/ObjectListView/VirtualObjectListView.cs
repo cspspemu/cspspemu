@@ -209,7 +209,7 @@ namespace BrightIdeasSoftware
 
                 // Collect items that are checked AND that still exist in the list.
                 ArrayList objects = new ArrayList();
-                foreach (KeyValuePair<Object, CheckState> kvp in this.CheckStateMap)
+                foreach (KeyValuePair<object, CheckState> kvp in this.CheckStateMap)
                 {
                     if (kvp.Value == CheckState.Checked && this.VirtualListDataSource.GetObjectIndex(kvp.Key) >= 0)
                         objects.Add(kvp.Key);
@@ -230,16 +230,16 @@ namespace BrightIdeasSoftware
                 }
 
                 // Uncheck anything that is no longer checked
-                Object[] keys = new Object[this.CheckStateMap.Count];
+                object[] keys = new object[this.CheckStateMap.Count];
                 this.CheckStateMap.Keys.CopyTo(keys, 0);
-                foreach (Object key in keys)
+                foreach (object key in keys)
                 {
                     if (!table.Contains(key))
                         this.SetObjectCheckedness(key, CheckState.Unchecked);
                 }
 
                 // Check all the new checked objects
-                foreach (Object x in table.Keys)
+                foreach (object x in table.Keys)
                     this.SetObjectCheckedness(x, CheckState.Checked);
             }
         }
@@ -452,7 +452,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="modelObject">The model object to be found</param>
         /// <returns>The index of the object. -1 means the object was not present</returns>
-        public override int IndexOf(Object modelObject)
+        public override int IndexOf(object modelObject)
         {
             if (this.VirtualListDataSource == null || modelObject == null)
                 return -1;

@@ -14,7 +14,7 @@ public static class StringExtensions
     /// <param name="RegexString"></param>
     /// <param name="ActionMatch"></param>
     /// <returns></returns>
-    public static String RegexReplace(this String String, string RegexString, Func<GroupCollection, string> ActionMatch)
+    public static string RegexReplace(this string String, string RegexString, Func<GroupCollection, string> ActionMatch)
     {
         var Regex = new Regex(RegexString, RegexOptions.None);
         return Regex.Replace(String, Match => { return ActionMatch(Match.Groups); });
@@ -26,7 +26,7 @@ public static class StringExtensions
     /// <param name="String"></param>
     /// <param name="RegexString"></param>
     /// <returns></returns>
-    public static bool RegexIsMatch(this String String, string RegexString)
+    public static bool RegexIsMatch(this string String, string RegexString)
     {
         var Regex = new Regex(RegexString, RegexOptions.None);
         return Regex.IsMatch(String);
@@ -38,7 +38,7 @@ public static class StringExtensions
     /// <param name="String"></param>
     /// <param name="RegexString"></param>
     /// <returns></returns>
-    public static MatchCollection RegexMatchAll(this String String, string RegexString)
+    public static MatchCollection RegexMatchAll(this string String, string RegexString)
     {
         var Regex = new Regex(RegexString, RegexOptions.None);
         return Regex.Matches(String);
@@ -50,7 +50,7 @@ public static class StringExtensions
     /// <param name="String"></param>
     /// <param name="RegexString"></param>
     /// <returns></returns>
-    public static GroupCollection RegexMatch(this String String, string RegexString)
+    public static GroupCollection RegexMatch(this string String, string RegexString)
     {
         var Regex = new Regex(RegexString, RegexOptions.None);
         var Match = Regex.Match(String);
@@ -58,14 +58,14 @@ public static class StringExtensions
         return Match.Groups;
     }
 
-    public static String Substr(this String String, int StartIndex)
+    public static string Substr(this string String, int StartIndex)
     {
         if (StartIndex < 0) StartIndex = String.Length + StartIndex;
         StartIndex = MathUtils.Clamp(StartIndex, 0, String.Length);
         return String.Substring(StartIndex);
     }
 
-    public static String Substr(this String String, int StartIndex, int Length)
+    public static string Substr(this string String, int StartIndex, int Length)
     {
         if (StartIndex < 0) StartIndex = String.Length + StartIndex;
         StartIndex = MathUtils.Clamp(StartIndex, 0, String.Length);
@@ -75,22 +75,22 @@ public static class StringExtensions
         return String.Substring(StartIndex, Length);
     }
 
-    public static byte[] GetStringzBytes(this String String, Encoding Encoding)
+    public static byte[] GetStringzBytes(this string String, Encoding Encoding)
     {
         return String.GetBytes(Encoding).Concat(new byte[] {0}).ToArray();
     }
 
-    public static byte[] GetBytes(this String This)
+    public static byte[] GetBytes(this string This)
     {
         return This.GetBytes(Encoding.UTF8);
     }
 
-    public static byte[] GetBytes(this String This, Encoding Encoding)
+    public static byte[] GetBytes(this string This, Encoding Encoding)
     {
         return Encoding.GetBytes(This);
     }
 
-    public static String EscapeString(this String This)
+    public static string EscapeString(this string This)
     {
         var That = "";
         foreach (var C in This)
@@ -151,10 +151,10 @@ public static class StringExtensions
         }
     }
 
-    public static String Sprintf(this String This, params Object[] _Params)
+    public static string Sprintf(this string This, params object[] _Params)
     {
-        String Ret = "";
-        var Params = new Queue<Object>(_Params);
+        string Ret = "";
+        var Params = new Queue<object>(_Params);
         for (int n = 0; n < This.Length; n++)
         {
             char C = This[n];

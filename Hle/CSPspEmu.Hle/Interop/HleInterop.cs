@@ -105,7 +105,7 @@ namespace CSPspEmu.Hle
             CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(FakeCpuThreadState);
             //HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
 
-            CurrentFakeHleThread.CpuThreadState.ExecuteAT(CurrentFakeHleThread.CpuThreadState.PC);
+            CurrentFakeHleThread.CpuThreadState.ExecuteAt(CurrentFakeHleThread.CpuThreadState.PC);
 
             ////CurrentFake.CpuThreadState.PC = HleCallback.Function;
             //CurrentFakeHleThread.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
@@ -155,7 +155,7 @@ namespace CSPspEmu.Hle
                 }
                 else
                 {
-                    throw (new NotImplementedException(String.Format("Can't handle type '{0}'", ArgumentType)));
+                    throw (new NotImplementedException(string.Format("Can't handle type '{0}'", ArgumentType)));
                 }
             }
 

@@ -6,7 +6,7 @@ namespace CSPspEmu.Hle.Vfs
 {
     public unsafe class HleIoDriverMountable : IHleIoDriver
     {
-        Dictionary<String, IHleIoDriver> Mounts = new Dictionary<string, IHleIoDriver>();
+        Dictionary<string, IHleIoDriver> Mounts = new Dictionary<string, IHleIoDriver>();
 
         public IHleIoDriver GetMount(string MountAt)
         {

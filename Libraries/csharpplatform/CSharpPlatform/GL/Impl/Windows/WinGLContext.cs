@@ -88,7 +88,7 @@ namespace CSharpPlatform.GL.Impl
                 ushort atom = RegisterClassEx(ref wc);
 
                 if (atom == 0)
-                    throw new Exception(String.Format("Failed to register window class. Error: {0}",
+                    throw new Exception(string.Format("Failed to register window class. Error: {0}",
                         Marshal.GetLastWin32Error()));
 
                 class_registered = true;
@@ -104,7 +104,7 @@ namespace CSharpPlatform.GL.Impl
         public static extern int ChoosePixelFormat(IntPtr hDc, PixelFormatDescriptor* pPfd);
 
         [SuppressUnmanagedCodeSecurity, DllImport("GDI32.dll", ExactSpelling = true, SetLastError = true)]
-        public static extern Boolean SetPixelFormat(IntPtr hdc, int ipfd, PixelFormatDescriptor* ppfd);
+        public static extern bool SetPixelFormat(IntPtr hdc, int ipfd, PixelFormatDescriptor* ppfd);
 
         static IntPtr SharedContext;
 
@@ -148,7 +148,7 @@ namespace CSharpPlatform.GL.Impl
 
                 if (hWnd == IntPtr.Zero)
                 {
-                    throw new Exception(String.Format("Failed to create window. Error: {0}",
+                    throw new Exception(string.Format("Failed to create window. Error: {0}",
                         Marshal.GetLastWin32Error()));
                 }
             }
@@ -235,7 +235,7 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
 
         public override string ToString()
         {
-            return String.Format("WinOpenglContext({0}, {1}, {2}, {3})", DC, Context, SharedContext, Size);
+            return string.Format("WinOpenglContext({0}, {1}, {2}, {3})", DC, Context, SharedContext, Size);
         }
 
         public enum ArbCreateContext
@@ -259,7 +259,7 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
 
         public delegate IntPtr wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int* attribList);
 
-        public delegate Boolean wglSwapIntervalEXT(int interval);
+        public delegate bool wglSwapIntervalEXT(int interval);
 
         public delegate int wglGetSwapIntervalEXT();
 

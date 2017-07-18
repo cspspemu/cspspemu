@@ -26,14 +26,14 @@ namespace CSPspEmu.Hle.Formats
         private TAG_INFO GetTagInfo(uint CheckTag)
         {
             var Result = g_tagInfo.SingleOrDefault(Tag => Tag.tag == CheckTag);
-            if (Result == null) throw(new InvalidDataException(String.Format("Can't find tag1 0x{0:X}", CheckTag)));
+            if (Result == null) throw(new InvalidDataException(string.Format("Can't find tag1 0x{0:X}", CheckTag)));
             return Result;
         }
 
         private TAG_INFO2 GetTagInfo2(uint CheckTag)
         {
             var Result = g_tagInfo2.SingleOrDefault(Tag => Tag.tag == CheckTag);
-            if (Result == null) throw (new InvalidDataException(String.Format("Can't find tag2 0x{0:X}", CheckTag)));
+            if (Result == null) throw (new InvalidDataException(string.Format("Can't find tag2 0x{0:X}", CheckTag)));
             return Result;
         }
 
@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Formats
 
                 if (ret != 0)
                 {
-                    throw (new Exception(String.Format("extra de-mangle returns {0}, ", ret)));
+                    throw (new Exception(string.Format("extra de-mangle returns {0}, ", ret)));
                 }
                 // copy result back
                 PointerUtils.Memcpy(buffer1, buffer2, 0xA0);
@@ -306,7 +306,7 @@ namespace CSPspEmu.Hle.Formats
                 if (ret != 0)
                 {
                     throw (new InvalidDataException(
-                        String.Format("error in sceUtilsBufferCopyWithRange 0x1 (0x{0:X}), ", ret)));
+                        string.Format("error in sceUtilsBufferCopyWithRange 0x1 (0x{0:X}), ", ret)));
                 }
 
                 if (retsize < 0x150)

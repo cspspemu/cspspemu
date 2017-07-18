@@ -30,8 +30,8 @@ namespace CSharpUtils.Containers.RedBlackTree
             internal Node _RightNode;
             internal Node _ParentNode;
 
-            internal CountType ChildCountLeft;
-            internal CountType ChildCountRight;
+            internal int ChildCountLeft;
+            internal int ChildCountRight;
 
             internal TElement Value;
             internal Color Color;
@@ -68,7 +68,7 @@ namespace CSharpUtils.Containers.RedBlackTree
                 }
             }
 
-            internal CountType DebugValidateStatsNodeSubtree()
+            internal int DebugValidateStatsNodeSubtree()
             {
                 int totalChildCountLeft = 0;
                 var totalChildCountRight = 0;
@@ -79,7 +79,7 @@ namespace CSharpUtils.Containers.RedBlackTree
                 return 1 + ChildCountLeft + ChildCountRight;
             }
 
-            internal void UpdateCurrentAndAncestors(CountType countIncrement)
+            internal void UpdateCurrentAndAncestors(int countIncrement)
             {
                 //return;
 
@@ -114,7 +114,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// <returns></returns>
             public override string ToString()
             {
-                return String.Format(
+                return string.Format(
                     "RedBlackTreeWithStats.Node(Value={0}, Color={1}, ChildCountLeft={2}, ChildCountRight={3})",
                     Value,
                     Enum.GetName(typeof(Color), Color),

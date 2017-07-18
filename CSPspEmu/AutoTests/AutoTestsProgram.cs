@@ -34,7 +34,7 @@ namespace CSPspEmu.AutoTests
 
         public class HleOutputHandlerMock : HleOutputHandler
         {
-            public String OutputString = "";
+            public string OutputString = "";
 
             public override void Output(string outputString)
             {
@@ -211,8 +211,8 @@ namespace CSPspEmu.AutoTests
             var hadAnError = false;
             for (var n = 0; n < 10; n++)
             {
-                var imageReferenceFile = String.Format("{0}.reference.{1}.png", fileNameBase, n);
-                var imageOutputFile = String.Format("{0}.lastoutput.{1}.png", fileNameBase, n);
+                var imageReferenceFile = string.Format("{0}.reference.{1}.png", fileNameBase, n);
+                var imageOutputFile = string.Format("{0}.lastoutput.{1}.png", fileNameBase, n);
                 if (File.Exists(imageReferenceFile))
                 {
                     if (File.Exists(imageOutputFile))
@@ -369,7 +369,7 @@ namespace CSPspEmu.AutoTests
             }
         }
 
-        private void InternalMain(bool runTestsViewOut, String[] arguments)
+        private void InternalMain(bool runTestsViewOut, string[] arguments)
         {
             var basePath = Path.GetDirectoryName(Application.ExecutablePath);
             var pspAutoTestsFolder = "";
@@ -426,7 +426,7 @@ namespace CSPspEmu.AutoTests
             }
         }
 
-        public static void Main(bool runTestsViewOut, String[] arguments, int timeout)
+        public static void Main(bool runTestsViewOut, string[] arguments, int timeout)
         {
             AutoTestsProgram._timeoutTime = TimeSpan.FromSeconds(timeout);
             new AutoTestsProgram().InternalMain(runTestsViewOut, arguments);

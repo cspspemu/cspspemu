@@ -71,7 +71,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
         /// <param name="String"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public SpaceAssigner1D.Space AllocateUnique(String String, Encoding encoding = null)
+        public SpaceAssigner1D.Space AllocateUnique(string String, Encoding encoding = null)
         {
             if (encoding == null) encoding = this.Encoding;
             return AllocateUnique(String.GetStringzBytes(encoding));

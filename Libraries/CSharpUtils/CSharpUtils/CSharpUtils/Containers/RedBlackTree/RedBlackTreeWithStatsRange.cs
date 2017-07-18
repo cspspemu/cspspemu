@@ -15,8 +15,8 @@ namespace CSharpUtils.Containers.RedBlackTree
             internal RedBlackTreeWithStats<TElement> ParentTree;
             internal Node RangeStartNode;
             internal Node RangeEndNode;
-            internal CountType RangeStartPosition;
-            internal CountType RangeEndPosition;
+            internal int RangeStartPosition;
+            internal int RangeEndPosition;
 
             internal Node RangeLastNode => RangeEndNode.PreviousNode;
 
@@ -25,7 +25,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// </summary>
             /// <param name="localIndex"></param>
             /// <returns></returns>
-            public CountType GetItemPosition(CountType localIndex)
+            public int GetItemPosition(int localIndex)
             {
                 if (RangeStartPosition == -1)
                 {
@@ -35,7 +35,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
 
             internal Range(RedBlackTreeWithStats<TElement> parentTree, Node rangeStartNode, Node rangeEndNode,
-                CountType rangeStartPosition = -1, CountType rangeEndPosition = -1)
+                int rangeStartPosition = -1, int rangeEndPosition = -1)
             {
                 ParentTree = parentTree;
                 if (rangeStartNode == null) rangeStartNode = parentTree.LocateNodeAtPosition(rangeStartPosition);
@@ -66,7 +66,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// </summary>
             /// <param name="limitCount"></param>
             /// <returns></returns>
-            public Range Limit(CountType limitCount)
+            public Range Limit(int limitCount)
             {
                 Assert(limitCount >= 0);
 
@@ -85,7 +85,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// </summary>
             /// <param name="limitCount"></param>
             /// <returns></returns>
-            public Range LimitUnchecked(CountType limitCount)
+            public Range LimitUnchecked(int limitCount)
             {
                 Assert(limitCount >= 0);
 
@@ -102,7 +102,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// <param name="skipCount"></param>
             /// <param name="takeCount"></param>
             /// <returns></returns>
-            public Range SkipTake(CountType skipCount, CountType takeCount)
+            public Range SkipTake(int skipCount, int takeCount)
             {
                 return Skip(skipCount).Take(takeCount);
             }
@@ -112,7 +112,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// </summary>
             /// <param name="skipCount"></param>
             /// <returns></returns>
-            public Range Skip(CountType skipCount)
+            public Range Skip(int skipCount)
             {
                 return SkipUnchecked(skipCount);
             }
@@ -122,7 +122,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// </summary>
             /// <param name="skipCount"></param>
             /// <returns></returns>
-            public Range Take(CountType skipCount)
+            public Range Take(int skipCount)
             {
                 return Limit(skipCount);
             }
@@ -132,7 +132,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// </summary>
             /// <param name="skipCount"></param>
             /// <returns></returns>
-            public Range SkipUnchecked(CountType skipCount)
+            public Range SkipUnchecked(int skipCount)
             {
                 return new Range(
                     ParentTree,
@@ -146,7 +146,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// <summary>
             /// 
             /// </summary>
-            public CountType Count
+            public int Count
             {
                 get
                 {
@@ -180,7 +180,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// <param name="startIndex"></param>
             /// <param name="endIndex"></param>
             /// <returns></returns>
-            public Range Slice(CountType startIndex, CountType endIndex)
+            public Range Slice(int startIndex, int endIndex)
             {
                 return new Range(
                     ParentTree,
@@ -196,7 +196,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// </summary>
             /// <param name="start"></param>
             /// <returns></returns>
-            public Range Slice(CountType start)
+            public Range Slice(int start)
             {
                 return new Range(
                     ParentTree,
@@ -211,7 +211,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// 
             /// </summary>
             /// <param name="index"></param>
-            public Node this[CountType index] => ParentTree.LocateNodeAtPosition(GetItemPosition(index));
+            public Node this[int index] => ParentTree.LocateNodeAtPosition(GetItemPosition(index));
 
             TElement FrontElement => RangeStartNode.Value;
 

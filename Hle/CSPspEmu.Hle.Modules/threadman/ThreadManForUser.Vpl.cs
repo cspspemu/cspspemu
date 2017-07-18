@@ -310,7 +310,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             /// <summary>
             /// 
             /// </summary>
-            public String Name
+            public string Name
             {
                 get
                 {

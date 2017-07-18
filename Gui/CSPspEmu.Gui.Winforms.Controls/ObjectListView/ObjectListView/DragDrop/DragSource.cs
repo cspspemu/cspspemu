@@ -61,21 +61,21 @@ namespace BrightIdeasSoftware
         /// item selected.</param>
         /// <returns>The data object that will be used for data transfer. This will often be a subclass
         /// of DataObject, but does not need to be.</returns>
-        Object StartDrag(ObjectListView olv, MouseButtons button, OLVListItem item);
+        object StartDrag(ObjectListView olv, MouseButtons button, OLVListItem item);
 
         /// <summary>
         /// What operations are possible for this drag? This controls the icon shown during the drag
         /// </summary>
         /// <param name="dragObject">The data object returned by StartDrag()</param>
         /// <returns>A combination of DragDropEffects flags</returns>
-        DragDropEffects GetAllowedEffects(Object dragObject);
+        DragDropEffects GetAllowedEffects(object dragObject);
 
         /// <summary>
         /// The drag operation is complete. Do whatever is necessary to complete the action.
         /// </summary>
         /// <param name="dragObject">The data object returned by StartDrag()</param>
         /// <param name="effect">The value returned from GetAllowedEffects()</param>
-        void EndDrag(Object dragObject, DragDropEffects effect);
+        void EndDrag(object dragObject, DragDropEffects effect);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ namespace BrightIdeasSoftware
         /// <param name="button"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public virtual Object StartDrag(ObjectListView olv, MouseButtons button, OLVListItem item)
+        public virtual object StartDrag(ObjectListView olv, MouseButtons button, OLVListItem item)
         {
             return null;
         }
@@ -102,7 +102,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public virtual DragDropEffects GetAllowedEffects(Object data)
+        public virtual DragDropEffects GetAllowedEffects(object data)
         {
             return DragDropEffects.None;
         }
@@ -112,7 +112,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="dragObject"></param>
         /// <param name="effect"></param>
-        public virtual void EndDrag(Object dragObject, DragDropEffects effect)
+        public virtual void EndDrag(object dragObject, DragDropEffects effect)
         {
         }
 
@@ -177,7 +177,7 @@ namespace BrightIdeasSoftware
         /// <param name="button"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public virtual Object StartDrag(ObjectListView olv, MouseButtons button, OLVListItem item)
+        public virtual object StartDrag(ObjectListView olv, MouseButtons button, OLVListItem item)
         {
             // We only drag on left mouse
             if (button != MouseButtons.Left)
@@ -191,7 +191,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="data"></param>
         /// <returns>All opertions are supported</returns>
-        public virtual DragDropEffects GetAllowedEffects(Object data)
+        public virtual DragDropEffects GetAllowedEffects(object data)
         {
             return DragDropEffects.All | DragDropEffects.Link; // why didn't MS include 'Link' in 'All'??
         }
@@ -201,7 +201,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="dragObject"></param>
         /// <param name="effect"></param>
-        public virtual void EndDrag(Object dragObject, DragDropEffects effect)
+        public virtual void EndDrag(object dragObject, DragDropEffects effect)
         {
             OLVDataObject data = dragObject as OLVDataObject;
             if (data == null)

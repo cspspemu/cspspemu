@@ -193,7 +193,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Custom renderers can use this information to supply more details about the hit location
         /// </summary>
-        public Object UserData;
+        public object UserData;
 
         #endregion
 
@@ -243,7 +243,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the model object that was hit
         /// </summary>
-        public Object RowObject
+        public object RowObject
         {
             get { return this.Item == null ? null : this.Item.RowObject; }
         }

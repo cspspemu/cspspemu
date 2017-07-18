@@ -84,7 +84,7 @@ namespace CSPspEmu.Hle.Formats.Font
             /// <summary>
             /// 
             /// </summary>
-            public String FontName
+            public string FontName
             {
                 get
                 {
@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Formats.Font
             /// <summary>
             /// 
             /// </summary>
-            public String FontType
+            public string FontType
             {
                 get
                 {
@@ -269,7 +269,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return String.Format("Point32({0}; {1})", X, Y);
+            return string.Format("Point32({0}; {1})", X, Y);
         }
     }
 
@@ -281,7 +281,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return String.Format("Point32({0}; {1})", X, Y);
+            return string.Format("Point32({0}; {1})", X, Y);
         }
     }
 
@@ -325,7 +325,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return String.Format("MapUshort({0}, {1})", Src, Dst);
+            return string.Format("MapUshort({0}, {1})", Src, Dst);
         }
     }
 
@@ -336,7 +336,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return String.Format("MapUint({0}, {1})", Src, Dst);
+            return string.Format("MapUint({0}, {1})", Src, Dst);
         }
     }
 
@@ -347,7 +347,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return String.Format("MapUint({0}, {1})", Src, Dst);
+            return string.Format("MapUint({0}, {1})", Src, Dst);
         }
     }
 
@@ -517,7 +517,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return String.Format("HV({0}, {1})", Horizontal, Vertical);
+            return string.Format("HV({0}, {1})", Horizontal, Vertical);
         }
     }
 }

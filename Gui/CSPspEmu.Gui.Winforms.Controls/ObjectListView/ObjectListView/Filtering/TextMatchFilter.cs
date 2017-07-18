@@ -324,7 +324,7 @@ namespace BrightIdeasSoftware
                     string cellText = column.GetStringValue(modelObject);
                     foreach (TextMatchingStrategy filter in this.MatchingStrategies)
                     {
-                        if (String.IsNullOrEmpty(filter.Text) || filter.MatchesText(cellText))
+                        if (string.IsNullOrEmpty(filter.Text) || filter.MatchesText(cellText))
                             return true;
                     }
                 }
@@ -346,7 +346,7 @@ namespace BrightIdeasSoftware
 
             foreach (TextMatchingStrategy filter in this.MatchingStrategies)
             {
-                if (!String.IsNullOrEmpty(filter.Text))
+                if (!string.IsNullOrEmpty(filter.Text))
                     ranges.AddRange(filter.FindAllMatchedRanges(cellText));
             }
 

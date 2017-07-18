@@ -186,7 +186,7 @@ namespace BrightIdeasSoftware
         /// <returns></returns>
         protected virtual string DateToString(DateTime dateTime)
         {
-            if (String.IsNullOrEmpty(this.Format))
+            if (string.IsNullOrEmpty(this.Format))
                 return dateTime.ToString(CultureInfo.CurrentUICulture);
 
             try
@@ -195,7 +195,7 @@ namespace BrightIdeasSoftware
             }
             catch (FormatException)
             {
-                return String.Format("Bad format string '{0}' for value '{1}'", this.Format, dateTime);
+                return string.Format("Bad format string '{0}' for value '{1}'", this.Format, dateTime);
             }
         }
 

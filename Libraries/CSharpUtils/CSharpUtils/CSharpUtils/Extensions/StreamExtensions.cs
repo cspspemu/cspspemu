@@ -143,7 +143,7 @@ namespace CSharpUtils.Extensions
         /// <param name="encoding"></param>
         /// <param name="includeExpectedByte"></param>
         /// <returns></returns>
-        public static String ReadUntilString(this Stream stream, byte expectedByte, Encoding encoding,
+        public static string ReadUntilString(this Stream stream, byte expectedByte, Encoding encoding,
             bool includeExpectedByte = false)
         {
             return encoding.GetString(stream.ReadUntil(expectedByte, includeExpectedByte));
@@ -311,7 +311,7 @@ namespace CSharpUtils.Extensions
         /// <param name="toRead"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public static String ReadString(this Stream stream, int toRead, Encoding encoding = null)
+        public static string ReadString(this Stream stream, int toRead, Encoding encoding = null)
         {
             if (encoding == null) encoding = Encoding.UTF8;
             return stream.ReadBytes(toRead).GetString(encoding);
@@ -324,7 +324,7 @@ namespace CSharpUtils.Extensions
         /// <param name="offset"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public static String ReadStringzAt(this Stream stream, long offset, Encoding encoding = null)
+        public static string ReadStringzAt(this Stream stream, long offset, Encoding encoding = null)
         {
             string Return = null;
             stream.PreservePositionAndLock(offset, () => { Return = stream.ReadStringz(-1, encoding); });

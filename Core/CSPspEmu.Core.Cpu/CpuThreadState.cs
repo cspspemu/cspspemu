@@ -16,7 +16,7 @@ using System.Runtime;
 
 namespace CSPspEmu.Core.Cpu
 {
-    unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint Address, String ErrorDescription, bool CanBeNull);
+    unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint Address, string ErrorDescription, bool CanBeNull);
 
     unsafe delegate void* GetMemoryPtrNotNullDelegate(uint Address);
 
@@ -362,20 +362,16 @@ namespace CSPspEmu.Core.Cpu
         public uint[] GetCurrentCallStack()
         {
             var Out = new List<uint>();
-            var Count = Math.Min(10240, CallStackCount);
-            for (int n = 0; n < Count; n++)
-            {
+            var count = Math.Min(10240, CallStackCount);
+            for (var n = 0; n < count; n++)
                 Out.Add(CallStack[(CallStackCount - n - 1) % CallStack.Length]);
-            }
             return Out.ToArray();
         }
 
-        public void CallStackPush(uint PC)
+        public void CallStackPush(uint pc)
         {
             if (CallStackCount >= 0 && CallStackCount < CallStack.Length)
-            {
-                CallStack[CallStackCount] = PC;
-            }
+                CallStack[CallStackCount] = pc;
             CallStackCount++;
         }
 
@@ -392,8 +388,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint GP
         {
-            get { return GPR28; }
-            set { GPR28 = value; }
+            get => GPR28;
+            set => GPR28 = value;
         }
 
         /// <summary>
@@ -401,8 +397,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint SP
         {
-            get { return GPR29; }
-            set { GPR29 = value; }
+            get => GPR29;
+            set => GPR29 = value;
         }
 
         /// <summary>
@@ -410,8 +406,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint K0
         {
-            get { return GPR26; }
-            set { GPR26 = value; }
+            get => GPR26;
+            set => GPR26 = value;
         }
 
         /// <summary>
@@ -420,8 +416,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint FP
         {
-            get { return GPR30; }
-            set { GPR30 = value; }
+            get => GPR30;
+            set => GPR30 = value;
         }
 
         /// <summary>
@@ -429,8 +425,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint RA
         {
-            get { return GPR31; }
-            set { GPR31 = value; }
+            get => GPR31;
+            set => GPR31 = value;
         }
 
         /// <summary>
@@ -450,52 +446,46 @@ namespace CSPspEmu.Core.Cpu
         public FprListInteger FPR_I;
         //readonly public float* FPR;
 
-        public void* GetMemoryPtr(uint Address)
+        public void* GetMemoryPtr(uint address)
         {
-            var Pointer = Memory.PspAddressToPointerUnsafe(Address);
+            var pointer = Memory.PspAddressToPointerUnsafe(address);
             //Console.WriteLine("%08X".Sprintf((uint)Pointer));
-            return Pointer;
+            return pointer;
         }
 
-        public void* GetMemoryPtrNotNull(uint Address)
-        {
-            return Memory.PspAddressToPointerNotNull(Address);
-        }
+        public void* GetMemoryPtrNotNull(uint address) => Memory.PspAddressToPointerNotNull(address);
 
-        public void* GetMemoryPtrSafe(uint Address)
-        {
-            return Memory.PspAddressToPointerSafe(Address, 0);
-        }
+        public void* GetMemoryPtrSafe(uint address) => Memory.PspAddressToPointerSafe(address, 0);
 
-        public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription, bool CanBeNull,
-            InvalidAddressAsEnum Invalid)
+        public void* GetMemoryPtrSafeWithError(uint address, string errorDescription, bool canBeNull,
+            InvalidAddressAsEnum invalid)
         {
             //Console.Error.WriteLine("{0:X8}, {1}, {2}", Address, CanBeNull, InvalidAsNull);
             try
             {
-                void* Result = Memory.PspAddressToPointerSafe(Address, 0, CanBeNull);
+                var result = Memory.PspAddressToPointerSafe(address, 0, canBeNull);
                 /*
                 if (Result == null && !CanBeNull)
                 {
                     throw(new PspMemory.InvalidAddressException(""));
                 }
                 */
-                return Result;
+                return result;
             }
-            catch (InvalidAddressException InvalidAddressException)
+            catch (InvalidAddressException invalidAddressException)
             {
-                if (Invalid == InvalidAddressAsEnum.Null) return null;
-                if (Invalid == InvalidAddressAsEnum.InvalidAddress) return PspMemory.InvalidPointer;
+                if (invalid == InvalidAddressAsEnum.Null) return null;
+                if (invalid == InvalidAddressAsEnum.InvalidAddress) return PspMemory.InvalidPointer;
                 throw (new InvalidAddressException(
-                    "GetMemoryPtrSafeWithError:" + ErrorDescription + " : " + InvalidAddressException.Message,
-                    InvalidAddressException));
+                    $"GetMemoryPtrSafeWithError:{errorDescription} : {invalidAddressException.Message}",
+                    invalidAddressException));
             }
-            catch (Exception Exception)
+            catch (Exception exception)
             {
-                if (Invalid == InvalidAddressAsEnum.Null) return null;
-                if (Invalid == InvalidAddressAsEnum.InvalidAddress) return PspMemory.InvalidPointer;
-                throw (new Exception("GetMemoryPtrSafeWithError: " + ErrorDescription + " : " + Exception.Message,
-                    Exception));
+                if (invalid == InvalidAddressAsEnum.Null) return null;
+                if (invalid == InvalidAddressAsEnum.InvalidAddress) return PspMemory.InvalidPointer;
+                throw new Exception($"GetMemoryPtrSafeWithError: {errorDescription} : {exception.Message}",
+                    exception);
             }
         }
 
@@ -503,12 +493,9 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Indexes"></param>
+        /// <param name="indexes"></param>
         /// <returns></returns>
-        public IEnumerable<int> GPRList(params int[] Indexes)
-        {
-            return Indexes.Select(Index => GPR[Index]);
-        }
+        public IEnumerable<int> GPRList(params int[] indexes) => indexes.Select(index => GPR[index]);
 
         private CpuThreadState()
         {
@@ -519,50 +506,38 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Processor"></param>
-        public CpuThreadState(CpuProcessor Processor)
+        /// <param name="processor"></param>
+        public CpuThreadState(CpuProcessor processor)
         {
-            this.CpuProcessor = Processor;
-            this.MethodCache = Processor.MethodCache;
+            CpuProcessor = processor;
+            MethodCache = processor.MethodCache;
             //this.Memory = Processor.Memory;
 
-            GPR = new GprList() {CpuThreadState = this};
-            FPR = new FprList() {CpuThreadState = this};
-            C0R = new C0rList() {CpuThreadState = this};
-            FPR_I = new FprListInteger() {CpuThreadState = this};
-            Vfpr = new VfprList() {CpuThreadState = this};
+            GPR = new GprList {CpuThreadState = this};
+            FPR = new FprList {CpuThreadState = this};
+            C0R = new C0rList {CpuThreadState = this};
+            FPR_I = new FprListInteger {CpuThreadState = this};
+            Vfpr = new VfprList {CpuThreadState = this};
 
-            for (int n = 0; n < 32; n++)
-            {
-                GPR[n] = 0;
-                FPR[n] = 0.0f;
-            }
+            for (var n = 0; n < 32; n++) GPR[n] = 0;
+            for (var n = 0; n < 32; n++) FPR[n] = 0.0f;
 
             VFR_CC_7 = VFR_CC_6 = VFR_CC_5 = VFR_CC_4 = VFR_CC_3 = VFR_CC_2 = VFR_CC_1 = VFR_CC_0 = true;
 
-            for (int n = 0; n < 128; n++)
-            {
-                Vfpr[n] = 0.0f;
-            }
+            for (var n = 0; n < 128; n++) Vfpr[n] = 0.0f;
         }
 
         /// <summary>
         /// Calls a syscall.
         /// </summary>
-        /// <param name="Code"></param>
-        public void Syscall(int Code)
-        {
-            CpuProcessor.Syscall(Code, this);
-        }
+        /// <param name="code"></param>
+        public void Syscall(int code) => CpuProcessor.Syscall(code, this);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DelegateId"></param>
-        public void SyscallNative(uint DelegateId)
-        {
-            CpuProcessor.RegisteredNativeSyscallMethods[DelegateId].PoolItem.Value(this);
-        }
+        /// <param name="delegateId"></param>
+        public void SyscallNative(uint delegateId) => CpuProcessor.RegisteredNativeSyscallMethods[delegateId].PoolItem.Value(this);
 
         //private DateTime LastTick;
         private int TickCount = 0;
@@ -630,20 +605,19 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="PC"></param>
-        public void Trace(uint PC)
+        /// <param name="pc"></param>
+        public void Trace(uint pc)
         {
             if (MipsDisassembler == null) MipsDisassembler = new MipsDisassembler();
-            var Result = MipsDisassembler.Disassemble(PC, (Instruction) Memory.Read4(PC));
-            Console.WriteLine("  Trace: PC:0x{0:X8} : DATA:0x{1:X8} : {2}", PC, Memory.Read4(PC), Result);
+            var Result = MipsDisassembler.Disassemble(pc, Memory.Read4(pc));
+            Console.WriteLine("  Trace: PC:0x{0:X8} : DATA:0x{1:X8} : {2}", pc, Memory.Read4(pc), Result);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <see cref="http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx"/>
-        private static readonly string[] RegisterMnemonicNames = new string[]
-        {
+        private static readonly string[] RegisterMnemonicNames = {
             "zr", "at", "v0", "v1", "a0", "a1", "a2", "a3",
             "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
             "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
@@ -661,71 +635,71 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="TextWriter"></param>
-        public void DumpRegistersCpu(TextWriter TextWriter)
+        /// <param name="textWriter"></param>
+        public void DumpRegistersCpu(TextWriter textWriter)
         {
-            TextWriter.WriteLine("PC: 0x{0:X8}, HI: 0x{1:X8}, LO: 0x{2:X8}", PC, HI, LO);
-            for (int n = 0; n < 32; n++)
+            textWriter.WriteLine("PC: 0x{0:X8}, HI: 0x{1:X8}, LO: 0x{2:X8}", PC, HI, LO);
+            for (var n = 0; n < 32; n++)
             {
-                if (n % 4 != 0) TextWriter.Write(", ");
-                TextWriter.Write("r{0,2}({1}) : 0x{2:X8}", n, RegisterMnemonicNames[n], GPR[n]);
-                if (n % 4 == 3) TextWriter.WriteLine();
+                if (n % 4 != 0) textWriter.Write(", ");
+                textWriter.Write("r{0,2}({1}) : 0x{2:X8}", n, RegisterMnemonicNames[n], GPR[n]);
+                if (n % 4 == 3) textWriter.WriteLine();
             }
-            TextWriter.WriteLine();
+            textWriter.WriteLine();
         }
 
-        public void DumpRegistersFpu(TextWriter TextWriter)
+        public void DumpRegistersFpu(TextWriter textWriter)
         {
-            for (int n = 0; n < 32; n++)
+            for (var n = 0; n < 32; n++)
             {
-                if (n % 4 != 0) TextWriter.Write(", ");
-                TextWriter.Write("f{0,2} : 0x{1:X8}, {2}", n, FPR_I[n], FPR[n]);
-                if (n % 4 == 3) TextWriter.WriteLine();
+                if (n % 4 != 0) textWriter.Write(", ");
+                textWriter.Write("f{0,2} : 0x{1:X8}, {2}", n, FPR_I[n], FPR[n]);
+                if (n % 4 == 3) textWriter.WriteLine();
             }
-            TextWriter.WriteLine();
+            textWriter.WriteLine();
         }
 
-        public void DumpRegistersVFpu(TextWriter TextWriter)
+        public void DumpRegistersVFpu(TextWriter textWriter)
         {
-            for (int n = 0; n < 32; n++)
+            for (var n = 0; n < 32; n++)
             {
-                if (n % 4 != 0) TextWriter.Write(", ");
-                TextWriter.Write("c0r{0,2} : 0x{1:X8}", n, C0R[n]);
-                if (n % 4 == 3) TextWriter.WriteLine();
+                if (n % 4 != 0) textWriter.Write(", ");
+                textWriter.Write("c0r{0,2} : 0x{1:X8}", n, C0R[n]);
+                if (n % 4 == 3) textWriter.WriteLine();
             }
-            TextWriter.WriteLine();
+            textWriter.WriteLine();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="TextWriter"></param>
-        public void DumpRegisters(TextWriter TextWriter)
+        /// <param name="textWriter"></param>
+        public void DumpRegisters(TextWriter textWriter)
         {
-            DumpRegistersCpu(TextWriter);
-            DumpRegistersFpu(TextWriter);
-            DumpRegistersVFpu(TextWriter);
+            DumpRegistersCpu(textWriter);
+            DumpRegistersFpu(textWriter);
+            DumpRegistersVFpu(textWriter);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="TextWriter"></param>
-        public void DumpVfpuRegisters(TextWriter TextWriter)
+        /// <param name="textWriter"></param>
+        public void DumpVfpuRegisters(TextWriter textWriter)
         {
-            for (int Matrix = 0; Matrix < 8; Matrix++)
+            for (var matrix = 0; matrix < 8; matrix++)
             {
-                TextWriter.WriteLine("Matrix: {0}", Matrix);
-                for (int Row = 0; Row < 4; Row++)
+                textWriter.WriteLine("Matrix: {0}", matrix);
+                for (var row = 0; row < 4; row++)
                 {
-                    var Line = "";
-                    for (int Column = 0; Column < 4; Column++)
+                    var line = "";
+                    for (var column = 0; column < 4; column++)
                     {
-                        Line += String.Format(", {0}", Vfpr[Matrix, Column, Row]);
+                        line += $", {Vfpr[matrix, column, row]}";
                     }
-                    TextWriter.WriteLine(Line);
+                    textWriter.WriteLine(line);
                 }
-                TextWriter.WriteLine("");
+                textWriter.WriteLine("");
             }
         }
 
@@ -733,46 +707,44 @@ namespace CSPspEmu.Core.Cpu
         /// 
         /// </summary>
         /// <param name="that"></param>
-        public unsafe void CopyRegistersFrom(CpuThreadState that)
+        public void CopyRegistersFrom(CpuThreadState that)
         {
-            this.PC = that.PC;
-            this.Fcr31 = that.Fcr31;
-            this.IC = that.IC;
-            this.LO = that.LO;
-            this.HI = that.HI;
-            fixed (float* ThisFPR = &this.FPR0)
-            fixed (float* ThatFPR = &that.FPR0)
-            fixed (uint* ThisGPR = &this.GPR0)
-            fixed (uint* ThatGPR = &that.GPR0)
+            PC = that.PC;
+            Fcr31 = that.Fcr31;
+            IC = that.IC;
+            LO = that.LO;
+            HI = that.HI;
+            fixed (float* thisFpr = &FPR0)
+            fixed (float* thatFpr = &that.FPR0)
+            fixed (uint* thisGpr = &GPR0)
+            fixed (uint* thatGpr = &that.GPR0)
             {
-                for (int n = 0; n < 32; n++)
+                for (var n = 0; n < 32; n++)
                 {
-                    ThisFPR[n] = ThatFPR[n];
-                    ThisGPR[n] = ThatGPR[n];
+                    thisFpr[n] = thatFpr[n];
+                    thisGpr[n] = thatGpr[n];
                 }
             }
 
-            fixed (float* ThisVFR = &this.VFR0)
-            fixed (float* ThatVFR = &that.VFR0)
+            fixed (float* thisVfr = &VFR0)
+            fixed (float* thatVfr = &that.VFR0)
             {
-                for (int n = 0; n < 128; n++)
-                {
-                    ThisVFR[n] = ThatVFR[n];
-                }
+                for (var n = 0; n < 128; n++)
+                    thisVfr[n] = thatVfr[n];
             }
         }
 
-        public void ExecuteFunctionAndReturn(uint PC)
+        public void ExecuteFunctionAndReturn(uint pc)
         {
-            ExecuteAT(PC);
+            ExecuteAt(pc);
         }
 
-        public void ExecuteAT(uint PC)
+        public void ExecuteAt(uint pc)
         {
             try
             {
                 RA = SpecialCpu.ReturnFromFunction;
-                MethodCache.GetForPc(this.PC).CallDelegate(this);
+                MethodCache.GetForPc(PC).CallDelegate(this);
             }
             catch (SpecialCpu.ReturnFromFunctionException)
             {
@@ -782,32 +754,21 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="MethodCacheInfo"></param>
-        /// <param name="PC"></param>
-        public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)
-        {
-            MethodCache._MethodCacheInfo_SetInternal(this, MethodCacheInfo, PC);
-        }
+        /// <param name="methodCacheInfo"></param>
+        /// <param name="pc"></param>
+        public void _MethodCacheInfo_SetInternal(MethodCacheInfo methodCacheInfo, uint pc) => MethodCache._MethodCacheInfo_SetInternal(this, methodCacheInfo, pc);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Address"></param>
-        /// <param name="PC"></param>
-        public void SetPCWriteAddress(uint Address, uint PC)
-        {
-            //Console.WriteLine("SetPCWriteAddress: {0:X} : {1:X}", Address, PC);
-            Memory.SetPCWriteAddress(Address, PC);
-        }
+        /// <param name="address"></param>
+        /// <param name="pc"></param>
+        public void SetPcWriteAddress(uint address, uint pc) => Memory.SetPCWriteAddress(address, pc);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="PC"></param>
         /// <returns></returns>
-        public Action<CpuThreadState> GetFuncAtPC(uint PC)
-        {
-            return CpuProcessor.MethodCache.GetForPc(PC).CallDelegate;
-        }
+        public Action<CpuThreadState> GetFuncAtPc(uint pc) => CpuProcessor.MethodCache.GetForPc(pc).CallDelegate;
     }
 }

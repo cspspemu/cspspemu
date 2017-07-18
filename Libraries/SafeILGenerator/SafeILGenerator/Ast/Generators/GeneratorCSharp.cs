@@ -39,13 +39,13 @@ namespace SafeILGenerator.Ast.Generators
 
         private static string ValueAsString(object value, Type type = null)
         {
-            if (type == null) type = value?.GetType() ?? typeof(Object);
+            if (type == null) type = value?.GetType() ?? typeof(object);
             if (value == null) return "null";
             if (value is bool) return value.ToString().ToLower();
             if (value is IntPtr) return $"0x{((IntPtr) value).ToInt64():X}";
             if (value is string) return $"{AstStringUtils.ToLiteral(value as string)}";
             if (AstUtils.IsTypeSigned(type)) return value.ToString();
-            if (Convert.ToInt64(value) > 9) return String.Format("0x{0:X}", value);
+            if (Convert.ToInt64(value) > 9) return string.Format("0x{0:X}", value);
             return value.ToString();
         }
 
@@ -83,7 +83,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             Output.Write("case ");
             //Output.Write(String.Join(", ", Case.CaseValues.Select(Item => ValueAsString(Item))));
-            Output.Write(String.Join(", ", ValueAsString(Case.CaseValue)));
+            Output.Write(string.Join(", ", ValueAsString(Case.CaseValue)));
             Output.Write(":");
             Output.WriteNewLine();
             Output.Indent(() => { Generate(Case.Code); });

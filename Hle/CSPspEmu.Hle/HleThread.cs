@@ -92,7 +92,7 @@ namespace CSPspEmu.Hle
         //public DateTime AwakeOnTime;
         public MemoryPartition Stack;
 
-        public String WaitDescription;
+        public string WaitDescription;
 
         public object WaitObject;
 
@@ -149,7 +149,7 @@ namespace CSPspEmu.Hle
             }
         }
 
-        public String Name
+        public string Name
         {
             get
             {
@@ -268,7 +268,7 @@ namespace CSPspEmu.Hle
             var Memory = CpuThreadState.CpuProcessor.Memory;
             try
             {
-                CpuThreadState.ExecuteAT(CpuThreadState.PC & FastPspMemory.FastMemoryMask);
+                CpuThreadState.ExecuteAt(CpuThreadState.PC & FastPspMemory.FastMemoryMask);
                 CpuThreadState.Syscall(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL);
             }
             catch (AccessViolationException AccessViolationException)
@@ -332,7 +332,7 @@ namespace CSPspEmu.Hle
             }
         }
 
-        public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, object WaitObject,
+        public void SetWaitAndPrepareWakeUp(WaitType WaitType, string WaitDescription, object WaitObject,
             Action<Action> PrepareCallback, bool HandleCallbacks = false)
         {
             if (this.HasAllStatus(Status.Waiting))
@@ -357,7 +357,7 @@ namespace CSPspEmu.Hle
             SetWait1();
         }
 
-        protected void SetWait0(WaitType WaitType, String WaitDescription, object WaitObject, bool HandleCallbacks)
+        protected void SetWait0(WaitType WaitType, string WaitDescription, object WaitObject, bool HandleCallbacks)
         {
             this.SetStatus(Status.Waiting);
             this.CurrentWaitType = WaitType;
@@ -384,7 +384,7 @@ namespace CSPspEmu.Hle
 
         public override string ToString()
         {
-            return String.Format(
+            return string.Format(
                 "HleThread(Id={0}, Priority={1}, Name='{2}', Status={3}, WaitDescription='{4}', YieldCount={5})",
                 Id, PriorityValue, Name, CurrentStatus, WaitDescription, YieldCount
             );
@@ -392,7 +392,7 @@ namespace CSPspEmu.Hle
 
         public string ToExtendedString()
         {
-            var Ret = String.Format(
+            var Ret = string.Format(
                 "HleThread(Id={0}, Priority={1}, PC=0x{2:X}, LastValidPC=0x{3:X}, SP=0x{4:X}, Name='{5}', Status={6}, YieldCount={7}",
                 Id, PriorityValue,
                 CpuThreadState.PC, CpuThreadState.LastValidPC, CpuThreadState.SP,
@@ -401,7 +401,7 @@ namespace CSPspEmu.Hle
             switch (CurrentStatus)
             {
                 case Status.Waiting:
-                    Ret += String.Format(
+                    Ret += string.Format(
                         ", CurrentWaitType={0}, WaitDescription={1}, WaitObject={2}, HandleCallbacks={3}",
                         CurrentWaitType, WaitDescription, WaitObject, HandleCallbacks
                     );

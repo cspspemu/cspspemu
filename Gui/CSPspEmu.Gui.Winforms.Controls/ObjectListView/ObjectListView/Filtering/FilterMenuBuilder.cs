@@ -235,7 +235,7 @@ namespace BrightIdeasSoftware
             checkedList.Tag = column;
             foreach (ICluster cluster in clusters)
                 checkedList.AddItem(cluster, column.ValuesChosenForFiltering.Contains(cluster.ClusterKey));
-            if (!String.IsNullOrEmpty(SELECT_ALL_LABEL))
+            if (!string.IsNullOrEmpty(SELECT_ALL_LABEL))
             {
                 int checkedCount = checkedList.CheckedItems.Count;
                 if (checkedCount == 0)

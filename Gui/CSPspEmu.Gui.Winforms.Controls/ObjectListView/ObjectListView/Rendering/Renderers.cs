@@ -115,7 +115,7 @@ namespace BrightIdeasSoftware
         /// <param name="itemBounds">The bounds of the item</param>
         /// <param name="rowObject">The model object to be drawn</param>
         /// <returns>Return true to indicate that the event was handled and no further processing is needed.</returns>
-        bool RenderItem(DrawListViewItemEventArgs e, Graphics g, Rectangle itemBounds, Object rowObject);
+        bool RenderItem(DrawListViewItemEventArgs e, Graphics g, Rectangle itemBounds, object rowObject);
 
         /// <summary>
         /// Render one cell within an ObjectListView when it is in Details mode.
@@ -125,7 +125,7 @@ namespace BrightIdeasSoftware
         /// <param name="cellBounds">The bounds of the cell</param>
         /// <param name="rowObject">The model object to be drawn</param>
         /// <returns>Return true to indicate that the event was handled and no further processing is needed.</returns>
-        bool RenderSubItem(DrawListViewSubItemEventArgs e, Graphics g, Rectangle cellBounds, Object rowObject);
+        bool RenderSubItem(DrawListViewSubItemEventArgs e, Graphics g, Rectangle cellBounds, object rowObject);
 
         /// <summary>
         /// What is under the given point?
@@ -420,7 +420,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object Aspect
+        public object Aspect
         {
             get
             {
@@ -431,7 +431,7 @@ namespace BrightIdeasSoftware
             set { aspect = value; }
         }
 
-        private Object aspect;
+        private object aspect;
 
         /// <summary>
         /// What are the bounds of the cell that is being drawn?
@@ -595,13 +595,13 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object RowObject
+        public object RowObject
         {
             get { return rowObject; }
             set { rowObject = value; }
         }
 
-        private Object rowObject;
+        private object rowObject;
 
         /// <summary>
         /// Get or set the list subitem that this renderer will be drawing
@@ -787,11 +787,11 @@ namespace BrightIdeasSoftware
             {
                 int selectorAsInt = -1;
 
-                if (imageSelector is Int32)
-                    selectorAsInt = (Int32) imageSelector;
+                if (imageSelector is int)
+                    selectorAsInt = (int) imageSelector;
                 else
                 {
-                    String selectorAsString = imageSelector as String;
+                    string selectorAsString = imageSelector as string;
                     if (selectorAsString != null)
                         selectorAsInt = il.Images.IndexOfKey(selectorAsString);
                 }
@@ -815,7 +815,7 @@ namespace BrightIdeasSoftware
         /// <returns></returns>
         protected virtual int CalculateTextWidth(Graphics g, string txt)
         {
-            if (String.IsNullOrEmpty(txt))
+            if (string.IsNullOrEmpty(txt))
                 return 0;
 
             if (this.UseGdiTextRendering)
@@ -897,7 +897,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="imageSelector">The value that indicates the image to be used</param>
         /// <returns>An Image or null</returns>
-        protected virtual Image GetImage(Object imageSelector)
+        protected virtual Image GetImage(object imageSelector)
         {
             if (imageSelector == null || imageSelector == System.DBNull.Value)
                 return null;
@@ -905,16 +905,16 @@ namespace BrightIdeasSoftware
             ImageList il = this.ImageListOrDefault;
             if (il != null)
             {
-                if (imageSelector is Int32)
+                if (imageSelector is int)
                 {
-                    Int32 index = (Int32) imageSelector;
+                    int index = (int) imageSelector;
                     if (index < 0 || index >= il.Images.Count)
                         return null;
 
                     return il.Images[index];
                 }
 
-                String str = imageSelector as String;
+                string str = imageSelector as string;
                 if (str != null)
                 {
                     if (il.Images.ContainsKey(str))
@@ -929,7 +929,7 @@ namespace BrightIdeasSoftware
 
         /// <summary>
         /// </summary>
-        protected virtual Object GetImageSelector()
+        protected virtual object GetImageSelector()
         {
             return this.ColumnIsPrimary ? this.ListItem.ImageSelector : this.OLVSubItem.ImageSelector;
         }
@@ -1483,7 +1483,7 @@ namespace BrightIdeasSoftware
         /// <param name="g">Graphics context to use for drawing</param>
         /// <param name="r">Bounds of the cell</param>
         /// <param name="imageSelector">The optional image to be drawn</param>
-        protected virtual int DrawImage(Graphics g, Rectangle r, Object imageSelector)
+        protected virtual int DrawImage(Graphics g, Rectangle r, object imageSelector)
         {
             if (imageSelector == null || imageSelector == System.DBNull.Value)
                 return 0;
@@ -1494,15 +1494,15 @@ namespace BrightIdeasSoftware
             {
                 int selectorAsInt = -1;
 
-                if (imageSelector is Int32)
+                if (imageSelector is int)
                 {
-                    selectorAsInt = (Int32) imageSelector;
+                    selectorAsInt = (int) imageSelector;
                     if (selectorAsInt >= il.Images.Count)
                         selectorAsInt = -1;
                 }
                 else
                 {
-                    String selectorAsString = imageSelector as String;
+                    string selectorAsString = imageSelector as string;
                     if (selectorAsString != null)
                         selectorAsInt = il.Images.IndexOfKey(selectorAsString);
                 }
@@ -1581,7 +1581,7 @@ namespace BrightIdeasSoftware
         {
             // Collect the non-null images
             List<Image> images = new List<Image>();
-            foreach (Object selector in imageSelectors)
+            foreach (object selector in imageSelectors)
             {
                 Image image = this.GetImage(selector);
                 if (image != null)
@@ -1618,9 +1618,9 @@ namespace BrightIdeasSoftware
         /// <param name="g">Graphics context to use for drawing</param>
         /// <param name="r">Bounds of the cell</param>
         /// <param name="txt">The string to be drawn</param>
-        public virtual void DrawText(Graphics g, Rectangle r, String txt)
+        public virtual void DrawText(Graphics g, Rectangle r, string txt)
         {
-            if (String.IsNullOrEmpty(txt))
+            if (string.IsNullOrEmpty(txt))
                 return;
 
             if (this.UseGdiTextRendering)
@@ -1641,7 +1641,7 @@ namespace BrightIdeasSoftware
         /// <para>This method doesn't honour the CanWrap setting on the renderer. All
         /// text is single line</para>
         /// </remarks>
-        protected virtual void DrawTextGdi(Graphics g, Rectangle r, String txt)
+        protected virtual void DrawTextGdi(Graphics g, Rectangle r, string txt)
         {
             Color backColor = Color.Transparent;
             if (this.IsDrawBackground && this.IsItemSelected && ColumnIsPrimary && !this.ListView.FullRowSelect)
@@ -1702,7 +1702,7 @@ namespace BrightIdeasSoftware
         /// Print the given text in the given rectangle using normal GDI+ .NET methods
         /// </summary>
         /// <remarks>Printing to a printer dc has to be done using this method.</remarks>
-        protected virtual void DrawTextGdiPlus(Graphics g, Rectangle r, String txt)
+        protected virtual void DrawTextGdiPlus(Graphics g, Rectangle r, string txt)
         {
             using (StringFormat fmt = this.StringFormatForGdiPlus)
             {
@@ -1861,7 +1861,7 @@ namespace BrightIdeasSoftware
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string TextToHighlight
         {
-            get { return String.Empty; }
+            get { return string.Empty; }
             set { }
         }
 
@@ -2112,7 +2112,7 @@ namespace BrightIdeasSoftware
         /// <param name="trueImage">Draw this when our data value is true</param>
         /// <param name="falseImage">Draw this when our data value is false</param>
         /// <returns>A Renderer</returns>
-        public static MappedImageRenderer Boolean(Object trueImage, Object falseImage)
+        public static MappedImageRenderer Boolean(object trueImage, object falseImage)
         {
             return new MappedImageRenderer(true, trueImage, false, falseImage);
         }
@@ -2124,9 +2124,9 @@ namespace BrightIdeasSoftware
         /// <param name="falseImage">Draw this when our data value is false</param>
         /// <param name="nullImage">Draw this when our data value is null</param>
         /// <returns>A Renderer</returns>
-        public static MappedImageRenderer TriState(Object trueImage, Object falseImage, Object nullImage)
+        public static MappedImageRenderer TriState(object trueImage, object falseImage, object nullImage)
         {
-            return new MappedImageRenderer(new Object[] {true, trueImage, false, falseImage, null, nullImage});
+            return new MappedImageRenderer(new object[] {true, trueImage, false, falseImage, null, nullImage});
         }
 
         /// <summary>
@@ -2142,7 +2142,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="key">The data value to be matched</param>
         /// <param name="image">The image to be shown when the key is matched</param>
-        public MappedImageRenderer(Object key, Object image)
+        public MappedImageRenderer(object key, object image)
             : this()
         {
             this.Add(key, image);
@@ -2155,7 +2155,7 @@ namespace BrightIdeasSoftware
         /// <param name="image1"></param>
         /// <param name="key2"></param>
         /// <param name="image2"></param>
-        public MappedImageRenderer(Object key1, Object image1, Object key2, Object image2)
+        public MappedImageRenderer(object key1, object image1, object key2, object image2)
             : this()
         {
             this.Add(key1, image1);
@@ -2166,7 +2166,7 @@ namespace BrightIdeasSoftware
         /// Build a renderer from the given array of keys and their matching images
         /// </summary>
         /// <param name="keysAndImages">An array of key/image pairs</param>
-        public MappedImageRenderer(Object[] keysAndImages)
+        public MappedImageRenderer(object[] keysAndImages)
             : this()
         {
             if ((keysAndImages.GetLength(0) % 2) != 0)
@@ -2181,7 +2181,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="value">Value that the Aspect must match</param>
         /// <param name="image">An ImageSelector -- an int, string or image</param>
-        public void Add(Object value, Object image)
+        public void Add(object value, object image)
         {
             if (value == null)
                 this.nullImage = image;
@@ -2216,7 +2216,7 @@ namespace BrightIdeasSoftware
         {
             ArrayList images = new ArrayList();
             Image image = null;
-            foreach (Object selector in imageSelectors)
+            foreach (object selector in imageSelectors)
             {
                 if (selector == null)
                     image = this.GetImage(this.nullImage);
@@ -2238,7 +2238,7 @@ namespace BrightIdeasSoftware
         /// <param name="g"></param>
         /// <param name="r"></param>
         /// <param name="selector"></param>
-        protected void RenderOne(Graphics g, Rectangle r, Object selector)
+        protected void RenderOne(Graphics g, Rectangle r, object selector)
         {
             Image image = null;
             if (selector == null)
@@ -2253,7 +2253,7 @@ namespace BrightIdeasSoftware
         #region Private variables
 
         private Hashtable map; // Track the association between values and images
-        private Object nullImage; // image to be drawn for null values (since null can't be a key)
+        private object nullImage; // image to be drawn for null values (since null can't be a key)
 
         #endregion
     }
@@ -2431,7 +2431,7 @@ namespace BrightIdeasSoftware
                 return;
             r = this.ApplyCellPadding(r);
 
-            if (this.Aspect is System.Byte[])
+            if (this.Aspect is byte[])
             {
                 this.DrawAlignedImage(g, r, this.GetImageFromAspect());
             }
@@ -2472,9 +2472,9 @@ namespace BrightIdeasSoftware
             // If it's a string, we try to find a file by that name.
             //    If we can't, we use the string as an index into our image list.
             Image image = null;
-            if (this.Aspect is System.Byte[])
+            if (this.Aspect is byte[])
             {
-                using (MemoryStream stream = new MemoryStream((System.Byte[]) this.Aspect))
+                using (MemoryStream stream = new MemoryStream((byte[]) this.Aspect))
                 {
                     try
                     {
@@ -2486,14 +2486,14 @@ namespace BrightIdeasSoftware
                     }
                 }
             }
-            else if (this.Aspect is Int32)
+            else if (this.Aspect is int)
             {
                 image = this.GetImage(this.Aspect);
             }
             else
             {
-                String str = this.Aspect as String;
-                if (!String.IsNullOrEmpty(str))
+                string str = this.Aspect as string;
+                if (!string.IsNullOrEmpty(str))
                 {
                     try
                     {
@@ -2531,7 +2531,7 @@ namespace BrightIdeasSoftware
         /// This is the method that is invoked by the timer. It basically switches control to the listview thread.
         /// </summary>
         /// <param name="state">not used</param>
-        public void OnTimer(Object state)
+        public void OnTimer(object state)
         {
             if (this.ListView == null || this.Paused)
                 this.tickler.Change(1000, Timeout.Infinite);
@@ -3133,7 +3133,7 @@ namespace BrightIdeasSoftware
         /// <param name="maxImages"></param>
         /// <param name="minValue"></param>
         /// <param name="maxValue"></param>
-        public MultiImageRenderer(Object imageSelector, int maxImages, int minValue, int maxValue)
+        public MultiImageRenderer(object imageSelector, int maxImages, int minValue, int maxValue)
             : this()
         {
             this.ImageSelector = imageSelector;
@@ -3154,8 +3154,8 @@ namespace BrightIdeasSoftware
         {
             get
             {
-                if (imageSelector is Int32)
-                    return (Int32) imageSelector;
+                if (imageSelector is int)
+                    return (int) imageSelector;
                 else
                     return -1;
             }
@@ -3170,7 +3170,7 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public string ImageName
         {
-            get { return imageSelector as String; }
+            get { return imageSelector as string; }
             set { imageSelector = value; }
         }
 
@@ -3180,13 +3180,13 @@ namespace BrightIdeasSoftware
         /// <remarks>Like all image selectors, this can be an int, string or Image</remarks>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object ImageSelector
+        public object ImageSelector
         {
             get { return imageSelector; }
             set { imageSelector = value; }
         }
 
-        private Object imageSelector;
+        private object imageSelector;
 
         /// <summary>
         /// What is the maximum number of images that this renderer should draw?
@@ -3311,9 +3311,9 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="key">When this flag is present...</param>
         /// <param name="imageSelector">...draw this image</param>
-        public void Add(Object key, Object imageSelector)
+        public void Add(object key, object imageSelector)
         {
-            Int32 k2 = ((IConvertible) key).ToInt32(NumberFormatInfo.InvariantInfo);
+            int k2 = ((IConvertible) key).ToInt32(NumberFormatInfo.InvariantInfo);
 
             this.imageMap[k2] = imageSelector;
             this.keysInOrder.Remove(k2);
@@ -3335,9 +3335,9 @@ namespace BrightIdeasSoftware
 
             r = this.ApplyCellPadding(r);
 
-            Int32 v2 = convertable.ToInt32(NumberFormatInfo.InvariantInfo);
+            int v2 = convertable.ToInt32(NumberFormatInfo.InvariantInfo);
             ArrayList images = new ArrayList();
-            foreach (Int32 key in this.keysInOrder)
+            foreach (int key in this.keysInOrder)
             {
                 if ((v2 & key) == key)
                 {
@@ -3363,10 +3363,10 @@ namespace BrightIdeasSoftware
             if (convertable == null)
                 return;
 
-            Int32 v2 = convertable.ToInt32(NumberFormatInfo.InvariantInfo);
+            int v2 = convertable.ToInt32(NumberFormatInfo.InvariantInfo);
 
             Point pt = this.Bounds.Location;
-            foreach (Int32 key in this.keysInOrder)
+            foreach (int key in this.keysInOrder)
             {
                 if ((v2 & key) == key)
                 {
@@ -3385,8 +3385,8 @@ namespace BrightIdeasSoftware
             }
         }
 
-        private List<Int32> keysInOrder = new List<Int32>();
-        private Dictionary<Int32, Object> imageMap = new Dictionary<Int32, object>();
+        private List<int> keysInOrder = new List<int>();
+        private Dictionary<int, object> imageMap = new Dictionary<int, object>();
     }
 
     /// <summary>
@@ -3560,13 +3560,13 @@ namespace BrightIdeasSoftware
         /// <returns></returns>
         protected virtual string GetDescription()
         {
-            if (String.IsNullOrEmpty(this.DescriptionAspectName))
-                return String.Empty;
+            if (string.IsNullOrEmpty(this.DescriptionAspectName))
+                return string.Empty;
 
             if (this.descriptionGetter == null)
                 this.descriptionGetter = new Munger(this.DescriptionAspectName);
 
-            return this.descriptionGetter.GetValue(this.RowObject) as String;
+            return this.descriptionGetter.GetValue(this.RowObject) as string;
         }
 
         Munger descriptionGetter;
@@ -3584,7 +3584,7 @@ namespace BrightIdeasSoftware
         {
             this.DrawBackground(g, r);
             r = this.ApplyCellPadding(r);
-            this.DrawDescribedTask(g, r, this.Aspect as String, this.GetDescription(), this.GetImage());
+            this.DrawDescribedTask(g, r, this.Aspect as string, this.GetDescription(), this.GetImage());
         }
 
         /// <summary>
@@ -3618,7 +3618,7 @@ namespace BrightIdeasSoftware
             }
 
             // Draw the title
-            if (!String.IsNullOrEmpty(title))
+            if (!string.IsNullOrEmpty(title))
             {
                 using (StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap))
                 {
@@ -3639,7 +3639,7 @@ namespace BrightIdeasSoftware
             }
 
             // Draw the description
-            if (!String.IsNullOrEmpty(description))
+            if (!string.IsNullOrEmpty(description))
             {
                 using (StringFormat fmt2 = new StringFormat())
                 {

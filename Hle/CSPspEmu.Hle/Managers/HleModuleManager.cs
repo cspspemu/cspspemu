@@ -32,7 +32,7 @@ namespace CSPspEmu.Hle.Managers
             return ModulesAssembly.GetTypes().Where(Type => FindType.IsAssignableFrom(Type));
         }
 
-        public Dictionary<String, Type> HleModuleTypes;
+        public Dictionary<string, Type> HleModuleTypes;
 
         protected int LastCallIndex = 0;
 
@@ -108,7 +108,7 @@ namespace CSPspEmu.Hle.Managers
             return (HleModuleHost) HleModules[Type];
         }
 
-        public HleModuleHost GetModuleByName(String ModuleNameToFind)
+        public HleModuleHost GetModuleByName(string ModuleNameToFind)
         {
             //Console.WriteLine("GetModuleByName('{0}')", ModuleNameToFind);
             if (!HleModuleTypes.ContainsKey(ModuleNameToFind))
@@ -124,14 +124,14 @@ namespace CSPspEmu.Hle.Managers
             return (TType) GetModuleByType(typeof(TType));
         }
 
-        public Action<CpuThreadState> GetModuleDelegate<TType>(String FunctionName) where TType : HleModuleHost
+        public Action<CpuThreadState> GetModuleDelegate<TType>(string FunctionName) where TType : HleModuleHost
         {
             var Module = GetModule<TType>();
             var EntriesByName = Module.EntriesByName;
             if (!EntriesByName.ContainsKey(FunctionName))
             {
                 throw (new KeyNotFoundException(
-                    String.Format(
+                    string.Format(
                         "Can't find method '{0}' on module '{1}'",
                         FunctionName,
                         Module.GetType().Name

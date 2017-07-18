@@ -43,7 +43,7 @@ namespace BrightIdeasSoftware
     /// value for the column/model combination. It could be simply representative of
     /// the appropriate type of value.</param>
     /// <returns>A control which can edit the given value</returns>
-    public delegate Control EditorCreatorDelegate(Object model, OLVColumn column, Object value);
+    public delegate Control EditorCreatorDelegate(object model, OLVColumn column, object value);
 
     /// <summary>
     /// An editor registry gives a way to decide what cell editor should be used to edit
@@ -67,22 +67,22 @@ namespace BrightIdeasSoftware
 
         private void InitializeStandardTypes()
         {
-            this.Register(typeof(Boolean), typeof(BooleanCellEditor));
-            this.Register(typeof(Int16), typeof(IntUpDown));
-            this.Register(typeof(Int32), typeof(IntUpDown));
-            this.Register(typeof(Int64), typeof(IntUpDown));
-            this.Register(typeof(UInt16), typeof(UintUpDown));
-            this.Register(typeof(UInt32), typeof(UintUpDown));
-            this.Register(typeof(UInt64), typeof(UintUpDown));
-            this.Register(typeof(Single), typeof(FloatCellEditor));
-            this.Register(typeof(Double), typeof(FloatCellEditor));
-            this.Register(typeof(DateTime), delegate(Object model, OLVColumn column, Object value)
+            this.Register(typeof(bool), typeof(BooleanCellEditor));
+            this.Register(typeof(short), typeof(IntUpDown));
+            this.Register(typeof(int), typeof(IntUpDown));
+            this.Register(typeof(long), typeof(IntUpDown));
+            this.Register(typeof(ushort), typeof(UintUpDown));
+            this.Register(typeof(uint), typeof(UintUpDown));
+            this.Register(typeof(ulong), typeof(UintUpDown));
+            this.Register(typeof(float), typeof(FloatCellEditor));
+            this.Register(typeof(double), typeof(FloatCellEditor));
+            this.Register(typeof(DateTime), delegate(object model, OLVColumn column, object value)
             {
                 DateTimePicker c = new DateTimePicker();
                 c.Format = DateTimePickerFormat.Short;
                 return c;
             });
-            this.Register(typeof(Boolean), delegate(Object model, OLVColumn column, Object value)
+            this.Register(typeof(bool), delegate(object model, OLVColumn column, object value)
             {
                 CheckBox c = new BooleanCellEditor2();
                 c.ThreeState = column.TriStateCheckBoxes;
@@ -105,7 +105,7 @@ namespace BrightIdeasSoftware
         public void Register(Type type, Type controlType)
         {
             this.Register(type,
-                delegate(Object model, OLVColumn column, Object value)
+                delegate(object model, OLVColumn column, object value)
                 {
                     return controlType.InvokeMember("", BindingFlags.CreateInstance, null, null, null) as Control;
                 });
@@ -164,7 +164,7 @@ namespace BrightIdeasSoftware
         /// value for the column/model combination. It could be simply representative of
         /// the appropriate type of value.</param>
         /// <returns>A Control that can edit the given type of values</returns>
-        public Control GetEditor(Object model, OLVColumn column, Object value)
+        public Control GetEditor(object model, OLVColumn column, object value)
         {
             Control editor;
 

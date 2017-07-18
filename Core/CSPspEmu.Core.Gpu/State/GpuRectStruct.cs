@@ -28,9 +28,6 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary>
         /// 
         /// </summary>
-        public bool IsFull
-        {
-            get { return (Left <= 0 && Top <= 0) && (Right >= 480 && Bottom >= 272); }
-        }
+        public bool IsFull => (Left <= 0 && Top <= 0) && (Right >= 480 && Bottom >= 272);
     }
 }

@@ -64,7 +64,7 @@ namespace cscodec.util
 	  * If <code>aObject</code> is an array, then each element may be a primitive
 	  * or a possibly-null object.
 	  */
-	  public static int hash( int aSeed , Object aObject ) {
+	  public static int hash( int aSeed , object aObject ) {
 	    int result = aSeed;
 	    if ( aObject == null) {
 	      result = hash(result, 0);
@@ -73,10 +73,10 @@ namespace cscodec.util
 	      result = hash(result, aObject.GetHashCode());
 	    }
 	    else {
-	      Object[] objAr = (Object[])aObject;
+	      object[] objAr = (object[])aObject;
 	      int length = objAr.Length;
 	      for ( int idx = 0; idx < length; ++idx ) {
-	        Object item = objAr[idx];
+	        object item = objAr[idx];
 	        //recursive call!
 	        result = hash(result, item);
 	      }
@@ -92,7 +92,7 @@ namespace cscodec.util
 	    return fODD_PRIME_NUMBER * aSeed;
 	  }
 
-	  private static bool isArray(Object aObject){
+	  private static bool isArray(object aObject){
 	    return aObject.GetType().IsArray;
 	  }
 	} 

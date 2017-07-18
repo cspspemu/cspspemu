@@ -44,7 +44,7 @@ namespace CSPspEmu.cheats
             set
             {
                 _Cheats = value.Trim();
-                if (!String.IsNullOrEmpty(_Cheats) || LinkedCwcheatsFileMustWrite)
+                if (!string.IsNullOrEmpty(_Cheats) || LinkedCwcheatsFileMustWrite)
                 {
                     File.WriteAllText(LinkedCwcheatsFile, _Cheats);
                 }

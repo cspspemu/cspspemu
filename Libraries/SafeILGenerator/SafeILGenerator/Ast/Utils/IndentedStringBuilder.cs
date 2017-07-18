@@ -43,7 +43,7 @@ namespace SafeILGenerator.Ast.Utils
                 if (_startingLine)
                 {
                     _startingLine = false;
-                    StringBuilder.Append(new String(' ', Math.Max(_indentLevel, 0) * IndentLevelSpaceCount));
+                    StringBuilder.Append(new string(' ', Math.Max(_indentLevel, 0) * IndentLevelSpaceCount));
                 }
                 StringBuilder.Append(inlineText);
             }

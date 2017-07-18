@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Loader
         public Dictionary<string, Elf.SectionHeader> SectionHeadersByName { get; protected set; }
         protected byte[] StringTable;
 
-        public String GetStringFromStringTable(uint Index)
+        public string GetStringFromStringTable(uint Index)
         {
             fixed (byte* NamePointer = &StringTable[Index])
             {

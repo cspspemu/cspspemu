@@ -272,7 +272,7 @@ namespace CSharpUtils.Ext.Compression.Zip
         /// <summary>
         /// 
         /// </summary>
-        public Dictionary<String, File> Files;
+        public Dictionary<string, File> Files;
 
         /// <summary>
         /// 

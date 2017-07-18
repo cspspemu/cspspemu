@@ -188,13 +188,13 @@ namespace BrightIdeasSoftware
             foreach (object key in map.Keys)
             {
                 string title = parmameters.GroupByColumn.ConvertGroupKeyToTitle(key);
-                if (!String.IsNullOrEmpty(parmameters.TitleFormat))
+                if (!string.IsNullOrEmpty(parmameters.TitleFormat))
                 {
                     int count = map[key].Count;
                     string format = (count == 1 ? parmameters.TitleSingularFormat : parmameters.TitleFormat);
                     try
                     {
-                        title = String.Format(format, title, count);
+                        title = string.Format(format, title, count);
                     }
                     catch (FormatException)
                     {

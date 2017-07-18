@@ -282,7 +282,7 @@ namespace BrightIdeasSoftware
                 olv.UseSubItemCheckBoxes = true;
             if (olv.AllColumns.Exists(delegate(OLVColumn x)
             {
-                return x.Index > 0 && (x.ImageGetter != null || !String.IsNullOrEmpty(x.ImageAspectName));
+                return x.Index > 0 && (x.ImageGetter != null || !string.IsNullOrEmpty(x.ImageAspectName));
             }))
                 olv.ShowImagesOnSubItems = true;
             olv.RebuildColumns();
@@ -327,7 +327,7 @@ namespace BrightIdeasSoftware
             OLVColumnAttribute attr)
         {
             OLVColumn column = this.MakeColumn(aspectName, title, attr);
-            column.Name = (attr == null || String.IsNullOrEmpty(attr.Name)) ? aspectName : attr.Name;
+            column.Name = (attr == null || string.IsNullOrEmpty(attr.Name)) ? aspectName : attr.Name;
             this.ConfigurePossibleBooleanColumn(column, propertyType);
 
             if (attr == null)
@@ -371,7 +371,7 @@ namespace BrightIdeasSoftware
         /// <returns></returns>
         protected virtual OLVColumn MakeColumn(string aspectName, string title, OLVColumnAttribute attr)
         {
-            string columnTitle = (attr == null || String.IsNullOrEmpty(attr.Title)) ? title : attr.Title;
+            string columnTitle = (attr == null || string.IsNullOrEmpty(attr.Title)) ? title : attr.Title;
             return new OLVColumn(columnTitle, aspectName);
         }
 

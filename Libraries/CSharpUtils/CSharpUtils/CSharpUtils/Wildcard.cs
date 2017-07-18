@@ -51,6 +51,6 @@ namespace CSharpUtils
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static implicit operator String(Wildcard input) => input.wildcardPattern;
+        public static implicit operator string(Wildcard input) => input.wildcardPattern;
     }
 }

@@ -71,7 +71,7 @@ namespace CSPspEmu.Hle.Managers
                     "HleThreadManager:: IGpuConnector.Signal :: 0x{0:X8}, 0x{1:X8}, 0x{2:X8}, {3}, {4}",
                     CallbackData.SignalFunction, CallbackData.SignalArgument, PC, Signal, Behavior);
                 HleInterop.ExecuteFunctionNowLater(CallbackData.SignalFunction, ExecuteNow,
-                    new Object[] {Signal, CallbackData.SignalArgument, PC});
+                    new object[] {Signal, CallbackData.SignalArgument, PC});
             }
             else
             {
@@ -87,7 +87,7 @@ namespace CSPspEmu.Hle.Managers
                 Console.Error.WriteLine("HleThreadManager:: IGpuConnector.Finish :: 0x{0:X8}, 0x{1:X8}, 0x{2:X8}, {3}",
                     CallbackData.FinishFunction, CallbackData.FinishArgument, PC, Arg);
                 HleInterop.ExecuteFunctionNowLater(CallbackData.FinishFunction, ExecuteNow,
-                    new Object[] {Arg, CallbackData.FinishArgument, PC});
+                    new object[] {Arg, CallbackData.FinishArgument, PC});
             }
         }
 

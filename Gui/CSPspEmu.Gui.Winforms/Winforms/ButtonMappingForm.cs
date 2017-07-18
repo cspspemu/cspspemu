@@ -44,7 +44,7 @@ namespace CSPspEmu.Gui.Winforms
                 TextBox.GotFocus += HandleGotFocus;
                 TextBox.LostFocus += HandleLostFocus;
                 var ConfigField = GetCachedControllerConfigField(TextBox.Name);
-                if (ConfigField != null) TextBox.Text = (String) ConfigField.GetValue(CurrentControllerConfig);
+                if (ConfigField != null) TextBox.Text = (string) ConfigField.GetValue(CurrentControllerConfig);
             }
 
             this.AcceptButton = button1;

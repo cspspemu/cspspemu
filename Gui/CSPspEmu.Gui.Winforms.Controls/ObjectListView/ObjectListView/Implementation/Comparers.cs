@@ -136,9 +136,9 @@ namespace BrightIdeasSoftware
         public int CompareValues(object x, object y)
         {
             // Force case insensitive compares on strings
-            String xAsString = x as String;
+            string xAsString = x as string;
             if (xAsString != null)
-                return String.Compare(xAsString, (String) y, StringComparison.CurrentCultureIgnoreCase);
+                return string.Compare(xAsString, (string) y, StringComparison.CurrentCultureIgnoreCase);
             else
             {
                 IComparable comparable = x as IComparable;
@@ -185,7 +185,7 @@ namespace BrightIdeasSoftware
             if (x.SortValue != null && y.SortValue != null)
                 result = x.SortValue.CompareTo(y.SortValue);
             else
-                result = String.Compare(x.Header, y.Header, StringComparison.CurrentCultureIgnoreCase);
+                result = string.Compare(x.Header, y.Header, StringComparison.CurrentCultureIgnoreCase);
 
             if (this.sortOrder == SortOrder.Descending)
                 result = 0 - result;
@@ -276,9 +276,9 @@ namespace BrightIdeasSoftware
         public int CompareValues(object x, object y)
         {
             // Force case insensitive compares on strings
-            String xStr = x as String;
+            string xStr = x as string;
             if (xStr != null)
-                return String.Compare(xStr, (String) y, StringComparison.CurrentCultureIgnoreCase);
+                return string.Compare(xStr, (string) y, StringComparison.CurrentCultureIgnoreCase);
             else
             {
                 IComparable comparable = x as IComparable;

@@ -731,7 +731,7 @@ namespace cscodec.h264.decoder
 			}
 		}
 
-		public static int pix_abs16_c(Object v,
+		public static int pix_abs16_c(object v,
 				byte[] pix1_base, int pix1_offset,
 				byte[] pix2_base, int pix2_offset,
 				int line_size, int h)

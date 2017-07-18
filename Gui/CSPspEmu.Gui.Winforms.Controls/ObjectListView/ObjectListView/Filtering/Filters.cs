@@ -366,7 +366,7 @@ namespace BrightIdeasSoftware
 
         private void ConvertPossibleValues()
         {
-            this.possibleValuesAsUlongs = new List<UInt64>();
+            this.possibleValuesAsUlongs = new List<ulong>();
             foreach (object x in this.PossibleValues)
                 this.possibleValuesAsUlongs.Add(Convert.ToUInt64(x));
         }
@@ -380,7 +380,7 @@ namespace BrightIdeasSoftware
         {
             try
             {
-                UInt64 value = Convert.ToUInt64(result);
+                ulong value = Convert.ToUInt64(result);
                 foreach (ulong flag in this.possibleValuesAsUlongs)
                 {
                     if ((value & flag) == flag)
@@ -398,7 +398,7 @@ namespace BrightIdeasSoftware
             }
         }
 
-        private List<UInt64> possibleValuesAsUlongs = new List<UInt64>();
+        private List<ulong> possibleValuesAsUlongs = new List<ulong>();
     }
 
     /// <summary>

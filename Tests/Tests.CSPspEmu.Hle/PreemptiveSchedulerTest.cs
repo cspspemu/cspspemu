@@ -18,7 +18,7 @@ namespace CSPspEmu.Tests.Hle
 
             public override string ToString()
             {
-                return String.Format("PreemptiveItem(Name='{0}',Priority={1}, Ready={2})", Name, Priority, Ready);
+                return string.Format("PreemptiveItem(Name='{0}',Priority={1}, Ready={2})", Name, Priority, Ready);
             }
         }
 

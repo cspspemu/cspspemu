@@ -18,7 +18,7 @@ namespace CSharpPlatform.Library
             this.LibraryHandle = LoadLibrary(LibraryName);
             if (this.LibraryHandle == IntPtr.Zero)
             {
-                throw (new InvalidOperationException(String.Format("Can't find library '{0}'", LibraryName)));
+                throw (new InvalidOperationException(string.Format("Can't find library '{0}'", LibraryName)));
             }
         }
 

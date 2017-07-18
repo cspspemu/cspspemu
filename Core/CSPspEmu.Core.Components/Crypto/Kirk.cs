@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Components.Crypto
                 if (header->Mode != KirkMode.Cmd1)
                 {
                     throw(new KirkException(ResultEnum.PspKirkInvalidMode,
-                        String.Format("Expected mode Cmd1 but found {0}", header->Mode)));
+                        string.Format("Expected mode Cmd1 but found {0}", header->Mode)));
                 }
 
                 HeaderKeys* keys = (HeaderKeys*) outbuff; //0-15 AES key, 16-31 CMAC key
@@ -134,7 +134,7 @@ namespace CSPspEmu.Core.Components.Crypto
                     Console.WriteLine("Output:");
                     ArrayUtils.HexDump(PointerUtils.PointerToByteArray(outbuff, 0x100));
                     throw (new KirkException(ResultEnum.PspKirkInvalidMode,
-                        String.Format("Expected mode Cmd1 but found {0}", header.Mode)));
+                        string.Format("Expected mode Cmd1 but found {0}", header.Mode)));
                 }
 
                 Console.WriteLine("Input:");

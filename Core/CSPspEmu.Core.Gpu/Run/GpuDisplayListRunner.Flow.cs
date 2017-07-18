@@ -82,10 +82,7 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuSendList(int mode, const void* list, PspGeContext* context);
 
-        public void OP_JUMP()
-        {
-            GpuDisplayList.JumpRelativeOffset((uint) (Params24 & ~3));
-        }
+        public void OP_JUMP() => GpuDisplayList.JumpRelativeOffset((uint) (Params24 & ~3));
 
         public void OP_END()
         {
@@ -96,20 +93,14 @@ namespace CSPspEmu.Core.Gpu.Run
         public void OP_FINISH()
         {
             GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
-            GpuDisplayList.DoFinish(PC, Params24, ExecuteNow: true);
+            GpuDisplayList.DoFinish(Pc, Params24, ExecuteNow: true);
         }
 
         //[GpuOpCodesNotImplemented]
-        public void OP_CALL()
-        {
-            GpuDisplayList.CallRelativeOffset((uint) (Params24 & ~3));
-        }
+        public void OP_CALL() => GpuDisplayList.CallRelativeOffset((uint) (Params24 & ~3));
 
         //[GpuOpCodesNotImplemented]
-        public void OP_RET()
-        {
-            GpuDisplayList.Ret();
-        }
+        public void OP_RET() => GpuDisplayList.Ret();
 
         /**
          * Trigger signal to call code from the command stream
@@ -125,29 +116,29 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuOpCodesNotImplemented]
         public void OP_SIGNAL()
         {
-            var Signal = Extract(0, 16);
-            var Behaviour = (SignalBehavior) Extract(16, 8);
+            var signal = Extract(0, 16);
+            var behaviour = (SignalBehavior) Extract(16, 8);
 
-            Console.Out.WriteLineColored(ConsoleColor.Green, "OP_SIGNAL: {0}, {1}", Signal, Behaviour);
+            Console.Out.WriteLineColored(ConsoleColor.Green, "OP_SIGNAL: {0}, {1}", signal, behaviour);
 
-            switch (Behaviour)
+            switch (behaviour)
             {
                 case SignalBehavior.PSP_GE_SIGNAL_NONE:
                     break;
                 case SignalBehavior.PSP_GE_SIGNAL_HANDLER_CONTINUE:
                 case SignalBehavior.PSP_GE_SIGNAL_HANDLER_PAUSE:
                 case SignalBehavior.PSP_GE_SIGNAL_HANDLER_SUSPEND:
-                    var Next = GpuDisplayList.ReadInstructionAndMoveNext();
-                    if (Next.OpCode != GpuOpCodes.END)
+                    var next = GpuDisplayList.ReadInstructionAndMoveNext();
+                    if (next.OpCode != GpuOpCodes.END)
                     {
-                        throw (new NotImplementedException("Error! Next Signal not an END! : " + Next.OpCode));
+                        throw new NotImplementedException("Error! Next Signal not an END! : " + next.OpCode);
                     }
                     break;
                 default:
-                    throw(new NotImplementedException(String.Format("Not implemented {0}", Behaviour)));
+                    throw new NotImplementedException($"Not implemented {behaviour}");
             }
 
-            GpuDisplayList.DoSignal(PC, Signal, Behaviour, ExecuteNow: true);
+            GpuDisplayList.DoSignal(Pc, signal, behaviour, ExecuteNow: true);
         }
     }
 }

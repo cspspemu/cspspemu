@@ -67,7 +67,7 @@ namespace CSPspEmu.Hle.Formats
             }
         }
 
-        public String DetectString(Stream Stream)
+        public string DetectString(Stream Stream)
         {
             return Enum.GetName(typeof(SubType), DetectSubType(Stream));
         }

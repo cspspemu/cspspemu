@@ -207,7 +207,7 @@ namespace BrightIdeasSoftware
             foreach (object x in this.CurrencyManager.List)
             {
                 object parentKey = this.GetParentValue(x);
-                if (Object.Equals(this.RootKeyValue, parentKey))
+                if (object.Equals(this.RootKeyValue, parentKey))
                     yield return x;
             }
         }
@@ -221,7 +221,7 @@ namespace BrightIdeasSoftware
             foreach (object x in this.CurrencyManager.List)
             {
                 object parentKey = this.GetParentValue(x);
-                if (Object.Equals(keyValue, parentKey))
+                if (object.Equals(keyValue, parentKey))
                     return true;
             }
             return false;
@@ -235,7 +235,7 @@ namespace BrightIdeasSoftware
                 foreach (object x in this.CurrencyManager.List)
                 {
                     object parentKey = this.GetParentValue(x);
-                    if (Object.Equals(keyValue, parentKey))
+                    if (object.Equals(keyValue, parentKey))
                         yield return x;
                 }
             }
@@ -250,7 +250,7 @@ namespace BrightIdeasSoftware
             foreach (object x in this.CurrencyManager.List)
             {
                 object key = this.GetKeyValue(x);
-                if (Object.Equals(parentValue, key))
+                if (object.Equals(parentValue, key))
                     return x;
             }
             return null;

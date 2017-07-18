@@ -272,13 +272,13 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// 
         /// </summary>
-        public String Name
+        public string Name
         {
             get { return name; }
             set { name = value; }
         }
 
-        private String name;
+        private string name;
 
         /// <summary>
         /// 
@@ -299,35 +299,35 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// 
         /// </summary>
-        public String Tag
+        public string Tag
         {
             get { return tag; }
             set { tag = value; }
         }
 
-        private String tag;
+        private string tag;
 
         /// <summary>
         /// 
         /// </summary>
-        public String Title
+        public string Title
         {
             get { return title; }
             set { title = value; }
         }
 
-        private String title;
+        private string title;
 
         /// <summary>
         /// 
         /// </summary>
-        public String ToolTipText
+        public string ToolTipText
         {
             get { return toolTipText; }
             set { toolTipText = value; }
         }
 
-        private String toolTipText;
+        private string toolTipText;
 
         /// <summary>
         /// 

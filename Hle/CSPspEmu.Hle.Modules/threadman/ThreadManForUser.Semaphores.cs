@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             bool TimedOut = false;
 
             CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore,
-                String.Format("sceKernelWaitSema('{0}')", Semaphore.Name), Semaphore, WakeUpCallback =>
+                string.Format("sceKernelWaitSema('{0}')", Semaphore.Name), Semaphore, WakeUpCallback =>
                 {
                     PspRtc.RegisterTimeout(Timeout, () =>
                     {

@@ -9,7 +9,7 @@ namespace CSharpUtilsTests
     {
         class A
         {
-            public virtual String Value
+            public virtual string Value
             {
                 get { return "A"; }
             }
@@ -17,7 +17,7 @@ namespace CSharpUtilsTests
 
         class B : A
         {
-            public override String Value
+            public override string Value
             {
                 get { return "B"; }
             }

@@ -363,7 +363,7 @@ namespace CSPspEmu.Hle.Modules.utility
             /// </summary>
             public pspUtilityMsgDialogPressed ButtonPressed;
 
-            public String Message
+            public string Message
             {
                 get
                 {

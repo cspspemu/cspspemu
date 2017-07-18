@@ -168,7 +168,7 @@ namespace CSPspEmu.Core.Gpu
             InstructionAddressStall = value & PspMemory.MemoryMask;
             if (InstructionAddressStall != 0 && !PspMemory.IsAddressValid(InstructionAddressStall))
             {
-                throw (new InvalidOperationException(String.Format("Invalid StallAddress! 0x{0}",
+                throw (new InvalidOperationException(string.Format("Invalid StallAddress! 0x{0}",
                     InstructionAddressStall)));
             }
             if (Debug) Console.WriteLine("GpuDisplayList.SetInstructionAddressStall:{0:X8}", value);
@@ -273,7 +273,7 @@ namespace CSPspEmu.Core.Gpu
 
         private void ProcessInstruction()
         {
-            GpuDisplayListRunner.PC = InstructionAddressCurrent;
+            GpuDisplayListRunner.Pc = InstructionAddressCurrent;
             var Instruction = ReadInstructionAndMoveNext();
             GpuDisplayListRunner.OpCode = Instruction.OpCode;
             GpuDisplayListRunner.Params24 = Instruction.Params;
@@ -282,7 +282,7 @@ namespace CSPspEmu.Core.Gpu
 
             if (Debug)
             {
-                var WritePC = Memory.GetPCWriteAddress(GpuDisplayListRunner.PC);
+                var WritePC = Memory.GetPCWriteAddress(GpuDisplayListRunner.Pc);
 
                 Console.Error.WriteLine(
                     "CODE(0x{0:X}-0x{1:X}) : PC(0x{2:X}) : {3} : 0x{4:X} : Done:{5}",

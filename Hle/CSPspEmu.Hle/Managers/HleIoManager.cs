@@ -102,7 +102,7 @@ namespace CSPspEmu.Hle.Managers
             var DriverName = Match.Groups[1].Value.ToLower() + ":";
             int FileSystemNumber = 0;
             IHleIoDriver HleIoDriver = null;
-            Int32.TryParse(Match.Groups[2].Value, out FileSystemNumber);
+            int.TryParse(Match.Groups[2].Value, out FileSystemNumber);
             if (!Drivers.TryGetValue(DriverName, out HleIoDriver))
             {
                 foreach (var Driver in Drivers)
@@ -170,14 +170,14 @@ namespace CSPspEmu.Hle.Managers
         {
             var Match = new Regex(@"^([a-zA-Z]+)(\d*):$").Match(DeviceName);
             int FileSystemNumber = 0;
-            Int32.TryParse(Match.Groups[2].Value, out FileSystemNumber);
+            int.TryParse(Match.Groups[2].Value, out FileSystemNumber);
 
             var BaseDeviceName = Match.Groups[1].Value + ":";
 
             //Drivers[
             if (!Drivers.ContainsKey(BaseDeviceName))
             {
-                throw(new NotImplementedException(String.Format("Unknown device '{0}'", BaseDeviceName)));
+                throw(new NotImplementedException(string.Format("Unknown device '{0}'", BaseDeviceName)));
             }
 
             return new ParsePathInfo()

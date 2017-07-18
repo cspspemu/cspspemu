@@ -274,7 +274,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public int CurrentBoneIndex;
 
-        public GpuMatrix4x3Struct BoneMatrix0,
+        public GpuMatrix4X3Struct BoneMatrix0,
             BoneMatrix1,
             BoneMatrix2,
             BoneMatrix3,
@@ -300,7 +300,7 @@ namespace CSPspEmu.Core.Gpu.State
     public struct TextureMappingStateStruct
     {
         public bool Enabled;
-        public GpuMatrix4x4Struct Matrix;
+        public GpuMatrix4X4Struct Matrix;
         public ColorbStruct TextureEnviromentColor;
         public TextureStateStruct TextureState;
         public ClutStateStruct UploadedClutState;
@@ -316,32 +316,32 @@ namespace CSPspEmu.Core.Gpu.State
 
         public byte GetTextureComponentsCount()
         {
-            byte Components = 2;
+            byte components = 2;
             switch (TextureMapMode)
             {
-                case TextureMapMode.GU_TEXTURE_COORDS:
+                case TextureMapMode.GuTextureCoords:
                     break;
-                case TextureMapMode.GU_TEXTURE_MATRIX:
+                case TextureMapMode.GuTextureMatrix:
                     switch (TextureProjectionMapMode)
                     {
-                        case TextureProjectionMapMode.GU_NORMAL:
-                            Components = 3;
+                        case TextureProjectionMapMode.GuNormal:
+                            components = 3;
                             break;
-                        case TextureProjectionMapMode.GU_NORMALIZED_NORMAL:
-                            Components = 3;
+                        case TextureProjectionMapMode.GuNormalizedNormal:
+                            components = 3;
                             break;
-                        case TextureProjectionMapMode.GU_POSITION:
-                            Components = 3;
+                        case TextureProjectionMapMode.GuPosition:
+                            components = 3;
                             break;
-                        case TextureProjectionMapMode.GU_UV:
-                            Components = 2;
+                        case TextureProjectionMapMode.GuUv:
+                            components = 2;
                             break;
                     }
                     break;
-                case TextureMapMode.GU_ENVIRONMENT_MAP:
+                case TextureMapMode.GuEnvironmentMap:
                     break;
             }
-            return Components;
+            return components;
         }
     }
 
@@ -457,14 +457,14 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public enum TexelSizeEnum : ushort
         {
-            BIT_16 = 0,
-            BIT_32 = 1
+            Bit16 = 0,
+            Bit32 = 1
         }
 
-        public int BytesPerPixel => (TexelSize == TexelSizeEnum.BIT_16) ? 2 : 4;
-        public int SourceLineWidthInBytes => (int) (SourceLineWidth * BytesPerPixel);
-        public int DestinationLineWidthInBytes => (int) (DestinationLineWidth * BytesPerPixel);
-        public int WidthInBytes => (int) (Width * BytesPerPixel);
+        public int BytesPerPixel => (TexelSize == TexelSizeEnum.Bit16) ? 2 : 4;
+        public int SourceLineWidthInBytes => SourceLineWidth * BytesPerPixel;
+        public int DestinationLineWidthInBytes => DestinationLineWidth * BytesPerPixel;
+        public int WidthInBytes => Width * BytesPerPixel;
 
         public PspPointer SourceAddress, DestinationAddress;
         public ushort SourceLineWidth, DestinationLineWidth;
@@ -474,8 +474,12 @@ namespace CSPspEmu.Core.Gpu.State
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
+#pragma warning disable 660,661
     public struct VertexTypeStruct
+#pragma warning restore 660,661
     {
+        public bool Equals(VertexTypeStruct other) => ReversedNormal == other.ReversedNormal && NormalCount == other.NormalCount && Value == other.Value;
+
         /// <summary />
         public bool ReversedNormal;
 
@@ -495,8 +499,8 @@ namespace CSPspEmu.Core.Gpu.State
             return !(a == b);
         }
 
-        public static readonly int[] TypeSizeTable = new int[] {0, sizeof(byte), sizeof(short), sizeof(float)};
-        public static readonly int[] ColorSizeTable = new int[] {0, 1, 1, 1, 2, 2, 2, 4};
+        public static readonly int[] TypeSizeTable = {0, sizeof(byte), sizeof(short), sizeof(float)};
+        public static readonly int[] ColorSizeTable = {0, 1, 1, 1, 2, 2, 2, 4};
 
         public enum IndexEnum : byte
         {
@@ -534,7 +538,7 @@ namespace CSPspEmu.Core.Gpu.State
             set => BitUtils.Insert(ref Value, 9, 2, (uint) value);
         }
 
-        public bool HasTexture => Texture != VertexTypeStruct.NumericEnum.Void;
+        public bool HasTexture => Texture != NumericEnum.Void;
 
         public NumericEnum Texture
         {
@@ -542,7 +546,7 @@ namespace CSPspEmu.Core.Gpu.State
             set => BitUtils.Insert(ref Value, 0, 2, (uint) value);
         }
 
-        public bool HasColor => Color != VertexTypeStruct.ColorEnum.Void;
+        public bool HasColor => Color != ColorEnum.Void;
 
         public ColorEnum Color
         {
@@ -550,7 +554,7 @@ namespace CSPspEmu.Core.Gpu.State
             set => BitUtils.Insert(ref Value, 2, 3, (uint) value);
         }
 
-        public bool HasNormal => Normal != VertexTypeStruct.NumericEnum.Void;
+        public bool HasNormal => Normal != NumericEnum.Void;
 
         public NumericEnum Normal
         {
@@ -558,7 +562,7 @@ namespace CSPspEmu.Core.Gpu.State
             set => BitUtils.Insert(ref Value, 5, 2, (uint) value);
         }
 
-        public bool HasPosition => Position != VertexTypeStruct.NumericEnum.Void;
+        public bool HasPosition => Position != NumericEnum.Void;
 
         public NumericEnum Position
         {
@@ -566,7 +570,7 @@ namespace CSPspEmu.Core.Gpu.State
             set => BitUtils.Insert(ref Value, 7, 2, (uint) value);
         }
 
-        public bool HasIndex => Index != VertexTypeStruct.IndexEnum.Void;
+        public bool HasIndex => Index != IndexEnum.Void;
 
         public IndexEnum Index
         {
@@ -609,23 +613,23 @@ namespace CSPspEmu.Core.Gpu.State
 
         public int GetVertexSize()
         {
-            int Size = 0;
-            Size = (int) MathUtils.NextAligned(Size, SkinSize);
-            Size += RealSkinningWeightCount * SkinSize;
-            Size = (int) MathUtils.NextAligned(Size, TextureSize);
-            Size += NormalCount * TextureSize;
-            Size = (int) MathUtils.NextAligned(Size, ColorSize);
-            Size += 1 * ColorSize;
-            Size = (int) MathUtils.NextAligned(Size, NormalSize);
-            Size += 3 * NormalSize;
-            Size = (int) MathUtils.NextAligned(Size, PositionSize);
-            Size += 3 * PositionSize;
+            var size = 0;
+            size = (int) MathUtils.NextAligned(size, SkinSize);
+            size += RealSkinningWeightCount * SkinSize;
+            size = (int) MathUtils.NextAligned(size, TextureSize);
+            size += NormalCount * TextureSize;
+            size = (int) MathUtils.NextAligned(size, ColorSize);
+            size += 1 * ColorSize;
+            size = (int) MathUtils.NextAligned(size, NormalSize);
+            size += 3 * NormalSize;
+            size = (int) MathUtils.NextAligned(size, PositionSize);
+            size += 3 * PositionSize;
 
-            var AlignmentSize = GetMaxAlignment();
+            var alignmentSize = GetMaxAlignment();
             //Size = (uint)((Size + AlignmentSize - 1) & ~(AlignmentSize - 1));
-            Size = (int) MathUtils.NextAligned(Size, (uint) AlignmentSize);
+            size = (int) MathUtils.NextAligned(size, (uint) alignmentSize);
             //Console.WriteLine("Size:" + Size);
-            return Size;
+            return size;
         }
 
         public int GetVertexSetMorphSize()
@@ -642,9 +646,9 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexStateStruct
     {
-        public GpuMatrix4x4Struct ProjectionMatrix;
-        public GpuMatrix4x3Struct WorldMatrix;
-        public GpuMatrix4x3Struct ViewMatrix;
+        public GpuMatrix4X4Struct ProjectionMatrix;
+        public GpuMatrix4X3Struct WorldMatrix;
+        public GpuMatrix4X3Struct ViewMatrix;
         public TransformModeEnum TransformMode;
         public VertexTypeStruct Type;
     }
@@ -705,16 +709,13 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public byte Red, Green, Blue, Alpha;
 
-        public void SetRGB_A1(uint Params24)
-        {
-            Alpha = 0xFF;
-        }
+        public void SetRGB_A1(uint params24) => Alpha = 0xFF;
 
-        public void SetRGB(uint Params24)
+        public void SetRgb(uint params24)
         {
-            Red = (byte) ((Params24 >> 0) & 0xFF);
-            Green = (byte) ((Params24 >> 8) & 0xFF);
-            Blue = (byte) ((Params24 >> 16) & 0xFF);
+            Red = (byte) ((params24 >> 0) & 0xFF);
+            Green = (byte) ((params24 >> 8) & 0xFF);
+            Blue = (byte) ((params24 >> 16) & 0xFF);
         }
     }
 
@@ -725,11 +726,11 @@ namespace CSPspEmu.Core.Gpu.State
 
         public void SetRGB_A1(uint params24)
         {
-            SetRGB(params24);
+            SetRgb(params24);
             Alpha = 1.0f;
         }
 
-        public void SetRGB(uint params24)
+        public void SetRgb(uint params24)
         {
             //Console.WriteLine(Params24);
             Red = ((params24 >> 0) & 0xFF) / 255.0f;
@@ -737,31 +738,23 @@ namespace CSPspEmu.Core.Gpu.State
             Blue = ((params24 >> 16) & 0xFF) / 255.0f;
         }
 
-        public void SetA(uint params24)
-        {
-            Alpha = ((params24 >> 0) & 0xFF) / 255.0f;
-        }
+        public void SetA(uint params24) => Alpha = ((params24 >> 0) & 0xFF) / 255.0f;
 
-        public override string ToString()
-        {
-            return $"Colorf(R={Red}, G={Green}, B={Blue}, A={Alpha})";
-        }
+        public override string ToString() => $"Colorf(R={Red}, G={Green}, B={Blue}, A={Alpha})";
 
-        public bool IsColorf(float r, float g, float b)
-        {
-            return r == this.Red && g == this.Green && b == this.Blue;
-        }
+        // ReSharper disable CompareOfFloatsByEqualityOperator
+        public bool IsColorf(float r, float g, float b) => r == Red && g == Green && b == Blue;
 
-        public static ColorfStruct operator +(ColorfStruct Left, ColorfStruct Right) => new ColorfStruct()
+        public static ColorfStruct operator +(ColorfStruct left, ColorfStruct right) => new ColorfStruct
         {
-            Red = Left.Red + Right.Red,
-            Green = Left.Green + Right.Green,
-            Blue = Left.Blue + Right.Blue,
-            Alpha = Left.Alpha + Right.Alpha,
+            Red = left.Red + right.Red,
+            Green = left.Green + right.Green,
+            Blue = left.Blue + right.Blue,
+            Alpha = left.Alpha + right.Alpha,
         };
 
 
-        public Vector4f ToVector4f() => new Vector4f(Red, Green, Blue, Alpha);
+        public Vector4f ToVector4F() => new Vector4f(Red, Green, Blue, Alpha);
     }
 
     public enum TransformModeEnum : byte
@@ -872,25 +865,25 @@ namespace CSPspEmu.Core.Gpu.State
     public enum GuBlendingFactorSource : byte
     {
         // Source
-        GU_SRC_COLOR = 0,
-        GU_ONE_MINUS_SRC_COLOR = 1,
-        GU_SRC_ALPHA = 2,
-        GU_ONE_MINUS_SRC_ALPHA = 3,
+        GuSrcColor = 0,
+        GuOneMinusSrcColor = 1,
+        GuSrcAlpha = 2,
+        GuOneMinusSrcAlpha = 3,
 
         // Both?
-        GU_FIX = 10
+        GuFix = 10
     }
 
     public enum GuBlendingFactorDestination : byte
     {
         // Dest
-        GU_DST_COLOR = 0,
-        GU_ONE_MINUS_DST_COLOR = 1,
-        GU_DST_ALPHA = 4,
-        GU_ONE_MINUS_DST_ALPHA = 5,
+        GuDstColor = 0,
+        GuOneMinusDstColor = 1,
+        GuDstAlpha = 4,
+        GuOneMinusDstAlpha = 5,
 
         // Both?
-        GU_FIX = 10
+        GuFix = 10
     }
 
     public enum TestFunctionEnum : byte
@@ -913,10 +906,10 @@ namespace CSPspEmu.Core.Gpu.State
 
     public enum ColorTestFunctionEnum : byte
     {
-        GU_NEVER,
-        GU_ALWAYS,
-        GU_EQUAL,
-        GU_NOTEQUAL,
+        GuNever,
+        GuAlways,
+        GuEqual,
+        GuNotequal,
     }
 
     [Flags]
@@ -945,35 +938,16 @@ namespace CSPspEmu.Core.Gpu.State
 
     public enum TextureMapMode : byte
     {
-        GU_TEXTURE_COORDS = 0,
-        GU_TEXTURE_MATRIX = 1,
-        GU_ENVIRONMENT_MAP = 2,
+        GuTextureCoords = 0,
+        GuTextureMatrix = 1,
+        GuEnvironmentMap = 2,
     }
 
     public enum TextureProjectionMapMode : byte
     {
-        /// <summary>
-        /// TMAP_TEXTURE_PROJECTION_MODE_POSITION
-        /// 3 texture components
-        /// </summary>
-        GU_POSITION = 0,
-
-        /// <summary>
-        /// TMAP_TEXTURE_PROJECTION_MODE_TEXTURE_COORDINATES
-        /// 2 texture components
-        /// </summary>
-        GU_UV = 1,
-
-        /// <summary>
-        /// TMAP_TEXTURE_PROJECTION_MODE_NORMALIZED_NORMAL
-        /// 3 texture components
-        /// </summary>
-        GU_NORMALIZED_NORMAL = 2,
-
-        /// <summary>
-        /// TMAP_TEXTURE_PROJECTION_MODE_NORMAL
-        /// 3 texture components
-        /// </summary>
-        GU_NORMAL = 3,
+        GuPosition = 0, // TMAP_TEXTURE_PROJECTION_MODE_POSITION - 3 texture components
+        GuUv = 1, // TMAP_TEXTURE_PROJECTION_MODE_TEXTURE_COORDINATES - 2 texture components 
+        GuNormalizedNormal = 2, // TMAP_TEXTURE_PROJECTION_MODE_NORMALIZED_NORMAL - 3 texture components
+        GuNormal = 3, // TMAP_TEXTURE_PROJECTION_MODE_NORMAL - 3 texture components
     }
 }

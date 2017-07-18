@@ -19,7 +19,7 @@ namespace SafeILGenerator.Ast.Generators
         public MapDelegate Action;
 #endif
 
-        public void Call(Object This, AstNode astNode)
+        public void Call(object This, AstNode astNode)
         {
 #if USE_NORMAL_INVOKE
 			MethodInfo.Invoke(This, new object[] { AstNode });
@@ -119,7 +119,7 @@ namespace SafeILGenerator.Ast.Generators
                 {
                     Console.WriteLine(generateMapping);
                 }
-                throw (new NotImplementedException(String.Format("Don't know how to generate {0} for {1}", astNodeType,
+                throw (new NotImplementedException(string.Format("Don't know how to generate {0} for {1}", astNodeType,
                     GetType())));
             }
 

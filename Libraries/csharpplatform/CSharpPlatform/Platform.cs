@@ -178,7 +178,7 @@ namespace CSPspEmu.Core
             internal static extern IntPtr GetConsoleWindow();
 
             [DllImport("user32.dll")]
-            internal static extern Boolean ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+            internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         }
 
         const uint MEM_RESERVE = 0x2000;
@@ -322,7 +322,7 @@ namespace CSPspEmu.Core
                     {
                         if ((void*) Pointer != (void*) Address)
                         {
-                            throw (new Exception(String.Format(
+                            throw (new Exception(string.Format(
                                 "Not allocated the desired address! Expected {0:X}, Allocated: {1:X}",
                                 new IntPtr(Address), new IntPtr(Pointer))));
                         }
@@ -378,7 +378,7 @@ namespace CSPspEmu.Core
             get { return (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000); }
         }
 
-        private const Int32 SW_HIDE = 0;
+        private const int SW_HIDE = 0;
 
         public static void HideConsole()
         {

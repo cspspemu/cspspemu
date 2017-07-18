@@ -284,8 +284,8 @@ namespace BrightIdeasSoftware
             get { return this.title; }
             set
             {
-                if (String.IsNullOrEmpty(value))
-                    this.title = String.Empty;
+                if (string.IsNullOrEmpty(value))
+                    this.title = string.Empty;
                 else if (value.Length >= 100)
                     this.title = value.Substring(0, 99);
                 else
@@ -566,7 +566,7 @@ namespace BrightIdeasSoftware
             ToolTipShowingEventArgs args = new ToolTipShowingEventArgs();
             args.ToolTipControl = this;
             this.OnShowing(args);
-            if (String.IsNullOrEmpty(args.Text))
+            if (string.IsNullOrEmpty(args.Text))
                 return false;
 
             this.ApplyEventFormatting(args);

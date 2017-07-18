@@ -42,7 +42,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
                 Min = min;
                 Max = max;
                 if (min > max)
-                    throw(new Exception(String.Format("Space(Min={0}, Max={1}). Min is bigger than Max!!", min, max)));
+                    throw(new Exception(string.Format("Space(Min={0}, Max={1}). Min is bigger than Max!!", min, max)));
                 //Debug.Assert(Min <= Max);
             }
 

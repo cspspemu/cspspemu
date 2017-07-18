@@ -52,7 +52,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Create a OLVListSubItem that shows the given string and image
         /// </summary>
-        public OLVListSubItem(object modelValue, string text, Object image)
+        public OLVListSubItem(object modelValue, string text, object image)
         {
             this.ModelValue = modelValue;
             this.Text = text;
@@ -141,13 +141,13 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <remarks><para>This can be an Image, a string or an int. A string or an int will
         /// be used as an index into the small image list.</para></remarks>
-        public Object ImageSelector
+        public object ImageSelector
         {
             get { return imageSelector; }
             set { imageSelector = value; }
         }
 
-        private Object imageSelector;
+        private object imageSelector;
 
         /// <summary>
         /// Gets or sets the url that should be invoked when this subitem is clicked

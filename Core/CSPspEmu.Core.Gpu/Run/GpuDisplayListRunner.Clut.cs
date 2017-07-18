@@ -18,31 +18,15 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         ///void sceGuClutLoad(int num_blocks, const void* cbp); // OP_CBP + OP_CBPH + OP_CLOAD
         ///
-        ClutStateStruct* ClutState
-        {
-            get { return &GpuState->TextureMappingState.ClutState; }
-        }
+        ClutStateStruct* ClutState => &GpuState->TextureMappingState.ClutState;
 
         // Clut Buffer Pointer (High)
         // Clut LOAD
-        public void OP_CBP()
-        {
-            ClutState->Address = (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
-            //Console.WriteLine("OP_CBP:{0:X}", Params24);
-        }
+        public void OP_CBP() => ClutState->Address = (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
 
-        public void OP_CBPH()
-        {
-            ClutState->Address = (ClutState->Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
-            //Console.WriteLine("OP_CBPH:{0:X}", Params24);
-        }
+        public void OP_CBPH() => ClutState->Address = (ClutState->Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
 
-        public void OP_CLOAD()
-        {
-            // TODO: Clut loading should be done at this function? Check! 
-            ClutState->NumberOfColors = Param8(0) * 8;
-            //Console.WriteLine("{0:X}", GpuState->TextureMappingState.ClutState.Address);
-        }
+        public void OP_CLOAD() => ClutState->NumberOfColors = Param8(0) * 8;
 
         /**
          * Set current CLUT mode

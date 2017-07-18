@@ -81,7 +81,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0x79D1C3FA, FirmwareVersion = 150)]
         public uint sceKernelDcacheWritebackAll()
         {
-            CpuProcessor.sceKernelDcacheWritebackAll();
+            CpuProcessor.SceKernelDcacheWritebackAll();
             return 0;
         }
 
@@ -93,7 +93,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0xBFA98062, FirmwareVersion = 150)]
         public uint sceKernelDcacheInvalidateRange(uint Pointer, int Size)
         {
-            CpuProcessor.sceKernelDcacheInvalidateRange(Pointer, Size);
+            CpuProcessor.SceKernelDcacheInvalidateRange(Pointer, Size);
             return 0;
         }
 
@@ -105,7 +105,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0x34B9FA9E, FirmwareVersion = 150)]
         public uint sceKernelDcacheWritebackInvalidateRange(uint Pointer, int Size)
         {
-            CpuProcessor.sceKernelDcacheWritebackInvalidateRange(Pointer, Size);
+            CpuProcessor.SceKernelDcacheWritebackInvalidateRange(Pointer, Size);
             return 0;
         }
 
@@ -118,7 +118,7 @@ namespace CSPspEmu.Hle.Modules.utils
         public uint sceKernelDcacheWritebackRange(uint Pointer, int Size)
         {
             if (Size < 0) throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
-            CpuProcessor.sceKernelDcacheWritebackRange(Pointer, Size);
+            CpuProcessor.SceKernelDcacheWritebackRange(Pointer, Size);
             return 0;
         }
 
@@ -128,7 +128,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0x3EE30821, FirmwareVersion = 150)]
         public uint sceKernelDcacheWritebackInvalidateAll()
         {
-            CpuProcessor.sceKernelDcacheWritebackInvalidateAll();
+            CpuProcessor.SceKernelDcacheWritebackInvalidateAll();
             return 0;
         }
 
@@ -295,7 +295,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0xC2DF770E, FirmwareVersion = 150)]
         public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
         {
-            this.CpuProcessor.sceKernelIcacheInvalidateRange(Address, Size);
+            this.CpuProcessor.SceKernelIcacheInvalidateRange(Address, Size);
             // Unimplemented cache.	
         }
 
@@ -305,7 +305,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0x920F104A, FirmwareVersion = 150)]
         public void sceKernelIcacheInvalidateAll()
         {
-            this.CpuProcessor.sceKernelIcacheInvalidateAll();
+            this.CpuProcessor.SceKernelIcacheInvalidateAll();
         }
 
         /// <summary>

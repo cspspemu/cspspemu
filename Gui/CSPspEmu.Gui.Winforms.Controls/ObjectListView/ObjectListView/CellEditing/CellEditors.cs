@@ -53,23 +53,23 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="key"></param>
         /// <param name="description"></param>
-        public ComboBoxItem(Object key, String description)
+        public ComboBoxItem(object key, string description)
         {
             this.key = key;
             this.description = description;
         }
 
-        private readonly String description;
+        private readonly string description;
 
         /// <summary>
         /// 
         /// </summary>
-        public Object Key
+        public object Key
         {
             get { return key; }
         }
 
-        private readonly Object key;
+        private readonly object key;
 
         public override string ToString()
         {
@@ -101,10 +101,10 @@ namespace BrightIdeasSoftware
         {
             this.DropDownStyle = ComboBoxStyle.DropDown;
 
-            Dictionary<String, bool> alreadySeen = new Dictionary<string, bool>();
+            Dictionary<string, bool> alreadySeen = new Dictionary<string, bool>();
             for (int i = 0; i < Math.Min(lv.GetItemCount(), 1000); i++)
             {
-                String str = column.GetStringValue(lv.GetModelObject(i));
+                string str = column.GetStringValue(lv.GetModelObject(i));
                 if (!alreadySeen.ContainsKey(str))
                 {
                     this.Items.Add(str);
@@ -162,8 +162,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public new int Value
         {
-            get { return Decimal.ToInt32(base.Value); }
-            set { base.Value = new Decimal(value); }
+            get { return decimal.ToInt32(base.Value); }
+            set { base.Value = new decimal(value); }
         }
     }
 
@@ -185,8 +185,8 @@ namespace BrightIdeasSoftware
 
         public new uint Value
         {
-            get { return Decimal.ToUInt32(base.Value); }
-            set { base.Value = new Decimal(value); }
+            get { return decimal.ToUInt32(base.Value); }
+            set { base.Value = new decimal(value); }
         }
     }
 

@@ -72,7 +72,7 @@ namespace CSharpPlatform.GL
             {
                 if (Constants == null)
                 {
-                    Constants = new Dictionary<GLint, string>();
+                    Constants = new Dictionary<int, string>();
                     foreach (var Field in typeof(GL).GetFields(BindingFlags.Static | BindingFlags.Public))
                     {
                         if (Field.FieldType == typeof(int))
@@ -575,7 +575,7 @@ namespace CSharpPlatform.GL
             try
             {
                 var Error = glGetError();
-                if (Error != GL_NO_ERROR) throw (new Exception(String.Format("glError: 0x{0:X4}", Error)));
+                if (Error != GL_NO_ERROR) throw (new Exception(string.Format("glError: 0x{0:X4}", Error)));
             }
             finally
             {
@@ -598,7 +598,7 @@ namespace CSharpPlatform.GL
 
         // REMOVE! Not available in OpenGL|ES
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-        public delegate void glGetTexImage_(GLenum texture, GLint level, GLenum format, GLenum type, void* img);
+        public delegate void glGetTexImage_(int texture, int level, int format, int type, void* img);
 
         public static readonly glGetTexImage_ glGetTexImage;
 
@@ -607,143 +607,143 @@ namespace CSharpPlatform.GL
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glActiveTexture(GLenum texture);
+    public delegate void glActiveTexture(int texture);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glAttachShader(GLuint program, GLuint shader);
+    public delegate void glAttachShader(uint program, uint shader);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBindAttribLocation(GLuint program, GLuint index, string name);
+    public delegate void glBindAttribLocation(uint program, uint index, string name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBindBuffer(GLenum target, GLuint buffer);
+    public delegate void glBindBuffer(int target, uint buffer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBindFramebuffer(GLenum target, GLuint framebuffer);
+    public delegate void glBindFramebuffer(int target, uint framebuffer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBindRenderbuffer(GLenum target, GLuint renderbuffer);
+    public delegate void glBindRenderbuffer(int target, uint renderbuffer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBindTexture(GLenum target, GLuint texture);
+    public delegate void glBindTexture(int target, uint texture);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBlendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+    public delegate void glBlendColor(float red, float green, float blue, float alpha);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBlendEquation(GLenum mode);
+    public delegate void glBlendEquation(int mode);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha);
+    public delegate void glBlendEquationSeparate(int modeRGB, int modeAlpha);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBlendFunc(GLenum sfactor, GLenum dfactor);
+    public delegate void glBlendFunc(int sfactor, int dfactor);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha);
+    public delegate void glBlendFuncSeparate(int srcRGB, int dstRGB, int srcAlpha, int dstAlpha);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glBufferData(GLenum target, GLsizeiptr size, void* data, GLenum usage);
+    public unsafe delegate void glBufferData(int target, uint size, void* data, int usage);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void* data);
+    public unsafe delegate void glBufferSubData(int target, GLintptr offset, uint size, void* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLenum glCheckFramebufferStatus(GLenum target);
+    public delegate int glCheckFramebufferStatus(int target);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glClear(GLbitfield mask);
+    public delegate void glClear(uint mask);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+    public delegate void glClearColor(float red, float green, float blue, float alpha);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glClearDepthf(GLclampf depth);
+    public delegate void glClearDepthf(float depth);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glClearStencil(GLint s);
+    public delegate void glClearStencil(int s);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
+    public delegate void glColorMask(bool red, bool green, bool blue, bool alpha);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glCompileShader(GLuint shader);
+    public delegate void glCompileShader(uint shader);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glCompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width,
-        GLsizei height, GLint border, GLsizei imageSize, void* data);
+    public unsafe delegate void glCompressedTexImage2D(int target, int level, int internalformat, int width,
+        int height, int border, int imageSize, void* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset,
-        GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, void* data);
+    public unsafe delegate void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset,
+        int width, int height, int format, int imageSize, void* data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glCopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y,
-        GLsizei width, GLsizei height, GLint border);
+    public delegate void glCopyTexImage2D(int target, int level, int internalformat, int x, int y,
+        int width, int height, int border);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x,
-        GLint y, GLsizei width, GLsizei height);
+    public delegate void glCopyTexSubImage2D(int target, int level, int xoffset, int yoffset, int x,
+        int y, int width, int height);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLuint glCreateProgram();
+    public delegate uint glCreateProgram();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLuint glCreateShader(GLenum type);
+    public delegate uint glCreateShader(int type);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glCullFace(GLenum mode);
+    public delegate void glCullFace(int mode);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glDeleteBuffers(GLsizei n, GLuint* buffers);
+    public unsafe delegate void glDeleteBuffers(int n, uint* buffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glDeleteFramebuffers(GLsizei n, GLuint* framebuffers);
+    public unsafe delegate void glDeleteFramebuffers(int n, uint* framebuffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDeleteProgram(GLuint program);
+    public delegate void glDeleteProgram(uint program);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glDeleteRenderbuffers(GLsizei n, GLuint* renderbuffers);
+    public unsafe delegate void glDeleteRenderbuffers(int n, uint* renderbuffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDeleteShader(GLuint shader);
+    public delegate void glDeleteShader(uint shader);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glDeleteTextures(GLsizei n, GLuint* textures);
+    public unsafe delegate void glDeleteTextures(int n, uint* textures);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDepthFunc(GLenum func);
+    public delegate void glDepthFunc(int func);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDepthMask(GLboolean flag);
+    public delegate void glDepthMask(bool flag);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDepthRangef(GLclampf zNear, GLclampf zFar);
+    public delegate void glDepthRangef(float zNear, float zFar);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public delegate void glDepthRange(double zNear, double zFar);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDetachShader(GLuint program, GLuint shader);
+    public delegate void glDetachShader(uint program, uint shader);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDisable(GLenum cap);
+    public delegate void glDisable(int cap);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDisableVertexAttribArray(GLuint index);
+    public delegate void glDisableVertexAttribArray(uint index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glDrawArrays(GLenum mode, GLint first, GLsizei count);
+    public delegate void glDrawArrays(int mode, int first, int count);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glDrawElements(GLenum mode, GLsizei count, GLenum type, void* indices);
+    public unsafe delegate void glDrawElements(int mode, int count, int type, void* indices);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glEnable(GLenum cap);
+    public delegate void glEnable(int cap);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glEnableVertexAttribArray(GLuint index);
+    public delegate void glEnableVertexAttribArray(uint index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public delegate void glFinish();
@@ -752,304 +752,304 @@ namespace CSharpPlatform.GL
     public delegate void glFlush();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget,
-        GLuint renderbuffer);
+    public delegate void glFramebufferRenderbuffer(int target, int attachment, int renderbuffertarget,
+        uint renderbuffer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget,
-        GLuint texture, GLint level);
+    public delegate void glFramebufferTexture2D(int target, int attachment, int textarget,
+        uint texture, int level);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glFrontFace(GLenum mode);
+    public delegate void glFrontFace(int mode);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGenBuffers(GLsizei n, GLuint* buffers);
+    public unsafe delegate void glGenBuffers(int n, uint* buffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glGenerateMipmap(GLenum target);
+    public delegate void glGenerateMipmap(int target);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGenFramebuffers(GLsizei n, GLuint* framebuffers);
+    public unsafe delegate void glGenFramebuffers(int n, uint* framebuffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGenRenderbuffers(GLsizei n, GLuint* renderbuffers);
+    public unsafe delegate void glGenRenderbuffers(int n, uint* renderbuffers);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGenTextures(GLsizei n, GLuint* textures);
+    public unsafe delegate void glGenTextures(int n, uint* textures);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, GLsizei* length,
-        GLint* size, GLenum* type, GLchar* name);
+    public unsafe delegate void glGetActiveAttrib(uint program, uint index, int bufsize, int* length,
+        int* size, int* type, byte* name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetActiveUniform(GLuint program, GLuint index, GLsizei bufsize, GLsizei* length,
-        GLint* size, GLenum* type, GLchar* name);
+    public unsafe delegate void glGetActiveUniform(uint program, uint index, int bufsize, int* length,
+        int* size, int* type, byte* name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetAttachedShaders(GLuint program, GLsizei maxcount, GLsizei* count, GLuint* shaders);
+    public unsafe delegate void glGetAttachedShaders(uint program, int maxcount, int* count, uint* shaders);
 
     //[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity] unsafe public delegate GLuint glGetAttribLocation(GLuint program, GLchar* name);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity]
-    public delegate int glGetAttribLocation(GLuint program, string name);
+    public delegate int glGetAttribLocation(uint program, string name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetBooleanv(GLenum pname, GLboolean* @params);
+    public unsafe delegate void glGetBooleanv(int pname, bool* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetBufferParameteriv(GLenum target, GLenum pname, GLint* @params);
+    public unsafe delegate void glGetBufferParameteriv(int target, int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLenum glGetError();
+    public delegate int glGetError();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetFloatv(GLenum pname, GLfloat* @params);
+    public unsafe delegate void glGetFloatv(int pname, float* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname,
-        GLint* @params);
+    public unsafe delegate void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname,
+        int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetIntegerv(GLenum pname, GLint* @params);
+    public unsafe delegate void glGetIntegerv(int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetProgramiv(GLuint program, GLenum pname, GLint* @params);
+    public unsafe delegate void glGetProgramiv(uint program, int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei* length, GLchar* infolog);
+    public unsafe delegate void glGetProgramInfoLog(uint program, int bufsize, int* length, byte* infolog);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* @params);
+    public unsafe delegate void glGetRenderbufferParameteriv(int target, int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetShaderiv(GLuint shader, GLenum pname, GLint* @params);
+    public unsafe delegate void glGetShaderiv(uint shader, int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* infolog);
+    public unsafe delegate void glGetShaderInfoLog(uint shader, int bufsize, int* length, byte* infolog);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint* range,
-        GLint* precision);
+    public unsafe delegate void glGetShaderPrecisionFormat(int shadertype, int precisiontype, int* range,
+        int* precision);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source);
+    public unsafe delegate void glGetShaderSource(uint shader, int bufsize, int* length, byte* source);
 
     //[System.CLSCompliant(false)]
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate GLubyte* glGetString(GLenum name);
+    public unsafe delegate byte* glGetString(int name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* @params);
+    public unsafe delegate void glGetTexParameterfv(int target, int pname, float* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetTexParameteriv(GLenum target, GLenum pname, GLint* @params);
+    public unsafe delegate void glGetTexParameteriv(int target, int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetUniformfv(GLuint program, GLint location, GLfloat* @params);
+    public unsafe delegate void glGetUniformfv(uint program, int location, float* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetUniformiv(GLuint program, GLint location, GLint* @params);
+    public unsafe delegate void glGetUniformiv(uint program, int location, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate int glGetUniformLocation(GLuint program, string name);
+    public delegate int glGetUniformLocation(uint program, string name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* @params);
+    public unsafe delegate void glGetVertexAttribfv(uint index, int pname, float* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetVertexAttribiv(GLuint index, GLenum pname, GLint* @params);
+    public unsafe delegate void glGetVertexAttribiv(uint index, int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glGetVertexAttribPointerv(GLuint index, GLenum pname, void** pointer);
+    public unsafe delegate void glGetVertexAttribPointerv(uint index, int pname, void** pointer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glHint(GLenum target, GLenum mode);
+    public delegate void glHint(int target, int mode);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLboolean glIsBuffer(GLuint buffer);
+    public delegate bool glIsBuffer(uint buffer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLboolean glIsEnabled(GLenum cap);
+    public delegate bool glIsEnabled(int cap);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLboolean glIsFramebuffer(GLuint framebuffer);
+    public delegate bool glIsFramebuffer(uint framebuffer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLboolean glIsProgram(GLuint program);
+    public delegate bool glIsProgram(uint program);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLboolean glIsRenderbuffer(GLuint renderbuffer);
+    public delegate bool glIsRenderbuffer(uint renderbuffer);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLboolean glIsShader(GLuint shader);
+    public delegate bool glIsShader(uint shader);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate GLboolean glIsTexture(GLuint texture);
+    public delegate bool glIsTexture(uint texture);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glLineWidth(GLfloat width);
+    public delegate void glLineWidth(float width);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glLinkProgram(GLuint program);
+    public delegate void glLinkProgram(uint program);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glPixelStorei(GLenum pname, GLint param);
+    public delegate void glPixelStorei(int pname, int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glPolygonOffset(GLfloat factor, GLfloat units);
+    public delegate void glPolygonOffset(float factor, float units);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
-        GLenum type, void* pixels);
+    public unsafe delegate void glReadPixels(int x, int y, int width, int height, int format,
+        int type, void* pixels);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public delegate void glReleaseShaderCompiler();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glRenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width,
-        GLsizei height);
+    public delegate void glRenderbufferStorage(int target, int internalformat, int width,
+        int height);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glSampleCoverage(GLclampf value, GLboolean invert);
+    public delegate void glSampleCoverage(float value, bool invert);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glScissor(GLint x, GLint y, GLsizei width, GLsizei height);
+    public delegate void glScissor(int x, int y, int width, int height);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glShaderBinary(GLsizei n, GLuint* shaders, GLenum binaryformat, void* binary,
-        GLsizei length);
+    public unsafe delegate void glShaderBinary(int n, uint* shaders, int binaryformat, void* binary,
+        int length);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glShaderSource(GLuint shader, GLsizei count, GLchar** @string, GLint* length);
+    public unsafe delegate void glShaderSource(uint shader, int count, byte** @string, int* length);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glStencilFunc(GLenum func, GLint @ref, GLuint mask);
+    public delegate void glStencilFunc(int func, int @ref, uint mask);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glStencilFuncSeparate(GLenum face, GLenum func, GLint @ref, GLuint mask);
+    public delegate void glStencilFuncSeparate(int face, int func, int @ref, uint mask);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glStencilMask(GLuint mask);
+    public delegate void glStencilMask(uint mask);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glStencilMaskSeparate(GLenum face, GLuint mask);
+    public delegate void glStencilMaskSeparate(int face, uint mask);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glStencilOp(GLenum fail, GLenum zfail, GLenum zpass);
+    public delegate void glStencilOp(int fail, int zfail, int zpass);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenum zpass);
+    public delegate void glStencilOpSeparate(int face, int fail, int zfail, int zpass);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width,
-        GLsizei height, GLint border, GLenum format, GLenum type, void* pixels);
+    public unsafe delegate void glTexImage2D(int target, int level, int internalformat, int width,
+        int height, int border, int format, int type, void* pixels);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glTexParameterf(GLenum target, GLenum pname, GLfloat param);
+    public delegate void glTexParameterf(int target, int pname, float param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glTexParameterfv(GLenum target, GLenum pname, GLfloat* @params);
+    public unsafe delegate void glTexParameterfv(int target, int pname, float* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glTexParameteri(GLenum target, GLenum pname, GLint param);
+    public delegate void glTexParameteri(int target, int pname, int param);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glTexParameteriv(GLenum target, GLenum pname, GLint* @params);
+    public unsafe delegate void glTexParameteriv(int target, int pname, int* @params);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
-        GLsizei height, GLenum format, GLenum type, void* pixels);
+    public unsafe delegate void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width,
+        int height, int format, int type, void* pixels);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform1f(GLint location, GLfloat x);
+    public delegate void glUniform1f(int location, float x);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform1fv(GLint location, GLsizei count, GLfloat* v);
+    public unsafe delegate void glUniform1fv(int location, int count, float* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform1i(GLint location, GLint x);
+    public delegate void glUniform1i(int location, int x);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform1iv(GLint location, GLsizei count, GLint* v);
+    public unsafe delegate void glUniform1iv(int location, int count, int* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform2f(GLint location, GLfloat x, GLfloat y);
+    public delegate void glUniform2f(int location, float x, float y);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform2fv(GLint location, GLsizei count, GLfloat* v);
+    public unsafe delegate void glUniform2fv(int location, int count, float* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform2i(GLint location, GLint x, GLint y);
+    public delegate void glUniform2i(int location, int x, int y);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform2iv(GLint location, GLsizei count, GLint* v);
+    public unsafe delegate void glUniform2iv(int location, int count, int* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z);
+    public delegate void glUniform3f(int location, float x, float y, float z);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform3fv(GLint location, GLsizei count, GLfloat* v);
+    public unsafe delegate void glUniform3fv(int location, int count, float* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform3i(GLint location, GLint x, GLint y, GLint z);
+    public delegate void glUniform3i(int location, int x, int y, int z);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform3iv(GLint location, GLsizei count, GLint* v);
+    public unsafe delegate void glUniform3iv(int location, int count, int* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+    public delegate void glUniform4f(int location, float x, float y, float z, float w);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform4fv(GLint location, GLsizei count, GLfloat* v);
+    public unsafe delegate void glUniform4fv(int location, int count, float* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUniform4i(GLint location, GLint x, GLint y, GLint z, GLint w);
+    public delegate void glUniform4i(int location, int x, int y, int z, int w);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniform4iv(GLint location, GLsizei count, GLint* v);
+    public unsafe delegate void glUniform4iv(int location, int count, int* v);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, GLfloat* value);
+    public unsafe delegate void glUniformMatrix2fv(int location, int count, bool transpose, float* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, GLfloat* value);
+    public unsafe delegate void glUniformMatrix3fv(int location, int count, bool transpose, float* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, GLfloat* value);
+    public unsafe delegate void glUniformMatrix4fv(int location, int count, bool transpose, float* value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glUseProgram(GLuint program);
+    public delegate void glUseProgram(uint program);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glValidateProgram(GLuint program);
+    public delegate void glValidateProgram(uint program);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glVertexAttrib1f(GLuint indx, GLfloat x);
+    public delegate void glVertexAttrib1f(uint indx, float x);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glVertexAttrib1fv(GLuint indx, GLfloat* values);
+    public unsafe delegate void glVertexAttrib1fv(uint indx, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glVertexAttrib2f(GLuint indx, GLfloat x, GLfloat y);
+    public delegate void glVertexAttrib2f(uint indx, float x, float y);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glVertexAttrib2fv(GLuint indx, GLfloat* values);
+    public unsafe delegate void glVertexAttrib2fv(uint indx, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glVertexAttrib3f(GLuint indx, GLfloat x, GLfloat y, GLfloat z);
+    public delegate void glVertexAttrib3f(uint indx, float x, float y, float z);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glVertexAttrib3fv(GLuint indx, GLfloat* values);
+    public unsafe delegate void glVertexAttrib3fv(uint indx, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glVertexAttrib4f(GLuint indx, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+    public delegate void glVertexAttrib4f(uint indx, float x, float y, float z, float w);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glVertexAttrib4fv(GLuint indx, GLfloat* values);
+    public unsafe delegate void glVertexAttrib4fv(uint indx, float* values);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate void glVertexAttribPointer(GLuint indx, GLint size, GLenum type, GLboolean normalized,
-        GLsizei stride, void* ptr);
+    public unsafe delegate void glVertexAttribPointer(uint indx, int size, int type, bool normalized,
+        int stride, void* ptr);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public delegate void glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+    public delegate void glViewport(int x, int y, int width, int height);
 }

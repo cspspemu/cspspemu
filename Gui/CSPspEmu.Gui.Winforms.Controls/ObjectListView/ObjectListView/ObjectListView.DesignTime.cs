@@ -513,10 +513,10 @@ namespace BrightIdeasSoftware.Design
         protected override string GetDisplayText(object value)
         {
             OLVColumn col = value as OLVColumn;
-            if (col == null || String.IsNullOrEmpty(col.AspectName))
+            if (col == null || string.IsNullOrEmpty(col.AspectName))
                 return base.GetDisplayText(value);
 
-            return String.Format("{0} ({1})", base.GetDisplayText(value), col.AspectName);
+            return string.Format("{0} ({1})", base.GetDisplayText(value), col.AspectName);
         }
     }
 
@@ -543,7 +543,7 @@ namespace BrightIdeasSoftware.Design
                 TextOverlay textOverlay = value as TextOverlay;
                 if (textOverlay != null)
                 {
-                    return String.IsNullOrEmpty(textOverlay.Text) ? "(none)" : "(set)";
+                    return string.IsNullOrEmpty(textOverlay.Text) ? "(none)" : "(set)";
                 }
             }
 

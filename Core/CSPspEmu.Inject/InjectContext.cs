@@ -52,7 +52,7 @@ public sealed class InjectContext : IDisposable
                 var RealType = TypesByType.ContainsKey(Type) ? TypesByType[Type] : Type;
 
                 if (RealType.IsAbstract)
-                    throw (new Exception(String.Format("Can't instantiate class '{0}', because it is abstract",
+                    throw (new Exception(string.Format("Can't instantiate class '{0}', because it is abstract",
                         RealType)));
 
                 try

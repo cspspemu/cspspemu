@@ -47,7 +47,7 @@ namespace CSharpPlatform.GL.Impl
         public const int EGL_BAD_SURFACE = 0x300D;
         public const int EGL_CONTEXT_LOST = 0x300E;
 
-        public static string eglGetErrorString(EGLint error)
+        public static string eglGetErrorString(int error)
         {
             switch (error)
             {
@@ -66,7 +66,7 @@ namespace CSharpPlatform.GL.Impl
                 case EGL_BAD_PARAMETER: return "EGL_BAD_PARAMETER";
                 case EGL_BAD_SURFACE: return "EGL_BAD_SURFACE";
                 case EGL_CONTEXT_LOST: return "EGL_CONTEXT_LOST";
-                default: return String.Format("EGL_UNKNOWN_{0:X4}", error);
+                default: return string.Format("EGL_UNKNOWN_{0:X4}", error);
             }
         }
 
@@ -179,119 +179,119 @@ namespace CSharpPlatform.GL.Impl
         const string DLL_EGL = "libEGL";
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLint eglGetError();
+        public static extern int eglGetError();
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
         public static extern EGLDisplay eglGetDisplay(EGLNativeDisplayType display_id);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglInitialize(EGLDisplay dpy, EGLint* major, EGLint* minor);
+        public static extern bool eglInitialize(EGLDisplay dpy, int* major, int* minor);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglTerminate(EGLDisplay dpy);
+        public static extern bool eglTerminate(EGLDisplay dpy);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern string eglQueryString(EGLDisplay dpy, EGLint name);
+        public static extern string eglQueryString(EGLDisplay dpy, int name);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglGetConfigs(EGLDisplay dpy, EGLConfig* configs, EGLint config_size,
-            EGLint* num_config);
+        public static extern bool eglGetConfigs(EGLDisplay dpy, EGLConfig* configs, int config_size,
+            int* num_config);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglChooseConfig(EGLDisplay dpy, EGLint* attrib_list, EGLConfig* configs,
-            EGLint config_size, EGLint* num_config);
+        public static extern bool eglChooseConfig(EGLDisplay dpy, int* attrib_list, EGLConfig* configs,
+            int config_size, int* num_config);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint attribute,
-            EGLint* value);
+        public static extern bool eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, int attribute,
+            int* value);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
         public static extern EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config,
-            EGLNativeWindowType win, EGLint* attrib_list);
+            EGLNativeWindowType win, int* attrib_list);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, EGLint* attrib_list);
+        public static extern EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, int* attrib_list);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
         public static extern EGLSurface eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config,
-            EGLNativePixmapType pixmap, EGLint* attrib_list);
+            EGLNativePixmapType pixmap, int* attrib_list);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglDestroySurface(EGLDisplay dpy, EGLSurface surface);
+        public static extern bool eglDestroySurface(EGLDisplay dpy, EGLSurface surface);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint attribute,
-            EGLint* value);
+        public static extern bool eglQuerySurface(EGLDisplay dpy, EGLSurface surface, int attribute,
+            int* value);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglBindAPI(EGLenum api);
+        public static extern bool eglBindAPI(int api);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLenum eglQueryAPI();
+        public static extern int eglQueryAPI();
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglWaitClient();
+        public static extern bool eglWaitClient();
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglReleaseThread();
+        public static extern bool eglReleaseThread();
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLSurface eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buftype,
-            EGLClientBuffer buffer, EGLConfig config, EGLint* attrib_list);
+        public static extern EGLSurface eglCreatePbufferFromClientBuffer(EGLDisplay dpy, int buftype,
+            EGLClientBuffer buffer, EGLConfig config, int* attrib_list);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint attribute,
-            EGLint value);
+        public static extern bool eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, int attribute,
+            int value);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
+        public static extern bool eglBindTexImage(EGLDisplay dpy, EGLSurface surface, int buffer);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
+        public static extern bool eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, int buffer);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglSwapInterval(EGLDisplay dpy, EGLint interval);
+        public static extern bool eglSwapInterval(EGLDisplay dpy, int interval);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
         public static extern EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context,
-            EGLint* attrib_list);
+            int* attrib_list);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglDestroyContext(EGLDisplay dpy, EGLContext ctx);
+        public static extern bool eglDestroyContext(EGLDisplay dpy, EGLContext ctx);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean
+        public static extern bool
             eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface read, EGLContext ctx);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
         public static extern EGLContext eglGetCurrentContext();
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLSurface eglGetCurrentSurface(EGLint readdraw);
+        public static extern EGLSurface eglGetCurrentSurface(int readdraw);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
         public static extern EGLDisplay eglGetCurrentDisplay();
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean
-            eglQueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attribute, EGLint* value);
+        public static extern bool
+            eglQueryContext(EGLDisplay dpy, EGLContext ctx, int attribute, int* value);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglWaitGL();
+        public static extern bool eglWaitGL();
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglWaitNative(EGLint engine);
+        public static extern bool eglWaitNative(int engine);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglSwapBuffers(EGLDisplay dpy, EGLSurface surface);
+        public static extern bool eglSwapBuffers(EGLDisplay dpy, EGLSurface surface);
 
         [DllImport(DLL_EGL), SuppressUnmanagedCodeSecurity]
-        public static extern EGLBoolean eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target);
+        public static extern bool eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target);
 
 
-        public static EGLint eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint attribute)
+        public static int eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, int attribute)
         {
-            EGLint @out = 0;
+            int @out = 0;
             if (!eglGetConfigAttrib(dpy, config, attribute, &@out)) throw (new Exception("Can't get value"));
             return @out;
         }

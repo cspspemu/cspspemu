@@ -35,7 +35,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             {
                 return Ast.CallDelegate(
                     Ast.CallInstance(Ast.CpuThreadStateExpr,
-                        (Func<uint, Action<CpuThreadState>>) CpuThreadStateMethods.GetFuncAtPC, pc),
+                        (Func<uint, Action<CpuThreadState>>) CpuThreadStateMethods.GetFuncAtPc, pc),
                     Ast.CpuThreadStateExpr);
             }
         }
@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                             Ast.Assign(localCachedPc, localCalculatePc),
                             Ast.Assign(localCachedFunction,
                                 Ast.CallInstance(Ast.CpuThreadStateExpr,
-                                    (Func<uint, Action<CpuThreadState>>) CpuThreadStateMethods.GetFuncAtPC, pc))
+                                    (Func<uint, Action<CpuThreadState>>) CpuThreadStateMethods.GetFuncAtPc, pc))
                         )
                     ),
                     callStm
