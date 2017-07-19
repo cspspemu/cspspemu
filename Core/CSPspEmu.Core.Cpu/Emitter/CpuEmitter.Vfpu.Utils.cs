@@ -176,8 +176,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
             protected VfpuRuntimeRegister(CpuEmitter cpuEmitter, VReg vReg, VType vType, int vectorSize)
             {
-                Pc = cpuEmitter.PC;
-                Instruction = cpuEmitter.Instruction;
+                Pc = cpuEmitter._pc;
+                Instruction = cpuEmitter._instruction;
                 VReg = vReg;
                 VType = vType;
                 VectorSize = (vectorSize == 0) ? Instruction.OneTwo : vectorSize;
@@ -340,7 +340,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             public AstNodeExpr Get() => GetRegApplyPrefix(new[] {Index}, 0, 0);
 
             public AstNodeStm Set(AstNodeExpr value, uint pc, [CallerMemberName] string calledFrom = "") =>
-                ast.Statements(
+                _ast.Statements(
                     SetRegApplyPrefix(Index, 0, value),
                     SetRegApplyPrefix2(Index, 0, pc, calledFrom)
                 );
@@ -367,10 +367,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
             public AstNodeStm SetVector(Func<int, AstNodeExpr> generator, uint pc,
                 [CallerMemberName] string calledFrom = "")
             {
-                return ast.Statements(
-                    ast.Statements(Enumerable.Range(0, VectorSize).Select(index => Set(index, generator(index)))
+                return _ast.Statements(
+                    _ast.Statements(Enumerable.Range(0, VectorSize).Select(index => Set(index, generator(index)))
                         .Where(statement => statement != null)),
-                    ast.StatementsInline(Enumerable.Range(0, VectorSize)
+                    _ast.StatementsInline(Enumerable.Range(0, VectorSize)
                         .Select(index => Set2(index, pc, calledFrom)).Where(statement => statement != null))
                 );
             }
@@ -386,8 +386,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
             public AstNodeStm SetVector(Func<int, AstNodeExpr> generator)
             {
-                return ast.Statements(Enumerable.Range(0, VectorSize)
-                    .Select(index => ast.Assign(this[index], generator(index))));
+                return _ast.Statements(Enumerable.Range(0, VectorSize)
+                    .Select(index => _ast.Assign(this[index], generator(index))));
             }
 
             public AstNodeExprLValue this[int index] => Refs[index];
@@ -446,7 +446,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
                 for (var row = 0; row < VectorSize; row++)
                 for (var column = 0; column < VectorSize; column++) statements.Add(Set2(column, row, pc, calledFrom));
-                return ast.Statements(statements);
+                return _ast.Statements(statements);
             }
         }
 
@@ -470,56 +470,56 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private VReg VD => new VReg
         {
-            Reg = Instruction.Vd,
+            Reg = _instruction.Vd,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestination
         };
 
         private VReg VS => new VReg
         {
-            Reg = Instruction.Vs,
+            Reg = _instruction.Vs,
             VfpuPrefix = PrefixSource,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT => new VReg
         {
-            Reg = Instruction.Vt,
+            Reg = _instruction.Vt,
             VfpuPrefix = PrefixTarget,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT5_1 => new VReg
         {
-            Reg = Instruction.Vt51,
+            Reg = _instruction.Vt51,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT5_2 => new VReg
         {
-            Reg = Instruction.Vt52,
+            Reg = _instruction.Vt52,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VD_NoPrefix => new VReg
         {
-            Reg = Instruction.Vd,
+            Reg = _instruction.Vd,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VS_NoPrefix => new VReg
         {
-            Reg = Instruction.Vs,
+            Reg = _instruction.Vs,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT_NoPrefix => new VReg
         {
-            Reg = Instruction.Vt,
+            Reg = _instruction.Vt,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
@@ -528,7 +528,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         {
             var elementSize = Marshal.SizeOf(typeof(TType));
             return VFpuVectorRef.Generate(vectorSize,
-                index => ast.MemoryGetPointerRef<TType>(Memory, Address_RS_IMM14(index * elementSize)));
+                index => _ast.MemoryGetPointerRef<TType>(_memory, Address_RS_IMM14(index * elementSize)));
         }
 
         private VfpuCell _Cell(VReg vReg, VType vType = VType.VFloat) => new VfpuCell(this, vReg, vType);
@@ -565,11 +565,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
         private VfpuCell CEL_VD_u => CEL(VD, VType.VUInt);
         private VfpuCell CEL_VT_u => CEL(VT, VType.VUInt);
         private VfpuCell CEL_VT_u_NoPrefix => CEL(VT_NoPrefix, VType.VUInt);
-        private AstNodeExpr _Aggregate(AstNodeExpr first, Func<AstNodeExpr, int, AstNodeExpr> callback) => _Aggregate(first, ONE_TWO, callback);
-        private AstNodeStmContainer _List(Func<int, AstNodeStm> callback) => _List(ONE_TWO, callback);
+        private AstNodeExpr _Aggregate(AstNodeExpr first, Func<AstNodeExpr, int, AstNodeExpr> callback) => _Aggregate(first, OneTwo, callback);
+        private AstNodeStmContainer _List(Func<int, AstNodeStm> callback) => _List(OneTwo, callback);
         private AstNodeStmContainer _List(int vectorSize, Func<int, AstNodeStm> callback)
         {
-            var statements = ast.Statements();
+            var statements = _ast.Statements();
             for (var index = 0; index < vectorSize; index++)
                 statements.AddStatement(callback(index));
             return statements;

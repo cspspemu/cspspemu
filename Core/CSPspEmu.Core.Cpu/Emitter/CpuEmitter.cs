@@ -7,47 +7,47 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
-    public sealed unsafe partial class CpuEmitter
+    public sealed partial class CpuEmitter
     {
-        [Inject] private CpuProcessor CpuProcessor;
+        [Inject] private CpuProcessor _cpuProcessor;
 
-        [Inject] private PspMemory Memory;
+        [Inject] private PspMemory _memory;
 
-        private MipsMethodEmitter MipsMethodEmitter;
-        private IInstructionReader InstructionReader;
-        private Instruction Instruction;
-        private uint PC;
+        private MipsMethodEmitter _mipsMethodEmitter;
+        private IInstructionReader _instructionReader;
+        private Instruction _instruction;
+        private uint _pc;
 
         public int BranchCount = 0;
 
-        private static AstMipsGenerator ast = AstMipsGenerator.Instance;
+        private static AstMipsGenerator _ast = AstMipsGenerator.Instance;
 
         public CpuEmitter(InjectContext injectContext, MipsMethodEmitter mipsMethodEmitter,
             IInstructionReader instructionReader)
         {
             injectContext.InjectDependencesTo(this);
-            this.MipsMethodEmitter = mipsMethodEmitter;
-            this.InstructionReader = instructionReader;
+            _mipsMethodEmitter = mipsMethodEmitter;
+            _instructionReader = instructionReader;
         }
 
-        public Instruction LoadAT(uint pc) => Instruction = InstructionReader[PC = pc];
+        public Instruction LoadAt(uint pc) => _instruction = _instructionReader[_pc = pc];
 
-        private int ONE_TWO => Instruction.OneTwo;
-        private int RT => Instruction.Rt;
-        private int RD => Instruction.Rd;
-        private int RS => Instruction.Rs;
-        private int IMM => Instruction.Imm;
-        private uint IMMU => Instruction.Immu;
-        private int FT => Instruction.Ft;
-        private int FD => Instruction.Fd;
-        private int FS => Instruction.Fs;
-        private AstNodeExpr IMM_s() => ast.Immediate(IMM);
-        private AstNodeExpr IMM_u() => ast.Immediate((uint) (ushort) IMM);
-        private AstNodeExpr IMM_uex() => ast.Immediate((uint) IMM);
+        private int OneTwo => _instruction.OneTwo;
+        private int Rt => _instruction.Rt;
+        private int Rd => _instruction.Rd;
+        private int Rs => _instruction.Rs;
+        private int Imm => _instruction.Imm;
+        private uint Immu => _instruction.Immu;
+        private int Ft => _instruction.Ft;
+        private int Fd => _instruction.Fd;
+        private int Fs => _instruction.Fs;
+        private AstNodeExpr IMM_s() => _ast.Immediate(Imm);
+        private AstNodeExpr IMM_u() => _ast.Immediate((uint) (ushort) Imm);
+        private AstNodeExpr IMM_uex() => _ast.Immediate((uint) Imm);
 
         private AstNodeExpr Address_RS_IMM14(int offset = 0) =>
-            ast.Cast<uint>(ast.Binary(ast.GPR_s(RS), "+", Instruction.Imm14 * 4 + offset), false);
+            _ast.Cast<uint>(_ast.Binary(_ast.GPR_s(Rs), "+", _instruction.Imm14 * 4 + offset), false);
 
-        private AstNodeExpr Address_RS_IMM() => ast.Cast<uint>(ast.Binary(ast.GPR_s(RS), "+", IMM_s()), false);
+        private AstNodeExpr Address_RS_IMM() => _ast.Cast<uint>(_ast.Binary(_ast.GPR_s(Rs), "+", IMM_s()), false);
     }
 }

@@ -94,6 +94,7 @@
     <Compile Include="Emitter\CpuEmitter.Vfpu_Branches.cs" />
     <Compile Include="HalfFloat.cs" />
     <Compile Include="Table\AddressType.cs" />
+    <Compile Include="Table\InstructionName.cs" />
     <Compile Include="Table\InstructionType.cs" />
     <Compile Include="Emitter\MipsMethodEmitter.cs" />
     <Compile Include="Instruction.cs" />

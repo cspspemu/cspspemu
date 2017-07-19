@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
 using CSPspEmu.Core.Cpu.Table;
 using SafeILGenerator.Ast;
@@ -63,11 +65,41 @@ namespace CSPspEmu.Core.Cpu.Switch
             bool throwOnUnexistent = true)
         {
             if (nameConverter == null) nameConverter = DefaultNameConverter;
+            
+            var customNamesToMethodInfo = new Dictionary<string, MethodInfo>();
+
+            string NormalizeName(string nname)
+            {
+                return nname.ToLower();
+            }
+
+            //Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            foreach (var methodInfo in typeof(TType).GetMethods())
+            {
+                // ReSharper disable once AssignNullToNotNullAttribute
+                var instructionName = (methodInfo.GetCustomAttributes(typeof(InstructionName), true) as InstructionName[]).FirstOrDefault();
+                if (instructionName != null)
+                {
+                    customNamesToMethodInfo[instructionName.Name] = methodInfo;
+                    if (NormalizeName(instructionName.Name) != NormalizeName(methodInfo.Name))
+                    {
+                        Console.WriteLine($"WARNING! Normalized name mismatch: {instructionName.Name} != {methodInfo.Name}");
+                    }
+                }
+                //Console.WriteLine("methodInfo:" + methodInfo + " : " + instructionName);
+            }
 
             return GenerateSwitch<Func<uint, TType, TRetType>>(name, instructionInfoList, instructionInfo =>
             {
                 var instructionInfoName = nameConverter((instructionInfo != null) ? instructionInfo.Name : "Default");
-                var methodInfo = typeof(TType).GetMethod(instructionInfoName);
+                MethodInfo methodInfo = null;
+                methodInfo = customNamesToMethodInfo.GetOrDefault(instructionInfoName, null);
+
+                if (methodInfo == null)
+                {
+                    Console.WriteLine($"WARNING! Not annotated instruction: {instructionInfoName} in type {typeof(TType)}");
+                    methodInfo = typeof(TType).GetMethod(instructionInfoName);
+                }
 
                 if (methodInfo == null && !throwOnUnexistent)
                 {

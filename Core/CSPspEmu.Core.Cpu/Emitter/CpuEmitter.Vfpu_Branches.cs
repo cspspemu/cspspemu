@@ -31,26 +31,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeStm vcmp()
         {
-            var vectorSize = Instruction.OneTwo;
-            var cond = Instruction.Imm4;
+            var vectorSize = _instruction.OneTwo;
+            var cond = _instruction.Imm4;
             var cond2 = (ConditionEnum) cond;
             //bool NormalFlag = (Cond & 8) == 0;
             //bool NotFlag = (Cond & 4) != 0;
             //uint TypeFlag = (Cond & 3);
 
-            var localCcTemp = ast.Local(AstLocal.Create<bool>());
-            var localCcOr = ast.Local(AstLocal.Create<bool>());
-            var localCcAnd = ast.Local(AstLocal.Create<bool>());
+            var localCcTemp = _ast.Local(AstLocal.Create<bool>());
+            var localCcOr = _ast.Local(AstLocal.Create<bool>());
+            var localCcAnd = _ast.Local(AstLocal.Create<bool>());
 
-            return ast.Statements(
-                ast.Assign(localCcOr, false),
-                ast.Assign(localCcAnd, true),
+            return _ast.Statements(
+                _ast.Assign(localCcOr, false),
+                _ast.Assign(localCcAnd, true),
 
                 // TODO: CHECK THIS!
-                ast.AssignVcc(0, true),
-                ast.AssignVcc(1, true),
-                ast.AssignVcc(2, true),
-                ast.AssignVcc(3, true),
+                _ast.AssignVcc(0, true),
+                _ast.AssignVcc(1, true),
+                _ast.AssignVcc(2, true),
+                _ast.AssignVcc(3, true),
                 _List(vectorSize, index =>
                 {
                     AstNodeExpr expr;
@@ -61,121 +61,121 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     switch (cond2)
                     {
                         case ConditionEnum.VcFl:
-                            expr = ast.Immediate(false);
+                            expr = _ast.Immediate(false);
                             break;
                         case ConditionEnum.VcEq:
-                            expr = ast.Binary(left, "==", right);
+                            expr = _ast.Binary(left, "==", right);
                             break;
                         case ConditionEnum.VcLt:
-                            expr = ast.Binary(left, "<", right);
+                            expr = _ast.Binary(left, "<", right);
                             break;
                         //case ConditionEnum.VC_LE: Expr = ast.Binary(Left, "<=", Right); break;
                         case ConditionEnum.VcLe:
-                            expr = ast.CallStatic((Func<float, float, bool>) MathFloat.IsLessOrEqualsThan, left, right);
+                            expr = _ast.CallStatic((Func<float, float, bool>) MathFloat.IsLessOrEqualsThan, left, right);
                             break;
 
                         case ConditionEnum.VcTr:
-                            expr = ast.Immediate(true);
+                            expr = _ast.Immediate(true);
                             break;
                         case ConditionEnum.VcNe:
-                            expr = ast.Binary(left, "!=", right);
+                            expr = _ast.Binary(left, "!=", right);
                             break;
                         //case ConditionEnum.VC_GE: Expr = ast.Binary(Left, ">=", Right); break;
                         case ConditionEnum.VcGe:
-                            expr = ast.CallStatic((Func<float, float, bool>) MathFloat.IsGreatOrEqualsThan, left,
+                            expr = _ast.CallStatic((Func<float, float, bool>) MathFloat.IsGreatOrEqualsThan, left,
                                 right);
                             break;
                         case ConditionEnum.VcGt:
-                            expr = ast.Binary(left, ">", right);
+                            expr = _ast.Binary(left, ">", right);
                             break;
 
                         case ConditionEnum.VcEz:
-                            expr = ast.Binary(ast.Binary(left, "==", 0.0f), "||", ast.Binary(left, "==", -0.0f));
+                            expr = _ast.Binary(_ast.Binary(left, "==", 0.0f), "||", _ast.Binary(left, "==", -0.0f));
                             break;
                         case ConditionEnum.VcEn:
-                            expr = ast.CallStatic((Func<float, bool>) MathFloat.IsNan, left);
+                            expr = _ast.CallStatic((Func<float, bool>) MathFloat.IsNan, left);
                             break;
                         case ConditionEnum.VcEi:
-                            expr = ast.CallStatic((Func<float, bool>) MathFloat.IsInfinity, left);
+                            expr = _ast.CallStatic((Func<float, bool>) MathFloat.IsInfinity, left);
                             break;
                         case ConditionEnum.VcEs:
-                            expr = ast.CallStatic((Func<float, bool>) MathFloat.IsNanOrInfinity, left);
+                            expr = _ast.CallStatic((Func<float, bool>) MathFloat.IsNanOrInfinity, left);
                             break; // Tekken Dark Resurrection
 
                         case ConditionEnum.VcNz:
-                            expr = ast.Binary(left, "!=", 0f);
+                            expr = _ast.Binary(left, "!=", 0f);
                             break;
                         case ConditionEnum.VcNn:
-                            expr = ast.Unary("!", ast.CallStatic((Func<float, bool>) MathFloat.IsNan, left));
+                            expr = _ast.Unary("!", _ast.CallStatic((Func<float, bool>) MathFloat.IsNan, left));
                             break;
                         case ConditionEnum.VcNi:
-                            expr = ast.Unary("!", ast.CallStatic((Func<float, bool>) MathFloat.IsInfinity, left));
+                            expr = _ast.Unary("!", _ast.CallStatic((Func<float, bool>) MathFloat.IsInfinity, left));
                             break;
                         case ConditionEnum.VcNs:
-                            expr = ast.Unary("!", ast.CallStatic((Func<float, bool>) MathFloat.IsNanOrInfinity, left));
+                            expr = _ast.Unary("!", _ast.CallStatic((Func<float, bool>) MathFloat.IsNanOrInfinity, left));
                             break;
 
                         default: throw (new InvalidOperationException());
                     }
 
-                    return ast.Statements(new List<AstNodeStm>
+                    return _ast.Statements(new List<AstNodeStm>
                     {
-                        ast.Assign(localCcTemp, expr),
-                        ast.AssignVcc(index, localCcTemp),
-                        ast.Assign(localCcOr, ast.Binary(localCcOr, "||", localCcTemp)),
-                        ast.Assign(localCcAnd, ast.Binary(localCcAnd, "&&", localCcTemp))
+                        _ast.Assign(localCcTemp, expr),
+                        _ast.AssignVcc(index, localCcTemp),
+                        _ast.Assign(localCcOr, _ast.Binary(localCcOr, "||", localCcTemp)),
+                        _ast.Assign(localCcAnd, _ast.Binary(localCcAnd, "&&", localCcTemp))
                     });
                 }),
-                ast.AssignVcc(4, localCcOr),
-                ast.AssignVcc(5, localCcAnd)
+                _ast.AssignVcc(4, localCcOr),
+                _ast.AssignVcc(5, localCcAnd)
             );
         }
 
         public AstNodeStm vslt() => VEC_VD.SetVector(
-            index => ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vslt_impl, VEC_VS[index],
-                VEC_VT[index]), PC);
+            index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vslt_impl, VEC_VS[index],
+                VEC_VT[index]), _pc);
 
         public AstNodeStm vsge() => VEC_VD.SetVector(
-            index => ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vsge_impl, VEC_VS[index],
-                VEC_VT[index]), PC);
+            index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vsge_impl, VEC_VS[index],
+                VEC_VT[index]), _pc);
 
         public AstNodeStm vscmp() => VEC_VD.SetVector(
-            index => ast.CallStatic((Func<float, float, float>) MathFloat.Sign2, VEC_VS[index], VEC_VT[index]), PC);
+            index => _ast.CallStatic((Func<float, float, float>) MathFloat.Sign2, VEC_VS[index], VEC_VT[index]), _pc);
 
         public AstNodeStm _vcmovtf(bool True)
         {
-            var register = (int) Instruction.Imm3;
+            var register = (int) _instruction.Imm3;
 
             Func<int, AstNodeExpr> _VCC = index =>
             {
-                AstNodeExpr ret = ast.Vcc(index);
-                if (!True) ret = ast.Unary("!", ret);
+                AstNodeExpr ret = _ast.Vcc(index);
+                if (!True) ret = _ast.Unary("!", ret);
                 return ret;
             };
 
             if (register < 6)
             {
                 // TODO: CHECK THIS!
-                return ast.IfElse(
+                return _ast.IfElse(
                     _VCC(register),
-                    VEC_VD.SetVector(index => VEC_VS[index], PC),
-                    ast.Statements(
-                        ast.Assign(ast.PrefixSourceEnabled(), false),
+                    VEC_VD.SetVector(index => VEC_VS[index], _pc),
+                    _ast.Statements(
+                        _ast.Assign(_ast.PrefixSourceEnabled(), false),
                         //ast.If(ast.PrefixDestinationEnabled(), VEC_VD.SetVector(Index => VEC_VD[Index], PC))
-                        ast.If(ast.PrefixDestinationEnabled(), VEC_VD.SetVector(index => VEC_VD[index], PC))
+                        _ast.If(_ast.PrefixDestinationEnabled(), VEC_VD.SetVector(index => VEC_VD[index], _pc))
                     )
                 );
             }
 
             if (register == 6)
             {
-                return VEC_VD.SetVector(index => ast.Ternary(_VCC(index), VEC_VS[index], VEC_VD[index]), PC);
+                return VEC_VD.SetVector(index => _ast.Ternary(_VCC(index), VEC_VS[index], VEC_VD[index]), _pc);
             }
 
             // Register == 7
 
             // Never copy (checked on a PSP)
-            return ast.Statement();
+            return _ast.Statement();
         }
 
         public AstNodeStm vcmovf() => _vcmovtf(false);
@@ -183,9 +183,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private AstNodeStm _bvtf(bool True)
         {
-            var register = (int) Instruction.Imm3;
-            AstNodeExpr branchExpr = ast.Vcc(register);
-            if (!True) branchExpr = ast.Unary("!", branchExpr);
+            var register = (int) _instruction.Imm3;
+            AstNodeExpr branchExpr = _ast.Vcc(register);
+            if (!True) branchExpr = _ast.Unary("!", branchExpr);
             return AssignBranchFlag(branchExpr);
         }
 

@@ -343,7 +343,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                 }
                 */
 
-                var instruction = _cpuEmitter.LoadAT(pc);
+                var instruction = _cpuEmitter.LoadAt(pc);
                 var disassembleInstruction = _mipsDisassembler.Disassemble(pc, instruction);
                 var call = CpuEmitterInstruction(instruction, _cpuEmitter);
                 var astNodeStm = ProcessGeneratedInstruction(disassembleInstruction, call);
@@ -509,7 +509,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                             var jumpInstruction = _GetAstCpuInstructionAT(_pc + 0); // Jump
 
 #if !DISABLE_JUMP_GOTO
-                            var jumpInstruction2 = _cpuEmitter.LoadAT(_pc + 0);
+                            var jumpInstruction2 = _cpuEmitter.LoadAt(_pc + 0);
                             var jumpDisasm = _mipsDisassembler.Disassemble(_pc + 0, jumpInstruction2);
                             var jumpJumpPc = jumpDisasm.Instruction.GetJumpAddress(_memory, jumpDisasm.InstructionPc);
 

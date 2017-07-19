@@ -12,10 +12,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // bc1(f/t)(l): Branch on C1 (False/True) (Likely)
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        public AstNodeStm bc1f() => AssignBranchFlag(ast.Unary("!", ast.FCR31_CC()));
+        public AstNodeStm bc1f() => AssignBranchFlag(_ast.Unary("!", _ast.FCR31_CC()));
 
         public AstNodeStm bc1fl() => bc1f();
-        public AstNodeStm bc1t() => AssignBranchFlag(ast.FCR31_CC());
+        public AstNodeStm bc1t() => AssignBranchFlag(_ast.FCR31_CC());
         public AstNodeStm bc1tl() => bc1t();
     }
 }
