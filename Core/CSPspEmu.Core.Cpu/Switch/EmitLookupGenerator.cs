@@ -21,30 +21,18 @@ namespace CSPspEmu.Core.Cpu.Switch
             return value => callback(value, instance);
         }
 
-        private static string DefaultNameConverter(string name)
-        {
-            switch (name)
-            {
-                case "Default":
-                    return "unknown";
-                case "break":
-                    return "_break";
-            }
-            return name.Replace('.', '_');
-        }
-
         public static Action<uint, TType> GenerateSwitchDelegate<TType>(string name,
-            IEnumerable<InstructionInfo> instructionInfoList, Func<string, string> nameConverter = null)
+            IEnumerable<InstructionInfo> instructionInfoList)
         {
-            if (nameConverter == null) nameConverter = DefaultNameConverter;
 
             return GenerateSwitch<Action<uint, TType>>(name, instructionInfoList, instructionInfo =>
             {
-                var instructionInfoName = nameConverter((instructionInfo != null) ? instructionInfo.Name : "Default");
+                var instructionInfoName = (instructionInfo != null) ? instructionInfo.Name : "Default";
                 var methodInfo = typeof(TType).GetMethod(instructionInfoName);
                 if (methodInfo == null)
-                    throw (new Exception("Cannot find method '" + instructionInfoName + "' on type '" +
-                                         typeof(TType).Name + "'"));
+                    throw (new Exception(
+                        $"Cannot find method \'{instructionInfoName}\' on type \'{typeof(TType).Name}\' {name}, {instructionInfo?.Name} ")
+                    );
 
                 //Console.WriteLine("MethodInfo: {0}", MethodInfo);
                 //Console.WriteLine("Argument(1): {0}", typeof(TType));
@@ -61,29 +49,31 @@ namespace CSPspEmu.Core.Cpu.Switch
         }
 
         public static Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(string name,
-            IEnumerable<InstructionInfo> instructionInfoList, Func<string, string> nameConverter = null,
-            bool throwOnUnexistent = true)
+            IEnumerable<InstructionInfo> instructionInfoList,
+            bool throwOnUnexistent = true, bool warnUnmapped = true)
         {
-            if (nameConverter == null) nameConverter = DefaultNameConverter;
-            
             var customNamesToMethodInfo = new Dictionary<string, MethodInfo>();
 
             string NormalizeName(string nname)
             {
-                return nname.ToLower();
+                return nname.ToLower().Replace('.', '_').Trim('_');
             }
 
             //Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
             foreach (var methodInfo in typeof(TType).GetMethods())
             {
                 // ReSharper disable once AssignNullToNotNullAttribute
-                var instructionName = (methodInfo.GetCustomAttributes(typeof(InstructionName), true) as InstructionName[]).FirstOrDefault();
+                var instructionName =
+                    (methodInfo.GetCustomAttributes(typeof(InstructionName), true) as InstructionName[])
+                    .FirstOrDefault();
                 if (instructionName != null)
                 {
                     customNamesToMethodInfo[instructionName.Name] = methodInfo;
+                    Console.WriteLine($"{instructionName.Name} -> {methodInfo}");
                     if (NormalizeName(instructionName.Name) != NormalizeName(methodInfo.Name))
                     {
-                        Console.WriteLine($"WARNING! Normalized name mismatch: {instructionName.Name} != {methodInfo.Name}");
+                        Console.WriteLine(
+                            $"WARNING! Normalized name mismatch: {instructionName.Name} != {methodInfo.Name}");
                     }
                 }
                 //Console.WriteLine("methodInfo:" + methodInfo + " : " + instructionName);
@@ -91,25 +81,30 @@ namespace CSPspEmu.Core.Cpu.Switch
 
             return GenerateSwitch<Func<uint, TType, TRetType>>(name, instructionInfoList, instructionInfo =>
             {
-                var instructionInfoName = nameConverter((instructionInfo != null) ? instructionInfo.Name : "Default");
-                MethodInfo methodInfo = null;
-                methodInfo = customNamesToMethodInfo.GetOrDefault(instructionInfoName, null);
+                var instructionInfoName = (instructionInfo != null) ? instructionInfo.Name : "unknown";
+                var methodInfo = customNamesToMethodInfo.GetOrDefault(instructionInfoName, null);
 
-                if (methodInfo == null)
-                {
-                    Console.WriteLine($"WARNING! Not annotated instruction: {instructionInfoName} in type {typeof(TType)}");
-                    methodInfo = typeof(TType).GetMethod(instructionInfoName);
-                }
+                //if (methodInfo == null)
+                //{
+                //    Console.WriteLine(
+                //        $"WARNING! Not annotated instruction: {instructionInfoName} in type {typeof(TType)} :: {name}");
+                //    foreach (var name3 in customNamesToMethodInfo)
+                //    {
+                //        Console.WriteLine($"- {name3}");
+                //    }
+                //    methodInfo = typeof(TType).GetMethod(instructionInfoName);
+                //}
 
                 if (methodInfo == null && !throwOnUnexistent)
                 {
-                    methodInfo = typeof(TType).GetMethod("unhandled");
+                    methodInfo = customNamesToMethodInfo.GetOrDefault("unhandled", null);
                 }
 
                 if (methodInfo == null)
                 {
-                    throw (new Exception("Cannot find method '" + instructionInfoName + "' on type '" +
-                                         typeof(TType).Name + "'"));
+                    throw (new Exception(
+                        $"Cannot find method \'{instructionInfoName}\' on type \'{typeof(TType).Name}\' : {name}, {instructionInfo?.Name}")
+                    );
                 }
 
                 if (methodInfo.ReturnType == typeof(TRetType))

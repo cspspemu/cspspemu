@@ -14,7 +14,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
     /// <summary>
     /// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
     /// </summary>
-    public sealed unsafe class MipsMethodEmitter
+    public sealed class MipsMethodEmitter
     {
         private readonly uint _pc;
         private readonly CpuProcessor _processor;

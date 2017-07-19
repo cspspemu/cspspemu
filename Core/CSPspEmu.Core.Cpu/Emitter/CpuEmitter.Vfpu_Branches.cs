@@ -4,6 +4,7 @@ using SafeILGenerator.Ast.Nodes;
 using CSharpUtils;
 using SafeILGenerator.Ast;
 using System.Collections.Generic;
+using CSPspEmu.Core.Cpu.Table;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -29,6 +30,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             VcNs = 15,
         }
 
+        [InstructionName("vcmp")]
         public AstNodeStm vcmp()
         {
             var vectorSize = _instruction.OneTwo;
@@ -131,14 +133,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
             );
         }
 
+        [InstructionName("vslt")]
         public AstNodeStm vslt() => VEC_VD.SetVector(
             index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vslt_impl, VEC_VS[index],
                 VEC_VT[index]), _pc);
 
+        [InstructionName("vsge")]
         public AstNodeStm vsge() => VEC_VD.SetVector(
             index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vsge_impl, VEC_VS[index],
                 VEC_VT[index]), _pc);
 
+        [InstructionName("vscmp")]
         public AstNodeStm vscmp() => VEC_VD.SetVector(
             index => _ast.CallStatic((Func<float, float, float>) MathFloat.Sign2, VEC_VS[index], VEC_VT[index]), _pc);
 
@@ -178,7 +183,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
             return _ast.Statement();
         }
 
+        [InstructionName("vcmovf")]
         public AstNodeStm vcmovf() => _vcmovtf(false);
+        
+        [InstructionName("vcmovt")]
         public AstNodeStm vcmovt() => _vcmovtf(true);
 
         private AstNodeStm _bvtf(bool True)
@@ -189,9 +197,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
             return AssignBranchFlag(branchExpr);
         }
 
+        [InstructionName("bvf")]
         public AstNodeStm bvf() => _bvtf(false);
+        
+        [InstructionName("bvfl")]
         public AstNodeStm bvfl() => bvf();
+        
+        [InstructionName("bvt")]
         public AstNodeStm bvt() => _bvtf(true);
+        
+        [InstructionName("bvtl")]
         public AstNodeStm bvtl() => bvt();
     }
 }

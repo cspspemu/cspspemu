@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static unsafe void _div_impl(CpuThreadState cpuThreadState, int left, int right)
+        public static void _div_impl(CpuThreadState cpuThreadState, int left, int right)
         {
             if (right == 0)
             {
@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static unsafe void _divu_impl(CpuThreadState cpuThreadState, uint left, uint right)
+        public static void _divu_impl(CpuThreadState cpuThreadState, uint left, uint right)
         {
             if (right == 0)
             {
