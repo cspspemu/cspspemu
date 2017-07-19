@@ -131,7 +131,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 
         public GLTexture TextureCacheGetAndBind(GpuStateStruct* gpuState)
         {
-            if (_DynarecConfig.EnableRenderTarget)
+            if (DynarecConfig.EnableRenderTarget)
             {
                 var textureMappingState = &gpuState->TextureMappingState;
                 var clutState = &textureMappingState->ClutState;

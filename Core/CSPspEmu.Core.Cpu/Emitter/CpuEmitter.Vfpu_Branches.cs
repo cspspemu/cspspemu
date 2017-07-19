@@ -31,8 +31,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeStm vcmp()
         {
-            var vectorSize = Instruction.ONE_TWO;
-            var cond = Instruction.IMM4;
+            var vectorSize = Instruction.OneTwo;
+            var cond = Instruction.Imm4;
             var cond2 = (ConditionEnum) cond;
             //bool NormalFlag = (Cond & 8) == 0;
             //bool NotFlag = (Cond & 4) != 0;
@@ -144,7 +144,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeStm _vcmovtf(bool True)
         {
-            var register = (int) Instruction.IMM3;
+            var register = (int) Instruction.Imm3;
 
             Func<int, AstNodeExpr> _VCC = index =>
             {
@@ -183,7 +183,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private AstNodeStm _bvtf(bool True)
         {
-            var register = (int) Instruction.IMM3;
+            var register = (int) Instruction.Imm3;
             AstNodeExpr branchExpr = ast.Vcc(register);
             if (!True) branchExpr = ast.Unary("!", branchExpr);
             return AssignBranchFlag(branchExpr);

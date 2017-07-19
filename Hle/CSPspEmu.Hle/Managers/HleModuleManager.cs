@@ -157,7 +157,7 @@ namespace CSPspEmu.Hle.Managers
             {
                 ModuleImportName = ModuleImportName,
                 FunctionEntryName = FunctionEntry.Name,
-                NID = FunctionEntry.NID,
+                Nid = FunctionEntry.NID,
                 PoolItem = IlInstanceHolder.TAlloc<Action<CpuThreadState>>(FunctionEntry.Delegate),
             };
             DelegateTable[DelegateId] = new DelegateInfo()

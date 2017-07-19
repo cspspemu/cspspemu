@@ -186,7 +186,7 @@ namespace CSPspEmu.Gui.Winforms
 
         private void saveILAsDLLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_DynarecConfig.FunctionCallWithStaticReferences)
+            if (DynarecConfig.FunctionCallWithStaticReferences)
             {
                 MessageBox.Show("_DynarecConfig.FunctionCallWithStaticReferences enabled. It will break exporting.");
             }

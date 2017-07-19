@@ -69,8 +69,8 @@ namespace CSPspEmu.Hle
             // J
             //0000 10ii iiii iiii iiii iiii iiii iiii
             var Instruction = default(Instruction);
-            Instruction.OP1 = 2;
-            Instruction.JUMP_Real = FunctionAddress;
+            Instruction.Op1 = 2;
+            Instruction.JumpReal = FunctionAddress;
 
             CpuProcessor.Memory.WriteSafe(CallAddress + 0, Instruction); // J
             CpuProcessor.Memory.WriteSafe(CallAddress + 4, 0x00000000); // NOP

@@ -180,7 +180,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 Instruction = cpuEmitter.Instruction;
                 VReg = vReg;
                 VType = vType;
-                VectorSize = (vectorSize == 0) ? Instruction.ONE_TWO : vectorSize;
+                VectorSize = (vectorSize == 0) ? Instruction.OneTwo : vectorSize;
             }
 
             private Type GetVTypeType()
@@ -470,56 +470,56 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private VReg VD => new VReg
         {
-            Reg = Instruction.VD,
+            Reg = Instruction.Vd,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestination
         };
 
         private VReg VS => new VReg
         {
-            Reg = Instruction.VS,
+            Reg = Instruction.Vs,
             VfpuPrefix = PrefixSource,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT => new VReg
         {
-            Reg = Instruction.VT,
+            Reg = Instruction.Vt,
             VfpuPrefix = PrefixTarget,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT5_1 => new VReg
         {
-            Reg = Instruction.VT5_1,
+            Reg = Instruction.Vt51,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT5_2 => new VReg
         {
-            Reg = Instruction.VT5_2,
+            Reg = Instruction.Vt52,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VD_NoPrefix => new VReg
         {
-            Reg = Instruction.VD,
+            Reg = Instruction.Vd,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VS_NoPrefix => new VReg
         {
-            Reg = Instruction.VS,
+            Reg = Instruction.Vs,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };
 
         private VReg VT_NoPrefix => new VReg
         {
-            Reg = Instruction.VT,
+            Reg = Instruction.Vt,
             VfpuPrefix = PrefixNone,
             VfpuDestinationPrefix = PrefixDestinationNone
         };

@@ -56,11 +56,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
             Action<CpuThreadState> Delegate;
             var time2 = time1;
 
-            var disableOptimizations = _DynarecConfig.DisableDotNetJitOptimizations;
-            if (totalInstructions >= _DynarecConfig.InstructionCountToDisableOptimizations) disableOptimizations = true;
+            var disableOptimizations = DynarecConfig.DisableDotNetJitOptimizations;
+            if (totalInstructions >= DynarecConfig.InstructionCountToDisableOptimizations) disableOptimizations = true;
 
             if (Platform.IsMono) disableOptimizations = false;
-            if (_DynarecConfig.ForceJitOptimizationsOnEvenLargeFunctions) disableOptimizations = false;
+            if (DynarecConfig.ForceJitOptimizationsOnEvenLargeFunctions) disableOptimizations = false;
 
             try
             {

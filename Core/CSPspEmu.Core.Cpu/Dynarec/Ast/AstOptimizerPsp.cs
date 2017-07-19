@@ -78,12 +78,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
                 switch (instructionInfo.Name)
                 {
                     case "lwl":
-                        lwlLwrStates[instruction.RT] = new LwlLwrState()
+                        lwlLwrStates[instruction.Rt] = new LwlLwrState()
                         {
                             LwlListIndex = n,
-                            LwlRtRegister = instruction.RT,
-                            LwlRsRegister = instruction.RS,
-                            LwlImm = instruction.IMM,
+                            LwlRtRegister = instruction.Rt,
+                            LwlRsRegister = instruction.Rs,
+                            LwlImm = instruction.Imm,
                             LwlPc = pc,
                         };
                         //Console.WriteLine("lwl");
@@ -92,23 +92,23 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
                     case "lwr":
                         //Console.WriteLine("lwr");
                         //Console.WriteLine(LwlLwrStates.Count);
-                        if (lwlLwrStates.ContainsKey(instruction.RT))
+                        if (lwlLwrStates.ContainsKey(instruction.Rt))
                         {
-                            var lwlLwrState = lwlLwrStates[instruction.RT];
+                            var lwlLwrState = lwlLwrStates[instruction.Rt];
                             if (
-                                (lwlLwrState.LwlRsRegister == instruction.RS) &&
-                                (lwlLwrState.LwlRtRegister == instruction.RT) &&
-                                (lwlLwrState.LwlImm == instruction.IMM + 3)
+                                (lwlLwrState.LwlRsRegister == instruction.Rs) &&
+                                (lwlLwrState.LwlRtRegister == instruction.Rt) &&
+                                (lwlLwrState.LwlImm == instruction.Imm + 3)
                             )
                             {
                                 containerNodes[lwlLwrState.LwlListIndex] = null;
                                 containerNodes[n] = ast.Statements(
                                     ast.Comment($"{lwlLwrState.LwlPc:X8}+{pc:X8} lwl+lwr"),
                                     ast.AssignGpr(
-                                        instruction.RT,
+                                        instruction.Rt,
                                         ast.MemoryGetValue<int>(
                                             Memory,
-                                            ast.Cast<uint>(ast.Binary(ast.GPR_s(instruction.RS), "+", instruction.IMM))
+                                            ast.Cast<uint>(ast.Binary(ast.GPR_s(instruction.Rs), "+", instruction.Imm))
                                         )
                                     )
                                 );

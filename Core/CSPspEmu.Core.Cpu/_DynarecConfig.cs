@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu
 {
-    public class _DynarecConfig
+    public class DynarecConfig
     {
         //public const bool UpdatePCEveryInstruction = true;
-        public const bool UpdatePCEveryInstruction = false;
+        //public const bool UpdatePCEveryInstruction = false;
+        public static bool UpdatePCEveryInstruction = false;
 
         public static bool FunctionCallWithStaticReferences = true;
         //public const bool FunctionCallWithStaticReferences = true;

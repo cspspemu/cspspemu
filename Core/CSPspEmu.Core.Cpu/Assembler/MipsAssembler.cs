@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
         public MipsAssembler(Stream outputStream)
         {
-            Instructions = InstructionTable.ALL.ToDictionary(instructionInfo => instructionInfo.Name);
+            Instructions = InstructionTable.All.ToDictionary(instructionInfo => instructionInfo.Name);
             OutputStream = outputStream;
             BinaryWriter = new BinaryWriter(OutputStream);
             BinaryReader = new BinaryReader(OutputStream);
@@ -297,7 +297,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
                 if (vfpuSize > 0)
                 {
-                    instruction.ONE_TWO = vfpuSize;
+                    instruction.OneTwo = vfpuSize;
                 }
 
                 var matches = Matcher(instructionInfo.AsmEncoding, (lineTokens.Length > 1) ? lineTokens[1] : "");
@@ -315,7 +315,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         case "%zt":
                         case "%zq":
                         case "%zm":
-                            instruction.VD = ParseVfprName(vfpuSize, value);
+                            instruction.Vd = ParseVfprName(vfpuSize, value);
                             break;
                         case "%ys":
                         case "%yp":
@@ -328,35 +328,35 @@ namespace CSPspEmu.Core.Cpu.Assembler
                             {
                                 value = ((value[0] == 'M') ? 'E' : 'M') + value.Substring(1);
                             }
-                            instruction.VS = ParseVfprName(vfpuSize, value);
+                            instruction.Vs = ParseVfprName(vfpuSize, value);
                             break;
                         case "%xs":
                         case "%xp":
                         case "%xt":
                         case "%xq":
                         case "%xm":
-                            instruction.VT = ParseVfprName(vfpuSize, value);
+                            instruction.Vt = ParseVfprName(vfpuSize, value);
                             break;
                         case "%vk":
-                            instruction.IMM5 = ParseVfprConstantName(value);
+                            instruction.Imm5 = ParseVfprConstantName(value);
                             break;
 
                         case "%vr":
-                            instruction.IMM5 = ParseVfprRotate(value);
+                            instruction.Imm5 = ParseVfprRotate(value);
                             break;
 
                         //case "%zm": throw(new NotImplementedException("zm"));
 
                         // sv.q %Xq, %Y
                         case "%Xq":
-                            instruction.VT5_1 = ParseVfprName(vfpuSize, value);
+                            instruction.Vt51 = ParseVfprName(vfpuSize, value);
                             break;
                         case "%Y":
                         {
                             var info = ParseVfprOffset(vfpuSize, value);
                             if ((info.Offset % 4) != 0) throw(new Exception("Offset must be multiple of 4"));
-                            instruction.IMM14 = info.Offset / 4;
-                            instruction.RS = info.Rs;
+                            instruction.Imm14 = info.Offset / 4;
+                            instruction.Rs = info.Rs;
                         }
                             break;
 
@@ -389,51 +389,51 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
                         // FPU
                         case "%S":
-                            instruction.FS = ParseFprName(value);
+                            instruction.Fs = ParseFprName(value);
                             break;
                         case "%D":
-                            instruction.FD = ParseFprName(value);
+                            instruction.Fd = ParseFprName(value);
                             break;
                         case "%T":
-                            instruction.FT = ParseFprName(value);
+                            instruction.Ft = ParseFprName(value);
                             break;
 
                         // CPU
                         case "%J":
                         case "%s":
-                            instruction.RS = ParseGprName(value);
+                            instruction.Rs = ParseGprName(value);
                             break;
                         case "%d":
-                            instruction.RD = ParseGprName(value);
+                            instruction.Rd = ParseGprName(value);
                             break;
                         case "%t":
-                            instruction.RT = ParseGprName(value);
+                            instruction.Rt = ParseGprName(value);
                             break;
 
                         case "%a":
-                            instruction.POS = (uint) ParseIntegerConstant(value);
+                            instruction.Pos = (uint) ParseIntegerConstant(value);
                             break;
                         case "%ne":
-                            instruction.SIZE_E = (uint) ParseIntegerConstant(value);
+                            instruction.SizeE = (uint) ParseIntegerConstant(value);
                             break;
                         case "%ni":
-                            instruction.SIZE_I = (uint) ParseIntegerConstant(value);
+                            instruction.SizeI = (uint) ParseIntegerConstant(value);
                             break;
 
                         case "%p":
-                            instruction.RD = ParseIntegerConstant(value);
+                            instruction.Rd = ParseIntegerConstant(value);
                             break;
 
                         case "%c":
                         case "%C":
-                            instruction.CODE = (uint) ParseIntegerConstant(value);
+                            instruction.Code = (uint) ParseIntegerConstant(value);
                             break;
                         case "%vi":
                         case "%i":
-                            instruction.IMM = ParseIntegerConstant(value);
+                            instruction.Imm = ParseIntegerConstant(value);
                             break;
                         case "%I":
-                            instruction.IMMU = (uint) ParseIntegerConstant(value);
+                            instruction.Immu = (uint) ParseIntegerConstant(value);
                             break;
 
                         case "%j":
@@ -606,11 +606,11 @@ namespace CSPspEmu.Core.Cpu.Assembler
                     switch (patch.Type)
                     {
                         case AssemblerPatchType.Rel16:
-                            instruction.IMM = ((int) labelAddress - (int) patch.Address - 4) / 4;
+                            instruction.Imm = ((int) labelAddress - (int) patch.Address - 4) / 4;
                             break;
                         case AssemblerPatchType.Abs26:
-                            instruction.JUMP_Bits = (labelAddress & PspMemory.MemoryMask) / 4;
-                            Console.Write("0x{0:X} : {1}", instruction.JUMP_Bits, patch.LabelName);
+                            instruction.JumpBits = (labelAddress & PspMemory.MemoryMask) / 4;
+                            Console.Write("0x{0:X} : {1}", instruction.JumpBits, patch.LabelName);
                             break;
                         case AssemblerPatchType.Abs32:
                             instruction.Value = labelAddress;

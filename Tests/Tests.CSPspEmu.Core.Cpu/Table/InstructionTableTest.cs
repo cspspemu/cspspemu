@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Tests
         [Test]
         public void PspInstructionsTest()
         {
-            var Instructions = InstructionTable.ALL;
+            var Instructions = InstructionTable.All;
         }
     }
 }

@@ -39,11 +39,14 @@ namespace CSPspEmu.Core.Cpu
             var method = typeBuilder.DefineMethod(methodName,
                 MethodAttributes.Final | MethodAttributes.Public | MethodAttributes.Static,
                 CallingConventions.Standard, typeof(void*), new[] {typeof(uint)});
+            var constructorInfo = typeof(MethodImplAttribute).GetConstructor(new[] {typeof(MethodImplOptions)});
             method.SetCustomAttribute(new CustomAttributeBuilder(
-                typeof(MethodImplAttribute).GetConstructor(new[] {typeof(MethodImplOptions)}),
+                constructorInfo,
                 new object[] {MethodImplOptions.AggressiveInlining}));
+            
+            var constructor = typeof(TargetedPatchingOptOutAttribute).GetConstructor(new[] {typeof(string)});
             method.SetCustomAttribute(new CustomAttributeBuilder(
-                typeof(TargetedPatchingOptOutAttribute).GetConstructor(new[] {typeof(string)}),
+                constructor,
                 new object[] {"Performance critical to inline across NGen image boundaries"}));
             //Method.GetILGenerator();
 

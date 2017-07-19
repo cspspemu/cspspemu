@@ -64,7 +64,7 @@ namespace CSPspEmu.Hle.Managers
         void IGpuConnector.Signal(uint PC, PspGeCallbackData CallbackData, uint Signal, SignalBehavior Behavior,
             bool ExecuteNow)
         {
-            if (_DynarecConfig.EnableGpuSignalsCallback)
+            if (DynarecConfig.EnableGpuSignalsCallback)
             {
                 if (HleConfig.CompilerVersion <= 0x01FFFFFF) PC = 0;
 
@@ -81,7 +81,7 @@ namespace CSPspEmu.Hle.Managers
 
         void IGpuConnector.Finish(uint PC, PspGeCallbackData CallbackData, uint Arg, bool ExecuteNow)
         {
-            if (_DynarecConfig.EnableGpuFinishCallback)
+            if (DynarecConfig.EnableGpuFinishCallback)
             {
                 if (HleConfig.CompilerVersion <= 0x01FFFFFF) PC = 0;
 

@@ -2,82 +2,21 @@
 {
     public enum VfpuControlRegistersEnum
     {
-        /// <summary>Source prefix stack</summary>
-        VfpuPfxs = 128,
-
-        /// <summary>
-        /// Target prefix stack
-        /// </summary>
-        VfpuPfxt = 129,
-
-        /// <summary>
-        /// Destination prefix stack
-        /// </summary>
-        VfpuPfxd = 130,
-
-        /// <summary>
-        /// Condition information
-        /// </summary>
-        VfpuCc = 131,
-
-        /// <summary>
-        /// VFPU internal information 4
-        /// </summary>
-        VfpuInf4 = 132,
-
-        /// <summary>
-        /// Not used (reserved)
-        /// </summary>
-        VfpuRsv5 = 133,
-
-        /// <summary>
-        /// Not used (reserved)
-        /// </summary>
-        VfpuRsv6 = 134,
-
-        /// <summary>
-        /// VFPU revision information
-        /// </summary>
-        VfpuRev = 135,
-
-        /// <summary>
-        /// Pseudorandom number generator information 0
-        /// </summary>
-        VfpuRcx0 = 136,
-
-        /// <summary>
-        /// Pseudorandom number generator information 1
-        /// </summary>
-        VfpuRcx1 = 137,
-
-        /// <summary>
-        /// Pseudorandom number generator information 2
-        /// </summary>
-        VfpuRcx2 = 138,
-
-        /// <summary>
-        /// Pseudorandom number generator information 3
-        /// </summary>
-        VfpuRcx3 = 139,
-
-        /// <summary>
-        /// Pseudorandom number generator information 4
-        /// </summary>
-        VfpuRcx4 = 140,
-
-        /// <summary>
-        /// Pseudorandom number generator information 5
-        /// </summary>
-        VfpuRcx5 = 141,
-
-        /// <summary>
-        /// Pseudorandom number generator information 6
-        /// </summary>
-        VfpuRcx6 = 142,
-
-        /// <summary>
-        /// Pseudorandom number generator information 7
-        /// </summary>
-        VfpuRcx7 = 143,
+        VfpuPfxs = 128, // Source prefix stack
+        VfpuPfxt = 129, // Target prefix stack
+        VfpuPfxd = 130, // Destination prefix stack
+        VfpuCc = 131, // Condition information
+        VfpuInf4 = 132, // VFPU internal information 4
+        VfpuRsv5 = 133, // Not used (reserved)
+        VfpuRsv6 = 134, // Not used (reserved)
+        VfpuRev = 135, // VFPU revision information
+        VfpuRcx0 = 136, // Pseudorandom number generator information 0
+        VfpuRcx1 = 137, // Pseudorandom number generator information 1
+        VfpuRcx2 = 138, // Pseudorandom number generator information 2
+        VfpuRcx3 = 139, // Pseudorandom number generator information 3
+        VfpuRcx4 = 140, // Pseudorandom number generator information 4
+        VfpuRcx5 = 141, // Pseudorandom number generator information 5
+        VfpuRcx6 = 142, // Pseudorandom number generator information 6
+        VfpuRcx7 = 143, // Pseudorandom number generator information 7
     }
 }

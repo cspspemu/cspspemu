@@ -30,13 +30,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Shift Left/Right Logical/Arithmethic (Variable).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        public AstNodeStm sll() => ast.AssignGpr(RD, ast.Binary(ast.GPR_u(RT), "<<", ast.Immediate((uint) Instruction.POS)));
-        public AstNodeStm sra() => ast.AssignGpr(RD, ast.Binary(ast.GPR_s(RT), ">>", ast.Immediate((int) Instruction.POS)));
-        public AstNodeStm srl() => ast.AssignGpr(RD, ast.Binary(ast.GPR_u(RT), ">>", ast.Immediate((uint) Instruction.POS)));
+        public AstNodeStm sll() => ast.AssignGpr(RD, ast.Binary(ast.GPR_u(RT), "<<", ast.Immediate((uint) Instruction.Pos)));
+        public AstNodeStm sra() => ast.AssignGpr(RD, ast.Binary(ast.GPR_s(RT), ">>", ast.Immediate((int) Instruction.Pos)));
+        public AstNodeStm srl() => ast.AssignGpr(RD, ast.Binary(ast.GPR_u(RT), ">>", ast.Immediate((uint) Instruction.Pos)));
 
         public AstNodeStm rotr() => ast.AssignGpr(RD,
             ast.CallStatic((Func<uint, int, uint>) CpuEmitterUtils._rotr_impl, ast.GPR_u(RT),
-                ast.Immediate((int) Instruction.POS)));
+                ast.Immediate((int) Instruction.Pos)));
 
         public AstNodeStm sllv() => ast.AssignGpr(RD, ast.Binary(ast.GPR_u(RT), "<<", ast.GPR_u(RS) & 31));
         public AstNodeStm srav() => ast.AssignGpr(RD, ast.Binary(ast.GPR_s(RT), ">>", ast.GPR_s(RS) & 31));
@@ -115,11 +115,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /// </summary>
         public AstNodeStm ext() => ast.AssignGpr(RT,
             ast.CallStatic((Func<uint, int, int, uint>) CpuEmitterUtils._ext_impl, ast.GPR_u(RS),
-                ast.Immediate((int) Instruction.POS), ast.Immediate((int) Instruction.SIZE_E)));
+                ast.Immediate((int) Instruction.Pos), ast.Immediate((int) Instruction.SizeE)));
 
         public AstNodeStm ins() => ast.AssignGpr(RT,
             ast.CallStatic((Func<uint, uint, int, int, uint>) CpuEmitterUtils._ins_impl, ast.GPR_u(RT),
-                ast.GPR_u(RS), ast.Immediate((int) Instruction.POS), ast.Immediate((int) Instruction.SIZE_I)));
+                ast.GPR_u(RS), ast.Immediate((int) Instruction.Pos), ast.Immediate((int) Instruction.SizeI)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Count Leading Ones/Zeros in word.
@@ -198,7 +198,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         public AstNodeStm syscall()
         {
-            if (Instruction.CODE == SyscallInfo.NativeCallSyscallCode)
+            if (Instruction.Code == SyscallInfo.NativeCallSyscallCode)
             {
                 var delegateId = Memory.Read4(PC + 4);
                 var syscallInfoInfo = CpuProcessor.RegisteredNativeSyscallMethods[delegateId];
@@ -210,7 +210,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     ast.GetTickCall(true)
                 );
 
-                if (_DynarecConfig.FunctionCallWithStaticReferences)
+                if (DynarecConfig.FunctionCallWithStaticReferences)
                 {
                     statements.AddStatement(ast.Statement(ast.CallDelegate(syscallInfoInfo.PoolItem.AstFieldAccess,
                         ast.CpuThreadStateExpr)));
@@ -231,7 +231,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     ast.AssignPc(PC),
                     ast.GetTickCall(true),
                     ast.Statement(ast.CallInstance(ast.CpuThreadStateExpr, (Action<int>) CpuThreadState.Methods.Syscall,
-                        (int) Instruction.CODE))
+                        (int) Instruction.Code))
                 );
             }
         }

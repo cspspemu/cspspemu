@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeExprCallDelegate MethodCacheInfoCallStaticPc(CpuProcessor cpuProcessor, uint pc)
         {
-            if (_DynarecConfig.FunctionCallWithStaticReferences)
+            if (DynarecConfig.FunctionCallWithStaticReferences)
             {
                 var methodCacheInfo = cpuProcessor.MethodCache.GetForPc(pc);
                 return Ast.CallDelegate(Ast.StaticFieldAccess(methodCacheInfo.StaticField.FieldInfo),
@@ -248,9 +248,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
             }
             else
             {
-                if (_DynarecConfig.AllowFastMemory && memory.HasFixedGlobalAddress)
+                if (DynarecConfig.AllowFastMemory && memory.HasFixedGlobalAddress)
                 {
-                    if (_DynarecConfig.EnableFastPspMemoryUtilsGetFastMemoryReader)
+                    if (DynarecConfig.EnableFastPspMemoryUtilsGetFastMemoryReader)
                     {
                         return Ast.CallStatic(FastPspMemoryUtils.GetFastMemoryReader(memory.FixedGlobalAddress),
                             address);
@@ -299,7 +299,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm GetTickCall(bool mandatory)
         {
             //mandatory = true;
-            if (mandatory || _DynarecConfig.EmitCallTick)
+            if (mandatory || DynarecConfig.EmitCallTick)
             {
                 return Ast.Statement(Ast.CallInstance(Ast.CpuThreadStateExpr,
                     (Action) CpuThreadState.Methods.Tick));

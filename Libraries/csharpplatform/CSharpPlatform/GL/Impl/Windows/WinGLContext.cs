@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security;
-using CSharpPlatform.GL.Impl.Windows;
+using System.Threading;
 using CSharpPlatform.Library;
+using CSPspEmu.Core;
 
-namespace CSharpPlatform.GL.Impl
+namespace CSharpPlatform.GL.Impl.Windows
 {
-    public unsafe class WinGLContext : IGlContext
+    public unsafe class WinGlContext : IGlContext
     {
-        IntPtr DC;
-        IntPtr Context;
+        IntPtr _dc;
+        IntPtr _context;
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr GetWindowDC(IntPtr hWnd);
@@ -19,10 +21,10 @@ namespace CSharpPlatform.GL.Impl
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool ReleaseDC(IntPtr hwnd, IntPtr DC);
+        internal static extern bool ReleaseDC(IntPtr hwnd, IntPtr dc);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern ushort RegisterClassEx(ref ExtendedWindowClass window_class);
+        internal static extern ushort RegisterClassEx(ref ExtendedWindowClass windowClass);
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, WindowMessage msg, IntPtr wParam, IntPtr lParam);
@@ -37,16 +39,16 @@ namespace CSharpPlatform.GL.Impl
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         internal static extern IntPtr CreateWindowEx(
-            ExtendedWindowStyle ExStyle,
-            IntPtr ClassAtom,
-            IntPtr WindowName,
-            WindowStyle Style,
-            int X, int Y,
-            int Width, int Height,
-            IntPtr HandleToParentWindow,
-            IntPtr Menu,
-            IntPtr Instance,
-            IntPtr Param
+            ExtendedWindowStyle exStyle,
+            IntPtr classAtom,
+            IntPtr windowName,
+            WindowStyle style,
+            int x, int y,
+            int width, int height,
+            IntPtr handleToParentWindow,
+            IntPtr menu,
+            IntPtr instance,
+            IntPtr param
         );
 
         [DllImport("Gdi32.dll")]
@@ -64,9 +66,9 @@ namespace CSharpPlatform.GL.Impl
 
         const ClassStyle DefaultClassStyle = ClassStyle.OwnDc;
 
-        private static bool class_registered;
+        private static bool _classRegistered;
 
-        static readonly IntPtr Instance = Marshal.GetHINSTANCE(typeof(WinGLContext).Module);
+        static readonly IntPtr Instance = Marshal.GetHINSTANCE(typeof(WinGlContext).Module);
         static readonly IntPtr ClassName = Marshal.StringToHGlobalAuto(Guid.NewGuid().ToString());
 
         const ExtendedWindowStyle ParentStyleEx = ExtendedWindowStyle.WindowEdge | ExtendedWindowStyle.ApplicationWindow
@@ -74,7 +76,7 @@ namespace CSharpPlatform.GL.Impl
 
         private static void RegisterClassOnce()
         {
-            if (!class_registered)
+            if (!_classRegistered)
             {
                 ExtendedWindowClass wc = new ExtendedWindowClass();
                 wc.Size = ExtendedWindowClass.SizeInBytes;
@@ -91,7 +93,7 @@ namespace CSharpPlatform.GL.Impl
                     throw new Exception(string.Format("Failed to register window class. Error: {0}",
                         Marshal.GetLastWin32Error()));
 
-                class_registered = true;
+                _classRegistered = true;
             }
         }
 
@@ -106,54 +108,51 @@ namespace CSharpPlatform.GL.Impl
         [SuppressUnmanagedCodeSecurity, DllImport("GDI32.dll", ExactSpelling = true, SetLastError = true)]
         public static extern bool SetPixelFormat(IntPtr hdc, int ipfd, PixelFormatDescriptor* ppfd);
 
-        static IntPtr SharedContext;
+        static IntPtr _sharedContext;
 
-        public static WinGLContext FromWindowHandle(IntPtr WindowHandle)
+        public static WinGlContext FromWindowHandle(IntPtr windowHandle)
         {
-            return new WinGLContext(WindowHandle);
+            return new WinGlContext(windowHandle);
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         public static extern bool AdjustWindowRectEx(ref Rect lpRect, int dwStyle, bool bMenu, int dwExStyle);
 
-        IntPtr hWnd;
+        IntPtr _hWnd;
 
-        private WinGLContext(IntPtr WinHandle)
+        private WinGlContext(IntPtr winHandle)
         {
-            hWnd = WinHandle;
+            _hWnd = winHandle;
             RegisterClassOnce();
-            int Width = 512;
-            int Height = 512;
+            var width = 512;
+            var height = 512;
 
-            if (WinHandle == IntPtr.Zero)
+            if (winHandle == IntPtr.Zero)
             {
-                WindowStyle style = WindowStyle.OverlappedWindow | WindowStyle.ClipChildren | WindowStyle.ClipSiblings;
-                ExtendedWindowStyle ex_style = ParentStyleEx;
+                var style = WindowStyle.OverlappedWindow | WindowStyle.ClipChildren | WindowStyle.ClipSiblings;
+                var exStyle = ParentStyleEx;
 
                 var rect = new Rect
                 {
                     Left = 0,
                     Top = 0,
-                    Right = Width,
-                    Bottom = Height
+                    Right = width,
+                    Bottom = height
                 };
-                AdjustWindowRectEx(ref rect, style, false, ex_style);
+                AdjustWindowRectEx(ref rect, style, false, exStyle);
 
-                IntPtr window_name = Marshal.StringToHGlobalAuto("Title");
-                hWnd = CreateWindowEx(
-                    ex_style, ClassName, window_name, style,
+                var windowName = Marshal.StringToHGlobalAuto("Title");
+                _hWnd = CreateWindowEx(
+                    exStyle, ClassName, windowName, style,
                     rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top,
                     IntPtr.Zero, IntPtr.Zero, Instance, IntPtr.Zero
                 );
 
-                if (hWnd == IntPtr.Zero)
-                {
-                    throw new Exception(string.Format("Failed to create window. Error: {0}",
-                        Marshal.GetLastWin32Error()));
-                }
+                if (_hWnd == IntPtr.Zero)
+                    throw new Exception($"Failed to create window. Error: {Marshal.GetLastWin32Error()}");
             }
 
-            DC = GetDC(hWnd);
+            _dc = GetDC(_hWnd);
 
             var pfd = new PixelFormatDescriptor();
             pfd.Size = (short) sizeof(PixelFormatDescriptor);
@@ -167,21 +166,31 @@ namespace CSharpPlatform.GL.Impl
             pfd.DepthBits = 16;
             pfd.StencilBits = 8;
 
-            var pf = ChoosePixelFormat(DC, &pfd);
+            var pf = ChoosePixelFormat(_dc, &pfd);
             //pf = 10;
 
-            if (!SetPixelFormat(DC, pf, &pfd))
+            if (!SetPixelFormat(_dc, pf, &pfd))
             {
                 Console.WriteLine("Error SetPixelFormat failed.");
             }
 
-            Context = Wgl.wglCreateContext(DC);
-            if (SharedContext != IntPtr.Zero)
+            _context = Wgl.wglCreateContext(_dc);
+            if (_sharedContext != IntPtr.Zero)
             {
+                RetryShareLists:
                 //Console.WriteLine("SharedContext!"); Console.ReadKey();
-                if (!Wgl.wglShareLists(SharedContext, Context))
+                if (!Wgl.wglShareLists(_sharedContext, _context))
                 {
-                    throw(new InvalidOperationException("Can't share lists"));
+                    var lastError = Platform.InternalWindows.GetLastError();
+                    Console.WriteLine($"Can't share lists {lastError}");
+                    if (lastError == 170) // BUSY
+                    {
+                        Console.WriteLine($"-- Due to Busy. RETRY.");
+                        Thread.Sleep(10);
+                        goto RetryShareLists;
+                    }
+                    Debugger.Break();
+                    throw new InvalidOperationException($"Can't share lists {lastError}");
                 }
             }
             MakeCurrent();
@@ -208,14 +217,14 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
 			}
 #endif
 
-            if (SharedContext == IntPtr.Zero)
+            if (_sharedContext == IntPtr.Zero)
             {
-                SharedContext = Context;
+                _sharedContext = _context;
             }
 
-            if (Extension.wglSwapIntervalEXT != null)
+            if (Extension.WglSwapIntervalExt != null)
             {
-                Extension.wglSwapIntervalEXT(0);
+                Extension.WglSwapIntervalExt(0);
             }
 
             //RECT clientRect;
@@ -227,16 +236,13 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
             get
             {
                 var bitmapHeader = default(Bitmap);
-                var hBitmap = GetCurrentObject(DC, 7);
+                var hBitmap = GetCurrentObject(_dc, 7);
                 GetObject(hBitmap, sizeof(Bitmap), &bitmapHeader);
                 return new GlContextSize {Width = (int) bitmapHeader.BmWidth, Height = (int) bitmapHeader.BmHeight};
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("WinOpenglContext({0}, {1}, {2}, {3})", DC, Context, SharedContext, Size);
-        }
+        public override string ToString() => $"WinOpenglContext({_dc}, {_context}, {_sharedContext}, {Size})";
 
         public enum ArbCreateContext
         {
@@ -252,22 +258,22 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
 
         public class Extension
         {
-            public static readonly wglCreateContextAttribsARB wglCreateContextAttribsARB;
-            public static readonly wglSwapIntervalEXT wglSwapIntervalEXT;
-            public static readonly wglGetSwapIntervalEXT wglGetSwapIntervalEXT;
+            public static WglCreateContextAttribsArb WglCreateContextAttribsArb;
+            public static WglSwapIntervalExt WglSwapIntervalExt;
+            public static WglGetSwapIntervalExt WglGetSwapIntervalExt;
         }
 
-        public delegate IntPtr wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int* attribList);
+        public delegate IntPtr WglCreateContextAttribsArb(IntPtr hDc, IntPtr hShareContext, int* attribList);
 
-        public delegate bool wglSwapIntervalEXT(int interval);
+        public delegate bool WglSwapIntervalExt(int interval);
 
-        public delegate int wglGetSwapIntervalEXT();
+        public delegate int WglGetSwapIntervalExt();
 
         public IGlContext MakeCurrent()
         {
             if (GlContextFactory.Current != this)
             {
-                if (!Wgl.wglMakeCurrent(DC, Context))
+                if (!Wgl.wglMakeCurrent(_dc, _context))
                 {
                     throw (new Exception("Can't MakeCurrent"));
                 }
@@ -280,7 +286,7 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
         {
             if (GlContextFactory.Current != null)
             {
-                if (!Wgl.wglMakeCurrent(DC, IntPtr.Zero))
+                if (!Wgl.wglMakeCurrent(_dc, IntPtr.Zero))
                 {
                     throw (new Exception("Can't MakeCurrent"));
                 }
@@ -291,14 +297,14 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
 
         public IGlContext SwapBuffers()
         {
-            Wgl.wglSwapBuffers(DC);
+            Wgl.wglSwapBuffers(_dc);
             return this;
         }
 
         public void Dispose()
         {
-            Wgl.wglDeleteContext(Context);
-            Context = IntPtr.Zero;
+            Wgl.wglDeleteContext(_context);
+            _context = IntPtr.Zero;
             //throw new NotImplementedException();
         }
     }

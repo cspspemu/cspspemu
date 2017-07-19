@@ -30,24 +30,24 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         "O",
                         result => $"0x{result.Instruction.GetBranchAddress(result.InstructionPc):X8}"
                     },
-                    {"J", result => GprIndexToRegisterName(result.Instruction.RS)},
+                    {"J", result => GprIndexToRegisterName(result.Instruction.Rs)},
                     {
                         "j",
                         result => $"0x{result.Instruction.GetJumpAddress(result.MemoryInfo, result.InstructionPc):X8}"
                     },
 
-                    {"s", result => GprIndexToRegisterName(result.Instruction.RS)},
-                    {"d", result => GprIndexToRegisterName(result.Instruction.RD)},
-                    {"t", result => GprIndexToRegisterName(result.Instruction.RT)},
+                    {"s", result => GprIndexToRegisterName(result.Instruction.Rs)},
+                    {"d", result => GprIndexToRegisterName(result.Instruction.Rd)},
+                    {"t", result => GprIndexToRegisterName(result.Instruction.Rt)},
 
-                    {"S", result => FprIndexToRegisterName(result.Instruction.FS)},
-                    {"D", result => FprIndexToRegisterName(result.Instruction.FD)},
-                    {"T", result => FprIndexToRegisterName(result.Instruction.FT)},
+                    {"S", result => FprIndexToRegisterName(result.Instruction.Fs)},
+                    {"D", result => FprIndexToRegisterName(result.Instruction.Fd)},
+                    {"T", result => FprIndexToRegisterName(result.Instruction.Ft)},
 
-                    {"C", result => $"{result.Instruction.CODE}"},
-                    {"a", result => result.Instruction.POS.ToString()},
-                    {"i", result => result.Instruction.IMM.ToString()},
-                    {"I", result => $"0x{result.Instruction.IMMU:X4}"},
+                    {"C", result => $"{result.Instruction.Code}"},
+                    {"a", result => result.Instruction.Pos.ToString()},
+                    {"i", result => result.Instruction.Imm.ToString()},
+                    {"I", result => $"0x{result.Instruction.Immu:X4}"},
                 };
 
             public string AssemblyLine
@@ -96,11 +96,11 @@ namespace CSPspEmu.Core.Cpu.Assembler
             {
                 var dictionary = new Dictionary<InstructionInfo, int>();
 
-                InstructionLookup = InstructionTable.ALL.ToArray();
+                InstructionLookup = InstructionTable.All.ToArray();
                 for (int n = 0; n < InstructionLookup.Length; n++) dictionary[InstructionLookup[n]] = n;
 
                 ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>("",
-                    InstructionTable.ALL, instructionInfo => ast.Return(ast.CallStatic(
+                    InstructionTable.All, instructionInfo => ast.Return(ast.CallStatic(
                         (Func<uint, int, Result>) _InternalHandle,
                         ast.Argument<uint>(0),
                         (instructionInfo != null) ? dictionary[instructionInfo] : -1

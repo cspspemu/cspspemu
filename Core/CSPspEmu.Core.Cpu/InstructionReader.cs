@@ -11,23 +11,20 @@ namespace CSPspEmu.Core.Cpu
 
     public class InstructionArrayReader : IInstructionReader
     {
-        private IArray<Instruction> Instructions;
+        private IArray<Instruction> _instructions;
 
-        public InstructionArrayReader(IArray<Instruction> Instructions)
+        public InstructionArrayReader(IArray<Instruction> instructions)
         {
-            this.Instructions = Instructions;
+            _instructions = instructions;
         }
 
-        public Instruction this[uint Index]
+        public Instruction this[uint index]
         {
-            get { return this.Instructions[(int) (Index / 4)]; }
-            set { this.Instructions[(int) (Index / 4)] = value; }
+            get => _instructions[(int) (index / 4)];
+            set => _instructions[(int) (index / 4)] = value;
         }
 
-        public uint EndPc
-        {
-            get { return (uint) ((Instructions.Length - 1) * 4); }
-        }
+        public uint EndPc => (uint) ((_instructions.Length - 1) * 4);
     }
 
     public class InstructionStreamReader : IInstructionReader
@@ -36,33 +33,30 @@ namespace CSPspEmu.Core.Cpu
         protected BinaryReader BinaryReader;
         protected BinaryWriter BinaryWriter;
 
-        public InstructionStreamReader(Stream Stream)
+        public InstructionStreamReader(Stream stream)
         {
-            this.Stream = Stream;
-            this.BinaryReader = new BinaryReader(Stream);
-            this.BinaryWriter = new BinaryWriter(Stream);
+            Stream = stream;
+            BinaryReader = new BinaryReader(stream);
+            BinaryWriter = new BinaryWriter(stream);
         }
 
-        public Instruction this[uint Index]
+        public Instruction this[uint index]
         {
             get
             {
-                var Instruction = default(Instruction);
-                Stream.Position = Index;
-                Instruction.Value = BinaryReader.ReadUInt32();
-                return Instruction;
+                var instruction = default(Instruction);
+                Stream.Position = index;
+                instruction.Value = BinaryReader.ReadUInt32();
+                return instruction;
             }
             set
             {
-                Stream.Position = Index;
+                Stream.Position = index;
                 BinaryWriter.Write((uint) value.Value);
             }
         }
 
 
-        public uint EndPc
-        {
-            get { return (uint) (Stream.Length - 4); }
-        }
+        public uint EndPc => (uint) (Stream.Length - 4);
     }
 }

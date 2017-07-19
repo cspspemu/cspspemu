@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
             EmitLookupGenerator.GenerateInfoDelegate(
                 EmitLookupGenerator.GenerateSwitchDelegateReturn<DynarecBranchAnalyzer, JumpFlags>(
                     "_GetBranchInfo",
-                    InstructionTable.ALL, throwOnUnexistent: false
+                    InstructionTable.All, throwOnUnexistent: false
                 ),
                 new DynarecBranchAnalyzer()
             );
@@ -46,7 +46,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
         public JumpFlags bvtl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.VFpuInstruction | JumpFlags.Likely;
 
         public JumpFlags beq() => JumpFlags.BranchOrJumpInstruction |
-                                  ((Instruction.RS == Instruction.RT) ? JumpFlags.JumpAlways : 0);
+                                  ((Instruction.Rs == Instruction.Rt) ? JumpFlags.JumpAlways : 0);
 
         public JumpFlags bne() => JumpFlags.BranchOrJumpInstruction;
         public JumpFlags beql() => JumpFlags.BranchOrJumpInstruction | JumpFlags.Likely;

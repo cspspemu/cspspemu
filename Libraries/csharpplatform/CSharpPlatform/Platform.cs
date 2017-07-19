@@ -162,7 +162,7 @@ namespace CSPspEmu.Core
             internal static extern int mprotect(void* start, ulong len, uint prot);
         }
 
-        private class InternalWindows
+        public class InternalWindows
         {
             [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
             internal static extern byte* VirtualAlloc(void* lpAddress, uint dwSize, uint flAllocationType,

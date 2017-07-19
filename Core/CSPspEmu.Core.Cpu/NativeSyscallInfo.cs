@@ -8,13 +8,10 @@ namespace CSPspEmu.Core.Cpu
 {
     public class NativeSyscallInfo
     {
-        public string Name
-        {
-            get { return string.Format("{0}.{1} (0x{2:X8})", ModuleImportName, FunctionEntryName, NID); }
-        }
+        public string Name => $"{ModuleImportName}.{FunctionEntryName} (0x{Nid:X8})";
 
         public ILInstanceHolderPoolItem<Action<CpuThreadState>> PoolItem;
-        public uint NID;
+        public uint Nid;
         public string FunctionEntryName;
         public string ModuleImportName;
     }

@@ -15,12 +15,12 @@ namespace CSPspEmu.Core.Cpu
         {
         }
 
-        public InvalidAddressException(ulong Address) : base(string.Format("Invalid Address : 0x{0:X8}", Address))
+        public InvalidAddressException(ulong address) : base($"Invalid Address : 0x{address:X8}")
         {
         }
 
-        public InvalidAddressException(ulong Address, Exception innerException) : base(
-            string.Format("Invalid Address : 0x{0:X8}", Address), innerException)
+        public InvalidAddressException(ulong address, Exception innerException) : base(
+            $"Invalid Address : 0x{address:X8}", innerException)
         {
         }
     }

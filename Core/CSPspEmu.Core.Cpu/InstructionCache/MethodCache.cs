@@ -157,7 +157,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         private DynarecFunction _GenerateForPC(uint pc)
         {
             var memory = _cpuProcessor.Memory;
-            if (_DynarecConfig.DebugFunctionCreation)
+            if (DynarecConfig.DebugFunctionCreation)
             {
                 Console.Write("PC=0x{0:X8}...", pc);
             }
@@ -169,7 +169,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
                     new InstructionStreamReader(new PspMemoryStream(memory)), pc);
             if (dynarecFunction.EntryPc != pc) throw (new Exception("Unexpected error"));
 
-            if (_DynarecConfig.AllowCreatingUsedFunctionsInBackground)
+            if (DynarecConfig.AllowCreatingUsedFunctionsInBackground)
             {
                 foreach (var callingPc in dynarecFunction.CallingPCs)
                 {
@@ -182,7 +182,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
             var time1 = DateTime.UtcNow;
 
-            if (_DynarecConfig.ImmediateLinking)
+            if (DynarecConfig.ImmediateLinking)
             {
                 try
                 {
@@ -203,7 +203,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             dynarecFunction.TimeLinking = time2 - time1;
             var timeAstGeneration = time1 - time0;
 
-            if (_DynarecConfig.DebugFunctionCreation)
+            if (DynarecConfig.DebugFunctionCreation)
             {
                 ConsoleUtils.SaveRestoreConsoleColor(
                     (timeAstGeneration + dynarecFunction.TimeLinking).TotalMilliseconds > 10

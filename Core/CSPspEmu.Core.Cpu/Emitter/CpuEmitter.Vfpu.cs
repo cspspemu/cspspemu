@@ -23,7 +23,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /// </summary>
         public AstNodeStm vrot()
         {
-            var imm5 = Instruction.IMM5;
+            var imm5 = Instruction.Imm5;
             var cosIndex = BitUtils.Extract(imm5, 0, 2);
             var sinIndex = BitUtils.Extract(imm5, 2, 2);
             var negateSin = BitUtils.ExtractBool(imm5, 4);
@@ -92,7 +92,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm vsat1() => _vfpu_call_ff((Func<float, float>) MathFloat.Vsat1);
 
         // Vector -> Cell operations
-        public AstNodeStm vcst() => CEL_VD.Set(VfpuConstants.GetConstantValueByIndex((int) Instruction.IMM5).Value, PC);
+        public AstNodeStm vcst() => CEL_VD.Set(VfpuConstants.GetConstantValueByIndex((int) Instruction.Imm5).Value, PC);
 
         public AstNodeStm vhdp()
         {
@@ -153,10 +153,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm vmul() => VEC_VD.SetVector(index => VEC_VS[index] * VEC_VT[index], PC);
 
         // Vfpu (Matrix) IDenTity
-        public AstNodeStm vidt() => VEC_VD.SetVector(index => (index == (Instruction.IMM7 % ONE_TWO)) ? 1f : 0f, PC);
+        public AstNodeStm vidt() => VEC_VD.SetVector(index => (index == (Instruction.Imm7 % ONE_TWO)) ? 1f : 0f, PC);
 
         // Vfpu load Integer IMmediate
-        public AstNodeStm viim() => CEL_VT_NoPrefix.Set((float) Instruction.IMM, PC);
+        public AstNodeStm viim() => CEL_VT_NoPrefix.Set((float) Instruction.Imm, PC);
 
         public AstNodeStm vdet()
         {
@@ -167,7 +167,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeStm mfvme() => ast.NotImplemented();
         public AstNodeStm mtvme() => ast.NotImplemented();
-        public AstNodeStm vfim() => CEL_VT_NoPrefix.Set(Instruction.IMM_HF, PC);
+        public AstNodeStm vfim() => CEL_VT_NoPrefix.Set(Instruction.ImmHf, PC);
         public AstNodeStm vlgb() => ast.NotImplemented();
         public AstNodeStm vsbn() => ast.NotImplemented();
         public AstNodeStm vsbz() => ast.NotImplemented();
@@ -216,7 +216,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         public AstNodeStm vwbn() => VEC_VD.SetVector(
-            index => ast.CallStatic((Func<float, int, float>) _vwbn_impl, VEC_VS[index], (int) Instruction.IMM8),
+            index => ast.CallStatic((Func<float, int, float>) _vwbn_impl, VEC_VS[index], (int) Instruction.Imm8),
             PC);
 
         public AstNodeStm vnop() => ast.Statement();
@@ -271,7 +271,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private AstNodeStm _vtXXXX_q(Func<uint, uint, uint> _vtXXXX_stepCallback)
         {
-            var vectorSize = Instruction.ONE_TWO;
+            var vectorSize = Instruction.OneTwo;
             if (vectorSize != 4) throw new Exception("Not implemented _vtXXXX_q for VectorSize=" + vectorSize);
             var dest = VEC(VD_NoPrefix, VUInt, 2);
             var src = VEC(VS_NoPrefix, VUInt, 4);
@@ -449,7 +449,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // @FIX!!!
         public AstNodeStm vmmul()
         {
-            var vectorSize = Instruction.ONE_TWO;
+            var vectorSize = Instruction.OneTwo;
             //var Dest = MAT(VD_NoPrefix);
             //var Src = MAT(VS_NoPrefix);
             //var Target = MAT(VT_NoPrefix);
@@ -553,7 +553,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeStm vs2i()
         {
-            var vectorSize = Instruction.ONE_TWO;
+            var vectorSize = Instruction.OneTwo;
             if (vectorSize > 2) throw (new NotImplementedException("vs2i.VectorSize"));
             var dest = _Vector(VD, VUInt, vectorSize * 2);
             var src = _Vector(VS, VUInt, vectorSize);
@@ -569,7 +569,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         {
             return VEC_VD.SetVector(
                 index => ast.CallStatic((Func<float, int, float>) MathFloat.Scalb, ast.Cast<float>(VEC_VS_i[index]),
-                    -(int) Instruction.IMM5), PC);
+                    -(int) Instruction.Imm5), PC);
         }
 
         private AstNodeStm _vf2i_dnu(Func<float, int> roundingFunc)
@@ -580,7 +580,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                         ast.CallStatic(
                             (Func<float, int, float>) MathFloat.Scalb,
                             VEC_VS[index],
-                            (int) Instruction.IMM5
+                            (int) Instruction.Imm5
                         )
                     )
                 , PC);
@@ -596,7 +596,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 ast.CallStatic(
                     (Func<float, int, int>) CpuEmitterUtils._vf2iz,
                     VEC_VS[Index],
-                    (int) Instruction.IMM5
+                    (int) Instruction.Imm5
                 )
             , PC);
 
@@ -658,7 +658,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             return ast.Statement(ast.CallStatic(
                 (Action<CpuThreadState, VfpuControlRegistersEnum, uint>) CpuEmitterUtils._mtvc_impl,
                 ast.CpuThreadStateExpr,
-                ast.Cast<VfpuControlRegistersEnum>((int) (Instruction.IMM7 + 128), false),
+                ast.Cast<VfpuControlRegistersEnum>((int) (Instruction.Imm7 + 128), false),
                 CEL_VD_u.Get()
             ));
             //_mtvc_impl
@@ -670,7 +670,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm mfvc() => ast.AssignGpr(RT, ast.CallStatic(
             (Func<CpuThreadState, VfpuControlRegistersEnum, uint>) CpuEmitterUtils._mfvc_impl,
             ast.CpuThreadStateExpr,
-            ast.Cast<VfpuControlRegistersEnum>((int) (Instruction.IMM7 + 128), false)
+            ast.Cast<VfpuControlRegistersEnum>((int) (Instruction.Imm7 + 128), false)
         ));
 
         // Move From/to Vfpu (C?)_
@@ -702,7 +702,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private AstNodeStm _lv_sv_l_r_q(bool left, bool save)
         {
-            var register = Instruction.VT5_1;
+            var register = Instruction.Vt51;
             var methodInfo = left
                     ? (LvlSvlQDelegate) CpuEmitterUtils._lvl_svl_q
                     : CpuEmitterUtils._lvr_svr_q
