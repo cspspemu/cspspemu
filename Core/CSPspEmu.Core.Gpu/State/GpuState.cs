@@ -257,10 +257,10 @@ namespace CSPspEmu.Core.Gpu.State
             {
                 switch (Format)
                 {
-                    case GuPixelFormats.RGBA_5650:
-                    case GuPixelFormats.RGBA_5551:
-                    case GuPixelFormats.RGBA_4444: return 2;
-                    case GuPixelFormats.RGBA_8888: return 4;
+                    case GuPixelFormats.Rgba5650:
+                    case GuPixelFormats.Rgba5551:
+                    case GuPixelFormats.Rgba4444: return 2;
+                    case GuPixelFormats.Rgba8888: return 4;
                     default:
                         throw (new InvalidOperationException(
                             "ScreenBufferStateStruct.BytesPerPixel : Invalid Format : " + Format));

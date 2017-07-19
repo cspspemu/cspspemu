@@ -73,10 +73,10 @@ namespace CSPspEmu.Utils.Utils
         {
             switch (pixelFormat)
             {
-                case GuPixelFormats.RGBA_8888: return ColorFormats.Rgba8888;
-                case GuPixelFormats.RGBA_5551: return ColorFormats.Rgba5551;
-                case GuPixelFormats.RGBA_5650: return ColorFormats.Rgba5650;
-                case GuPixelFormats.RGBA_4444: return ColorFormats.Rgba4444;
+                case GuPixelFormats.Rgba8888: return ColorFormats.Rgba8888;
+                case GuPixelFormats.Rgba5551: return ColorFormats.Rgba5551;
+                case GuPixelFormats.Rgba5650: return ColorFormats.Rgba5650;
+                case GuPixelFormats.Rgba4444: return ColorFormats.Rgba4444;
                 default: throw(new NotImplementedException("Not implemented " + pixelFormat));
             }
         }
@@ -94,7 +94,7 @@ namespace CSPspEmu.Utils.Utils
         */
 
         public static void Decode(GuPixelFormats pixelFormat, void* input, OutputPixel* output, int width, int height,
-            void* palette = null, GuPixelFormats paletteType = GuPixelFormats.NONE, int paletteCount = 0,
+            void* palette = null, GuPixelFormats paletteType = GuPixelFormats.None, int paletteCount = 0,
             int paletteStart = 0, int paletteShift = 0, int paletteMask = 0xFF, int strideWidth = -1,
             bool ignoreAlpha = false)
         {
@@ -120,37 +120,37 @@ namespace CSPspEmu.Utils.Utils
             //Console.WriteLine(PixelFormat);
             switch (pixelFormat)
             {
-                case GuPixelFormats.RGBA_5650:
+                case GuPixelFormats.Rgba5650:
                     pixelFormatDecoder.Decode_RGBA_5650();
                     break;
-                case GuPixelFormats.RGBA_5551:
+                case GuPixelFormats.Rgba5551:
                     pixelFormatDecoder.Decode_RGBA_5551();
                     break;
-                case GuPixelFormats.RGBA_4444:
+                case GuPixelFormats.Rgba4444:
                     pixelFormatDecoder.Decode_RGBA_4444();
                     break;
-                case GuPixelFormats.RGBA_8888:
+                case GuPixelFormats.Rgba8888:
                     pixelFormatDecoder.Decode_RGBA_8888();
                     break;
-                case GuPixelFormats.PALETTE_T4:
+                case GuPixelFormats.PaletteT4:
                     pixelFormatDecoder.Decode_PALETTE_T4();
                     break;
-                case GuPixelFormats.PALETTE_T8:
+                case GuPixelFormats.PaletteT8:
                     pixelFormatDecoder.Decode_PALETTE_T8();
                     break;
-                case GuPixelFormats.PALETTE_T16:
+                case GuPixelFormats.PaletteT16:
                     pixelFormatDecoder.Decode_PALETTE_T16();
                     break;
-                case GuPixelFormats.PALETTE_T32:
+                case GuPixelFormats.PaletteT32:
                     pixelFormatDecoder.Decode_PALETTE_T32();
                     break;
-                case GuPixelFormats.COMPRESSED_DXT1:
+                case GuPixelFormats.CompressedDxt1:
                     pixelFormatDecoder.Decode_COMPRESSED_DXT1();
                     break;
-                case GuPixelFormats.COMPRESSED_DXT3:
+                case GuPixelFormats.CompressedDxt3:
                     pixelFormatDecoder.Decode_COMPRESSED_DXT3();
                     break;
-                case GuPixelFormats.COMPRESSED_DXT5:
+                case GuPixelFormats.CompressedDxt5:
                     pixelFormatDecoder.Decode_COMPRESSED_DXT5();
                     break;
                 default: throw(new InvalidOperationException());
@@ -194,9 +194,9 @@ namespace CSPspEmu.Utils.Utils
                 {
                     var block = ((Dxt5Block*) _inputByte)[ni];
                     colors[0] = Decode_RGBA_5650_Pixel(block.Color0)
-                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                        .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
                     colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
-                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                        .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
                     colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
                         (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
                     colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
@@ -269,9 +269,9 @@ namespace CSPspEmu.Utils.Utils
                 {
                     var block = ((Dxt3Block*) _inputByte)[ni];
                     colors[0] = Decode_RGBA_5650_Pixel(block.Color0)
-                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                        .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
                     colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
-                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                        .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
                     colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
                         (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
                     colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
@@ -308,9 +308,9 @@ namespace CSPspEmu.Utils.Utils
                     var block = ((Dxt1Block*) _inputByte)[ni];
 
                     colors[0] = Decode_RGBA_5650_Pixel(block.Color0)
-                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                        .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
                     colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
-                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                        .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
 
                     if (block.Color0 > block.Color1)
                     {
@@ -323,7 +323,7 @@ namespace CSPspEmu.Utils.Utils
                     {
                         colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
                             (a, b) => (byte) (((a * 1) / 2) + ((b * 1) / 2)));
-                        colors[3] = OutputPixel.FromRGBA(0, 0, 0, 0);
+                        colors[3] = OutputPixel.FromRgba(0, 0, 0, 0);
                     }
 
                     var no = 0;
@@ -356,7 +356,7 @@ namespace CSPspEmu.Utils.Utils
             var palettePixels = new OutputPixel[paletteSize];
             var translate = new int[paletteSize];
 
-            if (_palette == null || _paletteType == GuPixelFormats.NONE)
+            if (_palette == null || _paletteType == GuPixelFormats.None)
             {
                 var n = 0;
                 for (var y = 0; y < _height; y++)
@@ -395,7 +395,7 @@ namespace CSPspEmu.Utils.Utils
 
         private void Decode_PALETTE_T4()
         {
-            if (_palette == null || _paletteType == GuPixelFormats.NONE)
+            if (_palette == null || _paletteType == GuPixelFormats.None)
             {
                 Console.WriteLine("Palette required!");
                 return;
@@ -602,25 +602,25 @@ namespace CSPspEmu.Utils.Utils
         {
             switch (guPixelFormat)
             {
-                case GuPixelFormats.RGBA_8888:
+                case GuPixelFormats.Rgba8888:
                 {
                     var o = (uint*) output;
                     for (var n = 0; n < count; n++) *o++ = Encode_RGBA_8888_Pixel(*input++);
                 }
                     break;
-                case GuPixelFormats.RGBA_5551:
+                case GuPixelFormats.Rgba5551:
                 {
                     var o = (ushort*) output;
                     for (var n = 0; n < count; n++) *o++ = Encode_RGBA_5551_Pixel(*input++);
                 }
                     break;
-                case GuPixelFormats.RGBA_5650:
+                case GuPixelFormats.Rgba5650:
                 {
                     var o = (ushort*) output;
                     for (var n = 0; n < count; n++) *o++ = Encode_RGBA_5650_Pixel(*input++);
                 }
                     break;
-                case GuPixelFormats.RGBA_4444:
+                case GuPixelFormats.Rgba4444:
                 {
                     var o = (ushort*) output;
                     for (var n = 0; n < count; n++) *o++ = Encode_RGBA_4444_Pixel(*input++);

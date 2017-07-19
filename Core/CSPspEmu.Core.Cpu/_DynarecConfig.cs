@@ -31,7 +31,8 @@ namespace CSPspEmu.Core.Cpu
         public static bool EnableTailCalling = true;
         //public const bool EnableTailCall = false;
 
-        public const bool BranchFlagAsLocal = true;
+        //public const bool BranchFlagAsLocal = true;
+        public static bool BranchFlagAsLocal = true;
 
         //public const bool DebugFunctionCreation = true;
         //public const bool DebugFunctionCreation = false;

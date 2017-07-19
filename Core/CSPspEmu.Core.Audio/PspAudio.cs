@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Audio
 {

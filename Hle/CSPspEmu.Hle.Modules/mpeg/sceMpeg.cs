@@ -7,6 +7,7 @@ using CSharpUtils.Streams;
 using System.IO;
 using CSPspEmu.Hle.Formats.video;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Hle.Interop;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.mpeg
@@ -155,7 +156,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
             sceMpegData->RingBufferAddressDataUpper = sceMpegRingbuffer->DataEnd;
             sceMpegData->FrameWidth = frameWidth;
             sceMpegData->SceMpegAvcMode.Mode = -1;
-            sceMpegData->SceMpegAvcMode.PixelFormat = GuPixelFormats.RGBA_8888;
+            sceMpegData->SceMpegAvcMode.PixelFormat = GuPixelFormats.Rgba8888;
             sceMpegData->VideoFrameCount = 0;
             sceMpegData->AudioFrameCount = 0;
 

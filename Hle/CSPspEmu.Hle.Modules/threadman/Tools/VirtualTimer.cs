@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Components.Rtc;
+using CSPspEmu.Hle.Interop;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

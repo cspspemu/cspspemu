@@ -185,8 +185,8 @@ namespace CSPspEmu.Hle.Modules.modulemgr
                     MemoryManager.GetPartition(MemoryPartitions.User),
                     ModuleManager,
                     "",
-                    ModuleName: Path,
-                    IsMainModule: false
+                    moduleName: Path,
+                    isMainModule: false
                 );
 
                 var SceModulePartition =
@@ -264,11 +264,11 @@ namespace CSPspEmu.Hle.Modules.modulemgr
             {
                 var NewCpuThreadState = new CpuThreadState(CpuThreadState.CpuProcessor);
                 NewCpuThreadState.CopyRegistersFrom(CpuThreadState);
-                NewCpuThreadState.GP = Module.InitInfo.GP;
+                NewCpuThreadState.GP = Module.InitInfo.Gp;
                 NewCpuThreadState.CallerModule = Module;
 
                 var ThreadId = (int) ThreadManForUser.sceKernelCreateThread(NewCpuThreadState, "ModuleThread",
-                    Module.InitInfo.PC, 10, 1024, PspThreadAttributes.ClearStack, null);
+                    Module.InitInfo.Pc, 10, 1024, PspThreadAttributes.ClearStack, null);
                 ThreadManForUser.sceKernelStartThread(NewCpuThreadState, ThreadId, ArgumentsSize, ArgumentsPointer);
             }
 
@@ -435,8 +435,8 @@ namespace CSPspEmu.Hle.Modules.modulemgr
             ModuleInfo.reserved[2] = 0;
             ModuleInfo.segmentaddr[0] = 0;
             */
-            ModuleInfo.entry_addr = Module.InitInfo.PC;
-            ModuleInfo.gp_value = Module.InitInfo.GP;
+            ModuleInfo.entry_addr = Module.InitInfo.Pc;
+            ModuleInfo.gp_value = Module.InitInfo.Gp;
             ModuleInfo.attribute = Module.ModuleInfo.ModuleAtributes;
 
             Console.Error.WriteLine("sceKernelQueryModuleInfo : PARTIALLY IMPLEMENTED!");

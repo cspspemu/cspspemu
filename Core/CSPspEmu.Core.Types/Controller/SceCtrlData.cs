@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Types.Controller;
 
 namespace CSPspEmu.Core.Types
 {

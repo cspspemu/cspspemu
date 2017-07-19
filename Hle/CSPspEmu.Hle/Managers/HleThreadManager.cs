@@ -12,6 +12,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Components.Display;
 using CSharpUtils.Threading;
 using CSPspEmu.Core.Gpu;
+using CSPspEmu.Hle.Interop;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 
 namespace CSPspEmu.Hle.Managers

@@ -8,6 +8,7 @@ using CSPspEmu.Hle.Modules.stdio;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Managers;
 using System.Runtime.InteropServices;
+using CSPspEmu.Hle.Interop;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {

@@ -58,12 +58,12 @@ namespace CSPspEmu.Core.Cpu
             {
                 get
                 {
-                    fixed (uint* ptr = &CpuThreadState.GPR0) return (int) ptr[index];
+                    fixed (uint* ptr = &CpuThreadState.Gpr0) return (int) ptr[index];
                 }
                 set
                 {
                     if (index == 0) return;
-                    fixed (uint* ptr = &CpuThreadState.GPR0) ptr[index] = (uint) value;
+                    fixed (uint* ptr = &CpuThreadState.Gpr0) ptr[index] = (uint) value;
                 }
             }
         }

@@ -29,7 +29,7 @@ using CSPspEmu.Resources;
 using CSPspEmu.Hle.Formats.Archive;
 using System.Reflection;
 using CSPspEmu.Core.Components.Rtc;
-using CSPspEmu.Interop;
+using CSPspEmu.Hle.Interop;
 using CSPspEmu.Hle.Vfs.Emulator;
 
 namespace CSPspEmu.Runner.Components.Cpu
@@ -311,8 +311,8 @@ namespace CSPspEmu.Runner.Components.Cpu
                             MemoryManager.GetPartition(MemoryPartitions.User),
                             ModuleManager,
                             title,
-                            ModuleName: fileName,
-                            IsMainModule: true
+                            moduleName: fileName,
+                            isMainModule: true
                         );
 
                         loadException = null;
@@ -356,11 +356,11 @@ namespace CSPspEmu.Runner.Components.Cpu
                 var currentCpuThreadState = new CpuThreadState(CpuProcessor);
                 {
                     //CpuThreadState.PC = Loader.InitInfo.PC;
-                    currentCpuThreadState.GP = hleModuleGuest.InitInfo.GP;
+                    currentCpuThreadState.GP = hleModuleGuest.InitInfo.Gp;
                     currentCpuThreadState.CallerModule = hleModuleGuest;
 
                     var threadId = (int) ThreadManForUser.sceKernelCreateThread(currentCpuThreadState, "<EntryPoint>",
-                        hleModuleGuest.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
+                        hleModuleGuest.InitInfo.Pc, 10, 0x1000, PspThreadAttributes.ClearStack, null);
 
                     //var Thread = HleThreadManager.GetThreadById(ThreadId);
                     ThreadManForUser._sceKernelStartThread(currentCpuThreadState, threadId, argumentsPartition.Size,

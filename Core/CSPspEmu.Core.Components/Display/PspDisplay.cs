@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Components.Display
             Enabled = true,
             FrameAddress = 0x04000000,
             BufferWidth = 512,
-            PixelFormat = GuPixelFormats.RGBA_8888,
+            PixelFormat = GuPixelFormats.Rgba8888,
             //Sync = SyncMode.Immediate,
             Mode = 0,
             Width = 480,

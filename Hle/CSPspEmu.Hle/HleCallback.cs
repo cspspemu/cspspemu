@@ -1,5 +1,6 @@
 ﻿using System;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Interop;
 
 namespace CSPspEmu.Hle
 {

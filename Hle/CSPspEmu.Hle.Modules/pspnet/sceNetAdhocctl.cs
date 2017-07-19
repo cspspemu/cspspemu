@@ -1,5 +1,6 @@
 ﻿using CSPspEmu.Hle.Managers;
 using System;
+using CSPspEmu.Hle.Interop;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {

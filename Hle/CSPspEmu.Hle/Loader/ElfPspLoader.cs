@@ -6,7 +6,6 @@ using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils;
-using CSPspEmu.Core;
 using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
 
@@ -14,13 +13,13 @@ namespace CSPspEmu.Hle.Loader
 {
     public struct InitInfoStruct
     {
-        public uint PC;
-        public uint GP;
+        public uint Pc;
+        public uint Gp;
     }
 
     public class ElfPspLoader
     {
-        static Logger Logger = Logger.GetLogger("Loader");
+        static Logger _logger = Logger.GetLogger("Loader");
 
         [Inject] protected ElfLoader ElfLoader;
 
@@ -38,70 +37,67 @@ namespace CSPspEmu.Hle.Loader
 
         protected HleModuleGuest HleModuleGuest;
 
-        Stream _RelocOutputStream;
-        StreamWriter _RelocOutput;
+        Stream _relocOutputStream;
+        StreamWriter _relocOutput;
 
         StreamWriter RelocOutput
         {
             get
             {
-                if (_RelocOutput == null)
+                if (_relocOutput == null)
                 {
 //#if !DEBUG
 #if true
                     //_RelocOutput = new StreamWriter(_RelocOutputStream = new MemoryStream());
-                    _RelocOutput = null;
-                    _RelocOutputStream = null;
+                    _relocOutput = null;
+                    _relocOutputStream = null;
 #else
 					_RelocOutputStream = File.Open("reloc.txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
 					_RelocOutput = new StreamWriter(_RelocOutputStream);
 					_RelocOutput.AutoFlush = true;
 #endif
                 }
-                return _RelocOutput;
+                return _relocOutput;
             }
         }
 
-        public HleModuleGuest LoadModule(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition,
-            HleModuleManager ModuleManager, string GameTitle, string ModuleName, bool IsMainModule)
+        public HleModuleGuest LoadModule(Stream fileStream, Stream memoryStream, MemoryPartition memoryPartition,
+            HleModuleManager moduleManager, string gameTitle, string moduleName, bool isMainModule)
         {
-            this.HleModuleGuest = InjectContext.NewInstance<HleModuleGuest>();
+            HleModuleGuest = InjectContext.NewInstance<HleModuleGuest>();
 
-            this.ElfLoader = new ElfLoader();
-            this.ModuleManager = ModuleManager;
+            ElfLoader = new ElfLoader();
+            ModuleManager = moduleManager;
 
-            var Magic = FileStream.SliceWithLength(0, 4).ReadString(4);
-            Logger.Info("Magic: '{0}'", Magic);
-            if (Magic == "~PSP")
+            var magic = fileStream.SliceWithLength(0, 4).ReadString(4);
+            _logger.Info("Magic: '{0}'", magic);
+            if (magic == "~PSP")
             {
                 try
                 {
-                    var DecryptedData = new EncryptedPrx().Decrypt(FileStream.ReadAll(), true);
-                    File.WriteAllBytes("last_decoded_prx.bin", DecryptedData);
-                    FileStream = new MemoryStream(DecryptedData);
+                    var decryptedData = new EncryptedPrx().Decrypt(fileStream.ReadAll(), true);
+                    File.WriteAllBytes("last_decoded_prx.bin", decryptedData);
+                    fileStream = new MemoryStream(decryptedData);
                 }
-                catch (Exception Exception)
+                catch (Exception exception)
                 {
-                    Logger.Error(Exception);
+                    _logger.Error(exception);
                     throw;
                 }
             }
 
-            this.ElfLoader.Load(FileStream, ModuleName);
+            ElfLoader.Load(fileStream, moduleName);
 
-            ElfConfig.InfoExeHasRelocation = this.ElfLoader.NeedsRelocation;
+            ElfConfig.InfoExeHasRelocation = ElfLoader.NeedsRelocation;
 
-            if (this.ElfLoader.NeedsRelocation)
+            if (ElfLoader.NeedsRelocation)
             {
-                var DummyPartition = MemoryPartition.Allocate(
-                    0x4000,
-                    Name: "Dummy"
-                );
-                BaseAddress = MemoryPartition.ChildPartitions.OrderByDescending(Partition => Partition.Size).First()
+                var dummyPartition = memoryPartition.Allocate(0x4000, Name: "Dummy");
+                BaseAddress = memoryPartition.ChildPartitions.OrderByDescending(partition => partition.Size).First()
                     .Low;
-                Logger.Info("BASE ADDRESS (Try    ): 0x{0:X}", BaseAddress);
+                _logger.Info("BASE ADDRESS (Try    ): 0x{0:X}", BaseAddress);
                 BaseAddress = MathUtils.NextAligned(BaseAddress, 0x1000);
-                Logger.Info("BASE ADDRESS (Aligned): 0x{0:X}", BaseAddress);
+                _logger.Info("BASE ADDRESS (Aligned): 0x{0:X}", BaseAddress);
             }
             else
             {
@@ -109,13 +105,13 @@ namespace CSPspEmu.Hle.Loader
             }
 
             ElfConfig.RelocatedBaseAddress = BaseAddress;
-            ElfConfig.GameTitle = GameTitle;
+            ElfConfig.GameTitle = gameTitle;
 
-            this.ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition, BaseAddress);
+            ElfLoader.AllocateAndWrite(memoryStream, memoryPartition, BaseAddress);
 
             LoadModuleInfo();
 
-            if (this.ElfLoader.NeedsRelocation)
+            if (ElfLoader.NeedsRelocation)
             {
                 RelocateFromHeaders();
             }
@@ -126,40 +122,40 @@ namespace CSPspEmu.Hle.Loader
 
             HleModuleGuest.InitInfo = new InitInfoStruct()
             {
-                PC = ElfLoader.Header.EntryPoint + BaseAddress,
-                GP = HleModuleGuest.ModuleInfo.GP,
+                Pc = ElfLoader.Header.EntryPoint + BaseAddress,
+                Gp = HleModuleGuest.ModuleInfo.GP,
             };
 
             UpdateModuleImports();
             UpdateModuleExports();
 
-            ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
+            moduleManager.LoadedGuestModules.Add(HleModuleGuest);
 
             return HleModuleGuest;
         }
 
         protected void LoadModuleInfo()
         {
-            var SectionHeaderName = ".rodata.sceModuleInfo";
-            var ProgramHeader = ElfLoader.ProgramHeaders.FirstOrDefault();
-            Stream Stream = null;
-            if (ElfLoader.SectionHeadersByName.ContainsKey(SectionHeaderName))
+            var sectionHeaderName = ".rodata.sceModuleInfo";
+            var programHeader = ElfLoader.ProgramHeaders.FirstOrDefault();
+            Stream stream;
+            if (ElfLoader.SectionHeadersByName.ContainsKey(sectionHeaderName))
             {
-                var SectionHeader = ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"];
-                Stream = ElfLoader.SectionHeaderMemoryStream(SectionHeader);
+                var sectionHeader = ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"];
+                stream = ElfLoader.SectionHeaderMemoryStream(sectionHeader);
                 Console.WriteLine("LoadModuleInfo: .rodata.sceModuleInfo 0x{0:X8}[{1}]",
-                    BaseAddress + SectionHeader.Address, SectionHeader.Size);
+                    BaseAddress + sectionHeader.Address, sectionHeader.Size);
             }
             else
             {
-                uint ModuleInfoAddress =
-                    (uint) (BaseAddress + (ProgramHeader.PsysicalAddress & 0x7FFFFFFFL) - ProgramHeader.Offset);
-                int Size = Marshal.SizeOf(typeof(ElfPsp.ModuleInfo));
-                Stream = ElfLoader.MemoryStream.SliceWithLength(ModuleInfoAddress, Size);
-                Console.WriteLine("LoadModuleInfo: 0x{0:X8}[{1}]", ModuleInfoAddress, Size);
+                var moduleInfoAddress =
+                    (uint) (BaseAddress + (programHeader.PsysicalAddress & 0x7FFFFFFFL) - programHeader.Offset);
+                var size = Marshal.SizeOf(typeof(ElfPsp.ModuleInfo));
+                stream = ElfLoader.MemoryStream.SliceWithLength(moduleInfoAddress, size);
+                Console.WriteLine("LoadModuleInfo: 0x{0:X8}[{1}]", moduleInfoAddress, size);
             }
 
-            HleModuleGuest.ModuleInfo = Stream.ReadStruct<ElfPsp.ModuleInfo>();
+            HleModuleGuest.ModuleInfo = stream.ReadStruct<ElfPsp.ModuleInfo>();
             Console.WriteLine("{0}", HleModuleGuest.ModuleInfo.ToStringDefault());
         }
 
@@ -171,27 +167,27 @@ namespace CSPspEmu.Hle.Loader
             }
 
             // Relocate from program headers
-            int RelocProgramIndex = 0;
-            foreach (var ProgramHeader in ElfLoader.ProgramHeaders)
+            var relocProgramIndex = 0;
+            foreach (var programHeader in ElfLoader.ProgramHeaders)
             {
-                if (RelocOutput != null) RelocOutput.WriteLine("Program Header: %d".Sprintf(RelocProgramIndex++));
-                switch (ProgramHeader.Type)
+                if (RelocOutput != null) RelocOutput.WriteLine("Program Header: %d".Sprintf(relocProgramIndex++));
+                switch (programHeader.Type)
                 {
                     case Elf.ProgramHeader.TypeEnum.Reloc1:
-                        Logger.Warning("SKIPPING Elf.ProgramHeader.TypeEnum.Reloc1!");
+                        _logger.Warning("SKIPPING Elf.ProgramHeader.TypeEnum.Reloc1!");
                         break;
                     case Elf.ProgramHeader.TypeEnum.Reloc2:
                         throw(new NotImplementedException());
                 }
             }
 
-            int RelocSectionIndex = 0;
-            foreach (var SectionHeader in ElfLoader.SectionHeaders)
+            var relocSectionIndex = 0;
+            foreach (var sectionHeader in ElfLoader.SectionHeaders)
             {
                 //RelocOutput.WriteLine("Section Header: %d : %s".Sprintf(RelocSectionIndex++, SectionHeader.ToString()));
-                if (RelocOutput != null) RelocOutput.WriteLine("Section Header: %d".Sprintf(RelocSectionIndex++));
+                RelocOutput?.WriteLine("Section Header: %d".Sprintf(relocSectionIndex++));
 
-                switch (SectionHeader.Type)
+                switch (sectionHeader.Type)
                 {
                     case Elf.SectionHeader.TypeEnum.Relocation:
                         Console.Error.WriteLine("Not implemented Elf.SectionHeader.TypeEnum.Relocation");
@@ -205,9 +201,9 @@ namespace CSPspEmu.Hle.Loader
                         break;
 
                     case Elf.SectionHeader.TypeEnum.PrxRelocation:
-                        Console.WriteLine("PrxRelocation : {0}", SectionHeader);
+                        Console.WriteLine("PrxRelocation : {0}", sectionHeader);
                         RelocateRelocs(
-                            ElfLoader.SectionHeaderFileStream(SectionHeader)
+                            ElfLoader.SectionHeaderFileStream(sectionHeader)
                                 .ReadStructVectorUntilTheEndOfStream<Elf.Reloc>()
                         );
                         break;
@@ -219,22 +215,22 @@ namespace CSPspEmu.Hle.Loader
             if (RelocOutput != null)
             {
                 RelocOutput.Flush();
-                _RelocOutputStream.Flush();
+                _relocOutputStream.Flush();
                 RelocOutput.Close();
-                _RelocOutputStream.Close();
+                _relocOutputStream.Close();
 
-                _RelocOutput = null;
-                _RelocOutputStream = null;
+                _relocOutput = null;
+                _relocOutputStream = null;
             }
         }
 
         /// <summary>
         /// This function relocates all the instructions and pointers of the loading executable.
         /// </summary>
-        /// <param name="Relocs"></param>
-        protected void RelocateRelocs(IEnumerable<Elf.Reloc> Relocs)
+        /// <param name="relocs"></param>
+        protected void RelocateRelocs(IEnumerable<Elf.Reloc> relocs)
         {
-            var InstructionReader = new InstructionStreamReader(ElfLoader.MemoryStream);
+            var instructionReader = new InstructionStreamReader(ElfLoader.MemoryStream);
 
             /*
             Func<uint, Action<ref Instruction>> UpdateInstruction = (Address) =>
@@ -244,12 +240,12 @@ namespace CSPspEmu.Hle.Loader
 
             //var Hi16List = new List<uint>();
 
-            ushort HiValue = 0;
-            var DeferredHi16 =
+            ushort hiValue = 0;
+            var deferredHi16 =
                 new LinkedList<uint>(); // We'll use this to relocate R_MIPS_HI16 when we get a R_MIPS_LO16
 
-            int Index = 0;
-            foreach (var Reloc in Relocs)
+            var index = 0;
+            foreach (var reloc in relocs)
             {
                 //Console.WriteLine(Reloc.ToStringDefault());
                 //Console.WriteLine("   {0:X}", RelocatedAddress);
@@ -259,37 +255,37 @@ namespace CSPspEmu.Hle.Loader
 
                 // Some games (e.g.: "Final Fantasy: Dissidia") use this kind of relocation
                 // suggesting that the PSP's ELF Loader is capable of recognizing it and stop.
-                if (Reloc.Type == Elf.Reloc.TypeEnum.StopRelocation)
+                if (reloc.Type == Elf.Reloc.TypeEnum.StopRelocation)
                 {
                     break;
                 }
 
-                var PointerBaseOffset = (uint) ElfLoader.ProgramHeaders[Reloc.PointerSectionHeaderBase].VirtualAddress;
-                var PointeeBaseOffset = (uint) ElfLoader.ProgramHeaders[Reloc.PointeeSectionHeaderBase].VirtualAddress;
+                var pointerBaseOffset = ElfLoader.ProgramHeaders[reloc.PointerSectionHeaderBase].VirtualAddress;
+                var pointeeBaseOffset = ElfLoader.ProgramHeaders[reloc.PointeeSectionHeaderBase].VirtualAddress;
 
                 // Address of data to relocate
-                var RelocatedPointerAddress = (uint) (BaseAddress + Reloc.PointerAddress + PointerBaseOffset);
+                var relocatedPointerAddress = BaseAddress + reloc.PointerAddress + pointerBaseOffset;
 
                 // Value of data to relocate
-                var Instruction = InstructionReader[RelocatedPointerAddress];
-                var InstructionBefore = Instruction;
+                var instruction = instructionReader[relocatedPointerAddress];
+                var instructionBefore = instruction;
 
-                var S = (uint) BaseAddress + PointeeBaseOffset;
-                var GP_ADDR = (int) (BaseAddress + Reloc.PointerAddress);
-                var GP_OFFSET = (int) GP_ADDR - ((int) BaseAddress & 0xFFFF0000);
+                var s = BaseAddress + pointeeBaseOffset;
+                var gpAddr = (int) (BaseAddress + reloc.PointerAddress);
+                var gpOffset = gpAddr - ((int) BaseAddress & 0xFFFF0000);
 
                 //Console.WriteLine(Reloc.Type);
 
-                bool DebugReloc = (RelocatedPointerAddress >= 0x08809320 &&
-                                   RelocatedPointerAddress <= 0x08809320 + 0x100);
+                var debugReloc = (relocatedPointerAddress >= 0x08809320 &&
+                                  relocatedPointerAddress <= 0x08809320 + 0x100);
                 //bool DebugReloc = false;
 
-                if (DebugReloc)
+                if (debugReloc)
                 {
-                    Console.WriteLine("{0:X8}[{1:X8}]: {2}", RelocatedPointerAddress, Instruction.Value, Reloc);
+                    Console.WriteLine("{0:X8}[{1:X8}]: {2}", relocatedPointerAddress, instruction.Value, reloc);
                 }
 
-                switch (Reloc.Type)
+                switch (reloc.Type)
                 {
                     // Tested on PSP: R_MIPS_NONE just returns 0.
                     case Elf.Reloc.TypeEnum.None: // 0
@@ -305,42 +301,42 @@ namespace CSPspEmu.Hle.Loader
                     */
                     case Elf.Reloc.TypeEnum.Mips32: // 2
                     {
-                        Instruction.Value += S;
+                        instruction.Value += s;
                     }
                         break;
                     case Elf.Reloc.TypeEnum.MipsRel32: // 3;
                     {
-                        throw (new NotImplementedException());
+                        throw new NotImplementedException();
                     }
                     case Elf.Reloc.TypeEnum.Mips26: // 4
                     {
-                        Instruction.JUMP_Real = Instruction.JUMP_Real + S;
+                        instruction.JUMP_Real = instruction.JUMP_Real + s;
                     }
                         break;
                     case Elf.Reloc.TypeEnum.MipsHi16: // 5
                     {
-                        HiValue = (ushort) Instruction.IMMU;
-                        DeferredHi16.AddLast(RelocatedPointerAddress);
+                        hiValue = (ushort) instruction.IMMU;
+                        deferredHi16.AddLast(relocatedPointerAddress);
                     }
                         break;
                     case Elf.Reloc.TypeEnum.MipsLo16: // 6
                     {
-                        uint A = Instruction.IMMU;
+                        var a = instruction.IMMU;
 
-                        Instruction.IMMU = ((uint) (HiValue << 16) | (uint) (A & 0x0000FFFF)) + S;
+                        instruction.IMMU = ((uint) (hiValue << 16) | a & 0x0000FFFF) + s;
 
                         // Process deferred R_MIPS_HI16
-                        foreach (var data_addr2 in DeferredHi16)
+                        foreach (var dataAddr2 in deferredHi16)
                         {
-                            var data2 = InstructionReader[data_addr2];
-                            uint result = ((data2.Value & 0x0000FFFF) << 16) + A + S;
+                            var data2 = instructionReader[dataAddr2];
+                            var result = ((data2.Value & 0x0000FFFF) << 16) + a + s;
                             // The low order 16 bits are always treated as a signed
                             // value. Therefore, a negative value in the low order bits
                             // requires an adjustment in the high order bits. We need
                             // to make this adjustment in two ways: once for the bits we
                             // took from the data, and once for the bits we are putting
                             // back in to the data.
-                            if ((A & 0x8000) != 0)
+                            if ((a & 0x8000) != 0)
                             {
                                 result -= 0x10000;
                             }
@@ -349,9 +345,9 @@ namespace CSPspEmu.Hle.Loader
                                 result += 0x10000;
                             }
                             data2.IMMU = (result >> 16);
-                            InstructionReader[data_addr2] = data2;
+                            instructionReader[dataAddr2] = data2;
                         }
-                        DeferredHi16.Clear();
+                        deferredHi16.Clear();
                     }
                         break;
                     case Elf.Reloc.TypeEnum.MipsGpRel16: // 7
@@ -376,20 +372,19 @@ namespace CSPspEmu.Hle.Loader
                     }
                         break;
                     default:
-                        throw(new NotImplementedException("Handling " + Reloc.Type + " not implemented"));
+                        throw new NotImplementedException($"Handling {reloc.Type} not implemented");
                 }
 
-                if (RelocOutput != null)
-                    RelocOutput.WriteLine(
-                        "RELOC %06d : 0x%08X : 0x%08X -> 0x%08X".Sprintf(
-                            Index,
-                            RelocatedPointerAddress, InstructionBefore.Value, Instruction.Value
-                        )
-                    );
+                RelocOutput?.WriteLine(
+                    "RELOC %06d : 0x%08X : 0x%08X -> 0x%08X".Sprintf(
+                        index,
+                        relocatedPointerAddress, instructionBefore.Value, instruction.Value
+                    )
+                );
 
-                if (DebugReloc)
+                if (debugReloc)
                 {
-                    Console.WriteLine("   -> {0:X8}", Instruction.Value);
+                    Console.WriteLine("   -> {0:X8}", instruction.Value);
                 }
 
                 /*
@@ -398,8 +393,8 @@ namespace CSPspEmu.Hle.Loader
                     i, data_addr, data_prev, data
                 ));
                 */
-                InstructionReader[RelocatedPointerAddress] = Instruction;
-                Index++;
+                instructionReader[relocatedPointerAddress] = instruction;
+                index++;
             }
         }
 
@@ -438,67 +433,69 @@ namespace CSPspEmu.Hle.Loader
         private void _UpdateModuleExports()
         {
             //var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
-            var ExportsStream = ElfLoader.MemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ExportsStart,
+            var exportsStream = ElfLoader.MemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ExportsStart,
                 HleModuleGuest.ModuleInfo.ExportsEnd);
-            var ModuleExports = ExportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleExport>();
+            var moduleExports = exportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleExport>();
 
             Console.WriteLine("Exports:");
 
-            foreach (var ModuleExport in ModuleExports)
+            foreach (var moduleExport in moduleExports)
             {
-                string ModuleExportName = "";
+                var moduleExportName = "";
 
                 try
                 {
-                    ModuleExportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleExport.Name);
+                    moduleExportName = ElfLoader.MemoryStream.ReadStringzAt(moduleExport.Name);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
 
-                Console.WriteLine("  * Export: '{0}'", ModuleExportName);
+                Console.WriteLine("  * Export: '{0}'", moduleExportName);
 
-                var HleModuleExports = new HleModuleExports();
-                HleModuleExports.Name = ModuleExportName;
-                HleModuleExports.Flags = ModuleExport.Flags;
-                HleModuleExports.Version = ModuleExport.Version;
+                var hleModuleExports = new HleModuleExports
+                {
+                    Name = moduleExportName,
+                    Flags = moduleExport.Flags,
+                    Version = moduleExport.Version
+                };
 
-                var ExportsExportsStream = ElfLoader.MemoryStream.SliceWithLength(
-                    ModuleExport.Exports,
-                    ModuleExport.FunctionCount * sizeof(uint) * 2 + ModuleExport.VariableCount * sizeof(uint) * 2
+                var exportsExportsStream = ElfLoader.MemoryStream.SliceWithLength(
+                    moduleExport.Exports,
+                    moduleExport.FunctionCount * sizeof(uint) * 2 + moduleExport.VariableCount * sizeof(uint) * 2
                 );
 
-                var FunctionNIDReader =
-                    new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.FunctionCount * sizeof(uint)));
-                var VariableNIDReader =
-                    new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.VariableCount * sizeof(uint)));
-                var FunctionAddressReader =
-                    new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.FunctionCount * sizeof(uint)));
-                var VariableAddressReader =
-                    new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.VariableCount * sizeof(uint)));
+                var functionNidReader =
+                    new BinaryReader(exportsExportsStream.ReadStream(moduleExport.FunctionCount * sizeof(uint)));
+                var variableNidReader =
+                    new BinaryReader(exportsExportsStream.ReadStream(moduleExport.VariableCount * sizeof(uint)));
+                var functionAddressReader =
+                    new BinaryReader(exportsExportsStream.ReadStream(moduleExport.FunctionCount * sizeof(uint)));
+                var variableAddressReader =
+                    new BinaryReader(exportsExportsStream.ReadStream(moduleExport.VariableCount * sizeof(uint)));
 
-                for (int n = 0; n < ModuleExport.FunctionCount; n++)
+                for (var n = 0; n < moduleExport.FunctionCount; n++)
                 {
-                    uint NID = FunctionNIDReader.ReadUInt32();
-                    uint CallAddress = FunctionAddressReader.ReadUInt32();
-                    HleModuleExports.Functions[NID] = new HleModuleImportsExports.Entry() {Address = CallAddress};
+                    var nid = functionNidReader.ReadUInt32();
+                    var callAddress = functionAddressReader.ReadUInt32();
+                    hleModuleExports.Functions[nid] = new HleModuleImportsExports.Entry() {Address = callAddress};
 
-                    Console.WriteLine("  |  - FUNC: {0:X} : {1:X} : {2}", NID, CallAddress,
-                        Enum.GetName(typeof(SpecialFunctionNids), NID));
+                    Console.WriteLine("  |  - FUNC: {0:X} : {1:X} : {2}", nid, callAddress,
+                        Enum.GetName(typeof(SpecialFunctionNids), nid));
                 }
 
-                for (int n = 0; n < ModuleExport.VariableCount; n++)
+                for (var n = 0; n < moduleExport.VariableCount; n++)
                 {
-                    uint NID = VariableNIDReader.ReadUInt32();
-                    uint CallAddress = VariableAddressReader.ReadUInt32();
-                    HleModuleExports.Variables[NID] = new HleModuleImportsExports.Entry() {Address = CallAddress};
+                    var nid = variableNidReader.ReadUInt32();
+                    var callAddress = variableAddressReader.ReadUInt32();
+                    hleModuleExports.Variables[nid] = new HleModuleImportsExports.Entry() {Address = callAddress};
 
-                    Console.WriteLine("  |  - VAR: {0:X} : {1:X} : {2}", NID, CallAddress,
-                        Enum.GetName(typeof(SpecialVariableNids), NID));
+                    Console.WriteLine("  |  - VAR: {0:X} : {1:X} : {2}", nid, callAddress,
+                        Enum.GetName(typeof(SpecialVariableNids), nid));
                 }
 
-                HleModuleGuest.ModulesExports.Add(HleModuleExports);
+                HleModuleGuest.ModulesExports.Add(hleModuleExports);
             }
 
             HleModuleGuest.ExportModules();
@@ -509,11 +506,11 @@ namespace CSPspEmu.Hle.Loader
         /// </summary>
         public enum SpecialFunctionNids : uint
         {
-            module_start = 0xD632ACDB,
-            module_stop = 0xCEE8593C,
-            module_reboot_before = 0x2F064FA6,
-            module_reboot_phase = 0xADF12745,
-            module_bootstart = 0xD3744BE0,
+            ModuleStart = 0xD632ACDB,
+            ModuleStop = 0xCEE8593C,
+            ModuleRebootBefore = 0x2F064FA6,
+            ModuleRebootPhase = 0xADF12745,
+            ModuleBootstart = 0xD3744BE0,
         }
 
         /// <summary>
@@ -521,11 +518,11 @@ namespace CSPspEmu.Hle.Loader
         /// </summary>
         public enum SpecialVariableNids : uint
         {
-            module_info = 0xF01D73A7,
-            module_start_thread_parameter = 0x0F7C276C,
-            module_stop_thread_parameter = 0xCF0CC697,
-            module_reboot_before_thread_parameter = 0xF4F4299D,
-            module_sdk_version = 0x11B97506,
+            ModuleInfo = 0xF01D73A7,
+            ModuleStartThreadParameter = 0x0F7C276C,
+            ModuleStopThreadParameter = 0xCF0CC697,
+            ModuleRebootBeforeThreadParameter = 0xF4F4299D,
+            ModuleSdkVersion = 0x11B97506,
         }
 
         /// <summary>
@@ -534,45 +531,47 @@ namespace CSPspEmu.Hle.Loader
         private void _UpdateModuleImports()
         {
             //var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
-            var ImportsStream = ElfLoader.MemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ImportsStart,
+            var importsStream = ElfLoader.MemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ImportsStart,
                 HleModuleGuest.ModuleInfo.ImportsEnd);
             //Console.WriteLine("ImportsStream.Length: {0}", ImportsStream.Length);
-            var ModuleImports = ImportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
+            var moduleImports = importsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
 
             Console.WriteLine("BASE ADDRESS: 0x{0:X}", BaseAddress);
 
             Console.WriteLine("Imports ({0:X8}-{1:X8}):", HleModuleGuest.ModuleInfo.ImportsStart,
                 HleModuleGuest.ModuleInfo.ImportsEnd);
 
-            foreach (var ModuleImport in ModuleImports)
+            foreach (var moduleImport in moduleImports)
             {
-                string ModuleImportName = "INVALID";
+                var moduleImportName = "INVALID";
                 try
                 {
-                    ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name);
+                    moduleImportName = ElfLoader.MemoryStream.ReadStringzAt(moduleImport.Name);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
 
-                var HleModuleImports = new HleModuleImports();
-                HleModuleImports.Name = ModuleImportName;
-                HleModuleImports.Flags = ModuleImport.Flags;
-                HleModuleImports.Version = ModuleImport.Version;
-
-                var NidStreamReader = new BinaryReader(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.NidAddress,
-                    ModuleImport.FunctionCount * sizeof(uint)));
-
-                for (int n = 0; n < ModuleImport.FunctionCount; n++)
+                var hleModuleImports = new HleModuleImports
                 {
-                    var NID = NidStreamReader.ReadUInt32();
-                    var CallAddress = (uint) (ModuleImport.CallAddress + n * 8);
+                    Name = moduleImportName,
+                    Flags = moduleImport.Flags,
+                    Version = moduleImport.Version
+                };
 
-                    HleModuleImports.Functions[NID] = new HleModuleImportsExports.Entry() {Address = CallAddress};
+                var nidStreamReader = new BinaryReader(ElfLoader.MemoryStream.SliceWithLength(moduleImport.NidAddress,
+                    moduleImport.FunctionCount * sizeof(uint)));
+
+                for (var n = 0; n < moduleImport.FunctionCount; n++)
+                {
+                    var nid = nidStreamReader.ReadUInt32();
+                    var callAddress = (uint) (moduleImport.CallAddress + n * 8);
+
+                    hleModuleImports.Functions[nid] = new HleModuleImportsExports.Entry() {Address = callAddress};
                 }
 
-                HleModuleGuest.ModulesImports.Add(HleModuleImports);
+                HleModuleGuest.ModulesImports.Add(hleModuleImports);
             }
 
             HleModuleGuest.ImportModules();

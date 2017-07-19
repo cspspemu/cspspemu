@@ -205,8 +205,8 @@ namespace CSPspEmu.Core.Gpu
                         var Data = new OutputPixel[InvalidTextureSize];
                         fixed (OutputPixel* DataPtr = Data)
                         {
-                            var Color1 = OutputPixel.FromRGBA(0xFF, 0x00, 0x00, 0xFF);
-                            var Color2 = OutputPixel.FromRGBA(0x00, 0x00, 0xFF, 0xFF);
+                            var Color1 = OutputPixel.FromRgba(0xFF, 0x00, 0x00, 0xFF);
+                            var Color2 = OutputPixel.FromRgba(0x00, 0x00, 0xFF, 0xFF);
                             for (int n = 0; n < InvalidTextureSize; n++)
                             {
                                 DataPtr[n] = ((n & 1) != 0) ? Color1 : Color2;

@@ -66,18 +66,18 @@ namespace CSPspEmu.Hle
             // http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
             switch (CultureInfo.TwoLetterISOLanguageName)
             {
-                case "ja": return PspLanguages.JAPANESE;
+                case "ja": return PspLanguages.Japanese;
                 default:
-                case "en": return PspLanguages.ENGLISH;
-                case "fr": return PspLanguages.FRENCH;
-                case "es": return PspLanguages.SPANISH;
-                case "de": return PspLanguages.GERMAN;
-                case "it": return PspLanguages.ITALIAN;
-                case "nl": return PspLanguages.DUTCH;
-                case "pt": return PspLanguages.PORTUGUESE;
-                case "ru": return PspLanguages.RUSSIAN;
-                case "ko": return PspLanguages.KOREAN;
-                case "zh": return PspLanguages.SIMPLIFIED_CHINESE; // TODO: TRADITIONAL_CHINESE
+                case "en": return PspLanguages.English;
+                case "fr": return PspLanguages.French;
+                case "es": return PspLanguages.Spanish;
+                case "de": return PspLanguages.German;
+                case "it": return PspLanguages.Italian;
+                case "nl": return PspLanguages.Dutch;
+                case "pt": return PspLanguages.Portuguese;
+                case "ru": return PspLanguages.Russian;
+                case "ko": return PspLanguages.Korean;
+                case "zh": return PspLanguages.SimplifiedChinese; // TODO: TRADITIONAL_CHINESE
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CSPspEmu.Core.Cpu.Emitter;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
@@ -59,7 +60,7 @@ namespace CSPspEmu.Core.Cpu.Table
             Id("add", Vm("000000:rs:rt:rd:00000:100000"), "%d, %s, %t", AddrTypeNone, 0),
             Id("addu", Vm("000000:rs:rt:rd:00000:100001"), "%d, %s, %t", AddrTypeNone, 0),
             Id("addi", Vm("001000:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
-            Id(nameof(CpuEmitter.addiu), Vm("001001:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
+            Id("addiu", Vm("001001:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
             Id("sub", Vm("000000:rs:rt:rd:00000:100010"), "%d, %s, %t", AddrTypeNone, 0),
             Id("subu", Vm("000000:rs:rt:rd:00000:100011"), "%d, %s, %t", AddrTypeNone, 0),
 
@@ -418,14 +419,14 @@ namespace CSPspEmu.Core.Cpu.Table
             Id("vtfm3", Vm("111100:010:vt:1:vs:0:vd"), "%zt, %yn, %xt", AddrTypeNone, InstrTypePsp),
             Id("vtfm4", Vm("111100:011:vt:1:vs:1:vd"), "%zq, %yo, %xq", AddrTypeNone, InstrTypePsp),
 
-            Id(nameof(CpuEmitter.vhtfm2), Vm("111100:001:vt:0:vs:0:vd"), "%zp, %ym, %xp", AddrTypeNone,
+            Id("vhtfm2", Vm("111100:001:vt:0:vs:0:vd"), "%zp, %ym, %xp", AddrTypeNone,
                 InstrTypePsp),
-            Id(nameof(CpuEmitter.vhtfm3), Vm("111100:010:vt:0:vs:1:vd"), "%zt, %yn, %xt", AddrTypeNone,
+            Id("vhtfm3", Vm("111100:010:vt:0:vs:1:vd"), "%zt, %yn, %xt", AddrTypeNone,
                 InstrTypePsp),
-            Id(nameof(CpuEmitter.vhtfm4), Vm("111100:011:vt:1:vs:0:vd"), "%zq, %yo, %xq", AddrTypeNone,
+            Id("vhtfm4", Vm("111100:011:vt:1:vs:0:vd"), "%zq, %yo, %xq", AddrTypeNone,
                 InstrTypePsp),
 
-            Id(nameof(CpuEmitter.vsrt3), Vm("110100:00:010:01000:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id("vsrt3", Vm("110100:00:010:01000:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
                 InstrTypePsp),
 
             Id("vfad", Vm("110100:00:010:00110:two:vs:one:vd"), "%zp, %yp", AddrTypeNone, InstrTypePsp),

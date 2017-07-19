@@ -108,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
         [HlePspFunction(NID = 0x092968F4, FirmwareVersion = 150)]
         public uint sceKernelCpuSuspendIntr()
         {
-            return HleInterruptManager.sceKernelCpuSuspendIntr();
+            return HleInterruptManager.SceKernelCpuSuspendIntr();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
         /// <param name="Flags"></param>
         private void _sceKernelCpuResumeIntr(uint Flags)
         {
-            HleInterruptManager.sceKernelCpuResumeIntr(Flags);
+            HleInterruptManager.SceKernelCpuResumeIntr(Flags);
         }
 
         /// <summary>

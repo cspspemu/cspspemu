@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using CSharpUtils;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Interop;
-using CSPspEmu.Core.Cpu.Dynarec;
 
-namespace CSPspEmu.Hle
+namespace CSPspEmu.Hle.Interop
 {
     public class HleInterop
     {
@@ -25,29 +21,29 @@ namespace CSPspEmu.Hle
         {
         }
 
-        public uint ExecuteFunctionNowLater(uint Function, bool ExecuteNow, params object[] Arguments)
+        public uint ExecuteFunctionNowLater(uint function, bool executeNow, params object[] arguments)
         {
-            if (ExecuteNow)
+            if (executeNow)
             {
-                return ExecuteFunctionNow(Function, Arguments);
+                return ExecuteFunctionNow(function, arguments);
             }
             else
             {
-                ExecuteFunctionLater(Function, Arguments);
+                ExecuteFunctionLater(function, arguments);
                 return 0;
             }
         }
 
-        public uint ExecuteFunctionNow(uint Function, params object[] Arguments)
+        public uint ExecuteFunctionNow(uint function, params object[] arguments)
         {
-            var CurrentFakeHleThread = HleThreadManager.CurrentOrAny;
-            CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
-            SetArgumentsToCpuThreadState(CurrentFakeHleThread.CpuThreadState, Function, Arguments);
-            Console.Out.WriteLineColored(ConsoleColor.Magenta, "ExecuteFunctionNow: 0x{0:X8}", Function);
-            CurrentFakeHleThread.CpuThreadState.ExecuteFunctionAndReturn(CurrentFakeHleThread.CpuThreadState.PC);
+            var currentFakeHleThread = HleThreadManager.CurrentOrAny;
+            currentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
+            SetArgumentsToCpuThreadState(currentFakeHleThread.CpuThreadState, function, arguments);
+            Console.Out.WriteLineColored(ConsoleColor.Magenta, "ExecuteFunctionNow: 0x{0:X8}", function);
+            currentFakeHleThread.CpuThreadState.ExecuteFunctionAndReturn(currentFakeHleThread.CpuThreadState.PC);
             Console.Out.WriteLineColored(ConsoleColor.Magenta, "... {0}",
-                (uint) CurrentFakeHleThread.CpuThreadState.GPR2);
-            return (uint) CurrentFakeHleThread.CpuThreadState.GPR2;
+                currentFakeHleThread.CpuThreadState.Gpr2);
+            return currentFakeHleThread.CpuThreadState.Gpr2;
         }
 
         public class QueuedExecution
@@ -57,55 +53,50 @@ namespace CSPspEmu.Hle
             public object[] Arguments;
         }
 
-        Queue<QueuedExecution> QueuedExecutions = new Queue<QueuedExecution>();
+        readonly Queue<QueuedExecution> _queuedExecutions = new Queue<QueuedExecution>();
 
-        public bool HasQueuedFunctions
-        {
-            get { return QueuedExecutions.Count > 0; }
-        }
+        public bool HasQueuedFunctions => _queuedExecutions.Count > 0;
 
         public int ExecuteAllQueuedFunctionsNow()
         {
-            lock (QueuedExecutions)
+            lock (_queuedExecutions)
             {
-                int ExecutedCount = 0;
-                while (QueuedExecutions.Count > 0)
+                var executedCount = 0;
+                while (_queuedExecutions.Count > 0)
                 {
-                    var QueuedExecution = QueuedExecutions.Dequeue();
-                    var Result = ExecuteFunctionNow(QueuedExecution.Function, QueuedExecution.Arguments);
-                    if (QueuedExecution.ExecutedCallback != null) QueuedExecution.ExecutedCallback(Result);
-                    ExecutedCount++;
+                    var queuedExecution = _queuedExecutions.Dequeue();
+                    var result = ExecuteFunctionNow(queuedExecution.Function, queuedExecution.Arguments);
+                    queuedExecution.ExecutedCallback?.Invoke(result);
+                    executedCount++;
                 }
-                return ExecutedCount;
+                return executedCount;
             }
         }
 
-        public void ExecuteFunctionLater(uint Function, params object[] Arguments)
-        {
-            ExecuteFunctionLater(Function, (Result) => { }, Arguments);
-        }
+        public void ExecuteFunctionLater(uint function, params object[] arguments) =>
+            ExecuteFunctionLater(function, result => { }, arguments);
 
-        public void ExecuteFunctionLater(uint Function, Action<uint> ExecutedCallback, params object[] Arguments)
+        public void ExecuteFunctionLater(uint function, Action<uint> executedCallback, params object[] arguments)
         {
-            lock (QueuedExecutions)
+            lock (_queuedExecutions)
             {
-                QueuedExecutions.Enqueue(new QueuedExecution()
+                _queuedExecutions.Enqueue(new QueuedExecution
                 {
-                    Function = Function,
-                    ExecutedCallback = ExecutedCallback,
-                    Arguments = Arguments,
+                    Function = function,
+                    ExecutedCallback = executedCallback,
+                    Arguments = arguments,
                 });
             }
         }
 
-        public HleThread Execute(CpuThreadState FakeCpuThreadState)
+        public HleThread Execute(CpuThreadState fakeCpuThreadState)
         {
-            var CurrentFakeHleThread = HleThreadManager.CurrentOrAny;
+            var currentFakeHleThread = HleThreadManager.CurrentOrAny;
 
-            CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(FakeCpuThreadState);
+            currentFakeHleThread.CpuThreadState.CopyRegistersFrom(fakeCpuThreadState);
             //HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
 
-            CurrentFakeHleThread.CpuThreadState.ExecuteAt(CurrentFakeHleThread.CpuThreadState.PC);
+            currentFakeHleThread.CpuThreadState.ExecuteAt(currentFakeHleThread.CpuThreadState.PC);
 
             ////CurrentFake.CpuThreadState.PC = HleCallback.Function;
             //CurrentFakeHleThread.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
@@ -118,48 +109,46 @@ namespace CSPspEmu.Hle
             //	CurrentFakeHleThread.Step();
             //}
 
-            return CurrentFakeHleThread;
+            return currentFakeHleThread;
         }
 
-        public static void SetArgumentsToCpuThreadState(CpuThreadState CpuThreadState, uint Function,
-            params object[] Arguments)
+        public static void SetArgumentsToCpuThreadState(CpuThreadState cpuThreadState, uint function,
+            params object[] arguments)
         {
-            int GprIndex = 4;
+            var gprIndex = 4;
             //int FprIndex = 0;
-            Action<int> GprAlign = (int Alignment) =>
+            void Align(int alignment) => gprIndex = (int) MathUtils.NextAligned((uint) gprIndex, alignment);
+
+            foreach (var argument in arguments)
             {
-                GprIndex = (int) MathUtils.NextAligned((uint) GprIndex, Alignment);
-            };
-            foreach (var Argument in Arguments)
-            {
-                var ArgumentType = Argument.GetType();
-                if (ArgumentType == typeof(uint))
+                var argumentType = argument.GetType();
+                if (argumentType == typeof(uint))
                 {
-                    GprAlign(1);
-                    CpuThreadState.GPR[GprIndex++] = (int) (uint) Argument;
+                    Align(1);
+                    cpuThreadState.GPR[gprIndex++] = (int) (uint) argument;
                 }
-                else if (ArgumentType == typeof(int))
+                else if (argumentType == typeof(int))
                 {
-                    GprAlign(1);
-                    CpuThreadState.GPR[GprIndex++] = (int) Argument;
+                    Align(1);
+                    cpuThreadState.GPR[gprIndex++] = (int) argument;
                 }
-                else if (ArgumentType == typeof(PspPointer))
+                else if (argumentType == typeof(PspPointer))
                 {
-                    GprAlign(1);
-                    CpuThreadState.GPR[GprIndex++] = (int) (uint) (PspPointer) Argument;
+                    Align(1);
+                    cpuThreadState.GPR[gprIndex++] = (int) (uint) (PspPointer) argument;
                 }
-                else if (ArgumentType.IsEnum)
+                else if (argumentType.IsEnum)
                 {
-                    GprAlign(1);
-                    CpuThreadState.GPR[GprIndex++] = Convert.ToInt32(Argument);
+                    Align(1);
+                    cpuThreadState.GPR[gprIndex++] = Convert.ToInt32(argument);
                 }
                 else
                 {
-                    throw (new NotImplementedException(string.Format("Can't handle type '{0}'", ArgumentType)));
+                    throw new NotImplementedException($"Can't handle type '{argumentType}'");
                 }
             }
 
-            CpuThreadState.PC = Function;
+            cpuThreadState.PC = function;
             //Console.Error.WriteLine(CpuThreadState);
             //CpuThreadState.DumpRegisters(Console.Error);
         }

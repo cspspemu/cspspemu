@@ -25,7 +25,7 @@ namespace CSPspEmu.Runner.Components.Display
                 //var VSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow / 2))); // HACK to give more time to render!
                 var endTimeIncrement =
                     TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) (PspDisplay.NumberOfRows)));
-                var vBlankInterruptHandler = _hleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT);
+                var vBlankInterruptHandler = _hleInterruptManager.GetInterruptHandler(PspInterrupts.PspVblankInt);
                 while (true)
                 {
                     //Console.WriteLine("[1]");

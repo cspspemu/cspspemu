@@ -22,48 +22,45 @@ namespace CSPspEmu.Hle.Managers
         /// <summary>
         /// 
         /// </summary>
-        public IHleIoDriver HleIoDriver
-        {
-            get { return HleIoDrvFileArg.HleIoDriver; }
-        }
+        public IHleIoDriver HleIoDriver => HleIoDrvFileArg.HleIoDriver;
     }
 
     public class HleIoWrapper
     {
-        HleIoManager HleIoManager;
+        HleIoManager _hleIoManager;
 
-        public HleIoWrapper(HleIoManager HleIoManager)
+        public HleIoWrapper(HleIoManager hleIoManager)
         {
-            this.HleIoManager = HleIoManager;
+            this._hleIoManager = hleIoManager;
         }
 
-        public void Mkdir(string Path, SceMode SceMode)
+        public void Mkdir(string path, SceMode sceMode)
         {
-            var PathInfo = HleIoManager.ParsePath(Path);
-            PathInfo.HleIoDriver.IoMkdir(PathInfo.HleIoDrvFileArg, PathInfo.LocalPath, SceMode);
+            var pathInfo = _hleIoManager.ParsePath(path);
+            pathInfo.HleIoDriver.IoMkdir(pathInfo.HleIoDrvFileArg, pathInfo.LocalPath, sceMode);
         }
 
-        public FileHandle Open(string FileName, HleIoFlags Flags, SceMode Mode)
+        public FileHandle Open(string fileName, HleIoFlags flags, SceMode mode)
         {
-            var PathInfo = HleIoManager.ParsePath(FileName);
-            PathInfo.HleIoDrvFileArg.HleIoDriver.IoOpen(PathInfo.HleIoDrvFileArg, PathInfo.LocalPath, Flags, Mode);
+            var pathInfo = _hleIoManager.ParsePath(fileName);
+            pathInfo.HleIoDrvFileArg.HleIoDriver.IoOpen(pathInfo.HleIoDrvFileArg, pathInfo.LocalPath, flags, mode);
             //return new FileHandle(this.HleIoManager, PathInfo.HleIoDrvFileArg);
-            return new FileHandle(PathInfo.HleIoDrvFileArg);
+            return new FileHandle(pathInfo.HleIoDrvFileArg);
         }
 
-        public byte[] ReadBytes(string FileName)
+        public byte[] ReadBytes(string fileName)
         {
-            using (var File = Open(FileName, HleIoFlags.Read, SceMode.File))
+            using (var file = Open(fileName, HleIoFlags.Read, SceMode.File))
             {
-                return File.ReadAll();
+                return file.ReadAll();
             }
         }
 
-        public void WriteBytes(string FileName, byte[] Data)
+        public void WriteBytes(string fileName, byte[] data)
         {
-            using (var File = Open(FileName, HleIoFlags.Create | HleIoFlags.Write | HleIoFlags.Truncate, SceMode.All))
+            using (var file = Open(fileName, HleIoFlags.Create | HleIoFlags.Write | HleIoFlags.Truncate, SceMode.All))
             {
-                File.WriteBytes(Data);
+                file.WriteBytes(data);
             }
         }
     }
@@ -85,104 +82,104 @@ namespace CSPspEmu.Hle.Managers
         /// <summary>
         /// Returns a tuple of Driver/Index/path.
         /// </summary>
-        /// <param name="FullPath"></param>
+        /// <param name="fullPath"></param>
         /// <returns></returns>
-        public ParsePathInfo ParsePath(string FullPath)
+        public ParsePathInfo ParsePath(string fullPath)
         {
             //FullPath = FullPath.Replace('\\', '/');
 
             //Console.Error.WriteLine("FullPath: {0}", FullPath);
-            if (FullPath.IndexOf(':') == -1)
+            if (fullPath.IndexOf(':') == -1)
             {
-                FullPath = CurrentDirectoryPath + "/" + FullPath;
+                fullPath = CurrentDirectoryPath + "/" + fullPath;
             }
 
             //Console.Error.WriteLine("FullPath: {0}", FullPath);
-            var Match = new Regex(@"^([a-zA-Z]+)(\d*):(.*)$").Match(FullPath);
-            var DriverName = Match.Groups[1].Value.ToLower() + ":";
-            int FileSystemNumber = 0;
-            IHleIoDriver HleIoDriver = null;
-            int.TryParse(Match.Groups[2].Value, out FileSystemNumber);
-            if (!Drivers.TryGetValue(DriverName, out HleIoDriver))
+            var match = new Regex(@"^([a-zA-Z]+)(\d*):(.*)$").Match(fullPath);
+            var driverName = match.Groups[1].Value.ToLower() + ":";
+            var fileSystemNumber = 0;
+            IHleIoDriver hleIoDriver = null;
+            int.TryParse(match.Groups[2].Value, out fileSystemNumber);
+            if (!Drivers.TryGetValue(driverName, out hleIoDriver))
             {
-                foreach (var Driver in Drivers)
+                foreach (var driver in Drivers)
                 {
-                    Console.WriteLine("Available Driver: '{0}'", Driver.Key);
+                    Console.WriteLine("Available Driver: '{0}'", driver.Key);
                 }
-                throw(new KeyNotFoundException("Can't find HleIoDriver '" + DriverName + "'"));
+                throw(new KeyNotFoundException("Can't find HleIoDriver '" + driverName + "'"));
             }
 
-            return new ParsePathInfo()
+            return new ParsePathInfo
             {
-                HleIoDrvFileArg = new HleIoDrvFileArg(DriverName, HleIoDriver, FileSystemNumber, null),
-                LocalPath = Match.Groups[3].Value.Replace('\\', '/'),
+                HleIoDrvFileArg = new HleIoDrvFileArg(driverName, hleIoDriver, fileSystemNumber, null),
+                LocalPath = match.Groups[3].Value.Replace('\\', '/'),
             };
         }
 
-        public IHleIoDriver GetDriver(string Name)
+        public IHleIoDriver GetDriver(string name)
         {
-            return Drivers[Name];
+            return Drivers[name];
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Name"></param>
-        /// <param name="Driver"></param>
-        public void SetDriver(string Name, IHleIoDriver Driver)
+        /// <param name="name"></param>
+        /// <param name="driver"></param>
+        public void SetDriver(string name, IHleIoDriver driver)
         {
             //Console.Error.WriteLine("SetDriver: {0}", Name);
             //Drivers.Add(Name, Driver);
-            Drivers[Name] = Driver;
+            Drivers[name] = driver;
             try
             {
-                Driver.IoInit();
+                driver.IoInit();
             }
-            catch (Exception Exception)
+            catch (Exception exception)
             {
-                Console.Error.WriteLine(Exception);
+                Console.Error.WriteLine(exception);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Name"></param>
-        public void RemoveDriver(string Name)
+        /// <param name="name"></param>
+        public void RemoveDriver(string name)
         {
             try
             {
-                Drivers[Name].IoExit();
-                Drivers.Remove(Name);
+                Drivers[name].IoExit();
+                Drivers.Remove(name);
             }
-            catch (Exception Exception)
+            catch (Exception exception)
             {
-                Console.Error.WriteLine(Exception);
+                Console.Error.WriteLine(exception);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DeviceName"></param>
+        /// <param name="deviceName"></param>
         /// <returns></returns>
-        public ParsePathInfo ParseDeviceName(string DeviceName)
+        public ParsePathInfo ParseDeviceName(string deviceName)
         {
-            var Match = new Regex(@"^([a-zA-Z]+)(\d*):$").Match(DeviceName);
-            int FileSystemNumber = 0;
-            int.TryParse(Match.Groups[2].Value, out FileSystemNumber);
+            var match = new Regex(@"^([a-zA-Z]+)(\d*):$").Match(deviceName);
+            int fileSystemNumber = 0;
+            int.TryParse(match.Groups[2].Value, out fileSystemNumber);
 
-            var BaseDeviceName = Match.Groups[1].Value + ":";
+            var baseDeviceName = match.Groups[1].Value + ":";
 
             //Drivers[
-            if (!Drivers.ContainsKey(BaseDeviceName))
+            if (!Drivers.ContainsKey(baseDeviceName))
             {
-                throw(new NotImplementedException(string.Format("Unknown device '{0}'", BaseDeviceName)));
+                throw(new NotImplementedException($"Unknown device '{baseDeviceName}'"));
             }
 
-            return new ParsePathInfo()
+            return new ParsePathInfo
             {
-                HleIoDrvFileArg = new HleIoDrvFileArg(BaseDeviceName, Drivers[BaseDeviceName], FileSystemNumber),
+                HleIoDrvFileArg = new HleIoDrvFileArg(baseDeviceName, Drivers[baseDeviceName], fileSystemNumber),
                 LocalPath = "",
             };
         }
@@ -195,10 +192,10 @@ namespace CSPspEmu.Hle.Managers
         /// <summary>
         /// Changes the current directory.
         /// </summary>
-        /// <param name="DirectoryPath"></param>
-        public void Chdir(string DirectoryPath)
+        /// <param name="directoryPath"></param>
+        public void Chdir(string directoryPath)
         {
-            CurrentDirectoryPath = DirectoryPath;
+            CurrentDirectoryPath = directoryPath;
         }
     }
 }

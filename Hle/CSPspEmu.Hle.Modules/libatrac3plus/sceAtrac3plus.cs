@@ -17,6 +17,7 @@ using CSPspEmu.Hle.Formats.audio.At3;
 using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {

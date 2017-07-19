@@ -17,10 +17,10 @@ namespace CSPspEmu.Core.Gpu
         {
             set
             {
-                if (OnScaleViewport != null) OnScaleViewport(value);
-                this._ScaleViewport = value;
+                OnScaleViewport?.Invoke(value);
+                _ScaleViewport = value;
             }
-            get { return _ScaleViewport; }
+            get => _ScaleViewport;
         }
 
         public virtual void InitSynchronizedOnce()
@@ -31,8 +31,8 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState,
-            GuPrimitiveType PrimitiveType)
+        public virtual void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState,
+            GuPrimitiveType primitiveType)
         {
         }
 
@@ -40,35 +40,35 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void Prim(ushort VertexCount)
+        public virtual void Prim(ushort vertexCount)
         {
         }
 
-        public virtual void Finish(GpuStateStruct* GpuState)
+        public virtual void Finish(GpuStateStruct* gpuState)
         {
         }
 
-        public virtual void End(GpuStateStruct* GpuState)
+        public virtual void End(GpuStateStruct* gpuState)
         {
         }
 
-        public virtual void Sync(GpuStateStruct* LastGpuState)
+        public virtual void Sync(GpuStateStruct* lastGpuState)
         {
         }
 
-        public virtual void BeforeDraw(GpuStateStruct* GpuState)
+        public virtual void BeforeDraw(GpuStateStruct* gpuState)
         {
         }
 
-        public virtual void InvalidateCache(uint Address, int Size)
+        public virtual void InvalidateCache(uint address, int size)
         {
         }
 
-        public virtual void TextureFlush(GpuStateStruct* GpuState)
+        public virtual void TextureFlush(GpuStateStruct* gpuState)
         {
         }
 
-        public virtual void TextureSync(GpuStateStruct* GpuState)
+        public virtual void TextureSync(GpuStateStruct* gpuState)
         {
         }
 
@@ -84,10 +84,10 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void Transfer(GpuStateStruct* GpuState)
+        public virtual void Transfer(GpuStateStruct* gpuState)
         {
             Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}",
-                GpuState->TextureTransferState.ToStringDefault());
+                gpuState->TextureTransferState.ToStringDefault());
         }
 
         public virtual void SetCurrent()

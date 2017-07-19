@@ -7,6 +7,13 @@ using CSharpUtils;
 
 public static class StringExtensions
 {
+    public static string JoinToString<T>(this IEnumerable<T> str, string separator) => String.Join(separator, str);
+
+    public static string ToCamelCase(this string str)
+    {
+        return str.Substr(0, 1).ToUpper() + str.Substr(1).ToLower();
+    }
+
     /// <summary>
     /// 
     /// </summary>

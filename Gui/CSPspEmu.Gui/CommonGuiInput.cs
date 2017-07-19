@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Components.Controller;
+using CSPspEmu.Core.Types.Controller;
 
 namespace CSPspEmu.Gui
 {

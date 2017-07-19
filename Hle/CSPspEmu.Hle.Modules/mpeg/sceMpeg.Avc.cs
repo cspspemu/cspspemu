@@ -145,9 +145,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
             {
                 switch (Mode->PixelFormat)
                 {
-                    case Core.Types.GuPixelFormats.RGBA_5650:
-                    case Core.Types.GuPixelFormats.RGBA_5551:
-                    case Core.Types.GuPixelFormats.RGBA_8888:
+                    case Core.Types.GuPixelFormats.Rgba5650:
+                    case Core.Types.GuPixelFormats.Rgba5551:
+                    case Core.Types.GuPixelFormats.Rgba8888:
                         SceMpegData->SceMpegAvcMode = *Mode;
                         break;
                     default:

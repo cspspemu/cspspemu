@@ -15,8 +15,8 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Threading.EventFlags;
 using CSharpUtils;
 using CSharpUtils.Threading;
+using CSPspEmu.Hle.Interop;
 using CSPspEmu.Hle.Loader;
-using CSPspEmu.Interop;
 
 namespace CSPspEmu.Hle
 {

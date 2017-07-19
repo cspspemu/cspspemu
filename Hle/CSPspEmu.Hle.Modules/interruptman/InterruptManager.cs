@@ -14,7 +14,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
         {
             switch (PspInterrupt)
             {
-                case PspInterrupts.PSP_VBLANK_INT: break;
+                case PspInterrupts.PspVblankInt: break;
                 default: throw(new NotImplementedException(string.Format("Can't handle '{0}'", PspInterrupt)));
             }
         }

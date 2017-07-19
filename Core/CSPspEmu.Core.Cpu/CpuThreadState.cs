@@ -84,11 +84,11 @@ namespace CSPspEmu.Core.Cpu
         // C0R: Cop0 registers
         // VFR_CC: Vfpu comparison flags
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        public uint GPR0,
-            GPR1,
-            GPR2,
-            GPR3,
-            GPR4,
+        public uint Gpr0,
+            Gpr1,
+            Gpr2,
+            Gpr3,
+            Gpr4,
             GPR5,
             GPR6,
             GPR7,
@@ -312,17 +312,96 @@ namespace CSPspEmu.Core.Cpu
             VFR126,
             VFR127;
 
+        //var name = 'C0R'; for (var n = 0; n < 32; n += 4) console.log('nameof(' + name + (n) + '), nameof(' + name + (n + 1) + '), nameof(' + name + (n + 2) + '), nameof(' + name + (n + 3) + '),');
+        public static readonly string[] C0RNames =
+        {
+            nameof(C0R0), nameof(C0R1), nameof(C0R2), nameof(C0R3),
+            nameof(C0R4), nameof(C0R5), nameof(C0R6), nameof(C0R7),
+            nameof(C0R8), nameof(C0R9), nameof(C0R10), nameof(C0R11),
+            nameof(C0R12), nameof(C0R13), nameof(C0R14), nameof(C0R15),
+            nameof(C0R16), nameof(C0R17), nameof(C0R18), nameof(C0R19),
+            nameof(C0R20), nameof(C0R21), nameof(C0R22), nameof(C0R23),
+            nameof(C0R24), nameof(C0R25), nameof(C0R26), nameof(C0R27),
+            nameof(C0R28), nameof(C0R29), nameof(C0R30), nameof(C0R31),
+        };
+
+        public static readonly string[] GprNames =
+        {
+            nameof(Gpr0), nameof(Gpr1), nameof(Gpr2), nameof(Gpr3),
+            nameof(Gpr4), nameof(GPR5), nameof(GPR6), nameof(GPR7),
+            nameof(GPR8), nameof(GPR9), nameof(GPR10), nameof(GPR11),
+            nameof(GPR12), nameof(GPR13), nameof(GPR14), nameof(GPR15),
+            nameof(GPR16), nameof(GPR17), nameof(GPR18), nameof(GPR19),
+            nameof(GPR20), nameof(GPR21), nameof(GPR22), nameof(GPR23),
+            nameof(GPR24), nameof(GPR25), nameof(GPR26), nameof(GPR27),
+            nameof(GPR28), nameof(GPR29), nameof(GPR30), nameof(GPR31),
+        };
+
+        public static readonly string[] FprNames =
+        {
+            nameof(FPR0), nameof(FPR1), nameof(FPR2), nameof(FPR3),
+            nameof(FPR4), nameof(FPR5), nameof(FPR6), nameof(FPR7),
+            nameof(FPR8), nameof(FPR9), nameof(FPR10), nameof(FPR11),
+            nameof(FPR12), nameof(FPR13), nameof(FPR14), nameof(FPR15),
+            nameof(FPR16), nameof(FPR17), nameof(FPR18), nameof(FPR19),
+            nameof(FPR20), nameof(FPR21), nameof(FPR22), nameof(FPR23),
+            nameof(FPR24), nameof(FPR25), nameof(FPR26), nameof(FPR27),
+            nameof(FPR28), nameof(FPR29), nameof(FPR30), nameof(FPR31),
+        };
+
+        public static readonly string[] VfrNames =
+        {
+            nameof(VFR0), nameof(VFR1), nameof(VFR2), nameof(VFR3),
+            nameof(VFR4), nameof(VFR5), nameof(VFR6), nameof(VFR7),
+            nameof(VFR8), nameof(VFR9), nameof(VFR10), nameof(VFR11),
+            nameof(VFR12), nameof(VFR13), nameof(VFR14), nameof(VFR15),
+            nameof(VFR16), nameof(VFR17), nameof(VFR18), nameof(VFR19),
+            nameof(VFR20), nameof(VFR21), nameof(VFR22), nameof(VFR23),
+            nameof(VFR24), nameof(VFR25), nameof(VFR26), nameof(VFR27),
+            nameof(VFR28), nameof(VFR29), nameof(VFR30), nameof(VFR31),
+            nameof(VFR32), nameof(VFR33), nameof(VFR34), nameof(VFR35),
+            nameof(VFR36), nameof(VFR37), nameof(VFR38), nameof(VFR39),
+            nameof(VFR40), nameof(VFR41), nameof(VFR42), nameof(VFR43),
+            nameof(VFR44), nameof(VFR45), nameof(VFR46), nameof(VFR47),
+            nameof(VFR48), nameof(VFR49), nameof(VFR50), nameof(VFR51),
+            nameof(VFR52), nameof(VFR53), nameof(VFR54), nameof(VFR55),
+            nameof(VFR56), nameof(VFR57), nameof(VFR58), nameof(VFR59),
+            nameof(VFR60), nameof(VFR61), nameof(VFR62), nameof(VFR63),
+            nameof(VFR64), nameof(VFR65), nameof(VFR66), nameof(VFR67),
+            nameof(VFR68), nameof(VFR69), nameof(VFR70), nameof(VFR71),
+            nameof(VFR72), nameof(VFR73), nameof(VFR74), nameof(VFR75),
+            nameof(VFR76), nameof(VFR77), nameof(VFR78), nameof(VFR79),
+            nameof(VFR80), nameof(VFR81), nameof(VFR82), nameof(VFR83),
+            nameof(VFR84), nameof(VFR85), nameof(VFR86), nameof(VFR87),
+            nameof(VFR88), nameof(VFR89), nameof(VFR90), nameof(VFR91),
+            nameof(VFR92), nameof(VFR93), nameof(VFR94), nameof(VFR95),
+            nameof(VFR96), nameof(VFR97), nameof(VFR98), nameof(VFR99),
+            nameof(VFR100), nameof(VFR101), nameof(VFR102), nameof(VFR103),
+            nameof(VFR104), nameof(VFR105), nameof(VFR106), nameof(VFR107),
+            nameof(VFR108), nameof(VFR109), nameof(VFR110), nameof(VFR111),
+            nameof(VFR112), nameof(VFR113), nameof(VFR114), nameof(VFR115),
+            nameof(VFR116), nameof(VFR117), nameof(VFR118), nameof(VFR119),
+            nameof(VFR120), nameof(VFR121), nameof(VFR122), nameof(VFR123),
+            nameof(VFR124), nameof(VFR125), nameof(VFR126), nameof(VFR127),
+        };
+
+        public static readonly string[] VfrCcNames =
+        {
+            nameof(VFR_CC_0),
+            nameof(VFR_CC_1),
+            nameof(VFR_CC_2),
+            nameof(VFR_CC_3),
+            nameof(VFR_CC_4),
+            nameof(VFR_CC_5),
+            nameof(VFR_CC_6),
+            nameof(VFR_CC_7),
+        };
+
         public bool VFR_CC_0, VFR_CC_1, VFR_CC_2, VFR_CC_3, VFR_CC_4, VFR_CC_5, VFR_CC_6, VFR_CC_7;
 
-        public bool VFR_CC_ANY
-        {
-            get { return VFR_CC_4; }
-        }
+        public bool VFR_CC_ANY => VFR_CC_4;
 
-        public bool VFR_CC_ALL
-        {
-            get { return VFR_CC_5; }
-        }
+        public bool VFR_CC_ALL => VFR_CC_5;
 
         public uint VFR_CC_Value
         {
@@ -434,8 +513,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint V0
         {
-            get { return GPR2; }
-            set { GPR2 = value; }
+            get { return Gpr2; }
+            set { Gpr2 = value; }
         }
 
         public GprList GPR;
@@ -537,7 +616,8 @@ namespace CSPspEmu.Core.Cpu
         /// 
         /// </summary>
         /// <param name="delegateId"></param>
-        public void SyscallNative(uint delegateId) => CpuProcessor.RegisteredNativeSyscallMethods[delegateId].PoolItem.Value(this);
+        public void SyscallNative(uint delegateId) =>
+            CpuProcessor.RegisteredNativeSyscallMethods[delegateId].PoolItem.Value(this);
 
         //private DateTime LastTick;
         private int TickCount = 0;
@@ -593,7 +673,7 @@ namespace CSPspEmu.Core.Cpu
         {
             if (EnableYielding)
             {
-                this.CpuProcessor.CpuConnector.Yield(this);
+                CpuProcessor.CpuConnector.Yield(this);
             }
         }
 
@@ -617,7 +697,8 @@ namespace CSPspEmu.Core.Cpu
         /// 
         /// </summary>
         /// <see cref="http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx"/>
-        private static readonly string[] RegisterMnemonicNames = {
+        private static readonly string[] RegisterMnemonicNames =
+        {
             "zr", "at", "v0", "v1", "a0", "a1", "a2", "a3",
             "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
             "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
@@ -716,8 +797,8 @@ namespace CSPspEmu.Core.Cpu
             HI = that.HI;
             fixed (float* thisFpr = &FPR0)
             fixed (float* thatFpr = &that.FPR0)
-            fixed (uint* thisGpr = &GPR0)
-            fixed (uint* thatGpr = &that.GPR0)
+            fixed (uint* thisGpr = &Gpr0)
+            fixed (uint* thatGpr = &that.Gpr0)
             {
                 for (var n = 0; n < 32; n++)
                 {
@@ -756,7 +837,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         /// <param name="methodCacheInfo"></param>
         /// <param name="pc"></param>
-        public void _MethodCacheInfo_SetInternal(MethodCacheInfo methodCacheInfo, uint pc) => MethodCache._MethodCacheInfo_SetInternal(this, methodCacheInfo, pc);
+        public void _MethodCacheInfo_SetInternal(MethodCacheInfo methodCacheInfo, uint pc) =>
+            MethodCache._MethodCacheInfo_SetInternal(this, methodCacheInfo, pc);
 
         /// <summary>
         /// 

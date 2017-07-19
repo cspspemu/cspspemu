@@ -3,7 +3,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
 {
-    public enum EventFlagId : int
+    public enum EventFlagId
     {
     }
 
