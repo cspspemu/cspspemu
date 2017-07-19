@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu.Table
         public static InstructionInfo[] Alu => _alu ?? (_alu = new[]
         {
             // Arithmetic operations.
-            Id("add", Vm("000000:rs:rt:rd:00000:100000"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Add, Vm("000000:rs:rt:rd:00000:100000"), "%d, %s, %t", AddrTypeNone, 0),
             Id("addu", Vm("000000:rs:rt:rd:00000:100001"), "%d, %s, %t", AddrTypeNone, 0),
             Id("addi", Vm("001000:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
             Id("addiu", Vm("001001:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),

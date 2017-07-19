@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Arithmetic operations.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("add")]
+        [InstructionName(InstructionNames.Add)]
         public AstNodeStm Add() => _ast.AssignGpr(Rd, _ast.GPR_s(Rs) + _ast.GPR_s(Rt));
 
         [InstructionName("addu")]

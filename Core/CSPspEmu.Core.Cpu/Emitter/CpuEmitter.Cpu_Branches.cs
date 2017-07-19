@@ -1,4 +1,5 @@
-﻿using SafeILGenerator.Ast;
+﻿using CSPspEmu.Core.Cpu.Table;
+using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
@@ -10,7 +11,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Code executed after the delayed slot.
         public AstNodeStm _branch_post(AstLabel branchLabel, uint branchPc)
         {
-            if (this.AndLink)
+            if (_andLink)
             {
                 return _ast.If(
                     BranchFlag(),
@@ -30,20 +31,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
             }
         }
 
-        bool AndLink = false;
-        uint BranchPC = 0;
+        bool _andLink = false;
+        uint _branchPc = 0;
 
-        private AstLocal BranchFlagLocal = null;
+        private AstLocal _branchFlagLocal = null;
 
         private AstNodeExprLValue BranchFlag()
         {
             if (DynarecConfig.BranchFlagAsLocal)
             {
-                if (BranchFlagLocal == null)
+                if (_branchFlagLocal == null)
                 {
-                    BranchFlagLocal = AstLocal.Create<bool>("BranchFlag");
+                    _branchFlagLocal = AstLocal.Create<bool>("BranchFlag");
                 }
-                return _ast.Local(BranchFlagLocal);
+                return _ast.Local(_branchFlagLocal);
             }
             else
             {
@@ -53,8 +54,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private AstNodeStm AssignBranchFlag(AstNodeExpr expr, bool andLink = false)
         {
-            AndLink = andLink;
-            BranchPC = _pc;
+            _andLink = andLink;
+            _branchPc = _pc;
             return _ast.Assign(BranchFlag(), _ast.Cast<bool>(expr, Explicit: false));
         }
 
@@ -66,23 +67,53 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // bgtz(l)    : Branch on Great Than Zero (Likely).
         // bgez(al)(l): Branch on Greater Equal Zero (And Link) (Likely).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        public AstNodeStm beq() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "==", _ast.GPR_s(Rt)));
+        [InstructionName("beq")]
+        public AstNodeStm Beq() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "==", _ast.GPR_s(Rt)));
 
-        public AstNodeStm beql() => beq();
-        public AstNodeStm bne() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "!=", _ast.GPR_s(Rt)));
-        public AstNodeStm bnel() => bne();
-        public AstNodeStm bltz() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<", 0));
-        public AstNodeStm bltzl() => bltz();
-        public AstNodeStm bltzal() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<", 0), andLink: true);
-        public AstNodeStm bltzall() => bltzal();
-        public AstNodeStm blez() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<=", 0));
-        public AstNodeStm blezl() => blez();
-        public AstNodeStm bgtz() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">", 0));
-        public AstNodeStm bgtzl() => bgtz();
-        public AstNodeStm bgez() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">=", 0));
-        public AstNodeStm bgezl() => bgez();
-        public AstNodeStm bgezal() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">=", 0), andLink: true);
-        public AstNodeStm bgezall() => bgezal();
+        [InstructionName("beql")]
+        public AstNodeStm Beql() => Beq();
+
+        [InstructionName("bne")]
+        public AstNodeStm Bne() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "!=", _ast.GPR_s(Rt)));
+
+        [InstructionName("bnel")]
+        public AstNodeStm Bnel() => Bne();
+
+        [InstructionName("bltz")]
+        public AstNodeStm Bltz() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<", 0));
+
+        [InstructionName("bltzl")]
+        public AstNodeStm Bltzl() => Bltz();
+
+        [InstructionName("bltzal")]
+        public AstNodeStm Bltzal() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<", 0), andLink: true);
+
+        [InstructionName("bltzall")]
+        public AstNodeStm Bltzall() => Bltzal();
+
+        [InstructionName("blez")]
+        public AstNodeStm Blez() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<=", 0));
+
+        [InstructionName("blezl")]
+        public AstNodeStm Blezl() => Blez();
+
+        [InstructionName("bgtz")]
+        public AstNodeStm Bgtz() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">", 0));
+
+        [InstructionName("bgtzl")]
+        public AstNodeStm Bgtzl() => Bgtz();
+
+        [InstructionName("bgez")]
+        public AstNodeStm Bgez() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">=", 0));
+
+        [InstructionName("bgezl")]
+        public AstNodeStm Bgezl() => Bgez();
+
+        [InstructionName("bgezal")]
+        public AstNodeStm Bgezal() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">=", 0), andLink: true);
+
+        [InstructionName("bgezall")]
+        public AstNodeStm Bgezall() => Bgezal();
 
         public bool PopulateCallStack =>
             !(_cpuProcessor.Memory.HasFixedGlobalAddress) && _cpuProcessor.CpuConfig.TrackCallStack;
@@ -169,12 +200,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // j(al)(r): Jump (And Link) (Register)
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        public AstNodeStm j() => JumpToFixedAddress(_instruction.GetJumpAddress(this._memory, _pc));
+        [InstructionName("j")]
+        public AstNodeStm J() => JumpToFixedAddress(_instruction.GetJumpAddress(this._memory, _pc));
 
-        public AstNodeStm jal() => CallFixedAddress(_instruction.GetJumpAddress(this._memory, _pc));
+        [InstructionName("jal")]
+        public AstNodeStm Jal() => CallFixedAddress(_instruction.GetJumpAddress(this._memory, _pc));
 
-        public AstNodeStm jr() => Rs == 31 ? ReturnFromFunction(_ast.GPR_u(Rs)) : JumpDynamicToAddress(_ast.GPR_u(Rs));
+        [InstructionName("jr")]
+        public AstNodeStm Jr() => Rs == 31 ? ReturnFromFunction(_ast.GPR_u(Rs)) : JumpDynamicToAddress(_ast.GPR_u(Rs));
 
-        public AstNodeStm jalr() => CallDynamicAddress(_ast.GPR_u(Rs));
+        [InstructionName("jalr")]
+        public AstNodeStm Jalr() => CallDynamicAddress(_ast.GPR_u(Rs));
     }
 }
