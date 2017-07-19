@@ -47,7 +47,7 @@ namespace CSPspEmu.Core.Cpu.Table
             .Union(Bcu)
             .Union(VfpuBranch);
 
-        public static InstructionInfo Unknown = Id("unknwon", Vm("111111:11111:11111:11111:11111:111111"), "",
+        public static InstructionInfo Unknown = Id(InstructionNames.Unknown, Vm("111111:11111:11111:11111:11111:111111"), "",
             AddrTypeNone, 0);
 
         private static InstructionInfo[] _alu;
@@ -56,86 +56,86 @@ namespace CSPspEmu.Core.Cpu.Table
         {
             // Arithmetic operations.
             Id(InstructionNames.Add, Vm("000000:rs:rt:rd:00000:100000"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("addu", Vm("000000:rs:rt:rd:00000:100001"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("addi", Vm("001000:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
-            Id("addiu", Vm("001001:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
-            Id("sub", Vm("000000:rs:rt:rd:00000:100010"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("subu", Vm("000000:rs:rt:rd:00000:100011"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Addu, Vm("000000:rs:rt:rd:00000:100001"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Addi, Vm("001000:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
+            Id(InstructionNames.Addiu, Vm("001001:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
+            Id(InstructionNames.Sub, Vm("000000:rs:rt:rd:00000:100010"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Subu, Vm("000000:rs:rt:rd:00000:100011"), "%d, %s, %t", AddrTypeNone, 0),
 
             // Logical Operations.
-            Id("and", Vm("000000:rs:rt:rd:00000:100100"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("andi", Vm("001100:rs:rt:imm16"), "%t, %s, %I", AddrTypeNone, 0),
-            Id("nor", Vm("000000:rs:rt:rd:00000:100111"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("or", Vm("000000:rs:rt:rd:00000:100101"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("ori", Vm("001101:rs:rt:imm16"), "%t, %s, %I", AddrTypeNone, 0),
-            Id("xor", Vm("000000:rs:rt:rd:00000:100110"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("xori", Vm("001110:rs:rt:imm16"), "%t, %s, %I", AddrTypeNone, 0),
+            Id(InstructionNames.And, Vm("000000:rs:rt:rd:00000:100100"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Andi, Vm("001100:rs:rt:imm16"), "%t, %s, %I", AddrTypeNone, 0),
+            Id(InstructionNames.Nor, Vm("000000:rs:rt:rd:00000:100111"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Or, Vm("000000:rs:rt:rd:00000:100101"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Ori, Vm("001101:rs:rt:imm16"), "%t, %s, %I", AddrTypeNone, 0),
+            Id(InstructionNames.Xor, Vm("000000:rs:rt:rd:00000:100110"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Xori, Vm("001110:rs:rt:imm16"), "%t, %s, %I", AddrTypeNone, 0),
 
             // Shift Left/Right Logical/Arithmethic (Variable).
-            Id("sll", Vm("000000:00000:rt:rd:sa:000000"), "%d, %t, %a", AddrTypeNone, 0),
-            Id("sllv", Vm("000000:rs:rt:rd:00000:000100"), "%d, %t, %s", AddrTypeNone, 0),
-            Id("sra", Vm("000000:00000:rt:rd:sa:000011"), "%d, %t, %a", AddrTypeNone, 0),
-            Id("srav", Vm("000000:rs:rt:rd:00000:000111"), "%d, %t, %s", AddrTypeNone, 0),
-            Id("srl", Vm("000000:00000:rt:rd:sa:000010"), "%d, %t, %a", AddrTypeNone, 0),
-            Id("srlv", Vm("000000:rs:rt:rd:00000:000110"), "%d, %t, %s", AddrTypeNone, 0),
-            Id("rotr", Vm("000000:00001:rt:rd:sa:000010"), "%d, %t, %a", AddrTypeNone, 0),
-            Id("rotrv", Vm("000000:rs:rt:rd:00001:000110"), "%d, %t, %s", AddrTypeNone, 0),
+            Id(InstructionNames.Sll, Vm("000000:00000:rt:rd:sa:000000"), "%d, %t, %a", AddrTypeNone, 0),
+            Id(InstructionNames.Sllv, Vm("000000:rs:rt:rd:00000:000100"), "%d, %t, %s", AddrTypeNone, 0),
+            Id(InstructionNames.Sra, Vm("000000:00000:rt:rd:sa:000011"), "%d, %t, %a", AddrTypeNone, 0),
+            Id(InstructionNames.Srav, Vm("000000:rs:rt:rd:00000:000111"), "%d, %t, %s", AddrTypeNone, 0),
+            Id(InstructionNames.Srl, Vm("000000:00000:rt:rd:sa:000010"), "%d, %t, %a", AddrTypeNone, 0),
+            Id(InstructionNames.Srlv, Vm("000000:rs:rt:rd:00000:000110"), "%d, %t, %s", AddrTypeNone, 0),
+            Id(InstructionNames.Rotr, Vm("000000:00001:rt:rd:sa:000010"), "%d, %t, %a", AddrTypeNone, 0),
+            Id(InstructionNames.Rotrv, Vm("000000:rs:rt:rd:00001:000110"), "%d, %t, %s", AddrTypeNone, 0),
 
             // Set Less Than (Immediate) (Unsigned).
-            Id("slt", Vm("000000:rs:rt:rd:00000:101010"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("slti", Vm("001010:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
-            Id("sltu", Vm("000000:rs:rt:rd:00000:101011"), "%d, %s, %t", AddrTypeNone, 0),
-            Id("sltiu", Vm("001011:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
+            Id(InstructionNames.Slt, Vm("000000:rs:rt:rd:00000:101010"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Slti, Vm("001010:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
+            Id(InstructionNames.Sltu, Vm("000000:rs:rt:rd:00000:101011"), "%d, %s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Sltiu, Vm("001011:rs:rt:imm16"), "%t, %s, %i", AddrTypeNone, 0),
 
             // Load Upper Immediate.
-            Id("lui", Vm("001111:00000:rt:imm16"), "%t, %I", AddrTypeNone, 0),
+            Id(InstructionNames.Lui, Vm("001111:00000:rt:imm16"), "%t, %I", AddrTypeNone, 0),
 
             // Sign Extend Byte/Half word.
-            Id("seb", Vm("011111:00000:rt:rd:10000:100000"), "%d, %t", AddrTypeNone, 0),
-            Id("seh", Vm("011111:00000:rt:rd:11000:100000"), "%d, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Seb, Vm("011111:00000:rt:rd:10000:100000"), "%d, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Seh, Vm("011111:00000:rt:rd:11000:100000"), "%d, %t", AddrTypeNone, 0),
 
             // BIT REVerse.
-            Id("bitrev", Vm("011111:00000:rt:rd:10100:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Bitrev, Vm("011111:00000:rt:rd:10100:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
 
             // MAXimum/MINimum.
-            Id("max", Vm("000000:rs:rt:rd:00000:101100"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
-            Id("min", Vm("000000:rs:rt:rd:00000:101101"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Max, Vm("000000:rs:rt:rd:00000:101100"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Min, Vm("000000:rs:rt:rd:00000:101101"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
 
             // DIVide (Unsigned).
-            Id("div", Vm("000000:rs:rt:00000:00000:011010"), "%s, %t", AddrTypeNone, 0),
-            Id("divu", Vm("000000:rs:rt:00000:00000:011011"), "%s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Div, Vm("000000:rs:rt:00000:00000:011010"), "%s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Divu, Vm("000000:rs:rt:00000:00000:011011"), "%s, %t", AddrTypeNone, 0),
 
             // MULTiply (Unsigned).
-            Id("mult", Vm("000000:rs:rt:00000:00000:011000"), "%s, %t", AddrTypeNone, 0),
-            Id("multu", Vm("000000:rs:rt:00000:00000:011001"), "%s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Mult, Vm("000000:rs:rt:00000:00000:011000"), "%s, %t", AddrTypeNone, 0),
+            Id(InstructionNames.Multu, Vm("000000:rs:rt:00000:00000:011001"), "%s, %t", AddrTypeNone, 0),
 
             // Multiply ADD/SUBstract (Unsigned).
-            Id("madd", Vm("000000:rs:rt:00000:00000:011100"), "%s, %t", AddrTypeNone, InstrTypePsp),
-            Id("maddu", Vm("000000:rs:rt:00000:00000:011101"), "%s, %t", AddrTypeNone, InstrTypePsp),
-            Id("msub", Vm("000000:rs:rt:00000:00000:101110"), "%s, %t", AddrTypeNone, InstrTypePsp),
-            Id("msubu", Vm("000000:rs:rt:00000:00000:101111"), "%s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Madd, Vm("000000:rs:rt:00000:00000:011100"), "%s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Maddu, Vm("000000:rs:rt:00000:00000:011101"), "%s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Msub, Vm("000000:rs:rt:00000:00000:101110"), "%s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Msubu, Vm("000000:rs:rt:00000:00000:101111"), "%s, %t", AddrTypeNone, InstrTypePsp),
 
             // Move To/From HI/LO.
-            Id("mfhi", Vm("000000:00000:00000:rd:00000:010000"), "%d", AddrTypeNone, 0),
-            Id("mflo", Vm("000000:00000:00000:rd:00000:010010"), "%d", AddrTypeNone, 0),
-            Id("mthi", Vm("000000:rs:00000:00000:00000:010001"), "%s", AddrTypeNone, 0),
-            Id("mtlo", Vm("000000:rs:00000:00000:00000:010011"), "%s", AddrTypeNone, 0),
+            Id(InstructionNames.Mfhi, Vm("000000:00000:00000:rd:00000:010000"), "%d", AddrTypeNone, 0),
+            Id(InstructionNames.Mflo, Vm("000000:00000:00000:rd:00000:010010"), "%d", AddrTypeNone, 0),
+            Id(InstructionNames.Mthi, Vm("000000:rs:00000:00000:00000:010001"), "%s", AddrTypeNone, 0),
+            Id(InstructionNames.Mtlo, Vm("000000:rs:00000:00000:00000:010011"), "%s", AddrTypeNone, 0),
 
             // Move if Zero/Non zero.
-            Id("movz", Vm("000000:rs:rt:rd:00000:001010"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
-            Id("movn", Vm("000000:rs:rt:rd:00000:001011"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Movz, Vm("000000:rs:rt:rd:00000:001010"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Movn, Vm("000000:rs:rt:rd:00000:001011"), "%d, %s, %t", AddrTypeNone, InstrTypePsp),
 
             // EXTract/INSert.
-            Id("ext", Vm("011111:rs:rt:msb:lsb:000000"), "%t, %s, %a, %ne", AddrTypeNone, InstrTypePsp),
-            Id("ins", Vm("011111:rs:rt:msb:lsb:000100"), "%t, %s, %a, %ni", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Ext, Vm("011111:rs:rt:msb:lsb:000000"), "%t, %s, %a, %ne", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Ins, Vm("011111:rs:rt:msb:lsb:000100"), "%t, %s, %a, %ni", AddrTypeNone, InstrTypePsp),
 
             // Count Leading Ones/Zeros in word.
-            Id("clz", Vm("000000:rs:00000:rd:00000:010110"), "%d, %s", AddrTypeNone, InstrTypePsp),
-            Id("clo", Vm("000000:rs:00000:rd:00000:010111"), "%d, %s", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Clz, Vm("000000:rs:00000:rd:00000:010110"), "%d, %s", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Clo, Vm("000000:rs:00000:rd:00000:010111"), "%d, %s", AddrTypeNone, InstrTypePsp),
 
             // Word Swap Bytes Within Halfwords/Words.
-            Id("wsbh", Vm("011111:00000:rt:rd:00010:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
-            Id("wsbw", Vm("011111:00000:rt:rd:00011:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Wsbh, Vm("011111:00000:rt:rd:00010:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Wsbw, Vm("011111:00000:rt:rd:00011:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
         });
 
         private static InstructionInfo[] _bcu;
@@ -143,52 +143,52 @@ namespace CSPspEmu.Core.Cpu.Table
         public static InstructionInfo[] Bcu => _bcu ?? (_bcu = new[]
         {
             // Branch on EQuals (Likely).
-            Id("beq", Vm("000100:rs:rt:imm16"), "%s, %t, %O", AddrType16, InstrTypeB),
-            Id("beql", Vm("010100:rs:rt:imm16"), "%s, %t, %O", AddrType16,
+            Id(InstructionNames.Beq, Vm("000100:rs:rt:imm16"), "%s, %t, %O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Beql, Vm("010100:rs:rt:imm16"), "%s, %t, %O", AddrType16,
                 InstrTypeB | InstrTypeLikely),
 
             // Branch on Greater Equal Zero (And Link) (Likely).
-            Id("bgez", Vm("000001:rs:00001:imm16"), "%s, %O", AddrType16, InstrTypeB),
-            Id("bgezl", Vm("000001:rs:00011:imm16"), "%s, %O", AddrType16,
+            Id(InstructionNames.Bgez, Vm("000001:rs:00001:imm16"), "%s, %O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bgezl, Vm("000001:rs:00011:imm16"), "%s, %O", AddrType16,
                 InstrTypeB | InstrTypeLikely),
-            Id("bgezal", Vm("000001:rs:10001:imm16"), "%s, %O", AddrType16, InstrTypeJal),
-            Id("bgezall", Vm("000001:rs:10011:imm16"), "%s, %O", AddrType16,
+            Id(InstructionNames.Bgezal, Vm("000001:rs:10001:imm16"), "%s, %O", AddrType16, InstrTypeJal),
+            Id(InstructionNames.Bgezall, Vm("000001:rs:10011:imm16"), "%s, %O", AddrType16,
                 InstrTypeJal | InstrTypeLikely),
 
             // Branch on Less Than Zero (And Link) (Likely).
-            Id("bltz", Vm("000001:rs:00000:imm16"), "%s, %O", AddrType16, InstrTypeB),
-            Id("bltzl", Vm("000001:rs:00010:imm16"), "%s, %O", AddrType16,
+            Id(InstructionNames.Bltz, Vm("000001:rs:00000:imm16"), "%s, %O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bltzl, Vm("000001:rs:00010:imm16"), "%s, %O", AddrType16,
                 InstrTypeB | InstrTypeLikely),
-            Id("bltzal", Vm("000001:rs:10000:imm16"), "%s, %O", AddrType16, InstrTypeJal),
-            Id("bltzall", Vm("000001:rs:10010:imm16"), "%s, %O", AddrType16,
+            Id(InstructionNames.Bltzal, Vm("000001:rs:10000:imm16"), "%s, %O", AddrType16, InstrTypeJal),
+            Id(InstructionNames.Bltzall, Vm("000001:rs:10010:imm16"), "%s, %O", AddrType16,
                 InstrTypeJal | InstrTypeLikely),
 
             // Branch on Less Or Equals than Zero (Likely).
-            Id("blez", Vm("000110:rs:00000:imm16"), "%s, %O", AddrType16, InstrTypeB),
-            Id("blezl", Vm("010110:rs:00000:imm16"), "%s, %O", AddrType16,
+            Id(InstructionNames.Blez, Vm("000110:rs:00000:imm16"), "%s, %O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Blezl, Vm("010110:rs:00000:imm16"), "%s, %O", AddrType16,
                 InstrTypeB | InstrTypeLikely),
 
             // Branch on Great Than Zero (Likely).
-            Id("bgtz", Vm("000111:rs:00000:imm16"), "%s, %O", AddrType16, InstrTypeB),
-            Id("bgtzl", Vm("010111:rs:00000:imm16"), "%s, %O", AddrType16,
+            Id(InstructionNames.Bgtz, Vm("000111:rs:00000:imm16"), "%s, %O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bgtzl, Vm("010111:rs:00000:imm16"), "%s, %O", AddrType16,
                 InstrTypeB | InstrTypeLikely),
 
             // Branch on Not Equals (Likely).
-            Id("bne", Vm("000101:rs:rt:imm16"), "%s, %t, %O", AddrType16, InstrTypeB),
-            Id("bnel", Vm("010101:rs:rt:imm16"), "%s, %t, %O", AddrType16,
+            Id(InstructionNames.Bne, Vm("000101:rs:rt:imm16"), "%s, %t, %O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bnel, Vm("010101:rs:rt:imm16"), "%s, %t, %O", AddrType16,
                 InstrTypeB | InstrTypeLikely),
 
             // Jump (And Link) (Register).
-            Id("j", Vm("000010:imm26"), "%j", AddrType26, InstrTypeJump),
-            Id("jr", Vm("000000:rs:00000:00000:00000:001000"), "%J", AddrTypeReg, InstrTypeJump),
-            Id("jalr", Vm("000000:rs:00000:rd:00000:001001"), "%J, %d", AddrTypeReg, InstrTypeJal),
-            Id("jal", Vm("000011:imm26"), "%j", AddrType26, InstrTypeJal),
+            Id(InstructionNames.J, Vm("000010:imm26"), "%j", AddrType26, InstrTypeJump),
+            Id(InstructionNames.Jr, Vm("000000:rs:00000:00000:00000:001000"), "%J", AddrTypeReg, InstrTypeJump),
+            Id(InstructionNames.Jalr, Vm("000000:rs:00000:rd:00000:001001"), "%J, %d", AddrTypeReg, InstrTypeJal),
+            Id(InstructionNames.Jal, Vm("000011:imm26"), "%j", AddrType26, InstrTypeJal),
 
             // Branch on C1 False/True (Likely).
-            Id("bc1f", Vm("010001:01000:00000:imm16"), "%O", AddrType16, InstrTypeB),
-            Id("bc1t", Vm("010001:01000:00001:imm16"), "%O", AddrType16, InstrTypeB),
-            Id("bc1fl", Vm("010001:01000:00010:imm16"), "%O", AddrType16, InstrTypeB),
-            Id("bc1tl", Vm("010001:01000:00011:imm16"), "%O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bc1F, Vm("010001:01000:00000:imm16"), "%O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bc1T, Vm("010001:01000:00001:imm16"), "%O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bc1Fl, Vm("010001:01000:00010:imm16"), "%O", AddrType16, InstrTypeB),
+            Id(InstructionNames.Bc1Tl, Vm("010001:01000:00011:imm16"), "%O", AddrType16, InstrTypeB),
         });
 
         private static InstructionInfo[] _lsu;
@@ -196,30 +196,30 @@ namespace CSPspEmu.Core.Cpu.Table
         public static InstructionInfo[] Lsu => _lsu ?? (_lsu = new[]
         {
             // Load Byte/Half word/Word (Left/Right/Unsigned).
-            Id("lb", Vm("100000:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("lh", Vm("100001:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("lw", Vm("100011:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("lwl", Vm("100010:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("lwr", Vm("100110:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("lbu", Vm("100100:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("lhu", Vm("100101:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lb, Vm("100000:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lh, Vm("100001:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lw, Vm("100011:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lwl, Vm("100010:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lwr, Vm("100110:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lbu, Vm("100100:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lhu, Vm("100101:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
 
             // Store Byte/Half word/Word (Left/Right).
-            Id("sb", Vm("101000:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("sh", Vm("101001:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("sw", Vm("101011:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("swl", Vm("101010:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
-            Id("swr", Vm("101110:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Sb, Vm("101000:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Sh, Vm("101001:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Sw, Vm("101011:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Swl, Vm("101010:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Swr, Vm("101110:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
 
             // Load Linked word.
             // Store Conditional word.
-            Id("ll", Vm("110000:rs:rt:imm16"), "%t, %O", AddrTypeNone, 0),
-            Id("sc", Vm("111000:rs:rt:imm16"), "%t, %O", AddrTypeNone, 0),
+            Id(InstructionNames.Ll, Vm("110000:rs:rt:imm16"), "%t, %O", AddrTypeNone, 0),
+            Id(InstructionNames.Sc, Vm("111000:rs:rt:imm16"), "%t, %O", AddrTypeNone, 0),
 
             // Load Word to Cop1 floating point.
             // Store Word from Cop1 floating point.
-            Id("lwc1", Vm("110001:rs:ft:imm16"), "%T, %i(%s)", AddrTypeNone, 0),
-            Id("swc1", Vm("111001:rs:ft:imm16"), "%T, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Lwc1, Vm("110001:rs:ft:imm16"), "%T, %i(%s)", AddrTypeNone, 0),
+            Id(InstructionNames.Swc1, Vm("111001:rs:ft:imm16"), "%T, %i(%s)", AddrTypeNone, 0),
         });
 
         private static InstructionInfo[] _fpu;
@@ -227,49 +227,49 @@ namespace CSPspEmu.Core.Cpu.Table
         public static InstructionInfo[] Fpu => _fpu ?? (_fpu = new[]
         {
             // Binary Floating Point Unit Operations
-            Id("add.s", Vm("010001:10000:ft:fs:fd:000000"), "%D, %S, %T", AddrTypeNone, 0),
-            Id("sub.s", Vm("010001:10000:ft:fs:fd:000001"), "%D, %S, %T", AddrTypeNone, 0),
-            Id("mul.s", Vm("010001:10000:ft:fs:fd:000010"), "%D, %S, %T", AddrTypeNone, 0),
-            Id("div.s", Vm("010001:10000:ft:fs:fd:000011"), "%D, %S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.AddS, Vm("010001:10000:ft:fs:fd:000000"), "%D, %S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.SubS, Vm("010001:10000:ft:fs:fd:000001"), "%D, %S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.MulS, Vm("010001:10000:ft:fs:fd:000010"), "%D, %S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.DivS, Vm("010001:10000:ft:fs:fd:000011"), "%D, %S, %T", AddrTypeNone, 0),
 
             // Unary Floating Point Unit Operations
-            Id("sqrt.s", Vm("010001:10000:00000:fs:fd:000100"), "%D, %S", AddrTypeNone, 0),
-            Id("abs.s", Vm("010001:10000:00000:fs:fd:000101"), "%D, %S", AddrTypeNone, 0),
-            Id("mov.s", Vm("010001:10000:00000:fs:fd:000110"), "%D, %S", AddrTypeNone, 0),
-            Id("neg.s", Vm("010001:10000:00000:fs:fd:000111"), "%D, %S", AddrTypeNone, 0),
-            Id("round.w.s", Vm("010001:10000:00000:fs:fd:001100"), "%D, %S", AddrTypeNone, 0),
-            Id("trunc.w.s", Vm("010001:10000:00000:fs:fd:001101"), "%D, %S", AddrTypeNone, 0),
-            Id("ceil.w.s", Vm("010001:10000:00000:fs:fd:001110"), "%D, %S", AddrTypeNone, 0),
-            Id("floor.w.s", Vm("010001:10000:00000:fs:fd:001111"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.SqrtS, Vm("010001:10000:00000:fs:fd:000100"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.AbsS, Vm("010001:10000:00000:fs:fd:000101"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.MovS, Vm("010001:10000:00000:fs:fd:000110"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.NegS, Vm("010001:10000:00000:fs:fd:000111"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.RoundWS, Vm("010001:10000:00000:fs:fd:001100"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.TruncWS, Vm("010001:10000:00000:fs:fd:001101"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.CeilWS, Vm("010001:10000:00000:fs:fd:001110"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.FloorWS, Vm("010001:10000:00000:fs:fd:001111"), "%D, %S", AddrTypeNone, 0),
 
             // Convert
-            Id("cvt.s.w", Vm("010001:10100:00000:fs:fd:100000"), "%D, %S", AddrTypeNone, 0),
-            Id("cvt.w.s", Vm("010001:10000:00000:fs:fd:100100"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.CvtSW, Vm("010001:10100:00000:fs:fd:100000"), "%D, %S", AddrTypeNone, 0),
+            Id(InstructionNames.CvtWS, Vm("010001:10000:00000:fs:fd:100100"), "%D, %S", AddrTypeNone, 0),
 
             // Move float point registers
-            Id("mfc1", Vm("010001:00000:rt:c1dr:00000:000000"), "%t, %S", AddrTypeNone, 0),
-            Id("mtc1", Vm("010001:00100:rt:c1dr:00000:000000"), "%t, %S", AddrTypeNone, 0),
+            Id(InstructionNames.Mfc1, Vm("010001:00000:rt:c1dr:00000:000000"), "%t, %S", AddrTypeNone, 0),
+            Id(InstructionNames.Mtc1, Vm("010001:00100:rt:c1dr:00000:000000"), "%t, %S", AddrTypeNone, 0),
             // CFC1 -- move Control word from/to floating point (C1)
-            Id("cfc1", Vm("010001:00010:rt:c1cr:00000:000000"), "%t, %p", AddrTypeNone, 0),
-            Id("ctc1", Vm("010001:00110:rt:c1cr:00000:000000"), "%t, %p", AddrTypeNone, 0),
+            Id(InstructionNames.Cfc1, Vm("010001:00010:rt:c1cr:00000:000000"), "%t, %p", AddrTypeNone, 0),
+            Id(InstructionNames.Ctc1, Vm("010001:00110:rt:c1cr:00000:000000"), "%t, %p", AddrTypeNone, 0),
 
             // Compare <condition> Single.
-            Id("c.f.s", Vm("010001:10000:ft:fs:00000:11:0000"), "%S, %T", AddrTypeNone, 0),
-            Id("c.un.s", Vm("010001:10000:ft:fs:00000:11:0001"), "%S, %T", AddrTypeNone, 0),
-            Id("c.eq.s", Vm("010001:10000:ft:fs:00000:11:0010"), "%S, %T", AddrTypeNone, 0),
-            Id("c.ueq.s", Vm("010001:10000:ft:fs:00000:11:0011"), "%S, %T", AddrTypeNone, 0),
-            Id("c.olt.s", Vm("010001:10000:ft:fs:00000:11:0100"), "%S, %T", AddrTypeNone, 0),
-            Id("c.ult.s", Vm("010001:10000:ft:fs:00000:11:0101"), "%S, %T", AddrTypeNone, 0),
-            Id("c.ole.s", Vm("010001:10000:ft:fs:00000:11:0110"), "%S, %T", AddrTypeNone, 0),
-            Id("c.ule.s", Vm("010001:10000:ft:fs:00000:11:0111"), "%S, %T", AddrTypeNone, 0),
-            Id("c.sf.s", Vm("010001:10000:ft:fs:00000:11:1000"), "%S, %T", AddrTypeNone, 0),
-            Id("c.ngle.s", Vm("010001:10000:ft:fs:00000:11:1001"), "%S, %T", AddrTypeNone, 0),
-            Id("c.seq.s", Vm("010001:10000:ft:fs:00000:11:1010"), "%S, %T", AddrTypeNone, 0),
-            Id("c.ngl.s", Vm("010001:10000:ft:fs:00000:11:1011"), "%S, %T", AddrTypeNone, 0),
-            Id("c.lt.s", Vm("010001:10000:ft:fs:00000:11:1100"), "%S, %T", AddrTypeNone, 0),
-            Id("c.nge.s", Vm("010001:10000:ft:fs:00000:11:1101"), "%S, %T", AddrTypeNone, 0),
-            Id("c.le.s", Vm("010001:10000:ft:fs:00000:11:1110"), "%S, %T", AddrTypeNone, 0),
-            Id("c.ngt.s", Vm("010001:10000:ft:fs:00000:11:1111"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CFS, Vm("010001:10000:ft:fs:00000:11:0000"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CUnS, Vm("010001:10000:ft:fs:00000:11:0001"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CEqS, Vm("010001:10000:ft:fs:00000:11:0010"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CUeqS, Vm("010001:10000:ft:fs:00000:11:0011"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.COltS, Vm("010001:10000:ft:fs:00000:11:0100"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CUltS, Vm("010001:10000:ft:fs:00000:11:0101"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.COleS, Vm("010001:10000:ft:fs:00000:11:0110"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CUleS, Vm("010001:10000:ft:fs:00000:11:0111"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CSfS, Vm("010001:10000:ft:fs:00000:11:1000"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CNgleS, Vm("010001:10000:ft:fs:00000:11:1001"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CSeqS, Vm("010001:10000:ft:fs:00000:11:1010"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CNglS, Vm("010001:10000:ft:fs:00000:11:1011"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CLtS, Vm("010001:10000:ft:fs:00000:11:1100"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CNgeS, Vm("010001:10000:ft:fs:00000:11:1101"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CLeS, Vm("010001:10000:ft:fs:00000:11:1110"), "%S, %T", AddrTypeNone, 0),
+            Id(InstructionNames.CNgtS, Vm("010001:10000:ft:fs:00000:11:1111"), "%S, %T", AddrTypeNone, 0),
         });
 
         private static InstructionInfo[] _special;
@@ -277,27 +277,27 @@ namespace CSPspEmu.Core.Cpu.Table
         public static InstructionInfo[] Special => _special ?? (_special = new[]
         {
             // Syscall
-            Id("syscall", Vm("000000:imm20:001100"), "%C", AddrTypeNone, InstrTypeSyscall),
+            Id(InstructionNames.Syscall, Vm("000000:imm20:001100"), "%C", AddrTypeNone, InstrTypeSyscall),
 
-            Id("cache", Vm("101111--------------------------"), "%k, %o", AddrTypeNone, 0),
-            Id("sync", Vm("000000:00000:00000:00000:00000:001111"), "", AddrTypeNone, 0),
+            Id(InstructionNames.Cache, Vm("101111--------------------------"), "%k, %o", AddrTypeNone, 0),
+            Id(InstructionNames.Sync, Vm("000000:00000:00000:00000:00000:001111"), "", AddrTypeNone, 0),
 
-            Id("break", Vm("000000:imm20:001101"), "%c", AddrTypeNone, 0),
-            Id("dbreak", Vm("011100:00000:00000:00000:00000:111111"), "", AddrTypeNone, InstrTypePsp),
-            Id("halt", Vm("011100:00000:00000:00000:00000:000000"), "", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Break, Vm("000000:imm20:001101"), "%c", AddrTypeNone, 0),
+            Id(InstructionNames.Dbreak, Vm("011100:00000:00000:00000:00000:111111"), "", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Halt, Vm("011100:00000:00000:00000:00000:000000"), "", AddrTypeNone, InstrTypePsp),
 
             // (D?/Exception) RETurn
-            Id("dret", Vm("011100:00000:00000:00000:00000:111110"), "", AddrTypeNone, InstrTypePsp),
-            Id("eret", Vm("010000:10000:00000:00000:00000:011000"), "", AddrTypeNone, 0),
+            Id(InstructionNames.Dret, Vm("011100:00000:00000:00000:00000:111110"), "", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Eret, Vm("010000:10000:00000:00000:00000:011000"), "", AddrTypeNone, 0),
 
             // Move (From/To) IC
-            Id("mfic", Vm("011100:rt:00000:00000:00000:100100"), "%t, %p", AddrTypeNone, InstrTypePsp),
-            Id("mtic", Vm("011100:rt:00000:00000:00000:100110"), "%t, %p", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Mfic, Vm("011100:rt:00000:00000:00000:100100"), "%t, %p", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Mtic, Vm("011100:rt:00000:00000:00000:100110"), "%t, %p", AddrTypeNone, InstrTypePsp),
 
             // Move (From/To) DR
-            Id("mfdr", Vm("011100:00000:----------:00000:111101"), "%t, %r", AddrTypeNone,
+            Id(InstructionNames.Mfdr, Vm("011100:00000:----------:00000:111101"), "%t, %r", AddrTypeNone,
                 InstrTypePsp),
-            Id("mtdr", Vm("011100:00100:----------:00000:111101"), "%t, %r", AddrTypeNone,
+            Id(InstructionNames.Mtdr, Vm("011100:00100:----------:00000:111101"), "%t, %r", AddrTypeNone,
                 InstrTypePsp),
         });
 
@@ -306,15 +306,15 @@ namespace CSPspEmu.Core.Cpu.Table
         public static InstructionInfo[] Cop0 => _cop0 ?? (_cop0 = new[]
         {
             // C? (From/To) Cop0
-            Id("cfc0", Vm("010000:00010:----------:00000:000000"), "%t, %p", AddrTypeNone,
+            Id(InstructionNames.Cfc0, Vm("010000:00010:----------:00000:000000"), "%t, %p", AddrTypeNone,
                 InstrTypePsp), // CFC0(010000:00010:rt:c0cr:00000:000000)
-            Id("ctc0", Vm("010000:00110:----------:00000:000000"), "%t, %p", AddrTypeNone,
+            Id(InstructionNames.Ctc0, Vm("010000:00110:----------:00000:000000"), "%t, %p", AddrTypeNone,
                 InstrTypePsp), // CTC0(010000:00110:rt:c0cr:00000:000000)
 
             // Move (From/To) Cop0
-            Id("mfc0", Vm("010000:00000:----------:00000:000000"), "%t, %0", AddrTypeNone,
+            Id(InstructionNames.Mfc0, Vm("010000:00000:----------:00000:000000"), "%t, %0", AddrTypeNone,
                 0), // MFC0(010000:00000:rt:c0dr:00000:000000)
-            Id("mtc0", Vm("010000:00100:----------:00000:000000"), "%t, %0", AddrTypeNone,
+            Id(InstructionNames.Mtc0, Vm("010000:00100:----------:00000:000000"), "%t, %0", AddrTypeNone,
                 0), // MTC0(010000:00100:rt:c0dr:00000:000000)
         });
 
@@ -323,263 +323,263 @@ namespace CSPspEmu.Core.Cpu.Table
         public static InstructionInfo[] Vfpu => _vfpu ?? (_vfpu = new[]
         {
             // Move From/to Vfpu (C?).
-            Id("mfv", Vm("010010:00:011:rt:0:0000000:0:vd"), "%t, %zs", AddrTypeNone, InstrTypePsp),
-            Id("mfvc", Vm("010010:00:011:rt:0:0000000:1:vd"), "%t, %2d", AddrTypeNone, InstrTypePsp),
-            Id("mtv", Vm("010010:00:111:rt:0:0000000:0:vd"), "%t, %zs", AddrTypeNone, InstrTypePsp),
-            Id("mtvc", Vm("010010:00:111:rt:0:0000000:1:vd"), "%t, %2d", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Mfv, Vm("010010:00:011:rt:0:0000000:0:vd"), "%t, %zs", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Mfvc, Vm("010010:00:011:rt:0:0000000:1:vd"), "%t, %2d", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Mtv, Vm("010010:00:111:rt:0:0000000:0:vd"), "%t, %zs", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Mtvc, Vm("010010:00:111:rt:0:0000000:1:vd"), "%t, %2d", AddrTypeNone, InstrTypePsp),
 
             // Load/Store Vfpu (Left/Right).
-            Id("lv.s", Vm("110010:rs:vt5:imm14:vt2"), "%Xs, %Y", AddrTypeNone, InstrTypePsp),
-            Id("lv.q", Vm("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
-            Id("lvl.q", Vm("110101:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
-            Id("lvr.q", Vm("110101:rs:vt5:imm14:1:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
-            Id("sv.q", Vm("111110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.LvS, Vm("110010:rs:vt5:imm14:vt2"), "%Xs, %Y", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.LvQ, Vm("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.LvlQ, Vm("110101:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.LvrQ, Vm("110101:rs:vt5:imm14:1:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.SvQ, Vm("111110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
 
             // Vfpu DOT product
             // Vfpu SCaLe/ROTate
-            Id("vdot", Vm("011001:001:vt:two:vs:one:vd"), "%zs, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vscl", Vm("011001:010:vt:two:vs:one:vd"), "%zp, %yp, %xs", AddrTypeNone, InstrTypePsp),
-            Id("vsge", Vm("011011:110:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            //ID("vslt",        VM("011011:100:vt:two:vs:one:vd"), "%zp, %yp, %xp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
-            Id("vslt", Vm("011011:111:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone,
+            Id(InstructionNames.Vdot, Vm("011001:001:vt:two:vs:one:vd"), "%zs, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vscl, Vm("011001:010:vt:two:vs:one:vd"), "%zp, %yp, %xs", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vsge, Vm("011011:110:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            //Id(InstructionNames.vslt,        VM("011011:100:vt:two:vs:one:vd"), "%zp, %yp, %xp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+            Id(InstructionNames.Vslt, Vm("011011:111:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone,
                 InstrTypePsp), // FIXED 2013-07-14
 
             // ROTate
-            Id("vrot", Vm("111100:111:01:imm5:two:vs:one:vd"), "%zp, %ys, %vr", AddrTypeNone,
+            Id(InstructionNames.Vrot, Vm("111100:111:01:imm5:two:vs:one:vd"), "%zp, %ys, %vr", AddrTypeNone,
                 InstrTypePsp),
 
             // Vfpu ZERO/ONE
-            Id("vzero", Vm("110100:00:000:0:0110:two:0000000:one:vd"), "%zp", AddrTypeNone,
+            Id(InstructionNames.Vzero, Vm("110100:00:000:0:0110:two:0000000:one:vd"), "%zp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vone", Vm("110100:00:000:0:0111:two:0000000:one:vd"), "%zp", AddrTypeNone,
+            Id(InstructionNames.Vone, Vm("110100:00:000:0:0111:two:0000000:one:vd"), "%zp", AddrTypeNone,
                 InstrTypePsp),
 
             // Vfpu MOVe/SiGN/Reverse SQuare root/COSine/Arc SINe/LOG2
-            Id("vmov", Vm("110100:00:000:0:0000:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vmov, Vm("110100:00:000:0:0000:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vabs", Vm("110100:00:000:0:0001:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vabs, Vm("110100:00:000:0:0001:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vneg", Vm("110100:00:000:0:0010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vneg, Vm("110100:00:000:0:0010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vocp", Vm("110100:00:010:0:0100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vocp, Vm("110100:00:010:0:0100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vsgn", Vm("110100:00:010:0:1010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vsgn, Vm("110100:00:010:0:1010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vrcp", Vm("110100:00:000:1:0000:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vrcp, Vm("110100:00:000:1:0000:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vrsq", Vm("110100:00:000:1:0001:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vrsq, Vm("110100:00:000:1:0001:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vsin", Vm("110100:00:000:1:0010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vsin, Vm("110100:00:000:1:0010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vcos", Vm("110100:00:000:1:0011:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vcos, Vm("110100:00:000:1:0011:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vexp2", Vm("110100:00:000:1:0100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vexp2, Vm("110100:00:000:1:0100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vlog2", Vm("110100:00:000:1:0101:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vlog2, Vm("110100:00:000:1:0101:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vsqrt", Vm("110100:00:000:1:0110:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vsqrt, Vm("110100:00:000:1:0110:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vasin", Vm("110100:00:000:1:0111:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vasin, Vm("110100:00:000:1:0111:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vnrcp", Vm("110100:00:000:1:1000:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vnrcp, Vm("110100:00:000:1:1000:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vnsin", Vm("110100:00:000:1:1010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vnsin, Vm("110100:00:000:1:1010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vrexp2", Vm("110100:00:000:1:1100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vrexp2, Vm("110100:00:000:1:1100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vsat0", Vm("110100:00:000:0:0100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vsat0, Vm("110100:00:000:0:0100:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vsat1", Vm("110100:00:000:0:0101:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vsat1, Vm("110100:00:000:0:0101:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
 
             // Vfpu ConSTant
-            Id("vcst", Vm("110100:00:011:imm5:two:0000000:one:vd"), "%zp, %vk", AddrTypeNone,
+            Id(InstructionNames.Vcst, Vm("110100:00:011:imm5:two:0000000:one:vd"), "%zp, %vk", AddrTypeNone,
                 InstrTypePsp),
 
             // Vfpu Matrix MULtiplication
-            Id("vmmul", Vm("111100:000:vt:two:vs:one:vd"), "%zm, %tym, %xm", AddrTypeNone,
+            Id(InstructionNames.Vmmul, Vm("111100:000:vt:two:vs:one:vd"), "%zm, %tym, %xm", AddrTypeNone,
                 InstrTypePsp),
 
             // -
-            Id("vhdp", Vm("011001:100:vt:two:vs:one:vd"), "%zs, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vcrs.t", Vm("011001:101:vt:1:vs:0:vd"), "%zt, %yt, %xt", AddrTypeNone, InstrTypePsp),
-            Id("vcrsp.t", Vm("111100:101:vt:1:vs:0:vd"), "%zt, %yt, %xt", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vhdp, Vm("011001:100:vt:two:vs:one:vd"), "%zs, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.VcrsT, Vm("011001:101:vt:1:vs:0:vd"), "%zt, %yt, %xt", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.VcrspT, Vm("111100:101:vt:1:vs:0:vd"), "%zt, %yt, %xt", AddrTypeNone, InstrTypePsp),
 
             // Vfpu Integer to(2) Color
-            Id("vi2c", Vm("110100:00:001:11:101:two:vs:one:vd"), "%zs, %yq", AddrTypeNone,
+            Id(InstructionNames.Vi2C, Vm("110100:00:001:11:101:two:vs:one:vd"), "%zs, %yq", AddrTypeNone,
                 InstrTypePsp),
-            Id("vi2uc", Vm("110100:00:001:11:100:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id(InstructionNames.Vi2Uc, Vm("110100:00:001:11:100:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
                 InstrTypePsp),
 
             // -
-            Id("vtfm2", Vm("111100:001:vt:0:vs:1:vd"), "%zp, %ym, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vtfm3", Vm("111100:010:vt:1:vs:0:vd"), "%zt, %yn, %xt", AddrTypeNone, InstrTypePsp),
-            Id("vtfm4", Vm("111100:011:vt:1:vs:1:vd"), "%zq, %yo, %xq", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vtfm2, Vm("111100:001:vt:0:vs:1:vd"), "%zp, %ym, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vtfm3, Vm("111100:010:vt:1:vs:0:vd"), "%zt, %yn, %xt", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vtfm4, Vm("111100:011:vt:1:vs:1:vd"), "%zq, %yo, %xq", AddrTypeNone, InstrTypePsp),
 
-            Id("vhtfm2", Vm("111100:001:vt:0:vs:0:vd"), "%zp, %ym, %xp", AddrTypeNone,
+            Id(InstructionNames.Vhtfm2, Vm("111100:001:vt:0:vs:0:vd"), "%zp, %ym, %xp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vhtfm3", Vm("111100:010:vt:0:vs:1:vd"), "%zt, %yn, %xt", AddrTypeNone,
+            Id(InstructionNames.Vhtfm3, Vm("111100:010:vt:0:vs:1:vd"), "%zt, %yn, %xt", AddrTypeNone,
                 InstrTypePsp),
-            Id("vhtfm4", Vm("111100:011:vt:1:vs:0:vd"), "%zq, %yo, %xq", AddrTypeNone,
-                InstrTypePsp),
-
-            Id("vsrt3", Vm("110100:00:010:01000:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id(InstructionNames.Vhtfm4, Vm("111100:011:vt:1:vs:0:vd"), "%zq, %yo, %xq", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vfad", Vm("110100:00:010:00110:two:vs:one:vd"), "%zp, %yp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vsrt3, Vm("110100:00:010:01000:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+                InstrTypePsp),
+
+            Id(InstructionNames.Vfad, Vm("110100:00:010:00110:two:vs:one:vd"), "%zp, %yp", AddrTypeNone, InstrTypePsp),
 
             // Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
-            Id("vmin", Vm("011011:010:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vmax", Vm("011011:011:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vadd", Vm("011000:000:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vsub", Vm("011000:001:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vdiv", Vm("011000:111:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vmul", Vm("011001:000:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vmin, Vm("011011:010:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vmax, Vm("011011:011:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vadd, Vm("011000:000:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vsub, Vm("011000:001:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vdiv, Vm("011000:111:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vmul, Vm("011001:000:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
 
             // Vfpu (Matrix) IDenTity
-            Id("vidt", Vm("110100:00:000:0:0011:two:0000000:one:vd"), "%zp", AddrTypeNone,
+            Id(InstructionNames.Vidt, Vm("110100:00:000:0:0011:two:0000000:one:vd"), "%zp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vmidt", Vm("111100:111:00:00011:two:0000000:one:vd"), "%zm", AddrTypeNone,
-                InstrTypePsp),
-
-            Id("viim", Vm("110111:11:0:vd:imm16"), "%xs, %vi", AddrTypeNone, InstrTypePsp),
-
-            Id("vmmov", Vm("111100:111:00:00000:two:vs:one:vd"), "%zm, %ym", AddrTypeNone,
-                InstrTypePsp),
-            Id("vmzero", Vm("111100:111:00:00110:two:0000000:one:vd"), "%zm", AddrTypeNone,
-                InstrTypePsp),
-            Id("vmone", Vm("111100:111:00:00111:two:0000000:one:vd"), "%zp", AddrTypeNone,
+            Id(InstructionNames.Vmidt, Vm("111100:111:00:00011:two:0000000:one:vd"), "%zm", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vnop", Vm("111111:1111111111:00000:00000000000"), "", AddrTypeNone, InstrTypePsp),
-            Id("vsync", Vm("111111:1111111111:00000:01100100000"), "", AddrTypeNone, InstrTypePsp),
-            Id("vflush", Vm("111111:1111111111:00000:10000001101"), "", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Viim, Vm("110111:11:0:vd:imm16"), "%xs, %vi", AddrTypeNone, InstrTypePsp),
 
-            Id("vpfxd", Vm("110111:10:------------:mskw:mskz:msky:mskx:satw:satz:saty:satx"),
+            Id(InstructionNames.Vmmov, Vm("111100:111:00:00000:two:vs:one:vd"), "%zm, %ym", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vmzero, Vm("111100:111:00:00110:two:0000000:one:vd"), "%zm", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vmone, Vm("111100:111:00:00111:two:0000000:one:vd"), "%zp", AddrTypeNone,
+                InstrTypePsp),
+
+            Id(InstructionNames.Vnop, Vm("111111:1111111111:00000:00000000000"), "", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vsync, Vm("111111:1111111111:00000:01100100000"), "", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vflush, Vm("111111:1111111111:00000:10000001101"), "", AddrTypeNone, InstrTypePsp),
+
+            Id(InstructionNames.Vpfxd, Vm("110111:10:------------:mskw:mskz:msky:mskx:satw:satz:saty:satx"),
                 "[%vp4, %vp5, %vp6, %vp7]", AddrTypeNone, InstrTypePsp),
-            Id("vpfxs",
+            Id(InstructionNames.Vpfxs,
                 Vm(
                     "110111:00:----:negw:negz:negy:negx:cstw:cstz:csty:cstx:absw:absz:absy:absx:swzw:swzz:swzy:swzx"),
                 "[%vp0, %vp1, %vp2, %vp3]", AddrTypeNone, InstrTypePsp),
-            Id("vpfxt",
+            Id(InstructionNames.Vpfxt,
                 Vm(
                     "110111:01:----:negw:negz:negy:negx:cstw:cstz:csty:cstx:absw:absz:absy:absx:swzw:swzz:swzy:swzx"),
                 "[%vp0, %vp1, %vp2, %vp3]", AddrTypeNone, InstrTypePsp),
 
-            Id("vdet", Vm("011001:110:vt:two:vs:one:vd"), "%zs, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vdet, Vm("011001:110:vt:two:vs:one:vd"), "%zs, %yp, %xp", AddrTypeNone, InstrTypePsp),
 
-            Id("vrnds", Vm("110100:00:001:00:000:two:vs:one:0000000"), "%ys", AddrTypeNone,
+            Id(InstructionNames.Vrnds, Vm("110100:00:001:00:000:two:vs:one:0000000"), "%ys", AddrTypeNone,
                 InstrTypePsp),
-            Id("vrndi", Vm("110100:00:001:00:001:two:0000000:one:vd"), "%zp", AddrTypeNone,
+            Id(InstructionNames.Vrndi, Vm("110100:00:001:00:001:two:0000000:one:vd"), "%zp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vrndf1", Vm("110100:00:001:00:010:two:0000000:one:vd"), "%zp", AddrTypeNone,
+            Id(InstructionNames.Vrndf1, Vm("110100:00:001:00:010:two:0000000:one:vd"), "%zp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vrndf2", Vm("110100:00:001:00:011:two:0000000:one:vd"), "%zp", AddrTypeNone,
-                InstrTypePsp),
-
-            Id("vcmp", Vm("011011:000:vt:two:vs:one:000:imm4"), "%Zn, %yp, %xp", AddrTypeNone,
+            Id(InstructionNames.Vrndf2, Vm("110100:00:001:00:011:two:0000000:one:vd"), "%zp", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vcmovf", Vm("110100:10:101:01:imm3:two:vs:one:vd"), "%zp, %yp, %v3", AddrTypeNone,
-                InstrTypePsp),
-            Id("vcmovt", Vm("110100:10:101:00:imm3:two:vs:one:vd"), "%zp, %yp, %v3", AddrTypeNone,
+            Id(InstructionNames.Vcmp, Vm("011011:000:vt:two:vs:one:000:imm4"), "%Zn, %yp, %xp", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vavg", Vm("110100:00:010:00111:two:vs:one:vd"), "%zp, %yp", AddrTypeNone, InstrTypePsp),
-            Id("vf2id", Vm("110100:10:011:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
+            Id(InstructionNames.Vcmovf, Vm("110100:10:101:01:imm3:two:vs:one:vd"), "%zp, %yp, %v3", AddrTypeNone,
                 InstrTypePsp),
-            Id("vf2in", Vm("110100:10:000:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
-                InstrTypePsp),
-            Id("vf2iu", Vm("110100:10:010:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
-                InstrTypePsp),
-            Id("vf2iz", Vm("110100:10:001:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
-                InstrTypePsp),
-            Id("vi2f", Vm("110100:10:100:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
+            Id(InstructionNames.Vcmovt, Vm("110100:10:101:00:imm3:two:vs:one:vd"), "%zp, %yp, %v3", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vscmp", Vm("011011:101:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
-            Id("vmscl", Vm("111100:100:vt:two:vs:one:vd"), "%zm, %ym, %xs", AddrTypeNone, InstrTypePsp),
-
-            Id("vt4444.q", Vm("110100:00:010:11001:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id(InstructionNames.Vavg, Vm("110100:00:010:00111:two:vs:one:vd"), "%zp, %yp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vf2Id, Vm("110100:10:011:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
                 InstrTypePsp),
-            Id("vt5551.q", Vm("110100:00:010:11010:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id(InstructionNames.Vf2In, Vm("110100:10:000:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
                 InstrTypePsp),
-            Id("vt5650.q", Vm("110100:00:010:11011:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id(InstructionNames.Vf2Iu, Vm("110100:10:010:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
                 InstrTypePsp),
-
-            Id("vmfvc", Vm("110100:00:010:10000:1:imm7:0:vd"), "%zs, %2s", AddrTypeNone, InstrTypePsp),
-            Id("vmtvc", Vm("110100:00:010:10001:0:vs:1:imm7"), "%2d, %ys", AddrTypeNone, InstrTypePsp),
-
-            Id("mfvme", Vm("011010--------------------------"), "%t, %i", AddrTypeNone, 0),
-            Id("mtvme", Vm("101100--------------------------"), "%t, %i", AddrTypeNone, 0),
-
-            Id("sv.s", Vm("111010:rs:vt5:imm14:vt2"), "%Xs, %Y", AddrTypeNone, InstrTypePsp),
-
-            Id("vfim", Vm("110111:11:1:vt:imm16"), "%xs, %vh", AddrTypeNone, InstrTypePsp),
-
-            Id("svl.q", Vm("111101:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
-            Id("svr.q", Vm("111101:rs:vt5:imm14:1:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
-
-            Id("vbfy1", Vm("110100:00:010:00010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
+            Id(InstructionNames.Vf2Iz, Vm("110100:10:001:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
                 InstrTypePsp),
-            Id("vbfy2", Vm("110100:00:010:00011:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id(InstructionNames.Vi2F, Vm("110100:10:100:imm5:two:vs:one:vd"), "%zp, %yp, %v5", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vf2h", Vm("110100:00:001:10:010:two:vs:one:vd"), "%zs, %yp", AddrTypeNone,
+            Id(InstructionNames.Vscmp, Vm("011011:101:vt:two:vs:one:vd"), "%zp, %yp, %xp", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vmscl, Vm("111100:100:vt:two:vs:one:vd"), "%zm, %ym, %xs", AddrTypeNone, InstrTypePsp),
+
+            Id(InstructionNames.Vt4444Q, Vm("110100:00:010:11001:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
                 InstrTypePsp),
-            Id("vh2f", Vm("110100:00:001:10:011:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
+            Id(InstructionNames.Vt5551Q, Vm("110100:00:010:11010:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vt5650Q, Vm("110100:00:010:11011:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vi2s", Vm("110100:00:001:11:111:two:vs:one:vd"), "%zs, %yp", AddrTypeNone,
+            Id(InstructionNames.Vmfvc, Vm("110100:00:010:10000:1:imm7:0:vd"), "%zs, %2s", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vmtvc, Vm("110100:00:010:10001:0:vs:1:imm7"), "%2d, %ys", AddrTypeNone, InstrTypePsp),
+
+            Id(InstructionNames.Mfvme, Vm("011010--------------------------"), "%t, %i", AddrTypeNone, 0),
+            Id(InstructionNames.Mtvme, Vm("101100--------------------------"), "%t, %i", AddrTypeNone, 0),
+
+            Id(InstructionNames.SvS, Vm("111010:rs:vt5:imm14:vt2"), "%Xs, %Y", AddrTypeNone, InstrTypePsp),
+
+            Id(InstructionNames.Vfim, Vm("110111:11:1:vt:imm16"), "%xs, %vh", AddrTypeNone, InstrTypePsp),
+
+            Id(InstructionNames.SvlQ, Vm("111101:rs:vt5:imm14:0:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.SvrQ, Vm("111101:rs:vt5:imm14:1:vt1"), "%Xq, %Y", AddrTypeNone, InstrTypePsp),
+
+            Id(InstructionNames.Vbfy1, Vm("110100:00:010:00010:two:vs:one:vd"), "%zp, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vi2us", Vm("110100:00:001:11:110:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+            Id(InstructionNames.Vbfy2, Vm("110100:00:010:00011:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vlgb", Vm("110100:00:001:10:111:two:vs:one:vd"), "%zs, %ys", AddrTypeNone,
+            Id(InstructionNames.Vf2H, Vm("110100:00:001:10:010:two:vs:one:vd"), "%zs, %yp", AddrTypeNone,
                 InstrTypePsp),
-            Id("vqmul", Vm("111100:101:vt:1:vs:1:vd"), "%zq, %yq, %xq", AddrTypeNone, InstrTypePsp),
-            Id("vs2i", Vm("110100:00:001:11:011:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
+            Id(InstructionNames.Vh2F, Vm("110100:00:001:10:011:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
+                InstrTypePsp),
+
+            Id(InstructionNames.Vi2S, Vm("110100:00:001:11:111:two:vs:one:vd"), "%zs, %yp", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vi2Us, Vm("110100:00:001:11:110:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+                InstrTypePsp),
+
+            Id(InstructionNames.Vlgb, Vm("110100:00:001:10:111:two:vs:one:vd"), "%zs, %ys", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vqmul, Vm("111100:101:vt:1:vs:1:vd"), "%zq, %yq, %xq", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vs2I, Vm("110100:00:001:11:011:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
                 InstrTypePsp),
 
             // Working on it.
 
             //"110100:00:001:11:000:1000000010000001"
-            Id("vc2i", Vm("110100:00:001:11:001:two:vs:one:vd"), "%zs, %ys, %xs", AddrTypeNone,
+            Id(InstructionNames.Vc2I, Vm("110100:00:001:11:001:two:vs:one:vd"), "%zs, %ys, %xs", AddrTypeNone,
                 InstrTypePsp),
-            Id("vuc2i", Vm("110100:00:001:11:000:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
-                InstrTypePsp),
-
-
-            Id("vsbn", Vm("011000:010:vt:two:vs:one:vd"), "%zs, %ys, %xs", AddrTypeNone, InstrTypePsp),
-
-            Id("vsbz", Vm("110100:00:001:10110:two:vs:one:vd"), "%zs, %ys", AddrTypeNone, InstrTypePsp),
-            Id("vsocp", Vm("110100:00:010:00101:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
-                InstrTypePsp),
-            Id("vsrt1", Vm("110100:00:010:00000:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
-                InstrTypePsp),
-            Id("vsrt2", Vm("110100:00:010:00001:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
-                InstrTypePsp),
-            Id("vsrt4", Vm("110100:00:010:01001:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
-                InstrTypePsp),
-            Id("vus2i", Vm("110100:00:001:11010:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
+            Id(InstructionNames.Vuc2I, Vm("110100:00:001:11:000:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
                 InstrTypePsp),
 
-            Id("vwbn", Vm("110100:11:imm8:two:vs:one:vd"), "%zs, %xs, %I", AddrTypeNone, InstrTypePsp),
-            //ID("vwb.q",       VM("111110------------------------1-"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+
+            Id(InstructionNames.Vsbn, Vm("011000:010:vt:two:vs:one:vd"), "%zs, %ys, %xs", AddrTypeNone, InstrTypePsp),
+
+            Id(InstructionNames.Vsbz, Vm("110100:00:001:10110:two:vs:one:vd"), "%zs, %ys", AddrTypeNone, InstrTypePsp),
+            Id(InstructionNames.Vsocp, Vm("110100:00:010:00101:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vsrt1, Vm("110100:00:010:00000:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vsrt2, Vm("110100:00:010:00001:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vsrt4, Vm("110100:00:010:01001:two:vs:one:vd"), "%zq, %yq", AddrTypeNone,
+                InstrTypePsp),
+            Id(InstructionNames.Vus2I, Vm("110100:00:001:11010:two:vs:one:vd"), "%zq, %yp", AddrTypeNone,
+                InstrTypePsp),
+
+            Id(InstructionNames.Vwbn, Vm("110100:11:imm8:two:vs:one:vd"), "%zs, %xs, %I", AddrTypeNone, InstrTypePsp),
+            //Id(InstructionNames.vwb.q,       VM("111110------------------------1-"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
         });
 
         private static InstructionInfo[] _vfpuBranch;
 
         public static InstructionInfo[] VfpuBranch => _vfpuBranch ?? (_vfpuBranch = new[]
         {
-            Id("bvf", Vm("010010:01:000:imm3:00:imm16"), "%Zc, %O", AddrType16,
+            Id(InstructionNames.Bvf, Vm("010010:01:000:imm3:00:imm16"), "%Zc, %O", AddrType16,
                 InstrTypePsp | InstrTypeB),
-            Id("bvt", Vm("010010:01:000:imm3:01:imm16"), "%Zc, %O", AddrType16,
+            Id(InstructionNames.Bvt, Vm("010010:01:000:imm3:01:imm16"), "%Zc, %O", AddrType16,
                 InstrTypePsp | InstrTypeB),
-            Id("bvfl", Vm("010010:01:000:imm3:10:imm16"), "%Zc, %O", AddrType16,
+            Id(InstructionNames.Bvfl, Vm("010010:01:000:imm3:10:imm16"), "%Zc, %O", AddrType16,
                 InstrTypePsp | InstrTypeB | InstrTypeLikely),
-            Id("bvtl", Vm("010010:01:000:imm3:11:imm16"), "%Zc, %O", AddrType16,
+            Id(InstructionNames.Bvtl, Vm("010010:01:000:imm3:11:imm16"), "%Zc, %O", AddrType16,
                 InstrTypePsp | InstrTypeB | InstrTypeLikely),
         });
     }

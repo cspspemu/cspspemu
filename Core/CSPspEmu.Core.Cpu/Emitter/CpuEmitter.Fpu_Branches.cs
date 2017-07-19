@@ -8,16 +8,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // bc1(f/t)(l): Branch on C1 (False/True) (Likely)
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("bc1f")]
+        [InstructionName(InstructionNames.Bc1F)]
         public AstNodeStm Bc1F() => AssignBranchFlag(_ast.Unary("!", _ast.FCR31_CC()));
 
-        [InstructionName("bc1fl")]
+        [InstructionName(InstructionNames.Bc1Fl)]
         public AstNodeStm Bc1Fl() => Bc1F();
 
-        [InstructionName("bc1t")]
+        [InstructionName(InstructionNames.Bc1T)]
         public AstNodeStm Bc1T() => AssignBranchFlag(_ast.FCR31_CC());
 
-        [InstructionName("bc1tl")]
+        [InstructionName(InstructionNames.Bc1Tl)]
         public AstNodeStm Bc1Tl() => Bc1T();
     }
 }

@@ -40,105 +40,105 @@ namespace CSPspEmu.Core.Cpu.Dynarec
             DynamicJump = (1 << 20),
         }
        
-        [InstructionName("bvf")]
+        [InstructionName(InstructionNames.Bvf)]
         public JumpFlags bvf() => JumpFlags.BranchOrJumpInstruction | JumpFlags.VFpuInstruction;
 
-        [InstructionName("bvt")]
+        [InstructionName(InstructionNames.Bvt)]
         public JumpFlags bvt() => JumpFlags.BranchOrJumpInstruction | JumpFlags.VFpuInstruction;
 
-        [InstructionName("bvfl")]
+        [InstructionName(InstructionNames.Bvfl)]
         public JumpFlags bvfl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.VFpuInstruction | JumpFlags.Likely;
 
-        [InstructionName("bvtl")]
+        [InstructionName(InstructionNames.Bvtl)]
         public JumpFlags bvtl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.VFpuInstruction | JumpFlags.Likely;
 
-        [InstructionName("beq")]
+        [InstructionName(InstructionNames.Beq)]
         public JumpFlags beq() => JumpFlags.BranchOrJumpInstruction |
                                   ((Instruction.Rs == Instruction.Rt) ? JumpFlags.JumpAlways : 0);
 
-        [InstructionName("bne")]
+        [InstructionName(InstructionNames.Bne)]
         public JumpFlags bne() => JumpFlags.BranchOrJumpInstruction;
 
-        [InstructionName("beql")]
+        [InstructionName(InstructionNames.Beql)]
         public JumpFlags beql() => JumpFlags.BranchOrJumpInstruction | JumpFlags.Likely;
 
-        [InstructionName("bnel")]
+        [InstructionName(InstructionNames.Bnel)]
         public JumpFlags bnel() => JumpFlags.BranchOrJumpInstruction | JumpFlags.Likely;
 
-        [InstructionName("bltz")]
+        [InstructionName(InstructionNames.Bltz)]
         public JumpFlags bltz() => JumpFlags.BranchOrJumpInstruction;
 
-        [InstructionName("bltzal")]
+        [InstructionName(InstructionNames.Bltzal)]
         public JumpFlags bltzal() => JumpFlags.BranchOrJumpInstruction | JumpFlags.AndLink;
 
-        [InstructionName("bltzl")]
+        [InstructionName(InstructionNames.Bltzl)]
         public JumpFlags bltzl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.Likely;
 
-        [InstructionName("bltzall")]
+        [InstructionName(InstructionNames.Bltzall)]
         public JumpFlags bltzall() => JumpFlags.BranchOrJumpInstruction | JumpFlags.AndLink | JumpFlags.Likely;
 
-        [InstructionName("blez")]
+        [InstructionName(InstructionNames.Blez)]
         public JumpFlags blez() => JumpFlags.BranchOrJumpInstruction;
 
-        [InstructionName("blezl")]
+        [InstructionName(InstructionNames.Blezl)]
         public JumpFlags blezl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.Likely;
 
-        [InstructionName("bgtz")]
+        [InstructionName(InstructionNames.Bgtz)]
         public JumpFlags bgtz() => JumpFlags.BranchOrJumpInstruction;
 
-        [InstructionName("bgez")]
+        [InstructionName(InstructionNames.Bgez)]
         public JumpFlags bgez() => JumpFlags.BranchOrJumpInstruction;
 
-        [InstructionName("bgtzl")]
+        [InstructionName(InstructionNames.Bgtzl)]
         public JumpFlags bgtzl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.Likely;
 
-        [InstructionName("bgezl")]
+        [InstructionName(InstructionNames.Bgezl)]
         public JumpFlags bgezl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.Likely;
 
-        [InstructionName("bgezal")]
+        [InstructionName(InstructionNames.Bgezal)]
         public JumpFlags bgezal() => JumpFlags.BranchOrJumpInstruction | JumpFlags.JumpInstruction | JumpFlags.AndLink;
 
 
-        [InstructionName("bgezall")]
+        [InstructionName(InstructionNames.Bgezall)]
         public JumpFlags bgezall() => JumpFlags.BranchOrJumpInstruction | JumpFlags.JumpInstruction |
                                       JumpFlags.AndLink | JumpFlags.Likely;
 
 
-        [InstructionName("j")]
+        [InstructionName(InstructionNames.J)]
         public JumpFlags j() => JumpFlags.BranchOrJumpInstruction | JumpFlags.JumpInstruction | JumpFlags.JumpAlways;
 
-        [InstructionName("jr")]
+        [InstructionName(InstructionNames.Jr)]
         public JumpFlags jr() => JumpFlags.BranchOrJumpInstruction | JumpFlags.JumpInstruction | JumpFlags.JumpAlways |
                                  JumpFlags.DynamicJump;
 
-        [InstructionName("jalr")]
+        [InstructionName(InstructionNames.Jalr)]
         public JumpFlags jalr() => JumpFlags.BranchOrJumpInstruction | JumpFlags.JumpInstruction |
                                    JumpFlags.JumpAlways |
                                    JumpFlags.AndLink | JumpFlags.DynamicJump;
 
-        [InstructionName("jal")]
+        [InstructionName(InstructionNames.Jal)]
         public JumpFlags jal() => JumpFlags.BranchOrJumpInstruction | JumpFlags.JumpInstruction | JumpFlags.JumpAlways |
                                   JumpFlags.AndLink;
 
-        [InstructionName("bc1f")]
+        [InstructionName(InstructionNames.Bc1F)]
         public JumpFlags bc1f() => JumpFlags.BranchOrJumpInstruction | JumpFlags.FpuInstruction;
 
-        [InstructionName("bc1t")]
+        [InstructionName(InstructionNames.Bc1T)]
         public JumpFlags bc1t() => JumpFlags.BranchOrJumpInstruction | JumpFlags.FpuInstruction;
 
-        [InstructionName("bc1fl")]
+        [InstructionName(InstructionNames.Bc1Fl)]
         public JumpFlags bc1fl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.FpuInstruction | JumpFlags.Likely;
 
-        [InstructionName("bc1tl")]
+        [InstructionName(InstructionNames.Bc1Tl)]
         public JumpFlags bc1tl() => JumpFlags.BranchOrJumpInstruction | JumpFlags.FpuInstruction | JumpFlags.Likely;
 
-        [InstructionName("syscall")]
+        [InstructionName(InstructionNames.Syscall)]
         public JumpFlags syscall() => JumpFlags.SyscallInstruction;
 
-        [InstructionName("unhandled")]
+        [InstructionName(InstructionNames.Unhandled)]
         public JumpFlags unhandled() => JumpFlags.NormalInstruction;
 
-        [InstructionName("unknown")]
+        [InstructionName(InstructionNames.Unknown)]
         public JumpFlags unknown() => JumpFlags.NormalInstruction;
     }
 }

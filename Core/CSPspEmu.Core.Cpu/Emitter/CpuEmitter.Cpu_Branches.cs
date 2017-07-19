@@ -67,52 +67,52 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // bgtz(l)    : Branch on Great Than Zero (Likely).
         // bgez(al)(l): Branch on Greater Equal Zero (And Link) (Likely).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("beq")]
+        [InstructionName(InstructionNames.Beq)]
         public AstNodeStm Beq() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "==", _ast.GPR_s(Rt)));
 
-        [InstructionName("beql")]
+        [InstructionName(InstructionNames.Beql)]
         public AstNodeStm Beql() => Beq();
 
-        [InstructionName("bne")]
+        [InstructionName(InstructionNames.Bne)]
         public AstNodeStm Bne() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "!=", _ast.GPR_s(Rt)));
 
-        [InstructionName("bnel")]
+        [InstructionName(InstructionNames.Bnel)]
         public AstNodeStm Bnel() => Bne();
 
-        [InstructionName("bltz")]
+        [InstructionName(InstructionNames.Bltz)]
         public AstNodeStm Bltz() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<", 0));
 
-        [InstructionName("bltzl")]
+        [InstructionName(InstructionNames.Bltzl)]
         public AstNodeStm Bltzl() => Bltz();
 
-        [InstructionName("bltzal")]
+        [InstructionName(InstructionNames.Bltzal)]
         public AstNodeStm Bltzal() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<", 0), andLink: true);
 
-        [InstructionName("bltzall")]
+        [InstructionName(InstructionNames.Bltzall)]
         public AstNodeStm Bltzall() => Bltzal();
 
-        [InstructionName("blez")]
+        [InstructionName(InstructionNames.Blez)]
         public AstNodeStm Blez() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), "<=", 0));
 
-        [InstructionName("blezl")]
+        [InstructionName(InstructionNames.Blezl)]
         public AstNodeStm Blezl() => Blez();
 
-        [InstructionName("bgtz")]
+        [InstructionName(InstructionNames.Bgtz)]
         public AstNodeStm Bgtz() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">", 0));
 
-        [InstructionName("bgtzl")]
+        [InstructionName(InstructionNames.Bgtzl)]
         public AstNodeStm Bgtzl() => Bgtz();
 
-        [InstructionName("bgez")]
+        [InstructionName(InstructionNames.Bgez)]
         public AstNodeStm Bgez() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">=", 0));
 
-        [InstructionName("bgezl")]
+        [InstructionName(InstructionNames.Bgezl)]
         public AstNodeStm Bgezl() => Bgez();
 
-        [InstructionName("bgezal")]
+        [InstructionName(InstructionNames.Bgezal)]
         public AstNodeStm Bgezal() => AssignBranchFlag(_ast.Binary(_ast.GPR_s(Rs), ">=", 0), andLink: true);
 
-        [InstructionName("bgezall")]
+        [InstructionName(InstructionNames.Bgezall)]
         public AstNodeStm Bgezall() => Bgezal();
 
         public bool PopulateCallStack =>
@@ -200,16 +200,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // j(al)(r): Jump (And Link) (Register)
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("j")]
+        [InstructionName(InstructionNames.J)]
         public AstNodeStm J() => JumpToFixedAddress(_instruction.GetJumpAddress(this._memory, _pc));
 
-        [InstructionName("jal")]
+        [InstructionName(InstructionNames.Jal)]
         public AstNodeStm Jal() => CallFixedAddress(_instruction.GetJumpAddress(this._memory, _pc));
 
-        [InstructionName("jr")]
+        [InstructionName(InstructionNames.Jr)]
         public AstNodeStm Jr() => Rs == 31 ? ReturnFromFunction(_ast.GPR_u(Rs)) : JumpDynamicToAddress(_ast.GPR_u(Rs));
 
-        [InstructionName("jalr")]
+        [InstructionName(InstructionNames.Jalr)]
         public AstNodeStm Jalr() => CallDynamicAddress(_ast.GPR_u(Rs));
     }
 }

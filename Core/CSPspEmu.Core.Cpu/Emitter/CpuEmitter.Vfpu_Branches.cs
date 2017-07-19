@@ -30,7 +30,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             VcNs = 15,
         }
 
-        [InstructionName("vcmp")]
+        [InstructionName(InstructionNames.Vcmp)]
         public AstNodeStm vcmp()
         {
             var vectorSize = _instruction.OneTwo;
@@ -133,17 +133,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
             );
         }
 
-        [InstructionName("vslt")]
+        [InstructionName(InstructionNames.Vslt)]
         public AstNodeStm vslt() => VEC_VD.SetVector(
             index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vslt_impl, VEC_VS[index],
                 VEC_VT[index]), _pc);
 
-        [InstructionName("vsge")]
+        [InstructionName(InstructionNames.Vsge)]
         public AstNodeStm vsge() => VEC_VD.SetVector(
             index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vsge_impl, VEC_VS[index],
                 VEC_VT[index]), _pc);
 
-        [InstructionName("vscmp")]
+        [InstructionName(InstructionNames.Vscmp)]
         public AstNodeStm vscmp() => VEC_VD.SetVector(
             index => _ast.CallStatic((Func<float, float, float>) MathFloat.Sign2, VEC_VS[index], VEC_VT[index]), _pc);
 
@@ -183,10 +183,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
             return _ast.Statement();
         }
 
-        [InstructionName("vcmovf")]
+        [InstructionName(InstructionNames.Vcmovf)]
         public AstNodeStm vcmovf() => _vcmovtf(false);
         
-        [InstructionName("vcmovt")]
+        [InstructionName(InstructionNames.Vcmovt)]
         public AstNodeStm vcmovt() => _vcmovtf(true);
 
         private AstNodeStm _bvtf(bool True)
@@ -197,16 +197,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
             return AssignBranchFlag(branchExpr);
         }
 
-        [InstructionName("bvf")]
+        [InstructionName(InstructionNames.Bvf)]
         public AstNodeStm bvf() => _bvtf(false);
         
-        [InstructionName("bvfl")]
+        [InstructionName(InstructionNames.Bvfl)]
         public AstNodeStm bvfl() => bvf();
         
-        [InstructionName("bvt")]
+        [InstructionName(InstructionNames.Bvt)]
         public AstNodeStm bvt() => _bvtf(true);
         
-        [InstructionName("bvtl")]
+        [InstructionName(InstructionNames.Bvtl)]
         public AstNodeStm bvtl() => bvt();
     }
 }

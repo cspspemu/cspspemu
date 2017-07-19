@@ -10,53 +10,53 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Binary Floating Point Unit Operations
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("add.s")]
+        [InstructionName(InstructionNames.AddS)]
         public AstNodeStm add_s() => _ast.AssignFPR_F(Fd, _ast.Fpr(Fs) + _ast.Fpr(Ft));
 
-        [InstructionName("sub.s")]
+        [InstructionName(InstructionNames.SubS)]
         public AstNodeStm sub_s() => _ast.AssignFPR_F(Fd, _ast.Fpr(Fs) - _ast.Fpr(Ft));
 
-        [InstructionName("mul.s")]
+        [InstructionName(InstructionNames.MulS)]
         public AstNodeStm mul_s() => _ast.AssignFPR_F(Fd, _ast.Fpr(Fs) * _ast.Fpr(Ft));
 
-        [InstructionName("div.s")]
+        [InstructionName(InstructionNames.DivS)]
         public AstNodeStm div_s() => _ast.AssignFPR_F(Fd, _ast.Fpr(Fs) / _ast.Fpr(Ft));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Unary Floating Point Unit Operations
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("sqrt.s")]
+        [InstructionName(InstructionNames.SqrtS)]
         public AstNodeStm sqrt_s() => _ast.AssignFPR_F(Fd, _ast.CallStatic((Func<float, float>) MathFloat.Sqrt, _ast.Fpr(Fs)));
 
-        [InstructionName("abs.s")]
+        [InstructionName(InstructionNames.AbsS)]
         public AstNodeStm abs_s() => _ast.AssignFPR_F(Fd, _ast.CallStatic((Func<float, float>) MathFloat.Abs, _ast.Fpr(Fs)));
 
-        [InstructionName("mov.s")]
+        [InstructionName(InstructionNames.MovS)]
         public AstNodeStm mov_s() => _ast.AssignFPR_F(Fd, _ast.Fpr(Fs));
 
-        [InstructionName("neg.s")]
+        [InstructionName(InstructionNames.NegS)]
         public AstNodeStm neg_s() => _ast.AssignFPR_F(Fd, -_ast.Fpr(Fs));
 
-        [InstructionName("trunc.w.s")]
+        [InstructionName(InstructionNames.TruncWS)]
         public AstNodeStm trunc_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Cast, _ast.Fpr(Fs)));
 
-        [InstructionName("round.w.s")]
+        [InstructionName(InstructionNames.RoundWS)]
         public AstNodeStm round_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Round, _ast.Fpr(Fs)));
 
-        [InstructionName("ceil.w.s")]
+        [InstructionName(InstructionNames.CeilWS)]
         public AstNodeStm ceil_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Ceil, _ast.Fpr(Fs)));
 
-        [InstructionName("floor.w.s")]
+        [InstructionName(InstructionNames.FloorWS)]
         public AstNodeStm floor_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Floor, _ast.Fpr(Fs)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Convert FS register (stored as an int) to float and stores the result on FD.
         // Floating-Point Convert to Word Fixed-Point
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("cvt.s.w")]
+        [InstructionName(InstructionNames.CvtSW)]
         public AstNodeStm cvt_s_w() => _ast.AssignFPR_F(Fd, _ast.Cast<float>(_ast.FPR_I(Fs)));
 
-        [InstructionName("cvt.w.s")]
+        [InstructionName(InstructionNames.CvtWS)]
         public AstNodeStm cvt_w_s() => _ast.AssignFPR_I(Fd,
             _ast.CallStatic((Func<CpuThreadState, float, int>) CpuEmitterUtils._cvt_w_s_impl, _ast.CpuThreadStateExpr,
                 _ast.Fpr(Fs)));
@@ -64,10 +64,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move (from/to) float point registers (reinterpreted)
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("mfc1")]
+        [InstructionName(InstructionNames.Mfc1)]
         public AstNodeStm mfc1() => _ast.AssignGpr(Rt, _ast.CallStatic((Func<float, int>) MathFloat.ReinterpretFloatAsInt, _ast.Fpr(Fs)));
 
-        [InstructionName("mtc1")]
+        [InstructionName(InstructionNames.Mtc1)]
         public AstNodeStm mtc1() => _ast.AssignFPR_F(Fs,
             _ast.CallStatic((Func<int, float>) MathFloat.ReinterpretIntAsFloat, _ast.GPR_s(Rt)));
 
@@ -75,20 +75,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Load Word to Cop1 floating point.
         // Store Word from Cop1 floating point.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("lwc1")]
+        [InstructionName(InstructionNames.Lwc1)]
         public AstNodeStm lwc1() => _ast.AssignFPR_I(Ft, _ast.MemoryGetValue<int>(_memory, this.Address_RS_IMM()));
 
-        [InstructionName("swc1")]
+        [InstructionName(InstructionNames.Swc1)]
         public AstNodeStm swc1() => _ast.MemorySetValue<int>(_memory, this.Address_RS_IMM(), _ast.FPR_I(Ft));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // CFC1 -- move Control word from/to floating point (C1)
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("cfc1")]
+        [InstructionName(InstructionNames.Cfc1)]
         public AstNodeStm cfc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._cfc1_impl,
             _ast.CpuThreadStateExpr, Rd, Rt));
 
-        [InstructionName("ctc1")]
+        [InstructionName(InstructionNames.Ctc1)]
         public AstNodeStm ctc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._ctc1_impl,
             _ast.CpuThreadStateExpr, Rd, Rt));
 
@@ -158,52 +158,52 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // c.le.s: Compare Less than or Equal Single
         // c.ngt.s: Compare Not Greater Than Single
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("c.f.s")]
+        [InstructionName(InstructionNames.CFS)]
         public AstNodeStm c_f_s() => _comp(0, 0);
 
-        [InstructionName("c.un.s")]
+        [InstructionName(InstructionNames.CUnS)]
         public AstNodeStm c_un_s() => _comp(1, 0);
 
-        [InstructionName("c.eq.s")]
+        [InstructionName(InstructionNames.CEqS)]
         public AstNodeStm c_eq_s() => _comp(2, 0);
 
-        [InstructionName("c.ueq.s")]
+        [InstructionName(InstructionNames.CUeqS)]
         public AstNodeStm c_ueq_s() => _comp(3, 0);
 
-        [InstructionName("c.olt.s")]
+        [InstructionName(InstructionNames.COltS)]
         public AstNodeStm c_olt_s() => _comp(4, 0);
 
-        [InstructionName("c.ult.s")]
+        [InstructionName(InstructionNames.CUltS)]
         public AstNodeStm c_ult_s() => _comp(5, 0);
 
-        [InstructionName("c.ole.s")]
+        [InstructionName(InstructionNames.COleS)]
         public AstNodeStm c_ole_s() => _comp(6, 0);
 
-        [InstructionName("c.ule.s")]
+        [InstructionName(InstructionNames.CUleS)]
         public AstNodeStm c_ule_s() => _comp(7, 0);
 
-        [InstructionName("c.sf.s")]
+        [InstructionName(InstructionNames.CSfS)]
         public AstNodeStm c_sf_s() => _comp(0, 1);
 
-        [InstructionName("c.ngle.s")]
+        [InstructionName(InstructionNames.CNgleS)]
         public AstNodeStm c_ngle_s() => _comp(1, 1);
 
-        [InstructionName("c.seq.s")]
+        [InstructionName(InstructionNames.CSeqS)]
         public AstNodeStm c_seq_s() => _comp(2, 1);
 
-        [InstructionName("c.ngl.s")]
+        [InstructionName(InstructionNames.CNglS)]
         public AstNodeStm c_ngl_s() => _comp(3, 1);
 
-        [InstructionName("c.lt.s")]
+        [InstructionName(InstructionNames.CLtS)]
         public AstNodeStm c_lt_s() => _comp(4, 1);
 
-        [InstructionName("c.nge.s")]
+        [InstructionName(InstructionNames.CNgeS)]
         public AstNodeStm c_nge_s() => _comp(5, 1);
 
-        [InstructionName("c.le.s")]
+        [InstructionName(InstructionNames.CLeS)]
         public AstNodeStm c_le_s() => _comp(6, 1);
 
-        [InstructionName("c.ngt.s")]
+        [InstructionName(InstructionNames.CNgtS)]
         public AstNodeStm c_ngt_s() => _comp(7, 1);
     }
 }
