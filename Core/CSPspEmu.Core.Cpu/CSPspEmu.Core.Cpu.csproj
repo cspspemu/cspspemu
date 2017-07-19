@@ -75,7 +75,6 @@
     <Compile Include="PspUntestedAttribute.cs" />
     <Compile Include="InstructionCache\MethodCache.cs" />
     <Compile Include="InstructionCache\MethodCacheInfo.cs" />
-    <Compile Include="CpuThreadState.Lists.cs" />
     <Compile Include="Dynarec\Ast\AstNodeExtensions.cs" />
     <Compile Include="Dynarec\Ast\AstNodeStmPspInstruction.cs" />
     <Compile Include="Dynarec\Ast\AstOptimizerPsp.cs" />

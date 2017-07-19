@@ -19,7 +19,7 @@ namespace CSPspEmu
         {
             try
             {
-                return CpuThreadState.GPR[GprPosition];
+                return CpuThreadState.Gpr[GprPosition];
             }
             finally
             {
@@ -31,8 +31,8 @@ namespace CSPspEmu
         {
             try
             {
-                var Low = CpuThreadState.GPR[GprPosition + 0];
-                var High = CpuThreadState.GPR[GprPosition + 1];
+                var Low = CpuThreadState.Gpr[GprPosition + 0];
+                var High = CpuThreadState.Gpr[GprPosition + 1];
                 return (long) ((High << 32) | (Low << 0));
             }
             finally
@@ -50,7 +50,7 @@ namespace CSPspEmu
         {
             try
             {
-                return CpuThreadState.FPR[FprPosition];
+                return CpuThreadState.Fpr[FprPosition];
             }
             finally
             {

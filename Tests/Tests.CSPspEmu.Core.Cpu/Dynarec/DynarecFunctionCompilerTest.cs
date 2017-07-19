@@ -30,9 +30,9 @@ namespace CSPspEmu.Tests.Cpu.Dynarec
             );
 
             var CpuThreadState = new CpuThreadState(CpuProcessor);
-            Assert.AreEqual(0, CpuThreadState.GPR[1]);
+            Assert.AreEqual(0, CpuThreadState.Gpr[1]);
             DynarecFunction.Delegate(CpuThreadState);
-            Assert.AreEqual(1, CpuThreadState.GPR[1]);
+            Assert.AreEqual(1, CpuThreadState.Gpr[1]);
         }
     }
 }

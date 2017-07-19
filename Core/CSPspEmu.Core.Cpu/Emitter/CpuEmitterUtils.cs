@@ -38,18 +38,18 @@ namespace CSPspEmu.Core.Cpu.Emitter
         {
             if (right == 0)
             {
-                cpuThreadState.LO = right;
-                cpuThreadState.HI = left;
+                cpuThreadState.Lo = right;
+                cpuThreadState.Hi = left;
             }
             else if (left == int.MinValue && right == -1)
             {
-                cpuThreadState.LO = int.MinValue;
-                cpuThreadState.HI = 0;
+                cpuThreadState.Lo = int.MinValue;
+                cpuThreadState.Hi = 0;
             }
             else
             {
-                cpuThreadState.LO = unchecked(left / right);
-                cpuThreadState.HI = unchecked(left % right);
+                cpuThreadState.Lo = unchecked(left / right);
+                cpuThreadState.Hi = unchecked(left % right);
             }
         }
 
@@ -59,13 +59,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         {
             if (right == 0)
             {
-                cpuThreadState.LO = (int) right;
-                cpuThreadState.HI = (int) left;
+                cpuThreadState.Lo = (int) right;
+                cpuThreadState.Hi = (int) left;
             }
             else
             {
-                cpuThreadState.LO = unchecked((int) (left / right));
-                cpuThreadState.HI = unchecked((int) (left % right));
+                cpuThreadState.Lo = unchecked((int) (left / right));
+                cpuThreadState.Hi = unchecked((int) (left % right));
             }
         }
 
@@ -111,12 +111,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public static int _cvt_w_s_impl(CpuThreadState cpuThreadState, float fs)
         {
             //Console.WriteLine("_cvt_w_s_impl: {0}", CpuThreadState.FPR[FS]);
-            switch (cpuThreadState.Fcr31.RM)
+            switch (cpuThreadState.Fcr31.Rm)
             {
-                case CpuThreadState.FCR31.TypeEnum.Rint: return (int) MathFloat.Rint(fs);
-                case CpuThreadState.FCR31.TypeEnum.Cast: return (int) MathFloat.Cast(fs);
-                case CpuThreadState.FCR31.TypeEnum.Ceil: return (int) MathFloat.Ceil(fs);
-                case CpuThreadState.FCR31.TypeEnum.Floor: return (int) MathFloat.Floor(fs);
+                case CpuThreadState.Fcr31Struct.TypeEnum.Rint: return (int) MathFloat.Rint(fs);
+                case CpuThreadState.Fcr31Struct.TypeEnum.Cast: return (int) MathFloat.Cast(fs);
+                case CpuThreadState.Fcr31Struct.TypeEnum.Ceil: return (int) MathFloat.Ceil(fs);
+                case CpuThreadState.Fcr31Struct.TypeEnum.Floor: return (int) MathFloat.Floor(fs);
             }
 
             throw(new InvalidCastException("RM has an invalid value!!"));
@@ -130,7 +130,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case 0: // readonly?
                     throw (new NotImplementedException("_cfc1_impl.RD=0"));
                 case 31:
-                    cpuThreadState.GPR[rt] = (int) cpuThreadState.Fcr31.Value;
+                    cpuThreadState.Gpr[rt] = (int) cpuThreadState.Fcr31.Value;
                     break;
                 default: throw (new Exception($"Unsupported CFC1({rd})"));
             }
@@ -141,7 +141,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             switch (rd)
             {
                 case 31:
-                    cpuThreadState.Fcr31.Value = (uint) cpuThreadState.GPR[rt];
+                    cpuThreadState.Fcr31.Value = (uint) cpuThreadState.Gpr[rt];
                     break;
                 default: throw (new Exception($"Unsupported CFC1({rd})"));
             }
@@ -154,7 +154,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         {
             if (float.IsNaN(s) || float.IsNaN(t))
             {
-                cpuThreadState.Fcr31.CC = fcUnordererd;
+                cpuThreadState.Fcr31.Cc = fcUnordererd;
             }
             else
             {
@@ -166,13 +166,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 var equal = fcEqual && s == t;
                 var less = fcLess && s < t;
 
-                cpuThreadState.Fcr31.CC = (less || equal);
+                cpuThreadState.Fcr31.Cc = (less || equal);
             }
         }
 
         public static void _break_impl(CpuThreadState cpuThreadState, uint pc, uint value)
         {
-            cpuThreadState.PC = pc;
+            cpuThreadState.Pc = pc;
             Console.Error.WriteLine("-------------------------------------------------------------------");
             Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
             Console.Error.WriteLine("-------------------------------------------------------------------");
@@ -181,14 +181,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public static void _cache_impl(CpuThreadState cpuThreadState, uint pc, uint value)
         {
-            cpuThreadState.PC = pc;
+            cpuThreadState.Pc = pc;
             //Console.Error.WriteLine("cache! : 0x{0:X}", Value);
             //CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
         }
 
         public static void _sync_impl(CpuThreadState cpuThreadState, uint pc, uint value)
         {
-            cpuThreadState.PC = pc;
+            cpuThreadState.Pc = pc;
             //Console.WriteLine("Not implemented 'sync' instruction at 0x{0:X8} with value 0x{1:X8}", PC, Value);
         }
 
@@ -263,7 +263,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             r[2] = r2;
             r[3] = r3;
 
-            fixed (float* vfpr = &cpuThreadState.VFR0)
+            fixed (float* vfpr = &cpuThreadState.Vfr0)
             {
                 for (var j = k; j < 4; j++, address += 4)
                 {
@@ -296,7 +296,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             r[2] = r2;
             r[3] = r3;
 
-            fixed (float* vfpr = &cpuThreadState.VFR0)
+            fixed (float* vfpr = &cpuThreadState.Vfr0)
             {
                 for (var j = 0; j < k; j++, address += 4)
                 {
@@ -381,7 +381,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case VfpuControlRegistersEnum.VfpuPfxs: return cpuThreadState.PrefixSource.Value;
                 case VfpuControlRegistersEnum.VfpuPfxt: return cpuThreadState.PrefixTarget.Value;
                 case VfpuControlRegistersEnum.VfpuPfxd: return cpuThreadState.PrefixDestination.Value;
-                case VfpuControlRegistersEnum.VfpuCc: return cpuThreadState.VFR_CC_Value;
+                case VfpuControlRegistersEnum.VfpuCc: return cpuThreadState.VfrCcValue;
                 case VfpuControlRegistersEnum.VfpuRcx0:
                     return (uint) MathFloat.ReinterpretFloatAsInt((float) (new Random().NextDouble()));
                 case VfpuControlRegistersEnum.VfpuRcx1:
@@ -413,7 +413,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     cpuThreadState.PrefixDestination.Value = value;
                     return;
                 case VfpuControlRegistersEnum.VfpuCc:
-                    cpuThreadState.VFR_CC_Value = value;
+                    cpuThreadState.VfrCcValue = value;
                     return;
                 case VfpuControlRegistersEnum.VfpuRcx0:
                     new Random((int) value);

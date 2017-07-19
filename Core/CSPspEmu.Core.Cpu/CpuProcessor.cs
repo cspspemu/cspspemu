@@ -73,7 +73,7 @@ namespace CSPspEmu.Core.Cpu
             }
             else
             {
-                Console.WriteLine("Undefined syscall: {0:X6} at 0x{1:X8}", code, cpuThreadState.PC);
+                Console.WriteLine("Undefined syscall: {0:X6} at 0x{1:X8}", code, cpuThreadState.Pc);
             }
         }
 

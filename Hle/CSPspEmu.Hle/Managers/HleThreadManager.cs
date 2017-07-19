@@ -275,7 +275,7 @@ namespace CSPspEmu.Hle.Managers
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Execute: {0} : PC: 0x{1:X}", CurrentCurrent,
-                                CurrentCurrent.CpuThreadState.PC);
+                                CurrentCurrent.CpuThreadState.Pc);
                         });
                     }
 

@@ -89,7 +89,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         //private AstNodeExprArgument GetCpuThreadStateArgument() { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); }
         public AstNodeExprLValue FCR31_CC()
         {
-            return Ast.FieldAccess(Reg(nameof(CpuThreadState.Fcr31)), nameof(CpuThreadState.FCR31.CC));
+            return Ast.FieldAccess(Reg(nameof(CpuThreadState.Fcr31)), nameof(CpuThreadState.Fcr31Struct.Cc));
         }
 
         private static readonly Dictionary<string, AstNodeExprFieldAccess> RegCache =
@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeExprLValue Fpr(int index) => Reg(CpuThreadState.FprNames[index]);
 
         public AstNodeExprLValue HI_LO() =>
-            Ast.PropertyAccess(Ast.CpuThreadStateExpr, nameof(CpuThreadState.HI_LO));
+            Ast.PropertyAccess(Ast.CpuThreadStateExpr, nameof(CpuThreadState.HiLo));
 
         public AstNodeExprLValue FPR_I(int index) =>
             Ast.Indirect(Ast.Cast(typeof(int*), Ast.GetAddress(Reg(CpuThreadState.FprNames[index])), Explicit: false));
@@ -186,13 +186,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeStm AssignVcc(int index, AstNodeExpr expr) => Ast.Assign(Vcc(index), expr);
 
-        public AstNodeExprLValue Ic() => Reg(nameof(CpuThreadState.IC));
+        public AstNodeExprLValue Ic() => Reg(nameof(CpuThreadState.Ic));
 
-        public AstNodeExprLValue Pc() => Reg(nameof(CpuThreadState.PC));
+        public AstNodeExprLValue Pc() => Reg(nameof(CpuThreadState.Pc));
 
-        public AstNodeExprLValue Hi() => Reg(nameof(CpuThreadState.HI));
+        public AstNodeExprLValue Hi() => Reg(nameof(CpuThreadState.Hi));
 
-        public AstNodeExprLValue Lo() => Reg(nameof(CpuThreadState.LO));
+        public AstNodeExprLValue Lo() => Reg(nameof(CpuThreadState.Lo));
 
         public AstNodeExprLValue C0R(int index) => Reg(CpuThreadState.C0RNames[index]);
 

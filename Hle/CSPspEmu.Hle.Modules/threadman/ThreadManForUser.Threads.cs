@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 #endif
 
             Thread.Attribute = Attribute;
-            Thread.GP = CpuThreadState.GP;
+            Thread.GP = CpuThreadState.Gp;
             Thread.Info.EntryPoint = (SceKernelThreadEntry) EntryPoint;
 
             //var ThreadStackPartition = MemoryManager.GetPartition(MemoryPartitions.User);
@@ -90,8 +90,8 @@ namespace CSPspEmu.Hle.Modules.threadman
                 Thread.CpuThreadState.CopyRegistersFrom(ThreadManager.Current.CpuThreadState);
             }
 
-            Thread.CpuThreadState.PC = (uint) EntryPoint;
-            Thread.CpuThreadState.RA = (uint) HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
+            Thread.CpuThreadState.Pc = (uint) EntryPoint;
+            Thread.CpuThreadState.Ra = (uint) HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
             Thread.SetStatus(HleThread.Status.Stopped);
             //Thread.CpuThreadState.RA = (uint)0;
 
@@ -107,7 +107,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xF8, 0xFFFFFFFF);
             CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xFC, 0xFFFFFFFF);
 
-            Thread.CpuThreadState.SP = SP;
+            Thread.CpuThreadState.Sp = SP;
             //ThreadToStart.CpuThreadState.FP = 0xDEADBEEF;
             Thread.CpuThreadState.K0 = K0;
 
@@ -127,18 +127,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 
             if (UserDataPointer == 0)
             {
-                ThreadToStart.CpuThreadState.GPR[4] = 0;
-                ThreadToStart.CpuThreadState.GPR[5] = 0;
+                ThreadToStart.CpuThreadState.Gpr[4] = 0;
+                ThreadToStart.CpuThreadState.Gpr[5] = 0;
             }
             else
             {
                 CpuThreadState.CpuProcessor.Memory.Copy(UserDataPointer, CopiedDataAddress, UserDataLength);
-                ThreadToStart.CpuThreadState.GPR[4] = (int) UserDataLength;
-                ThreadToStart.CpuThreadState.GPR[5] = (int) CopiedDataAddress;
+                ThreadToStart.CpuThreadState.Gpr[4] = (int) UserDataLength;
+                ThreadToStart.CpuThreadState.Gpr[5] = (int) CopiedDataAddress;
             }
 
-            ThreadToStart.CpuThreadState.GP = (uint) CpuThreadState.GP;
-            ThreadToStart.CpuThreadState.SP = (uint) (CopiedDataAddress - 0x40);
+            ThreadToStart.CpuThreadState.Gp = (uint) CpuThreadState.Gp;
+            ThreadToStart.CpuThreadState.Sp = (uint) (CopiedDataAddress - 0x40);
 
             ThreadToStart.CpuThreadState.CallerModule = CpuThreadState.CallerModule;
 
@@ -477,7 +477,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         {
             //if (ThreadManager.Current == null) return 0;
 
-            return sceKernelExitDeleteThread(CpuThreadState.GPR[2]);
+            return sceKernelExitDeleteThread(CpuThreadState.Gpr[2]);
         }
 
         /// <summary>
@@ -774,7 +774,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             var HleThread = ThreadManager.GetThreadById(ThreadId, AllowSelf: true);
             var SpHigh = (uint) HleThread.Info.StackPointer;
             var SpLow = (uint) HleThread.Info.StackPointer - HleThread.Info.StackSize;
-            var SpCurrent = (uint) HleThread.CpuThreadState.SP;
+            var SpCurrent = (uint) HleThread.CpuThreadState.Sp;
             Console.Error.WriteLine("sceKernelGetThreadStackFreeSize: {0:X} - {1:X} - {2:X}", SpLow, SpCurrent, SpHigh);
             return (int) (SpCurrent - SpLow);
             //throw(new NotImplementedException());

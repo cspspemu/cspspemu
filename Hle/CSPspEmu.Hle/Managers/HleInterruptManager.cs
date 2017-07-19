@@ -135,7 +135,7 @@ namespace CSPspEmu.Hle.Managers
                     hleCallback.SetArgumentsToCpuThreadState(fakeCpuThreadState);
 
                     fakeCpuThreadState.EnableYielding = false;
-                    fakeCpuThreadState.ExecuteAt(fakeCpuThreadState.PC);
+                    fakeCpuThreadState.ExecuteAt(fakeCpuThreadState.Pc);
                     //HleInterop.Execute(FakeCpuThreadState);
                     //Console.Error.WriteLine("Execute queued");
 

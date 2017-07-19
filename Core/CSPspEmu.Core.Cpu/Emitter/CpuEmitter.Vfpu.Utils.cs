@@ -121,7 +121,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         {
             Console.Error.WriteLine("");
             Console.Error.WriteLine("VPU DEBUG:");
-            fixed (float* fpr = &cpuThreadState.VFR0)
+            fixed (float* fpr = &cpuThreadState.Vfr0)
             {
                 var index = 0;
                 for (var matrix = 0; matrix < 8; matrix++)

@@ -55,7 +55,7 @@ namespace CSPspEmuLLETest
         {
             var dmaAddress = (DmaEnum) address;
             if ((dmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (dmaAddress < DmaEnum.NAND__DATA_PAGE_END)) return;
-            Console.WriteLine("PC({0:X8}) {1}: {2} : 0x{3:X8}", CpuThreadState.PC, direction, GetRegisterName(address),
+            Console.WriteLine("PC({0:X8}) {1}: {2} : 0x{3:X8}", CpuThreadState.Pc, direction, GetRegisterName(address),
                 value);
         }
 

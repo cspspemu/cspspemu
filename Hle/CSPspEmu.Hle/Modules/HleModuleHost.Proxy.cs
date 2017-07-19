@@ -81,12 +81,12 @@ namespace CSPspEmu.Hle
 
             protected override object ReadFromFpr(Type Type, int Index)
             {
-                return this.CpuThreadState.FPR[Index];
+                return this.CpuThreadState.Fpr[Index];
             }
 
             protected override object ReadFromGpr(Type Type, int Index)
             {
-                return this.CpuThreadState.GPR[Index];
+                return this.CpuThreadState.Gpr[Index];
             }
 
             protected override object ReadFromStack(Type Type, int Index)
@@ -94,12 +94,12 @@ namespace CSPspEmu.Hle
                 if (Type == typeof(int) || Type == typeof(uint))
                 {
                     return CpuThreadState.Memory.ReadSafe<uint>(
-                        (uint) (this.CpuThreadState.GPR[29] + ((MaxGprIndex - Index) * 4)));
+                        (uint) (this.CpuThreadState.Gpr[29] + ((MaxGprIndex - Index) * 4)));
                 }
                 if (Type == typeof(long) || Type == typeof(ulong))
                 {
                     return CpuThreadState.Memory.ReadSafe<ulong>(
-                        (uint) (this.CpuThreadState.GPR[29] + ((MaxGprIndex - Index) * 4)));
+                        (uint) (this.CpuThreadState.Gpr[29] + ((MaxGprIndex - Index) * 4)));
                 }
                 throw(new NotImplementedException("Invalid operation"));
             }
@@ -427,7 +427,7 @@ namespace CSPspEmu.Hle
                             "Thread({0}:'{1}') : RA(0x{2:X})",
                             ThreadManager.Current.Id,
                             ThreadManager.Current.Name,
-                            ThreadManager.Current.CpuThreadState.RA
+                            ThreadManager.Current.CpuThreadState.Ra
                         );
                     }
                     else
@@ -463,7 +463,7 @@ namespace CSPspEmu.Hle
 
                 try
                 {
-                    CpuThreadState.PC = CpuThreadState.RA;
+                    CpuThreadState.Pc = CpuThreadState.Ra;
                     Delegate(CpuThreadState);
                 }
                 catch (InvalidProgramException)
@@ -480,11 +480,11 @@ namespace CSPspEmu.Hle
                 }
                 catch (MemoryPartitionNoMemoryException)
                 {
-                    CpuThreadState.GPR[2] = (int) SceKernelErrors.ERROR_ERRNO_NO_MEMORY;
+                    CpuThreadState.Gpr[2] = (int) SceKernelErrors.ERROR_ERRNO_NO_MEMORY;
                 }
                 catch (SceKernelException SceKernelException)
                 {
-                    CpuThreadState.GPR[2] = (int) SceKernelException.SceKernelError;
+                    CpuThreadState.Gpr[2] = (int) SceKernelException.SceKernelError;
                 }
                 catch (SceKernelSelfStopUnloadModuleException)
                 {
@@ -506,8 +506,8 @@ namespace CSPspEmu.Hle
                         Out.WriteLine(" : {0}",
                             ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState,
                                 ((MethodInfo.ReturnType == typeof(float))
-                                    ? (object) CpuThreadState.FPR[0]
-                                    : (object) CpuThreadState.GPR[2])));
+                                    ? (object) CpuThreadState.Fpr[0]
+                                    : (object) CpuThreadState.Gpr[2])));
                         Out.WriteLine("");
                     }
                 }

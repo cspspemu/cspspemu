@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Runtime.CompilerServices;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.VFpu;
 using CSPspEmu.Core.Cpu.InstructionCache;
@@ -16,11 +15,11 @@ using System.Runtime;
 
 namespace CSPspEmu.Core.Cpu
 {
-    unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint Address, string ErrorDescription, bool CanBeNull);
+    internal unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint address, string errorDescription, bool canBeNull);
 
-    unsafe delegate void* GetMemoryPtrNotNullDelegate(uint Address);
+    internal unsafe delegate void* GetMemoryPtrNotNullDelegate(uint address);
 
-    public sealed unsafe partial class CpuThreadState
+    public sealed unsafe class CpuThreadState
     {
         public static readonly CpuThreadState Methods = new CpuThreadState();
 
@@ -39,38 +38,38 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// Las Valid Registered PC
         /// </summary>
-        public uint LastValidPC = 0xFFFFFFFF;
+        public uint LastValidPc = 0xFFFFFFFF;
 
         /// <summary>
         /// Current PC
         /// </summary>
-        public uint PC;
+        public uint Pc;
         //public uint nPC;
 
         /// <summary>
         /// LOw, HIgh registers.
         /// Used for mult/div.
         /// </summary>
-        public int LO, HI;
+        public int Lo, Hi;
 
-        public long HI_LO
+        public long HiLo
         {
             //[MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                fixed (int* LOPtr = &LO) return *(long*) LOPtr;
+                fixed (int* loPtr = &Lo) return *(long*) loPtr;
             }
             //[MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
-                fixed (int* LOPtr = &LO) *(long*) LOPtr = value;
+                fixed (int* loPtr = &Lo) *(long*) loPtr = value;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public uint IC;
+        public uint Ic;
 
         /// <summary>
         /// 
@@ -89,66 +88,66 @@ namespace CSPspEmu.Core.Cpu
             Gpr2,
             Gpr3,
             Gpr4,
-            GPR5,
-            GPR6,
-            GPR7,
-            GPR8,
-            GPR9,
-            GPR10,
-            GPR11,
-            GPR12,
-            GPR13,
-            GPR14,
-            GPR15,
-            GPR16,
-            GPR17,
-            GPR18,
-            GPR19,
-            GPR20,
-            GPR21,
-            GPR22,
-            GPR23,
-            GPR24,
-            GPR25,
-            GPR26,
-            GPR27,
-            GPR28,
-            GPR29,
-            GPR30,
-            GPR31;
+            Gpr5,
+            Gpr6,
+            Gpr7,
+            Gpr8,
+            Gpr9,
+            Gpr10,
+            Gpr11,
+            Gpr12,
+            Gpr13,
+            Gpr14,
+            Gpr15,
+            Gpr16,
+            Gpr17,
+            Gpr18,
+            Gpr19,
+            Gpr20,
+            Gpr21,
+            Gpr22,
+            Gpr23,
+            Gpr24,
+            Gpr25,
+            Gpr26,
+            Gpr27,
+            Gpr28,
+            Gpr29,
+            Gpr30,
+            Gpr31;
 
-        public float FPR0,
-            FPR1,
-            FPR2,
-            FPR3,
-            FPR4,
-            FPR5,
-            FPR6,
-            FPR7,
-            FPR8,
-            FPR9,
-            FPR10,
-            FPR11,
-            FPR12,
-            FPR13,
-            FPR14,
-            FPR15,
-            FPR16,
-            FPR17,
-            FPR18,
-            FPR19,
-            FPR20,
-            FPR21,
-            FPR22,
-            FPR23,
-            FPR24,
-            FPR25,
-            FPR26,
-            FPR27,
-            FPR28,
-            FPR29,
-            FPR30,
-            FPR31;
+        public float Fpr0,
+            Fpr1,
+            Fpr2,
+            Fpr3,
+            Fpr4,
+            Fpr5,
+            Fpr6,
+            Fpr7,
+            Fpr8,
+            Fpr9,
+            Fpr10,
+            Fpr11,
+            Fpr12,
+            Fpr13,
+            Fpr14,
+            Fpr15,
+            Fpr16,
+            Fpr17,
+            Fpr18,
+            Fpr19,
+            Fpr20,
+            Fpr21,
+            Fpr22,
+            Fpr23,
+            Fpr24,
+            Fpr25,
+            Fpr26,
+            Fpr27,
+            Fpr28,
+            Fpr29,
+            Fpr30,
+            Fpr31;
 
         public uint C0R0,
             C0R1,
@@ -183,134 +182,134 @@ namespace CSPspEmu.Core.Cpu
             C0R30,
             C0R31;
 
-        public float VFR0,
-            VFR1,
-            VFR2,
-            VFR3,
-            VFR4,
-            VFR5,
-            VFR6,
-            VFR7,
-            VFR8,
-            VFR9,
-            VFR10,
-            VFR11,
-            VFR12,
-            VFR13,
-            VFR14,
-            VFR15,
-            VFR16,
-            VFR17,
-            VFR18,
-            VFR19,
-            VFR20,
-            VFR21,
-            VFR22,
-            VFR23,
-            VFR24,
-            VFR25,
-            VFR26,
-            VFR27,
-            VFR28,
-            VFR29,
-            VFR30,
-            VFR31,
-            VFR32,
-            VFR33,
-            VFR34,
-            VFR35,
-            VFR36,
-            VFR37,
-            VFR38,
-            VFR39,
-            VFR40,
-            VFR41,
-            VFR42,
-            VFR43,
-            VFR44,
-            VFR45,
-            VFR46,
-            VFR47,
-            VFR48,
-            VFR49,
-            VFR50,
-            VFR51,
-            VFR52,
-            VFR53,
-            VFR54,
-            VFR55,
-            VFR56,
-            VFR57,
-            VFR58,
-            VFR59,
-            VFR60,
-            VFR61,
-            VFR62,
-            VFR63,
-            VFR64,
-            VFR65,
-            VFR66,
-            VFR67,
-            VFR68,
-            VFR69,
-            VFR70,
-            VFR71,
-            VFR72,
-            VFR73,
-            VFR74,
-            VFR75,
-            VFR76,
-            VFR77,
-            VFR78,
-            VFR79,
-            VFR80,
-            VFR81,
-            VFR82,
-            VFR83,
-            VFR84,
-            VFR85,
-            VFR86,
-            VFR87,
-            VFR88,
-            VFR89,
-            VFR90,
-            VFR91,
-            VFR92,
-            VFR93,
-            VFR94,
-            VFR95,
-            VFR96,
-            VFR97,
-            VFR98,
-            VFR99,
-            VFR100,
-            VFR101,
-            VFR102,
-            VFR103,
-            VFR104,
-            VFR105,
-            VFR106,
-            VFR107,
-            VFR108,
-            VFR109,
-            VFR110,
-            VFR111,
-            VFR112,
-            VFR113,
-            VFR114,
-            VFR115,
-            VFR116,
-            VFR117,
-            VFR118,
-            VFR119,
-            VFR120,
-            VFR121,
-            VFR122,
-            VFR123,
-            VFR124,
-            VFR125,
-            VFR126,
-            VFR127;
+        public float Vfr0,
+            Vfr1,
+            Vfr2,
+            Vfr3,
+            Vfr4,
+            Vfr5,
+            Vfr6,
+            Vfr7,
+            Vfr8,
+            Vfr9,
+            Vfr10,
+            Vfr11,
+            Vfr12,
+            Vfr13,
+            Vfr14,
+            Vfr15,
+            Vfr16,
+            Vfr17,
+            Vfr18,
+            Vfr19,
+            Vfr20,
+            Vfr21,
+            Vfr22,
+            Vfr23,
+            Vfr24,
+            Vfr25,
+            Vfr26,
+            Vfr27,
+            Vfr28,
+            Vfr29,
+            Vfr30,
+            Vfr31,
+            Vfr32,
+            Vfr33,
+            Vfr34,
+            Vfr35,
+            Vfr36,
+            Vfr37,
+            Vfr38,
+            Vfr39,
+            Vfr40,
+            Vfr41,
+            Vfr42,
+            Vfr43,
+            Vfr44,
+            Vfr45,
+            Vfr46,
+            Vfr47,
+            Vfr48,
+            Vfr49,
+            Vfr50,
+            Vfr51,
+            Vfr52,
+            Vfr53,
+            Vfr54,
+            Vfr55,
+            Vfr56,
+            Vfr57,
+            Vfr58,
+            Vfr59,
+            Vfr60,
+            Vfr61,
+            Vfr62,
+            Vfr63,
+            Vfr64,
+            Vfr65,
+            Vfr66,
+            Vfr67,
+            Vfr68,
+            Vfr69,
+            Vfr70,
+            Vfr71,
+            Vfr72,
+            Vfr73,
+            Vfr74,
+            Vfr75,
+            Vfr76,
+            Vfr77,
+            Vfr78,
+            Vfr79,
+            Vfr80,
+            Vfr81,
+            Vfr82,
+            Vfr83,
+            Vfr84,
+            Vfr85,
+            Vfr86,
+            Vfr87,
+            Vfr88,
+            Vfr89,
+            Vfr90,
+            Vfr91,
+            Vfr92,
+            Vfr93,
+            Vfr94,
+            Vfr95,
+            Vfr96,
+            Vfr97,
+            Vfr98,
+            Vfr99,
+            Vfr100,
+            Vfr101,
+            Vfr102,
+            Vfr103,
+            Vfr104,
+            Vfr105,
+            Vfr106,
+            Vfr107,
+            Vfr108,
+            Vfr109,
+            Vfr110,
+            Vfr111,
+            Vfr112,
+            Vfr113,
+            Vfr114,
+            Vfr115,
+            Vfr116,
+            Vfr117,
+            Vfr118,
+            Vfr119,
+            Vfr120,
+            Vfr121,
+            Vfr122,
+            Vfr123,
+            Vfr124,
+            Vfr125,
+            Vfr126,
+            Vfr127;
 
         //var name = 'C0R'; for (var n = 0; n < 32; n += 4) console.log('nameof(' + name + (n) + '), nameof(' + name + (n + 1) + '), nameof(' + name + (n + 2) + '), nameof(' + name + (n + 3) + '),');
         public static readonly string[] C0RNames =
@@ -328,99 +327,99 @@ namespace CSPspEmu.Core.Cpu
         public static readonly string[] GprNames =
         {
             nameof(Gpr0), nameof(Gpr1), nameof(Gpr2), nameof(Gpr3),
-            nameof(Gpr4), nameof(GPR5), nameof(GPR6), nameof(GPR7),
-            nameof(GPR8), nameof(GPR9), nameof(GPR10), nameof(GPR11),
-            nameof(GPR12), nameof(GPR13), nameof(GPR14), nameof(GPR15),
-            nameof(GPR16), nameof(GPR17), nameof(GPR18), nameof(GPR19),
-            nameof(GPR20), nameof(GPR21), nameof(GPR22), nameof(GPR23),
-            nameof(GPR24), nameof(GPR25), nameof(GPR26), nameof(GPR27),
-            nameof(GPR28), nameof(GPR29), nameof(GPR30), nameof(GPR31),
+            nameof(Gpr4), nameof(Gpr5), nameof(Gpr6), nameof(Gpr7),
+            nameof(Gpr8), nameof(Gpr9), nameof(Gpr10), nameof(Gpr11),
+            nameof(Gpr12), nameof(Gpr13), nameof(Gpr14), nameof(Gpr15),
+            nameof(Gpr16), nameof(Gpr17), nameof(Gpr18), nameof(Gpr19),
+            nameof(Gpr20), nameof(Gpr21), nameof(Gpr22), nameof(Gpr23),
+            nameof(Gpr24), nameof(Gpr25), nameof(Gpr26), nameof(Gpr27),
+            nameof(Gpr28), nameof(Gpr29), nameof(Gpr30), nameof(Gpr31),
         };
 
         public static readonly string[] FprNames =
         {
-            nameof(FPR0), nameof(FPR1), nameof(FPR2), nameof(FPR3),
-            nameof(FPR4), nameof(FPR5), nameof(FPR6), nameof(FPR7),
-            nameof(FPR8), nameof(FPR9), nameof(FPR10), nameof(FPR11),
-            nameof(FPR12), nameof(FPR13), nameof(FPR14), nameof(FPR15),
-            nameof(FPR16), nameof(FPR17), nameof(FPR18), nameof(FPR19),
-            nameof(FPR20), nameof(FPR21), nameof(FPR22), nameof(FPR23),
-            nameof(FPR24), nameof(FPR25), nameof(FPR26), nameof(FPR27),
-            nameof(FPR28), nameof(FPR29), nameof(FPR30), nameof(FPR31),
+            nameof(Fpr0), nameof(Fpr1), nameof(Fpr2), nameof(Fpr3),
+            nameof(Fpr4), nameof(Fpr5), nameof(Fpr6), nameof(Fpr7),
+            nameof(Fpr8), nameof(Fpr9), nameof(Fpr10), nameof(Fpr11),
+            nameof(Fpr12), nameof(Fpr13), nameof(Fpr14), nameof(Fpr15),
+            nameof(Fpr16), nameof(Fpr17), nameof(Fpr18), nameof(Fpr19),
+            nameof(Fpr20), nameof(Fpr21), nameof(Fpr22), nameof(Fpr23),
+            nameof(Fpr24), nameof(Fpr25), nameof(Fpr26), nameof(Fpr27),
+            nameof(Fpr28), nameof(Fpr29), nameof(Fpr30), nameof(Fpr31),
         };
 
         public static readonly string[] VfrNames =
         {
-            nameof(VFR0), nameof(VFR1), nameof(VFR2), nameof(VFR3),
-            nameof(VFR4), nameof(VFR5), nameof(VFR6), nameof(VFR7),
-            nameof(VFR8), nameof(VFR9), nameof(VFR10), nameof(VFR11),
-            nameof(VFR12), nameof(VFR13), nameof(VFR14), nameof(VFR15),
-            nameof(VFR16), nameof(VFR17), nameof(VFR18), nameof(VFR19),
-            nameof(VFR20), nameof(VFR21), nameof(VFR22), nameof(VFR23),
-            nameof(VFR24), nameof(VFR25), nameof(VFR26), nameof(VFR27),
-            nameof(VFR28), nameof(VFR29), nameof(VFR30), nameof(VFR31),
-            nameof(VFR32), nameof(VFR33), nameof(VFR34), nameof(VFR35),
-            nameof(VFR36), nameof(VFR37), nameof(VFR38), nameof(VFR39),
-            nameof(VFR40), nameof(VFR41), nameof(VFR42), nameof(VFR43),
-            nameof(VFR44), nameof(VFR45), nameof(VFR46), nameof(VFR47),
-            nameof(VFR48), nameof(VFR49), nameof(VFR50), nameof(VFR51),
-            nameof(VFR52), nameof(VFR53), nameof(VFR54), nameof(VFR55),
-            nameof(VFR56), nameof(VFR57), nameof(VFR58), nameof(VFR59),
-            nameof(VFR60), nameof(VFR61), nameof(VFR62), nameof(VFR63),
-            nameof(VFR64), nameof(VFR65), nameof(VFR66), nameof(VFR67),
-            nameof(VFR68), nameof(VFR69), nameof(VFR70), nameof(VFR71),
-            nameof(VFR72), nameof(VFR73), nameof(VFR74), nameof(VFR75),
-            nameof(VFR76), nameof(VFR77), nameof(VFR78), nameof(VFR79),
-            nameof(VFR80), nameof(VFR81), nameof(VFR82), nameof(VFR83),
-            nameof(VFR84), nameof(VFR85), nameof(VFR86), nameof(VFR87),
-            nameof(VFR88), nameof(VFR89), nameof(VFR90), nameof(VFR91),
-            nameof(VFR92), nameof(VFR93), nameof(VFR94), nameof(VFR95),
-            nameof(VFR96), nameof(VFR97), nameof(VFR98), nameof(VFR99),
-            nameof(VFR100), nameof(VFR101), nameof(VFR102), nameof(VFR103),
-            nameof(VFR104), nameof(VFR105), nameof(VFR106), nameof(VFR107),
-            nameof(VFR108), nameof(VFR109), nameof(VFR110), nameof(VFR111),
-            nameof(VFR112), nameof(VFR113), nameof(VFR114), nameof(VFR115),
-            nameof(VFR116), nameof(VFR117), nameof(VFR118), nameof(VFR119),
-            nameof(VFR120), nameof(VFR121), nameof(VFR122), nameof(VFR123),
-            nameof(VFR124), nameof(VFR125), nameof(VFR126), nameof(VFR127),
+            nameof(Vfr0), nameof(Vfr1), nameof(Vfr2), nameof(Vfr3),
+            nameof(Vfr4), nameof(Vfr5), nameof(Vfr6), nameof(Vfr7),
+            nameof(Vfr8), nameof(Vfr9), nameof(Vfr10), nameof(Vfr11),
+            nameof(Vfr12), nameof(Vfr13), nameof(Vfr14), nameof(Vfr15),
+            nameof(Vfr16), nameof(Vfr17), nameof(Vfr18), nameof(Vfr19),
+            nameof(Vfr20), nameof(Vfr21), nameof(Vfr22), nameof(Vfr23),
+            nameof(Vfr24), nameof(Vfr25), nameof(Vfr26), nameof(Vfr27),
+            nameof(Vfr28), nameof(Vfr29), nameof(Vfr30), nameof(Vfr31),
+            nameof(Vfr32), nameof(Vfr33), nameof(Vfr34), nameof(Vfr35),
+            nameof(Vfr36), nameof(Vfr37), nameof(Vfr38), nameof(Vfr39),
+            nameof(Vfr40), nameof(Vfr41), nameof(Vfr42), nameof(Vfr43),
+            nameof(Vfr44), nameof(Vfr45), nameof(Vfr46), nameof(Vfr47),
+            nameof(Vfr48), nameof(Vfr49), nameof(Vfr50), nameof(Vfr51),
+            nameof(Vfr52), nameof(Vfr53), nameof(Vfr54), nameof(Vfr55),
+            nameof(Vfr56), nameof(Vfr57), nameof(Vfr58), nameof(Vfr59),
+            nameof(Vfr60), nameof(Vfr61), nameof(Vfr62), nameof(Vfr63),
+            nameof(Vfr64), nameof(Vfr65), nameof(Vfr66), nameof(Vfr67),
+            nameof(Vfr68), nameof(Vfr69), nameof(Vfr70), nameof(Vfr71),
+            nameof(Vfr72), nameof(Vfr73), nameof(Vfr74), nameof(Vfr75),
+            nameof(Vfr76), nameof(Vfr77), nameof(Vfr78), nameof(Vfr79),
+            nameof(Vfr80), nameof(Vfr81), nameof(Vfr82), nameof(Vfr83),
+            nameof(Vfr84), nameof(Vfr85), nameof(Vfr86), nameof(Vfr87),
+            nameof(Vfr88), nameof(Vfr89), nameof(Vfr90), nameof(Vfr91),
+            nameof(Vfr92), nameof(Vfr93), nameof(Vfr94), nameof(Vfr95),
+            nameof(Vfr96), nameof(Vfr97), nameof(Vfr98), nameof(Vfr99),
+            nameof(Vfr100), nameof(Vfr101), nameof(Vfr102), nameof(Vfr103),
+            nameof(Vfr104), nameof(Vfr105), nameof(Vfr106), nameof(Vfr107),
+            nameof(Vfr108), nameof(Vfr109), nameof(Vfr110), nameof(Vfr111),
+            nameof(Vfr112), nameof(Vfr113), nameof(Vfr114), nameof(Vfr115),
+            nameof(Vfr116), nameof(Vfr117), nameof(Vfr118), nameof(Vfr119),
+            nameof(Vfr120), nameof(Vfr121), nameof(Vfr122), nameof(Vfr123),
+            nameof(Vfr124), nameof(Vfr125), nameof(Vfr126), nameof(Vfr127),
         };
 
         public static readonly string[] VfrCcNames =
         {
-            nameof(VFR_CC_0),
-            nameof(VFR_CC_1),
-            nameof(VFR_CC_2),
-            nameof(VFR_CC_3),
-            nameof(VFR_CC_4),
-            nameof(VFR_CC_5),
-            nameof(VFR_CC_6),
-            nameof(VFR_CC_7),
+            nameof(VfrCc0),
+            nameof(VfrCc1),
+            nameof(VfrCc2),
+            nameof(VfrCc3),
+            nameof(VfrCc4),
+            nameof(VfrCc5),
+            nameof(VfrCc6),
+            nameof(VfrCc7),
         };
 
-        public bool VFR_CC_0, VFR_CC_1, VFR_CC_2, VFR_CC_3, VFR_CC_4, VFR_CC_5, VFR_CC_6, VFR_CC_7;
+        public bool VfrCc0, VfrCc1, VfrCc2, VfrCc3, VfrCc4, VfrCc5, VfrCc6, VfrCc7;
 
-        public bool VFR_CC_ANY => VFR_CC_4;
+        public bool VfrCcAny => VfrCc4;
 
-        public bool VFR_CC_ALL => VFR_CC_5;
+        public bool VfrCcAll => VfrCc5;
 
-        public uint VFR_CC_Value
+        public uint VfrCcValue
         {
             get
             {
-                uint Value = 0;
-                fixed (bool* VFR_CC = &VFR_CC_0)
+                uint value = 0;
+                fixed (bool* vfrCc = &VfrCc0)
                 {
-                    for (int n = 0; n < 8; n++) Value |= (uint) (VFR_CC[n] ? (1 << n) : 0);
+                    for (int n = 0; n < 8; n++) value |= (uint) (vfrCc[n] ? (1 << n) : 0);
                 }
-                return Value;
+                return value;
             }
             set
             {
-                fixed (bool* VFR_CC = &VFR_CC_0)
+                fixed (bool* vfrCc = &VfrCc0)
                 {
                     for (int n = 0; n < 8; n++)
                     {
-                        VFR_CC[n] = (((value >> n) & 1) != 0);
+                        vfrCc[n] = (((value >> n) & 1) != 0);
                     }
                 }
             }
@@ -433,7 +432,7 @@ namespace CSPspEmu.Core.Cpu
 
         public Random Random = new Random();
 
-        public FCR31 Fcr31;
+        public Fcr31Struct Fcr31;
 
         public readonly uint[] CallStack = new uint[10240];
         public int CallStackCount;
@@ -465,19 +464,19 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// Points to the middle of the 64K block of memory in the static data segment.
         /// </summary>
-        public uint GP
+        public uint Gp
         {
-            get => GPR28;
-            set => GPR28 = value;
+            get => Gpr28;
+            set => Gpr28 = value;
         }
 
         /// <summary>
         /// Points to last location on the stack.
         /// </summary>
-        public uint SP
+        public uint Sp
         {
-            get => GPR29;
-            set => GPR29 = value;
+            get => Gpr29;
+            set => Gpr29 = value;
         }
 
         /// <summary>
@@ -485,27 +484,27 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint K0
         {
-            get => GPR26;
-            set => GPR26 = value;
+            get => Gpr26;
+            set => Gpr26 = value;
         }
 
         /// <summary>
         /// saved value / frame pointer
         /// Preserved across procedure calls
         /// </summary>
-        public uint FP
+        public uint Fp
         {
-            get => GPR30;
-            set => GPR30 = value;
+            get => Gpr30;
+            set => Gpr30 = value;
         }
 
         /// <summary>
         /// Return Address
         /// </summary>
-        public uint RA
+        public uint Ra
         {
-            get => GPR31;
-            set => GPR31 = value;
+            get => Gpr31;
+            set => Gpr31 = value;
         }
 
         /// <summary>
@@ -517,12 +516,12 @@ namespace CSPspEmu.Core.Cpu
             set { Gpr2 = value; }
         }
 
-        public GprList GPR;
-        public C0rList C0R;
-        public FprList FPR;
+        public GprList Gpr;
+        public C0RList C0R;
+        public FprList Fpr;
         public VfprList Vfpr;
 
-        public FprListInteger FPR_I;
+        public FprListInteger FprI;
         //readonly public float* FPR;
 
         public void* GetMemoryPtr(uint address)
@@ -534,7 +533,7 @@ namespace CSPspEmu.Core.Cpu
 
         public void* GetMemoryPtrNotNull(uint address) => Memory.PspAddressToPointerNotNull(address);
 
-        public void* GetMemoryPtrSafe(uint address) => Memory.PspAddressToPointerSafe(address, 0);
+        public void* GetMemoryPtrSafe(uint address) => Memory.PspAddressToPointerSafe(address);
 
         public void* GetMemoryPtrSafeWithError(uint address, string errorDescription, bool canBeNull,
             InvalidAddressAsEnum invalid)
@@ -574,7 +573,7 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         /// <param name="indexes"></param>
         /// <returns></returns>
-        public IEnumerable<int> GPRList(params int[] indexes) => indexes.Select(index => GPR[index]);
+        public IEnumerable<int> GprItems(params int[] indexes) => indexes.Select(index => Gpr[index]);
 
         private CpuThreadState()
         {
@@ -592,16 +591,16 @@ namespace CSPspEmu.Core.Cpu
             MethodCache = processor.MethodCache;
             //this.Memory = Processor.Memory;
 
-            GPR = new GprList {CpuThreadState = this};
-            FPR = new FprList {CpuThreadState = this};
-            C0R = new C0rList {CpuThreadState = this};
-            FPR_I = new FprListInteger {CpuThreadState = this};
+            Gpr = new GprList {CpuThreadState = this};
+            Fpr = new FprList {CpuThreadState = this};
+            C0R = new C0RList {CpuThreadState = this};
+            FprI = new FprListInteger {CpuThreadState = this};
             Vfpr = new VfprList {CpuThreadState = this};
 
-            for (var n = 0; n < 32; n++) GPR[n] = 0;
-            for (var n = 0; n < 32; n++) FPR[n] = 0.0f;
+            for (var n = 0; n < 32; n++) Gpr[n] = 0;
+            for (var n = 0; n < 32; n++) Fpr[n] = 0.0f;
 
-            VFR_CC_7 = VFR_CC_6 = VFR_CC_5 = VFR_CC_4 = VFR_CC_3 = VFR_CC_2 = VFR_CC_1 = VFR_CC_0 = true;
+            VfrCc7 = VfrCc6 = VfrCc5 = VfrCc4 = VfrCc3 = VfrCc2 = VfrCc1 = VfrCc0 = true;
 
             for (var n = 0; n < 128; n++) Vfpr[n] = 0.0f;
         }
@@ -620,9 +619,9 @@ namespace CSPspEmu.Core.Cpu
             CpuProcessor.RegisteredNativeSyscallMethods[delegateId].PoolItem.Value(this);
 
         //private DateTime LastTick;
-        private int TickCount = 0;
+        private int _tickCount;
 
-        DateTime LastTickYield = DateTime.UtcNow;
+        DateTime _lastTickYield = DateTime.UtcNow;
 
         public bool EnableYielding = true;
 
@@ -637,9 +636,9 @@ namespace CSPspEmu.Core.Cpu
             //Console.WriteLine("Tick1");
             if (EnableYielding)
             {
-                TickCount++;
+                _tickCount++;
 
-                if ((TickCount & 0x1F) == 1)
+                if ((_tickCount & 0x1F) == 1)
                     //if ((TickCount & 3) == 1)
                 {
                     Tick2();
@@ -650,12 +649,12 @@ namespace CSPspEmu.Core.Cpu
         private void Tick2()
         {
             CpuProcessor.ExecuteInterrupt(this);
-            if (TickCount > 10000)
+            if (_tickCount > 10000)
             {
-                TickCount = 0;
-                if ((DateTime.UtcNow - LastTickYield).TotalMilliseconds >= 2)
+                _tickCount = 0;
+                if ((DateTime.UtcNow - _lastTickYield).TotalMilliseconds >= 2)
                 {
-                    LastTickYield = DateTime.UtcNow;
+                    _lastTickYield = DateTime.UtcNow;
                     Yield();
                 }
             }
@@ -680,7 +679,7 @@ namespace CSPspEmu.Core.Cpu
         /// <summary>
         /// 
         /// </summary>
-        static MipsDisassembler MipsDisassembler;
+        static MipsDisassembler _mipsDisassembler;
 
         /// <summary>
         /// 
@@ -688,9 +687,9 @@ namespace CSPspEmu.Core.Cpu
         /// <param name="pc"></param>
         public void Trace(uint pc)
         {
-            if (MipsDisassembler == null) MipsDisassembler = new MipsDisassembler();
-            var Result = MipsDisassembler.Disassemble(pc, Memory.Read4(pc));
-            Console.WriteLine("  Trace: PC:0x{0:X8} : DATA:0x{1:X8} : {2}", pc, Memory.Read4(pc), Result);
+            if (_mipsDisassembler == null) _mipsDisassembler = new MipsDisassembler();
+            var result = _mipsDisassembler.Disassemble(pc, Memory.Read4(pc));
+            Console.WriteLine("  Trace: PC:0x{0:X8} : DATA:0x{1:X8} : {2}", pc, Memory.Read4(pc), result);
         }
 
         /// <summary>
@@ -719,11 +718,11 @@ namespace CSPspEmu.Core.Cpu
         /// <param name="textWriter"></param>
         public void DumpRegistersCpu(TextWriter textWriter)
         {
-            textWriter.WriteLine("PC: 0x{0:X8}, HI: 0x{1:X8}, LO: 0x{2:X8}", PC, HI, LO);
+            textWriter.WriteLine("PC: 0x{0:X8}, HI: 0x{1:X8}, LO: 0x{2:X8}", Pc, Hi, Lo);
             for (var n = 0; n < 32; n++)
             {
                 if (n % 4 != 0) textWriter.Write(", ");
-                textWriter.Write("r{0,2}({1}) : 0x{2:X8}", n, RegisterMnemonicNames[n], GPR[n]);
+                textWriter.Write("r{0,2}({1}) : 0x{2:X8}", n, RegisterMnemonicNames[n], Gpr[n]);
                 if (n % 4 == 3) textWriter.WriteLine();
             }
             textWriter.WriteLine();
@@ -734,7 +733,7 @@ namespace CSPspEmu.Core.Cpu
             for (var n = 0; n < 32; n++)
             {
                 if (n % 4 != 0) textWriter.Write(", ");
-                textWriter.Write("f{0,2} : 0x{1:X8}, {2}", n, FPR_I[n], FPR[n]);
+                textWriter.Write("f{0,2} : 0x{1:X8}, {2}", n, FprI[n], Fpr[n]);
                 if (n % 4 == 3) textWriter.WriteLine();
             }
             textWriter.WriteLine();
@@ -790,13 +789,13 @@ namespace CSPspEmu.Core.Cpu
         /// <param name="that"></param>
         public void CopyRegistersFrom(CpuThreadState that)
         {
-            PC = that.PC;
+            Pc = that.Pc;
             Fcr31 = that.Fcr31;
-            IC = that.IC;
-            LO = that.LO;
-            HI = that.HI;
-            fixed (float* thisFpr = &FPR0)
-            fixed (float* thatFpr = &that.FPR0)
+            Ic = that.Ic;
+            Lo = that.Lo;
+            Hi = that.Hi;
+            fixed (float* thisFpr = &Fpr0)
+            fixed (float* thatFpr = &that.Fpr0)
             fixed (uint* thisGpr = &Gpr0)
             fixed (uint* thatGpr = &that.Gpr0)
             {
@@ -807,8 +806,8 @@ namespace CSPspEmu.Core.Cpu
                 }
             }
 
-            fixed (float* thisVfr = &VFR0)
-            fixed (float* thatVfr = &that.VFR0)
+            fixed (float* thisVfr = &Vfr0)
+            fixed (float* thatVfr = &that.Vfr0)
             {
                 for (var n = 0; n < 128; n++)
                     thisVfr[n] = thatVfr[n];
@@ -824,8 +823,8 @@ namespace CSPspEmu.Core.Cpu
         {
             try
             {
-                RA = SpecialCpu.ReturnFromFunction;
-                MethodCache.GetForPc(PC).CallDelegate(this);
+                Ra = SpecialCpu.ReturnFromFunction;
+                MethodCache.GetForPc(Pc).CallDelegate(this);
             }
             catch (SpecialCpu.ReturnFromFunctionException)
             {
@@ -852,5 +851,165 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         /// <returns></returns>
         public Action<CpuThreadState> GetFuncAtPc(uint pc) => CpuProcessor.MethodCache.GetForPc(pc).CallDelegate;
+        
+        public struct Fcr31Struct
+        {
+            public enum TypeEnum : uint
+            {
+                Rint = 0,
+                Cast = 1,
+                Ceil = 2,
+                Floor = 3,
+            }
+
+            private uint _value;
+
+            public uint Value
+            {
+                get
+                {
+                    _value = BitUtils.Insert(_value, 0, 2, (uint) Rm);
+                    _value = BitUtils.Insert(_value, 23, 1, (uint) (Cc ? 1 : 0));
+                    _value = BitUtils.Insert(_value, 24, 1, (uint) (Fs ? 1 : 0));
+                    return _value;
+                }
+                set
+                {
+                    _value = value;
+                    Cc = (BitUtils.Extract(value, 23, 1) != 0);
+                    Fs = (BitUtils.Extract(value, 24, 1) != 0);
+                    Rm = (TypeEnum) BitUtils.Extract(value, 0, 2);
+                }
+            }
+
+            public TypeEnum Rm;
+            public bool Cc;
+            public bool Fs;
+        }
+
+        public class GprList
+        {
+            public CpuThreadState CpuThreadState;
+
+            private int NameToIndex(string name) => Array.IndexOf(RegisterMnemonicNames, name);
+
+            public int this[string name]
+            {
+                get => this[NameToIndex(name)];
+                set => this[NameToIndex(name)] = value;
+            }
+
+            public int this[int index]
+            {
+                get
+                {
+                    fixed (uint* ptr = &CpuThreadState.Gpr0) return (int) ptr[index];
+                }
+                set
+                {
+                    if (index == 0) return;
+                    fixed (uint* ptr = &CpuThreadState.Gpr0) ptr[index] = (uint) value;
+                }
+            }
+        }
+
+        public class C0RList
+        {
+            public CpuThreadState CpuThreadState;
+
+            public uint this[int index]
+            {
+                get
+                {
+                    fixed (uint* ptr = &CpuThreadState.C0R0) return ptr[index];
+                }
+                set
+                {
+                    fixed (uint* ptr = &CpuThreadState.C0R0) ptr[index] = value;
+                }
+            }
+        }
+
+        public class FprList
+        {
+            public CpuThreadState CpuThreadState;
+
+            public float this[int index]
+            {
+                get
+                {
+                    fixed (float* ptr = &CpuThreadState.Fpr0) return ptr[index];
+                }
+                set
+                {
+                    fixed (float* ptr = &CpuThreadState.Fpr0) ptr[index] = value;
+                }
+            }
+        }
+
+        public class FprListInteger
+        {
+            public CpuThreadState CpuThreadState;
+
+            public int this[int index]
+            {
+                get
+                {
+                    fixed (float* ptr = &CpuThreadState.Fpr0) return ((int*) ptr)[index];
+                }
+                set
+                {
+                    fixed (float* ptr = &CpuThreadState.Fpr0) ((int*) ptr)[index] = value;
+                }
+            }
+        }
+
+        public class VfprList
+        {
+            public CpuThreadState CpuThreadState;
+
+            public float this[int index]
+            {
+                get
+                {
+                    fixed (float* ptr = &CpuThreadState.Vfr0) return ptr[index];
+                }
+                set
+                {
+                    fixed (float* ptr = &CpuThreadState.Vfr0) ptr[index] = value;
+                }
+            }
+
+            public float this[int matrix, int column, int row]
+            {
+                get => this[VfpuUtils.GetIndexCell(matrix, column, row)];
+                set => this[VfpuUtils.GetIndexCell(matrix, column, row)] = value;
+            }
+
+            public float[] this[string nameWithSufix]
+            {
+                get { return VfpuUtils.GetIndices(nameWithSufix).Select(item => this[item]).ToArray(); }
+                set
+                {
+                    var indices = VfpuUtils.GetIndices(nameWithSufix);
+                    for (var n = 0; n < value.Length; n++) this[indices[n]] = value[n];
+                }
+            }
+
+            public float[] this[int size, string name]
+            {
+                get { return VfpuUtils.GetIndices(size, name).Select(item => this[item]).ToArray(); }
+                set
+                {
+                    var indices = VfpuUtils.GetIndices(size, name);
+                    for (var n = 0; n < value.Length; n++) this[indices[n]] = value[n];
+                }
+            }
+
+            public void ClearAll(float value = 0f)
+            {
+                for (var n = 0; n < 128; n++) this[n] = value;
+            }
+        }
     }
 }

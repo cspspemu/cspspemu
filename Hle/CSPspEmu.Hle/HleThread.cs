@@ -145,7 +145,7 @@ namespace CSPspEmu.Hle
             set
             {
                 Info.GP = value;
-                CpuThreadState.GP = value;
+                CpuThreadState.Gp = value;
             }
         }
 
@@ -268,7 +268,7 @@ namespace CSPspEmu.Hle
             var Memory = CpuThreadState.CpuProcessor.Memory;
             try
             {
-                CpuThreadState.ExecuteAt(CpuThreadState.PC & FastPspMemory.FastMemoryMask);
+                CpuThreadState.ExecuteAt(CpuThreadState.Pc & FastPspMemory.FastMemoryMask);
                 CpuThreadState.Syscall(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL);
             }
             catch (AccessViolationException AccessViolationException)
@@ -395,7 +395,7 @@ namespace CSPspEmu.Hle
             var Ret = string.Format(
                 "HleThread(Id={0}, Priority={1}, PC=0x{2:X}, LastValidPC=0x{3:X}, SP=0x{4:X}, Name='{5}', Status={6}, YieldCount={7}",
                 Id, PriorityValue,
-                CpuThreadState.PC, CpuThreadState.LastValidPC, CpuThreadState.SP,
+                CpuThreadState.Pc, CpuThreadState.LastValidPc, CpuThreadState.Sp,
                 Name, CurrentStatus, YieldCount
             );
             switch (CurrentStatus)
@@ -428,7 +428,7 @@ namespace CSPspEmu.Hle
         public void DumpStack(TextWriter TextWriter)
         {
             var FullCallStack = CpuThreadState.GetCurrentCallStack();
-            TextWriter.WriteLine("   PC=(0x{0:X8})", CpuThreadState.PC);
+            TextWriter.WriteLine("   PC=(0x{0:X8})", CpuThreadState.Pc);
             TextWriter.WriteLine("   LastCalledHleFunction: {0}", LastCalledHleFunction);
             TextWriter.WriteLine("   CallStack({0})", FullCallStack.Length);
             CpuThreadState.DumpRegistersCpu(TextWriter);

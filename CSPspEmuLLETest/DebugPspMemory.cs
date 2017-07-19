@@ -40,7 +40,7 @@ namespace CSPspEmuLLETest
             if (IsHwRegister(address)) return (byte) Dma.ReadDma(1, address);
             var value = base.Read1(address);
             if (LogNormalReads)
-                Console.WriteLine("Read1(0x{0:X8}) <- 0x{1:X2} at 0x{2:X8}", address, value, CpuThreadState.PC);
+                Console.WriteLine("Read1(0x{0:X8}) <- 0x{1:X2} at 0x{2:X8}", address, value, CpuThreadState.Pc);
             return value;
         }
 
@@ -49,7 +49,7 @@ namespace CSPspEmuLLETest
             if (IsHwRegister(address)) return (ushort) Dma.ReadDma(2, address);
             var value = base.Read2(address);
             if (LogNormalReads)
-                Console.WriteLine("Read2(0x{0:X8}) <- 0x{1:X4} at 0x{2:X8}", address, value, CpuThreadState.PC);
+                Console.WriteLine("Read2(0x{0:X8}) <- 0x{1:X4} at 0x{2:X8}", address, value, CpuThreadState.Pc);
             return value;
         }
 
@@ -58,7 +58,7 @@ namespace CSPspEmuLLETest
             if (IsHwRegister(address)) return (uint) Dma.ReadDma(4, address);
             var value = base.Read4(address);
             if (LogNormalReads)
-                Console.WriteLine("Read4(0x{0:X8}) <- 0x{1:X8} at 0x{2:X8}", address, value, CpuThreadState.PC);
+                Console.WriteLine("Read4(0x{0:X8}) <- 0x{1:X8} at 0x{2:X8}", address, value, CpuThreadState.Pc);
             return value;
         }
 
@@ -79,7 +79,7 @@ namespace CSPspEmuLLETest
                 return;
             }
             if (LogNormalReads)
-                Console.WriteLine("Write1(0x{0:X8}) -> 0x{1:X2} at 0x{2:X8}", address, value, CpuThreadState.PC);
+                Console.WriteLine("Write1(0x{0:X8}) -> 0x{1:X2} at 0x{2:X8}", address, value, CpuThreadState.Pc);
             base.Write1(address, value);
         }
 
@@ -92,7 +92,7 @@ namespace CSPspEmuLLETest
                 return;
             }
             if (LogNormalReads)
-                Console.WriteLine("Write2(0x{0:X8}) -> 0x{1:X4} at 0x{2:X8}", address, value, CpuThreadState.PC);
+                Console.WriteLine("Write2(0x{0:X8}) -> 0x{1:X4} at 0x{2:X8}", address, value, CpuThreadState.Pc);
             base.Write2(address, value);
         }
 
@@ -105,7 +105,7 @@ namespace CSPspEmuLLETest
                 return;
             }
             if (LogNormalReads)
-                Console.WriteLine("Write4(0x{0:X8}) -> 0x{1:X8} at 0x{2:X8}", address, value, CpuThreadState.PC);
+                Console.WriteLine("Write4(0x{0:X8}) -> 0x{1:X8} at 0x{2:X8}", address, value, CpuThreadState.Pc);
             base.Write4(address, value);
         }
     }

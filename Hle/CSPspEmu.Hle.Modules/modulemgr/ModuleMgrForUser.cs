@@ -264,7 +264,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
             {
                 var NewCpuThreadState = new CpuThreadState(CpuThreadState.CpuProcessor);
                 NewCpuThreadState.CopyRegistersFrom(CpuThreadState);
-                NewCpuThreadState.GP = Module.InitInfo.Gp;
+                NewCpuThreadState.Gp = Module.InitInfo.Gp;
                 NewCpuThreadState.CallerModule = Module;
 
                 var ThreadId = (int) ThreadManForUser.sceKernelCreateThread(NewCpuThreadState, "ModuleThread",

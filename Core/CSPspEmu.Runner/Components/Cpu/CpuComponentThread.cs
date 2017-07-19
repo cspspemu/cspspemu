@@ -356,7 +356,7 @@ namespace CSPspEmu.Runner.Components.Cpu
                 var currentCpuThreadState = new CpuThreadState(CpuProcessor);
                 {
                     //CpuThreadState.PC = Loader.InitInfo.PC;
-                    currentCpuThreadState.GP = hleModuleGuest.InitInfo.Gp;
+                    currentCpuThreadState.Gp = hleModuleGuest.InitInfo.Gp;
                     currentCpuThreadState.CallerModule = hleModuleGuest;
 
                     var threadId = (int) ThreadManForUser.sceKernelCreateThread(currentCpuThreadState, "<EntryPoint>",
@@ -450,10 +450,10 @@ namespace CSPspEmu.Runner.Components.Cpu
 
                             errorOut.WriteLine(
                                 "Last registered PC = 0x{0:X}, RA = 0x{1:X}, RelocatedBaseAddress=0x{2:X}, UnrelocatedPC=0x{3:X}",
-                                HleThreadManager.Current.CpuThreadState.PC,
-                                HleThreadManager.Current.CpuThreadState.RA,
+                                HleThreadManager.Current.CpuThreadState.Pc,
+                                HleThreadManager.Current.CpuThreadState.Ra,
                                 ElfConfig.RelocatedBaseAddress,
-                                HleThreadManager.Current.CpuThreadState.PC - ElfConfig.RelocatedBaseAddress
+                                HleThreadManager.Current.CpuThreadState.Pc - ElfConfig.RelocatedBaseAddress
                             );
 
                             errorOut.WriteLine("Last called syscalls: ");
@@ -467,8 +467,8 @@ namespace CSPspEmu.Runner.Components.Cpu
                                 errorOut.WriteLine("{0}", thread.ToExtendedString());
                                 errorOut.WriteLine(
                                     "Last valid PC: 0x{0:X} :, 0x{1:X}",
-                                    thread.CpuThreadState.LastValidPC,
-                                    thread.CpuThreadState.LastValidPC - ElfConfig.RelocatedBaseAddress
+                                    thread.CpuThreadState.LastValidPc,
+                                    thread.CpuThreadState.LastValidPc - ElfConfig.RelocatedBaseAddress
                                 );
                                 thread.DumpStack(errorOut);
                             }

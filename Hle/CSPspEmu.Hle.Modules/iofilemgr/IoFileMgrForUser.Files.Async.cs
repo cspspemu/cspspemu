@@ -126,7 +126,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
         {
             var File = HleIoManager.HleIoDrvFileArgPool.Get(FileId);
             Result = File.AsyncLastResult;
-            CpuThreadState.LO = (int) FileId;
+            CpuThreadState.Lo = (int) FileId;
 
             return 0;
             /*
