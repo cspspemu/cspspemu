@@ -12,187 +12,187 @@ namespace CSPspEmu.Core.Cpu.Emitter
         [InstructionName(InstructionNames.Add)]
         public AstNodeStm Add() => _ast.AssignGpr(Rd, _ast.GPR_s(Rs) + _ast.GPR_s(Rt));
 
-        [InstructionName("addu")]
+        [InstructionName(InstructionNames.Addu)]
         public AstNodeStm Addu() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) + _ast.GPR_u(Rt));
         
-        [InstructionName("sub")]
+        [InstructionName(InstructionNames.Sub)]
         public AstNodeStm Sub() => _ast.AssignGpr(Rd, _ast.GPR_s(Rs) - _ast.GPR_s(Rt));
 
-        [InstructionName("subu")]
+        [InstructionName(InstructionNames.Subu)]
         public AstNodeStm Subu() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) - _ast.GPR_u(Rt));
 
-        [InstructionName("addi")]
+        [InstructionName(InstructionNames.Addi)]
         public AstNodeStm Addi() => _ast.AssignGpr(Rt, _ast.GPR_s(Rs) + IMM_s());
 
-        [InstructionName("addiu")]
+        [InstructionName(InstructionNames.Addiu)]
         public AstNodeStm Addiu() => _ast.AssignGpr(Rt, _ast.GPR_s(Rs) + IMM_s());
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Logical Operations.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("and")]
+        [InstructionName(InstructionNames.And)]
         public AstNodeStm And() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) & _ast.GPR_u(Rt));
         
-        [InstructionName("or")]
+        [InstructionName(InstructionNames.Or)]
         public AstNodeStm Or() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) | _ast.GPR_u(Rt));
 
-        [InstructionName("xor")]
+        [InstructionName(InstructionNames.Xor)]
         public AstNodeStm Xor() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) ^ _ast.GPR_u(Rt));
 
-        [InstructionName("nor")]
+        [InstructionName(InstructionNames.Nor)]
         public AstNodeStm Nor() => _ast.AssignGpr(Rd, ~(_ast.GPR_u(Rs) | _ast.GPR_u(Rt)));
 
-        [InstructionName("andi")]
+        [InstructionName(InstructionNames.Andi)]
         public AstNodeStm Andi() => _ast.AssignGpr(Rt, _ast.GPR_u(Rs) & IMM_u());
 
-        [InstructionName("ori")]
+        [InstructionName(InstructionNames.Ori)]
         public AstNodeStm Ori() => _ast.AssignGpr(Rt, _ast.GPR_u(Rs) | IMM_u());
 
-        [InstructionName("xori")]
+        [InstructionName(InstructionNames.Xori)]
         public AstNodeStm Xori() => _ast.AssignGpr(Rt, _ast.GPR_u(Rs) ^ IMM_u());
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Shift Left/Right Logical/Arithmethic (Variable).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("sll")]
+        [InstructionName(InstructionNames.Sll)]
         public AstNodeStm Sll() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), "<<", _ast.Immediate((uint) _instruction.Pos)));
 
-        [InstructionName("sra")]
+        [InstructionName(InstructionNames.Sra)]
         public AstNodeStm Sra() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_s(Rt), ">>", _ast.Immediate((int) _instruction.Pos)));
 
-        [InstructionName("srl")]
+        [InstructionName(InstructionNames.Srl)]
         public AstNodeStm Srl() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), ">>", _ast.Immediate((uint) _instruction.Pos)));
 
-        [InstructionName("rotr")]
+        [InstructionName(InstructionNames.Rotr)]
         public AstNodeStm Rotr() => _ast.AssignGpr(Rd,
             _ast.CallStatic((Func<uint, int, uint>) CpuEmitterUtils._rotr_impl, _ast.GPR_u(Rt),
                 _ast.Immediate((int) _instruction.Pos)));
 
-        [InstructionName("sllv")]
+        [InstructionName(InstructionNames.Sllv)]
         public AstNodeStm Sllv() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), "<<", _ast.GPR_u(Rs) & 31));
         
-        [InstructionName("srav")]
+        [InstructionName(InstructionNames.Srav)]
         public AstNodeStm Srav() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_s(Rt), ">>", _ast.GPR_s(Rs) & 31));
 
-        [InstructionName("srlv")]
+        [InstructionName(InstructionNames.Srlv)]
         public AstNodeStm Srlv() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), ">>", _ast.GPR_u(Rs) & 31));
 
-        [InstructionName("rotrv")]
+        [InstructionName(InstructionNames.Rotrv)]
         public AstNodeStm Rotrv() => _ast.AssignGpr(Rd,
             _ast.CallStatic((Func<uint, int, uint>) CpuEmitterUtils._rotr_impl, _ast.GPR_u(Rt), _ast.GPR_s(Rs)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Set Less Than (Immediate) (Unsigned).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("slt")]
+        [InstructionName(InstructionNames.Slt)]
         public AstNodeStm Slt() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_s(Rs), "<", _ast.GPR_s(Rt)));
 
-        [InstructionName("sltu")]
+        [InstructionName(InstructionNames.Sltu)]
         public AstNodeStm Sltu() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rs), "<", _ast.GPR_u(Rt)));
 
-        [InstructionName("slti")]
+        [InstructionName(InstructionNames.Slti)]
         public AstNodeStm Slti() => _ast.AssignGpr(Rt, _ast.Binary(_ast.GPR_s(Rs), "<", IMM_s()));
 
-        [InstructionName("sltiu")]
+        [InstructionName(InstructionNames.Sltiu)]
         public AstNodeStm Sltiu() => _ast.AssignGpr(Rt, _ast.Binary(_ast.GPR_u(Rs), "<", IMM_uex()));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Load Upper Immediate.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("lui")]
+        [InstructionName(InstructionNames.Lui)]
         public AstNodeStm Lui() => _ast.AssignGpr(Rt, _ast.Binary(IMM_u(), "<<", _ast.Immediate((uint) 16)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Sign Extend Byte/Half word.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("seb")]
+        [InstructionName(InstructionNames.Seb)]
         public AstNodeStm Seb() => _ast.AssignGpr(Rd, _ast.Cast<int>(_ast.Cast<sbyte>(_ast.GPR_u(Rt))));
 
-        [InstructionName("seh")]
+        [InstructionName(InstructionNames.Seh)]
         public AstNodeStm Seh() => _ast.AssignGpr(Rd, _ast.Cast<int>(_ast.Cast<short>(_ast.GPR_u(Rt))));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // BIT REVerse.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("bitrev")]
+        [InstructionName(InstructionNames.Bitrev)]
         public AstNodeStm Bitrev() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._bitrev_impl, _ast.GPR_u(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // MAXimum/MINimum.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("max")]
+        [InstructionName(InstructionNames.Max)]
         public AstNodeStm Max() => _ast.AssignGpr(Rd,
             _ast.CallStatic((Func<int, int, int>) CpuEmitterUtils._max_impl, _ast.GPR_s(Rs), _ast.GPR_s(Rt)));
 
-        [InstructionName("min")]
+        [InstructionName(InstructionNames.Min)]
         public AstNodeStm Min() => _ast.AssignGpr(Rd,
             _ast.CallStatic((Func<int, int, int>) CpuEmitterUtils._min_impl, _ast.GPR_s(Rs), _ast.GPR_s(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // DIVide (Unsigned).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("div")]
+        [InstructionName(InstructionNames.Div)]
         public AstNodeStm Div() => (_ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._div_impl,
             _ast.CpuThreadStateExpr, _ast.GPR_s(Rs), _ast.GPR_s(Rt))));
 
-        [InstructionName("divu")]
+        [InstructionName(InstructionNames.Divu)]
         public AstNodeStm Divu() => (_ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._divu_impl,
             _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), _ast.GPR_u(Rt))));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // MULTiply (ADD/SUBstract) (Unsigned).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("mult")]
+        [InstructionName(InstructionNames.Mult)]
         public AstNodeStm Mult() => _ast.AssignHilo(_ast.GPR_sl(Rs) * _ast.GPR_sl(Rt));
 
-        [InstructionName("multu")]
+        [InstructionName(InstructionNames.Multu)]
         public AstNodeStm Multu() => _ast.AssignHilo(_ast.GPR_ul(Rs) * _ast.GPR_ul(Rt));
 
-        [InstructionName("madd")]
+        [InstructionName(InstructionNames.Madd)]
         public AstNodeStm Madd() => _ast.AssignHilo(_ast.HILO_sl() + _ast.GPR_sl(Rs) * _ast.GPR_sl(Rt));
 
-        [InstructionName("maddu")]
+        [InstructionName(InstructionNames.Maddu)]
         public AstNodeStm Maddu() => _ast.AssignHilo(_ast.HILO_ul() + _ast.GPR_ul(Rs) * _ast.GPR_ul(Rt));
 
-        [InstructionName("msub")]
+        [InstructionName(InstructionNames.Msub)]
         public AstNodeStm Msub() => _ast.AssignHilo(_ast.HILO_sl() - _ast.GPR_sl(Rs) * _ast.GPR_sl(Rt));
 
-        [InstructionName("msubu")]
+        [InstructionName(InstructionNames.Msubu)]
         public AstNodeStm Msubu() => _ast.AssignHilo(_ast.HILO_ul() - _ast.GPR_ul(Rs) * _ast.GPR_ul(Rt));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move To/From HI/LO.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("mfhi")]
+        [InstructionName(InstructionNames.Mfhi)]
         public AstNodeStm Mfhi() => _ast.AssignGpr(Rd, _ast.Cast<uint>(_ast.Hi()));
 
-        [InstructionName("mflo")]
+        [InstructionName(InstructionNames.Mflo)]
         public AstNodeStm Mflo() => _ast.AssignGpr(Rd, _ast.Cast<uint>(_ast.Lo()));
 
-        [InstructionName("mthi")]
+        [InstructionName(InstructionNames.Mthi)]
         public AstNodeStm Mthi() => _ast.AssignHi(_ast.GPR_s(Rs));
 
-        [InstructionName("mtlo")]
+        [InstructionName(InstructionNames.Mtlo)]
         public AstNodeStm Mtlo() => _ast.AssignLo(_ast.GPR_s(Rs));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move if Zero/Non zero.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("movz")]
+        [InstructionName(InstructionNames.Movz)]
         public AstNodeStm Movz() => _ast.If(_ast.Binary(_ast.GPR_s(Rt), "==", 0), _ast.Assign(_ast.Gpr(Rd), _ast.GPR_u(Rs)));
 
-        [InstructionName("movn")]
+        [InstructionName(InstructionNames.Movn)]
         public AstNodeStm Movn() => _ast.If(_ast.Binary(_ast.GPR_s(Rt), "!=", 0), _ast.Assign(_ast.Gpr(Rd), _ast.GPR_u(Rs)));
 
         /// <summary>
         /// EXTract/INSert
         /// </summary>
-        [InstructionName("ext")]
+        [InstructionName(InstructionNames.Ext)]
         public AstNodeStm Ext() => _ast.AssignGpr(Rt,
             _ast.CallStatic((Func<uint, int, int, uint>) CpuEmitterUtils._ext_impl, _ast.GPR_u(Rs),
                 _ast.Immediate((int) _instruction.Pos), _ast.Immediate((int) _instruction.SizeE)));
 
-        [InstructionName("ins")]
+        [InstructionName(InstructionNames.Ins)]
         public AstNodeStm Ins() => _ast.AssignGpr(Rt,
             _ast.CallStatic((Func<uint, uint, int, int, uint>) CpuEmitterUtils._ins_impl, _ast.GPR_u(Rt),
                 _ast.GPR_u(Rs), _ast.Immediate((int) _instruction.Pos), _ast.Immediate((int) _instruction.SizeI)));
@@ -200,84 +200,84 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Count Leading Ones/Zeros in word.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("clz")]
+        [InstructionName(InstructionNames.Clz)]
         public AstNodeStm Clz() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._clz_impl, _ast.GPR_u(Rs)));
 
-        [InstructionName("clo")]
+        [InstructionName(InstructionNames.Clo)]
         public AstNodeStm Clo() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._clo_impl, _ast.GPR_u(Rs)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Word Swap Bytes Within Halfwords/Words.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("wsbh")]
+        [InstructionName(InstructionNames.Wsbh)]
         public AstNodeStm Wsbh() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._wsbh_impl, _ast.GPR_u(Rt)));
 
-        [InstructionName("wsbw")]
+        [InstructionName(InstructionNames.Wsbw)]
         public AstNodeStm Wsbw() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._wsbw_impl, _ast.GPR_u(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move Control (From/To) Cop0
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("cfc0")]
+        [InstructionName(InstructionNames.Cfc0)]
         public AstNodeStm Cfc0() => _ast.Unimplemented($"Unimplemented cfc0 : {Rt}, {Rd}").Statement();
 
-        [InstructionName("ctc0")]
+        [InstructionName(InstructionNames.Ctc0)]
         public AstNodeStm Ctc0() => _ast.Unimplemented($"Unimplemented ctc0 : {Rt}, {Rd}").Statement();
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move (From/To) Cop0
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("mfc0")]
+        [InstructionName(InstructionNames.Mfc0)]
         public AstNodeStm Mfc0() => _ast.AssignGpr(Rt, _ast.C0R(Rd));
 
-        [InstructionName("mtc0")]
+        [InstructionName(InstructionNames.Mtc0)]
         public AstNodeStm Mtc0() => _ast.AssignC0R(Rd, _ast.Gpr(Rt));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Load Byte/Half word/Word (Left/Right/Unsigned).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("lb")]
+        [InstructionName(InstructionNames.Lb)]
         public AstNodeStm Lb() => _ast.AssignGpr(Rt, _ast.MemoryGetValue<sbyte>(_memory, Address_RS_IMM()));
 
-        [InstructionName("lbu")]
+        [InstructionName(InstructionNames.Lbu)]
         public AstNodeStm Lbu() => _ast.AssignGpr(Rt, _ast.MemoryGetValue<byte>(_memory, Address_RS_IMM()));
 
-        [InstructionName("lh")]
+        [InstructionName(InstructionNames.Lh)]
         public AstNodeStm Lh() => _ast.AssignGpr(Rt, _ast.MemoryGetValue<short>(_memory, Address_RS_IMM()));
 
-        [InstructionName("lhu")]
+        [InstructionName(InstructionNames.Lhu)]
         public AstNodeStm Lhu() => _ast.AssignGpr(Rt, _ast.MemoryGetValue<ushort>(_memory, Address_RS_IMM()));
 
-        [InstructionName("lw")]
+        [InstructionName(InstructionNames.Lw)]
         public AstNodeStm Lw() => _ast.AssignGpr(Rt, _ast.MemoryGetValue<int>(_memory, Address_RS_IMM()));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Store Byte/Half word/Word (Left/Right).
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("sb")]
+        [InstructionName(InstructionNames.Sb)]
         public AstNodeStm Sb() => _ast.MemorySetValue<byte>(_memory, Address_RS_IMM(), _ast.GPR_u(Rt));
 
-        [InstructionName("sh")]
+        [InstructionName(InstructionNames.Sh)]
         public AstNodeStm Sh() => _ast.MemorySetValue<ushort>(_memory, Address_RS_IMM(), _ast.GPR_u(Rt));
 
-        [InstructionName("sw")]
+        [InstructionName(InstructionNames.Sw)]
         public AstNodeStm Sw() => _ast.MemorySetValue<uint>(_memory, Address_RS_IMM(), _ast.GPR_u(Rt));
 
-        [InstructionName("lwl")]
+        [InstructionName(InstructionNames.Lwl)]
         public AstNodeStm Lwl() => _ast.AssignGpr(Rt,
             _ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>) CpuEmitterUtils._lwl_exec,
                 _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), IMM_s(), _ast.GPR_u(Rt)));
 
-        [InstructionName("lwr")]
+        [InstructionName(InstructionNames.Lwr)]
         public AstNodeStm Lwr() => _ast.AssignGpr(Rt,
             _ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>) CpuEmitterUtils._lwr_exec,
                 _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), IMM_s(), _ast.GPR_u(Rt)));
 
-        [InstructionName("swl")]
+        [InstructionName(InstructionNames.Swl)]
         public AstNodeStm Swl() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, int, uint>) CpuEmitterUtils._swl_exec,
             _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), IMM_s(), _ast.GPR_u(Rt)));
 
-        [InstructionName("swr")]
+        [InstructionName(InstructionNames.Swr)]
         public AstNodeStm Swr() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, int, uint>) CpuEmitterUtils._swr_exec,
             _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), IMM_s(), _ast.GPR_u(Rt)));
 
@@ -285,10 +285,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Load Linked word.
         // Store Conditional word.
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("ll")]
+        [InstructionName(InstructionNames.Ll)]
         public AstNodeStm Ll() => Lw();
 
-        [InstructionName("sc")]
+        [InstructionName(InstructionNames.Sc)]
         public AstNodeStm Sc() => _ast.Statements(Sw(), _ast.AssignGpr(Rt, 1));
 
         public string SpecialName = "";
@@ -296,7 +296,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Syscall
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("syscall")]
+        [InstructionName(InstructionNames.Syscall)]
         public AstNodeStm Syscall()
         {
             if (_instruction.Code == SyscallInfo.NativeCallSyscallCode)
@@ -337,55 +337,55 @@ namespace CSPspEmu.Core.Cpu.Emitter
             }
         }
 
-        [InstructionName("cache")]
+        [InstructionName(InstructionNames.Cache)]
         public AstNodeStm Cache() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._cache_impl,
             _ast.CpuThreadStateExpr, _pc, _instruction.Value));
 
-        [InstructionName("sync")]
+        [InstructionName(InstructionNames.Sync)]
         public AstNodeStm Sync() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._sync_impl,
             _ast.CpuThreadStateExpr, _pc, _instruction.Value));
 
-        [InstructionName("break")]
-        public AstNodeStm _break() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._break_impl,
+        [InstructionName(InstructionNames.Break)]
+        public AstNodeStm Break() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._break_impl,
             _ast.CpuThreadStateExpr, _pc, _instruction.Value));
 
-        [InstructionName("dbreak")]
+        [InstructionName(InstructionNames.Dbreak)]
         public AstNodeStm Dbreak() => throw new NotImplementedException("dbreak");
 
-        [InstructionName("halt")]
+        [InstructionName(InstructionNames.Halt)]
         public AstNodeStm Halt() => throw new NotImplementedException("halt");
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // (D?/Exception) RETurn
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("dret")]
+        [InstructionName(InstructionNames.Dret)]
         public AstNodeStm Dret() => throw new NotImplementedException("dret");
 
-        [InstructionName("eret")]
+        [InstructionName(InstructionNames.Eret)]
         public AstNodeStm Eret() => throw new NotImplementedException("eret");
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move (From/To) IC
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("mfic")]
+        [InstructionName(InstructionNames.Mfic)]
         public AstNodeStm Mfic() => _ast.AssignGpr(Rt, _ast.Ic());
 
-        [InstructionName("mtic")]
+        [InstructionName(InstructionNames.Mtic)]
         public AstNodeStm Mtic() => _ast.AssignIc(_ast.GPR_u(Rt));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move (From/To) DR
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("mfdr")]
+        [InstructionName(InstructionNames.Mfdr)]
         public AstNodeStm Mfdr() => throw new NotImplementedException("mfdr");
 
-        [InstructionName("mtdr")]
+        [InstructionName(InstructionNames.Mtdr)]
         public AstNodeStm Mtdr() => throw new NotImplementedException("mtdr");
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Unknown instruction
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        [InstructionName("unknown")]
+        [InstructionName(InstructionNames.Unknown)]
         public AstNodeStm Unknown() => _ast.Unimplemented($"UNKNOWN INSTRUCTION: 0x{_instruction.Value:X8} : 0x{_instruction.Value:X8} at 0x{_pc:X8}").Statement();
     }
 }
