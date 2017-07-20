@@ -4,6 +4,7 @@ using CSPspEmu.Hle.Modules._unknownPrx;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Resources;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.Tests
@@ -14,8 +15,12 @@ namespace CSPspEmu.Hle.Modules.Tests
         [Inject] sceDeflt sceDeflt = null;
 
         [Test]
+        [Ignore("file not found")]
         public void TestMethod1()
         {
+            //global::packageName.Properties.Resources.ThatFileName
+            
+
             var inflated = ReadResourceBytes("sample.inflated");
             var deflated = ReadResourceBytes("sample.deflated");
             var buffer = new byte[inflated.Length];

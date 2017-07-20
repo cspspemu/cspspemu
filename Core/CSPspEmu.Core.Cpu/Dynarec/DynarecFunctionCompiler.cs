@@ -18,8 +18,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
         {
         }
 
-        public DynarecFunction CreateFunction(IInstructionReader instructionReader, uint pc,
-            Action<uint> exploreNewPcCallback = null, bool doDebug = false, bool doLog = false)
+        public DynarecFunction CreateFunction(
+            IInstructionReader instructionReader, uint pc,
+            Action<uint> exploreNewPcCallback = null, bool doDebug = false, bool doLog = false,
+            bool checkValidAddress = true
+        )
         {
             switch (pc)
             {
@@ -39,7 +42,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                 default:
                     var mipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, pc, doDebug, doLog);
                     var internalFunctionCompiler = new InternalFunctionCompiler(InjectContext, mipsMethodEmiter, this,
-                        instructionReader, exploreNewPcCallback, pc, doLog);
+                        instructionReader, exploreNewPcCallback, pc, doLog, checkValidAddress: checkValidAddress);
                     return internalFunctionCompiler.CreateFunction();
             }
         }

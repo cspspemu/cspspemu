@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Cpu
 
     public class InstructionArrayReader : IInstructionReader
     {
-        private IArray<Instruction> _instructions;
+        private readonly IArray<Instruction> _instructions;
 
         public InstructionArrayReader(IArray<Instruction> instructions)
         {

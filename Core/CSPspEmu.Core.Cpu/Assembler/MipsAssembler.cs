@@ -42,7 +42,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
         public static AssemblerResult StaticAssembleInstructions(string program)
         {
             var memory = new MemoryStream();
-            var result = new AssemblerResult()
+            var result = new AssemblerResult
             {
                 Instructions = new StreamStructArrayWrapper<Instruction>(memory),
             };
