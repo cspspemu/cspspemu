@@ -38,15 +38,13 @@ namespace SafeILGenerator.Ast.Utils
 
         public IndentedStringBuilder Write(string inlineText)
         {
-            if (inlineText.Length > 0)
+            if (inlineText.Length <= 0) return this;
+            if (_startingLine)
             {
-                if (_startingLine)
-                {
-                    _startingLine = false;
-                    StringBuilder.Append(new string(' ', Math.Max(_indentLevel, 0) * IndentLevelSpaceCount));
-                }
-                StringBuilder.Append(inlineText);
+                _startingLine = false;
+                StringBuilder.Append(new string(' ', Math.Max(_indentLevel, 0) * IndentLevelSpaceCount));
             }
+            StringBuilder.Append(inlineText);
             return this;
         }
 
