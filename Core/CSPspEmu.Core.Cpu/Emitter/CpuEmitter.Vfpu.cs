@@ -189,13 +189,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Vadd)]
         public AstNodeStm Vadd() => VecVd.SetVector(index => VecVs[index] + VecVt[index], _pc);
-        
+
         [InstructionName(InstructionNames.Vsub)]
         public AstNodeStm Vsub() => VecVd.SetVector(index => VecVs[index] - VecVt[index], _pc);
-        
+
         [InstructionName(InstructionNames.Vdiv)]
         public AstNodeStm Vdiv() => VecVd.SetVector(index => VecVs[index] / VecVt[index], _pc);
-        
+
         [InstructionName(InstructionNames.Vmul)]
         public AstNodeStm Vmul() => VecVd.SetVector(index => VecVs[index] * VecVt[index], _pc);
 
@@ -217,19 +217,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Mfvme)]
         public AstNodeStm Mfvme() => _ast.NotImplemented();
-        
+
         [InstructionName(InstructionNames.Mtvme)]
         public AstNodeStm Mtvme() => _ast.NotImplemented();
-        
+
         [InstructionName(InstructionNames.Vfim)]
         public AstNodeStm Vfim() => CelVtNoPrefix.Set(_instruction.ImmHf, _pc);
-        
+
         [InstructionName(InstructionNames.Vlgb)]
         public AstNodeStm Vlgb() => _ast.NotImplemented();
-        
+
         [InstructionName(InstructionNames.Vsbn)]
         public AstNodeStm Vsbn() => _ast.NotImplemented();
-        
+
         [InstructionName(InstructionNames.Vsbz)]
         public AstNodeStm Vsbz() => _ast.NotImplemented();
 
@@ -357,10 +357,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Vt4444Q)]
         public AstNodeStm vt4444_q() => _vtXXXX_q(_vt4444_step);
-        
+
         [InstructionName(InstructionNames.Vt5551Q)]
         public AstNodeStm vt5551_q() => _vtXXXX_q(_vt5551_step);
-        
+
         [InstructionName(InstructionNames.Vt5650Q)]
         public AstNodeStm vt5650_q() => _vtXXXX_q(_vt5650_step);
 
@@ -497,10 +497,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Vpfxd)]
         public AstNodeStm Vpfxd() => _vpfx_dst(PrefixDestination, CpuEmitterUtils._vpfxd_impl);
-        
+
         [InstructionName(InstructionNames.Vpfxs)]
         public AstNodeStm Vpfxs() => _vpfx_dst(PrefixSource, CpuEmitterUtils._vpfxs_impl);
-        
+
         [InstructionName(InstructionNames.Vpfxt)]
         public AstNodeStm Vpfxt() => _vpfx_dst(PrefixTarget, CpuEmitterUtils._vpfxt_impl);
 
@@ -591,31 +591,31 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Vtfm2)]
         public AstNodeStm Vtfm2() => _vtfm_x(2);
-        
+
         [InstructionName(InstructionNames.Vtfm3)]
         public AstNodeStm Vtfm3() => _vtfm_x(3);
-        
+
         [InstructionName(InstructionNames.Vtfm4)]
         public AstNodeStm Vtfm4() => _vtfm_x(4);
-        
+
         [InstructionName(InstructionNames.Vhtfm2)]
         public AstNodeStm Vhtfm2() => _vhtfm_x(2);
-        
+
         [InstructionName(InstructionNames.Vhtfm3)]
         public AstNodeStm Vhtfm3() => _vhtfm_x(3);
-        
+
         [InstructionName(InstructionNames.Vhtfm4)]
         public AstNodeStm Vhtfm4() => _vhtfm_x(4);
-        
+
         [InstructionName(InstructionNames.Vmidt)]
         public AstNodeStm Vmidt() => MatVd.SetMatrix((column, row) => (column == row) ? 1f : 0f, _pc);
-        
+
         [InstructionName(InstructionNames.Vmzero)]
         public AstNodeStm Vmzero() => MatVd.SetMatrix((column, row) => 0f, _pc);
-        
+
         [InstructionName(InstructionNames.Vmone)]
         public AstNodeStm Vmone() => MatVd.SetMatrix((column, row) => 1f, _pc);
-        
+
         [InstructionName(InstructionNames.Vmscl)]
         public AstNodeStm Vmscl() => MatVd.SetMatrix((column, row) => MatVs[column, row] * CelVt.Get(), _pc);
 
@@ -778,10 +778,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Vmfvc)]
         public AstNodeStm Vmfvc() => _ast.NotImplemented();
-        
+
         [InstructionName(InstructionNames.Vmtvc)]
         public AstNodeStm Vmtvc() => _ast.NotImplemented();
-        
+
         [InstructionName(InstructionNames.Mtv)]
         public AstNodeStm Mtv() => CelVd.Set(_ast.GPR_f(Rt), _pc);
 
@@ -861,19 +861,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.LvlQ)]
         public AstNodeStm lvl_q() => _lv_sv_l_r_q(left: true, save: false);
-        
+
         [InstructionName(InstructionNames.SvlQ)]
         public AstNodeStm svl_q() => _lv_sv_l_r_q(left: true, save: true);
-        
+
         [InstructionName(InstructionNames.LvrQ)]
         public AstNodeStm lvr_q() => _lv_sv_l_r_q(left: false, save: false);
-        
+
         [InstructionName(InstructionNames.SvrQ)]
         public AstNodeStm svr_q() => _lv_sv_l_r_q(left: false, save: true);
-        
+
         [InstructionName(InstructionNames.LvS)]
         public AstNodeStm lv_s() => _Cell(Vt52).Set(_ast.MemoryGetValue<float>(_memory, Address_RS_IMM14()), _pc);
-        
+
         [InstructionName(InstructionNames.SvS)]
         public AstNodeStm sv_s() => _ast.MemorySetValue<float>(_memory, Address_RS_IMM14(), _Cell(Vt52).Get());
     }

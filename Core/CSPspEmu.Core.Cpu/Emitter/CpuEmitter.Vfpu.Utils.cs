@@ -533,13 +533,18 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private VfpuCell _Cell(VReg vReg, VType vType = VType.VFloat) => new VfpuCell(this, vReg, vType);
 
-        private VfpuVector _Vector(VReg vReg, VType vType = VType.VFloat, int size = 0) => new VfpuVector(this, vReg, vType, size);
+        private VfpuVector _Vector(VReg vReg, VType vType = VType.VFloat, int size = 0) =>
+            new VfpuVector(this, vReg, vType, size);
 
-        private VfpuMatrix _Matrix(VReg vReg, VType vType = VType.VFloat, int size = 0) => new VfpuMatrix(this, vReg, vType, size);
+        private VfpuMatrix _Matrix(VReg vReg, VType vType = VType.VFloat, int size = 0) =>
+            new VfpuMatrix(this, vReg, vType, size);
 
-        private VfpuMatrix Mat(VReg vReg, VType vType = VType.VFloat, int size = 0) => new VfpuMatrix(this, vReg, vType, size);
+        private VfpuMatrix Mat(VReg vReg, VType vType = VType.VFloat, int size = 0) =>
+            new VfpuMatrix(this, vReg, vType, size);
 
-        private VfpuVector Vec(VReg vReg, VType vType = VType.VFloat, int size = 0) => new VfpuVector(this, vReg, vType, size);
+        private VfpuVector Vec(VReg vReg, VType vType = VType.VFloat, int size = 0) =>
+            new VfpuVector(this, vReg, vType, size);
+
         private VfpuCell Cel(VReg vReg, VType vType = VType.VFloat) => new VfpuCell(this, vReg, vType);
         private VfpuMatrix MatVs => Mat(Vs);
         private VfpuMatrix MatVd => Mat(Vd);
@@ -565,8 +570,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
         private VfpuCell CelVdU => Cel(Vd, VType.VuInt);
         private VfpuCell CelVtU => Cel(Vt, VType.VuInt);
         private VfpuCell CelVtUNoPrefix => Cel(VtNoPrefix, VType.VuInt);
-        private AstNodeExpr _Aggregate(AstNodeExpr first, Func<AstNodeExpr, int, AstNodeExpr> callback) => _Aggregate(first, OneTwo, callback);
+
+        private AstNodeExpr _Aggregate(AstNodeExpr first, Func<AstNodeExpr, int, AstNodeExpr> callback) =>
+            _Aggregate(first, OneTwo, callback);
+
         private AstNodeStmContainer _List(Func<int, AstNodeStm> callback) => _List(OneTwo, callback);
+
         private AstNodeStmContainer _List(int vectorSize, Func<int, AstNodeStm> callback)
         {
             var statements = _ast.Statements();

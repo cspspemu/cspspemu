@@ -86,7 +86,8 @@ namespace CSPspEmu.Hle.Managers
         /// </summary>
         private readonly HleInterruptHandler[] _interruptHandlers = new HleInterruptHandler[(int) PspInterrupts.Max];
 
-        public HleInterruptHandler GetInterruptHandler(PspInterrupts pspInterrupt) => _interruptHandlers[(int) pspInterrupt];
+        public HleInterruptHandler GetInterruptHandler(PspInterrupts pspInterrupt) =>
+            _interruptHandlers[(int) pspInterrupt];
 
         private HleInterruptManager()
         {
@@ -174,7 +175,9 @@ namespace CSPspEmu.Hle.Managers
         PspAudioInt = 10,
         PspI2CInt = 12,
         PspSircsInt = 14,
-        PspSystimer0Int = 15, // Calls to register or enable on these interrupts always yield 0x80020065 (illegal intr code), which seems plausible if they are system interrupts. QueryIntrHandlerInfo yields the following interesting information:
+
+        PspSystimer0Int =
+            15, // Calls to register or enable on these interrupts always yield 0x80020065 (illegal intr code), which seems plausible if they are system interrupts. QueryIntrHandlerInfo yields the following interesting information:
         PspSystimer1Int = 16,
         PspSystimer2Int = 17,
         PspSystimer3Int = 18,

@@ -400,6 +400,7 @@ namespace CSPspEmu.Core.Gpu.State
         /// MipmapState list
         /// </summary>
         public MipmapState Mipmap0;
+
         public MipmapState Mipmap1;
         public MipmapState Mipmap2;
         public MipmapState Mipmap3;
@@ -478,7 +479,8 @@ namespace CSPspEmu.Core.Gpu.State
     public struct VertexTypeStruct
 #pragma warning restore 660,661
     {
-        public bool Equals(VertexTypeStruct other) => ReversedNormal == other.ReversedNormal && NormalCount == other.NormalCount && Value == other.Value;
+        public bool Equals(VertexTypeStruct other) => ReversedNormal == other.ReversedNormal &&
+                                                      NormalCount == other.NormalCount && Value == other.Value;
 
         /// <summary />
         public bool ReversedNormal;

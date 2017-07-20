@@ -194,9 +194,9 @@ public static unsafe class ArrayExtensions
             offset += completeChunksCount;
             yield return chunk;
         }
-        
+
         if (partialChunkSize <= 0) yield break;
-        
+
         var chunk2 = new T[partialChunkSize];
         Array.Copy(@this, offset, chunk2, 0, partialChunkSize);
         offset += partialChunkSize;

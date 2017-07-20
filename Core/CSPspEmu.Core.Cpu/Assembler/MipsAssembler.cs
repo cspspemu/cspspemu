@@ -597,7 +597,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                 {
                     throw new KeyNotFoundException($"Can't find label '{patch.LabelName}'");
                 }
-                
+
                 var labelAddress = labels[patch.LabelName];
 
                 OutputStream.Position = patch.Address;

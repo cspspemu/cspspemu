@@ -44,7 +44,7 @@ namespace CSharpUtils
         /// <param name="input"></param>
         /// <returns></returns>
         public static implicit operator Wildcard(string input) => new Wildcard(input);
-        
+
         /// <summary>
         /// 
         /// </summary>

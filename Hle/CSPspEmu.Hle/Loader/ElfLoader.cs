@@ -146,13 +146,17 @@ namespace CSPspEmu.Hle.Loader
             }
         }
 
-        public Stream ProgramHeaderFileStream(Elf.ProgramHeader programHeader) => FileStream.SliceWithLength(programHeader.Offset, programHeader.FileSize);
+        public Stream ProgramHeaderFileStream(Elf.ProgramHeader programHeader) =>
+            FileStream.SliceWithLength(programHeader.Offset, programHeader.FileSize);
 
-        public Stream SectionHeaderFileStream(Elf.SectionHeader sectionHeader) => FileStream.SliceWithLength(sectionHeader.Offset, sectionHeader.Size);
+        public Stream SectionHeaderFileStream(Elf.SectionHeader sectionHeader) =>
+            FileStream.SliceWithLength(sectionHeader.Offset, sectionHeader.Size);
 
-        public Stream SectionHeaderMemoryStream(Elf.SectionHeader sectionHeader) => MemoryStream.SliceWithLength(BaseAddress + sectionHeader.Address, sectionHeader.Size);
+        public Stream SectionHeaderMemoryStream(Elf.SectionHeader sectionHeader) =>
+            MemoryStream.SliceWithLength(BaseAddress + sectionHeader.Address, sectionHeader.Size);
 
-        protected IEnumerable<Elf.SectionHeader> SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet flag) => SectionHeaders.Where(sectionHeader => sectionHeader.Flags.HasFlag(flag));
+        protected IEnumerable<Elf.SectionHeader> SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet flag) =>
+            SectionHeaders.Where(sectionHeader => sectionHeader.Flags.HasFlag(flag));
 
         public bool IsPrx => Header.Type.HasFlag(Elf.HeaderStruct.TypeEnum.Prx);
 

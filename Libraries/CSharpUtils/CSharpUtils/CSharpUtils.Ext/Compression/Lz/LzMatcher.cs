@@ -158,7 +158,6 @@ namespace CSharpUtils.Ext.Compression.Lz
             {
                 fixed (byte* dataPtr = Data)
                 {
-                
                     var hash = GetOffsetHash(_offset);
                     if (!_waypoints.ContainsKey(hash)) return findSequenceResult;
                     //var Node = Waypoints[Hash].Last;
@@ -194,7 +193,7 @@ namespace CSharpUtils.Ext.Compression.Lz
                         }
 
                         if (matchedLength < MinSize) continue;
-                        
+
                         if (findSequenceResult.Size < matchedLength)
                         {
                             findSequenceResult.Size = matchedLength;

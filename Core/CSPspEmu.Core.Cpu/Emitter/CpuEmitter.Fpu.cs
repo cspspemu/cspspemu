@@ -26,10 +26,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Unary Floating Point Unit Operations
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.SqrtS)]
-        public AstNodeStm sqrt_s() => _ast.AssignFPR_F(Fd, _ast.CallStatic((Func<float, float>) MathFloat.Sqrt, _ast.Fpr(Fs)));
+        public AstNodeStm sqrt_s() =>
+            _ast.AssignFPR_F(Fd, _ast.CallStatic((Func<float, float>) MathFloat.Sqrt, _ast.Fpr(Fs)));
 
         [InstructionName(InstructionNames.AbsS)]
-        public AstNodeStm abs_s() => _ast.AssignFPR_F(Fd, _ast.CallStatic((Func<float, float>) MathFloat.Abs, _ast.Fpr(Fs)));
+        public AstNodeStm abs_s() =>
+            _ast.AssignFPR_F(Fd, _ast.CallStatic((Func<float, float>) MathFloat.Abs, _ast.Fpr(Fs)));
 
         [InstructionName(InstructionNames.MovS)]
         public AstNodeStm mov_s() => _ast.AssignFPR_F(Fd, _ast.Fpr(Fs));
@@ -38,16 +40,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm neg_s() => _ast.AssignFPR_F(Fd, -_ast.Fpr(Fs));
 
         [InstructionName(InstructionNames.TruncWS)]
-        public AstNodeStm trunc_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Cast, _ast.Fpr(Fs)));
+        public AstNodeStm trunc_w_s() =>
+            _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Cast, _ast.Fpr(Fs)));
 
         [InstructionName(InstructionNames.RoundWS)]
-        public AstNodeStm round_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Round, _ast.Fpr(Fs)));
+        public AstNodeStm round_w_s() =>
+            _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Round, _ast.Fpr(Fs)));
 
         [InstructionName(InstructionNames.CeilWS)]
-        public AstNodeStm ceil_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Ceil, _ast.Fpr(Fs)));
+        public AstNodeStm ceil_w_s() =>
+            _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Ceil, _ast.Fpr(Fs)));
 
         [InstructionName(InstructionNames.FloorWS)]
-        public AstNodeStm floor_w_s() => _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Floor, _ast.Fpr(Fs)));
+        public AstNodeStm floor_w_s() =>
+            _ast.AssignFPR_I(Fd, _ast.CallStatic((Func<float, int>) MathFloat.Floor, _ast.Fpr(Fs)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Convert FS register (stored as an int) to float and stores the result on FD.
@@ -65,7 +71,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Move (from/to) float point registers (reinterpreted)
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Mfc1)]
-        public AstNodeStm Mfc1() => _ast.AssignGpr(Rt, _ast.CallStatic((Func<float, int>) MathFloat.ReinterpretFloatAsInt, _ast.Fpr(Fs)));
+        public AstNodeStm Mfc1() => _ast.AssignGpr(Rt,
+            _ast.CallStatic((Func<float, int>) MathFloat.ReinterpretFloatAsInt, _ast.Fpr(Fs)));
 
         [InstructionName(InstructionNames.Mtc1)]
         public AstNodeStm Mtc1() => _ast.AssignFPR_F(Fs,
@@ -85,11 +92,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // CFC1 -- move Control word from/to floating point (C1)
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Cfc1)]
-        public AstNodeStm Cfc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._cfc1_impl,
+        public AstNodeStm Cfc1() => _ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, int, int>) CpuEmitterUtils._cfc1_impl,
             _ast.CpuThreadStateExpr, Rd, Rt));
 
         [InstructionName(InstructionNames.Ctc1)]
-        public AstNodeStm Ctc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._ctc1_impl,
+        public AstNodeStm Ctc1() => _ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, int, int>) CpuEmitterUtils._ctc1_impl,
             _ast.CpuThreadStateExpr, Rd, Rt));
 
         /// <summary>

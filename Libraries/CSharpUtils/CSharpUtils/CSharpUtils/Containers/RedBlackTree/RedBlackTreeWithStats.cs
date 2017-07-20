@@ -639,7 +639,8 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// 
         /// </summary>
         /// <returns></returns>
-        public RedBlackTreeWithStats<TElement> Clone() => new RedBlackTreeWithStats<TElement>(Comparer, BaseRootNode.Clone(), _length);
+        public RedBlackTreeWithStats<TElement> Clone() =>
+            new RedBlackTreeWithStats<TElement>(Comparer, BaseRootNode.Clone(), _length);
 
         object ICloneable.Clone() => new RedBlackTreeWithStats<TElement>(Comparer, BaseRootNode.Clone(), _length);
 

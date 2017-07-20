@@ -40,7 +40,7 @@ namespace CSPspEmu.Core.Cpu
             method.SetCustomAttribute(new CustomAttributeBuilder(
                 constructorInfo,
                 new object[] {MethodImplOptions.AggressiveInlining}));
-            
+
             var constructor = typeof(TargetedPatchingOptOutAttribute).GetConstructor(new[] {typeof(string)});
             method.SetCustomAttribute(new CustomAttributeBuilder(
                 constructor,

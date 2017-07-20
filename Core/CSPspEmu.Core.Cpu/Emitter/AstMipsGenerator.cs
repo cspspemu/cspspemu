@@ -114,7 +114,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
         static AstMipsGenerator()
         {
             for (var n = 0; n < 32; n++)
-                GprCache[n] = Ast.FieldAccess(Ast.CpuThreadStateExpr, CpuThreadStateType.GetField(CpuThreadState.GprNames[n]));
+                GprCache[n] = Ast.FieldAccess(Ast.CpuThreadStateExpr,
+                    CpuThreadStateType.GetField(CpuThreadState.GprNames[n]));
         }
 
         private AstNodeExprLValue RefGprIndex(int index)
@@ -196,7 +197,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeExprLValue C0R(int index) => Reg(CpuThreadState.C0RNames[index]);
 
-        public AstNodeExprLValue Gpr(int index) => index == 0 ? throw new Exception("Can't get reference to GPR0") : RefGprIndex(index);
+        public AstNodeExprLValue Gpr(int index) =>
+            index == 0 ? throw new Exception("Can't get reference to GPR0") : RefGprIndex(index);
 
         public AstNodeExprLValue GPR_l(int index) => Ast.Indirect(Ast.Cast(typeof(long*), Ast.GetAddress(Gpr(index))));
 

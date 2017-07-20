@@ -50,7 +50,7 @@ namespace CSharpUtils
         {
             if (x == null) throw new ArgumentNullException(nameof(x));
             if (y == null) throw new ArgumentNullException(nameof(y));
-            
+
             using (var leftIt = x.GetEnumerator())
             using (var rightIt = y.GetEnumerator())
             {

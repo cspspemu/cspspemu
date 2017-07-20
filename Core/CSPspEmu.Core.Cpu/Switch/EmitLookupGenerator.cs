@@ -24,7 +24,6 @@ namespace CSPspEmu.Core.Cpu.Switch
         public static Action<uint, TType> GenerateSwitchDelegate<TType>(string name,
             IEnumerable<InstructionInfo> instructionInfoList)
         {
-
             return GenerateSwitch<Action<uint, TType>>(name, instructionInfoList, instructionInfo =>
             {
                 var instructionInfoName = (instructionInfo != null) ? instructionInfo.Name : "Default";

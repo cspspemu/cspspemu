@@ -21,7 +21,7 @@ namespace CSPspEmu.Core.Gpu
 
         public GpuOpCodes OpCode => (GpuOpCodes) ((Instruction >> 24) & 0xFF);
 
-	    public uint Params => ((Instruction) & 0xFFFFFF);
+        public uint Params => ((Instruction) & 0xFFFFFF);
     }
 
     public sealed unsafe class GpuDisplayList
@@ -229,28 +229,28 @@ namespace CSPspEmu.Core.Gpu
             ILGenerator.Emit(OpCodes.Ldarg_1);
             ILGenerator.Emit(OpCodes.Switch, SwitchLabels);
             ILGenerator.Emit(OpCodes.Ret);
-	        
-	        var opcodesToMethods = new Dictionary<GpuOpCodes, MethodInfo>();
-	        
-	        foreach (var methodInfo in typeof(GpuDisplayListRunner).GetMethods())
-	        {
-		        var gpuInstructionAttributes = methodInfo.GetAttribute<GpuInstructionAttribute>().FirstOrDefault();
-		        if (gpuInstructionAttributes != null)
-		        {
-			        opcodesToMethods[gpuInstructionAttributes.Opcode] = methodInfo;
-		        }
-	        }
 
-	        for (int n = 0; n < SwitchLabels.Length; n++)
+            var opcodesToMethods = new Dictionary<GpuOpCodes, MethodInfo>();
+
+            foreach (var methodInfo in typeof(GpuDisplayListRunner).GetMethods())
+            {
+                var gpuInstructionAttributes = methodInfo.GetAttribute<GpuInstructionAttribute>().FirstOrDefault();
+                if (gpuInstructionAttributes != null)
+                {
+                    opcodesToMethods[gpuInstructionAttributes.Opcode] = methodInfo;
+                }
+            }
+
+            for (int n = 0; n < SwitchLabels.Length; n++)
             {
                 ILGenerator.MarkLabel(SwitchLabels[n]);
-	            var MethodInfo_Operation = opcodesToMethods[(GpuOpCodes)n];
-	            if (MethodInfo_Operation == null)
-	            {
-		            throw new InvalidProgramException($"Can't find method for gpu opcode {(GpuOpCodes)n}");
-	            }
-	            //var MethodInfo_Operation = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
-	            //var MethodInfo_Operation = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
+                var MethodInfo_Operation = opcodesToMethods[(GpuOpCodes) n];
+                if (MethodInfo_Operation == null)
+                {
+                    throw new InvalidProgramException($"Can't find method for gpu opcode {(GpuOpCodes) n}");
+                }
+                //var MethodInfo_Operation = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
+                //var MethodInfo_Operation = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
                 if (MethodInfo_Operation == null)
                 {
                     Console.Error.WriteLine("Warning! Can't find Gpu.OpCode '" + Names[n] + "'");

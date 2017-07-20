@@ -17,7 +17,8 @@ namespace CSharpUtils.Extensions
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
-        public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key, Func<TValue> allocator)
+        public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key,
+            Func<TValue> allocator)
         {
             return !This.TryGetValue(key, out TValue item) ? (This[key] = allocator()) : item;
         }
@@ -30,7 +31,8 @@ namespace CSharpUtils.Extensions
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
-        public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key) where TValue : new()
+        public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key)
+            where TValue : new()
         {
             return This.GetOrCreate(key, () => new TValue());
         }
@@ -44,7 +46,8 @@ namespace CSharpUtils.Extensions
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
-        public static TValue GetOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key, TValue defaultValue)
+        public static TValue GetOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key,
+            TValue defaultValue)
         {
             return This.TryGetValue(key, out TValue item) ? item : defaultValue;
         }

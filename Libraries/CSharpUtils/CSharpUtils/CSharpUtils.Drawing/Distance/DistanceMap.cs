@@ -93,7 +93,7 @@ namespace CSharpUtils.Drawing.Distance
                     for (var x = 0; x < width; x++)
                     {
                         if (!mask[x, y]) continue;
-                        
+
                         // Inner
                         row[x] = new DistanceEntry(0, 0);
 

@@ -33,10 +33,13 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.DTH0)]
         public void OP_DTH0() => _OP_DTH(0);
+
         [GpuInstructionAttribute(GpuOpCodes.DTH1)]
         public void OP_DTH1() => _OP_DTH(1);
+
         [GpuInstructionAttribute(GpuOpCodes.DTH2)]
         public void OP_DTH2() => _OP_DTH(2);
+
         [GpuInstructionAttribute(GpuOpCodes.DTH3)]
         public void OP_DTH3() => _OP_DTH(3);
     }

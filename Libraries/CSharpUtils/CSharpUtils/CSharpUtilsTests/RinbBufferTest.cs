@@ -27,10 +27,7 @@ namespace CSharpUtilsTests
         [Test]
         public void ReadEmpty()
         {
-            Assert.Throws<OverflowException>(() =>
-            {
-                RingBuffer.Read();
-            });
+            Assert.Throws<OverflowException>(() => { RingBuffer.Read(); });
         }
 
         [Test]

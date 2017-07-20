@@ -329,7 +329,8 @@ namespace CSharpUtils.Drawing
         /// </summary>
         /// <param name="col"></param>
         /// <returns></returns>
-        public static implicit operator ArgbRev(Color col) => new ArgbRev() {R = col.R, G = col.G, B = col.B, A = col.A};
+        public static implicit operator ArgbRev(Color col) =>
+            new ArgbRev() {R = col.R, G = col.G, B = col.B, A = col.A};
 
         /// <summary>
         /// 

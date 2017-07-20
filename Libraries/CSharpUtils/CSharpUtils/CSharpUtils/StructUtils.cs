@@ -114,13 +114,13 @@ namespace CSharpUtils
             return rawData;
         }
 
-	    /// <summary>
-	    /// </summary>
-	    /// <typeparam name="T"></typeparam>
-	    /// <param name="dataArray"></param>
-	    /// <param name="count"></param>
-	    /// <returns></returns>
-	    public static unsafe byte[] StructArrayToBytes<T>(T[] dataArray, int count = -1) where T : struct
+        /// <summary>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataArray"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static unsafe byte[] StructArrayToBytes<T>(T[] dataArray, int count = -1) where T : struct
         {
             if (count == -1) count = dataArray.Length;
             var elementSize = Marshal.SizeOf(dataArray[0]);

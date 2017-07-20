@@ -8,9 +8,11 @@ namespace CSPspEmu.Core.Cpu
     {
         public uint Value;
 
-        public uint GetJumpAddress(IPspMemoryInfo memoryInfo, uint currentPc) => (uint) (currentPc & ~0x0FFFFFFF) + (JumpBits << 2);
+        public uint GetJumpAddress(IPspMemoryInfo memoryInfo, uint currentPc) =>
+            (uint) (currentPc & ~0x0FFFFFFF) + (JumpBits << 2);
 
-        private void Set(int offset, int count, uint setValue) => Value = BitUtils.Insert(Value, offset, count, setValue);
+        private void Set(int offset, int count, uint setValue) =>
+            Value = BitUtils.Insert(Value, offset, count, setValue);
 
         private uint Get(int offset, int count) => BitUtils.Extract(Value, offset, count);
 

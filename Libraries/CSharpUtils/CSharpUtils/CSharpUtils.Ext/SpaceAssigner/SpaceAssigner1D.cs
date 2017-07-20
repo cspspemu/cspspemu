@@ -21,6 +21,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
             /// 
             /// </summary>
             public readonly long Min;
+
             /// <summary>
             /// 
             /// </summary>
@@ -368,7 +369,8 @@ namespace CSharpUtils.Ext.SpaceAssigner
         /// <param name="min"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public SpaceAssigner1D AddAvailableWithLength(long min, long length) => AddAvailableWithBounds(min, min + length);
+        public SpaceAssigner1D AddAvailableWithLength(long min, long length) =>
+            AddAvailableWithBounds(min, min + length);
 
         /// <summary>
         /// 

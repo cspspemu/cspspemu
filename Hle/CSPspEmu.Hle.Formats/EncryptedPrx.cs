@@ -174,7 +174,8 @@ namespace CSPspEmu.Hle.Formats
             buf[4] = (uint) size;
 
             if (Kirk.HleUtilsBufferCopyWithRange((byte*) buf, size + 0x14, (byte*) buf, size + 0x14,
-                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt) != Core.Components.Crypto.Kirk.ResultEnum.Ok)
+                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt) !=
+                Core.Components.Crypto.Kirk.ResultEnum.Ok)
             {
                 return -1;
             }
@@ -267,7 +268,8 @@ namespace CSPspEmu.Hle.Formats
 
                 /* sha-1 */
                 if (Kirk.HleUtilsBufferCopyWithRange(outbuf, 3000000, outbuf, 3000000,
-                        Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdSha1Hash) != Core.Components.Crypto.Kirk.ResultEnum.Ok)
+                        Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdSha1Hash) !=
+                    Core.Components.Crypto.Kirk.ResultEnum.Ok)
                 {
                     throw (new InvalidDataException("error in sceUtilsBufferCopyWithRange 0xB, "));
                 }

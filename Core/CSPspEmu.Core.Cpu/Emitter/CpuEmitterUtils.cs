@@ -74,7 +74,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint _ins_impl(uint initialData, uint data, int pos, int size) => BitUtils.Insert(initialData, pos, size, data);
+        public static uint _ins_impl(uint initialData, uint data, int pos, int size) =>
+            BitUtils.Insert(initialData, pos, size, data);
 
         // http://aggregate.org/MAGIC/
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -315,7 +316,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         public static float _vslt_impl(float a, float b) => float.IsNaN(a) || float.IsNaN(b) ? 0f : ((a < b) ? 1f : 0f);
-        public static float _vsge_impl(float a, float b) => float.IsNaN(a) || float.IsNaN(b) ? 0f : ((a >= b) ? 1f : 0f);
+
+        public static float _vsge_impl(float a, float b) =>
+            float.IsNaN(a) || float.IsNaN(b) ? 0f : ((a >= b) ? 1f : 0f);
 
         public static void _vrnds(CpuThreadState cpuThreadState, int seed) => cpuThreadState.Random = new Random(seed);
 
@@ -327,12 +330,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static float _vrndf1(CpuThreadState cpuThreadState) => (float) (cpuThreadState.Random.NextDouble() * 2.0f);
+        public static float _vrndf1(CpuThreadState cpuThreadState) =>
+            (float) (cpuThreadState.Random.NextDouble() * 2.0f);
+
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static float _vrndf2(CpuThreadState cpuThreadState) => (float) (cpuThreadState.Random.NextDouble() * 4.0f);
-        public static void _vpfxd_impl(CpuThreadState cpuThreadState, uint value) => cpuThreadState.PrefixDestination.Value = value;
-        public static void _vpfxs_impl(CpuThreadState cpuThreadState, uint value) => cpuThreadState.PrefixSource.Value = value;
-        public static void _vpfxt_impl(CpuThreadState cpuThreadState, uint value) => cpuThreadState.PrefixTarget.Value = value;
+        public static float _vrndf2(CpuThreadState cpuThreadState) =>
+            (float) (cpuThreadState.Random.NextDouble() * 4.0f);
+
+        public static void _vpfxd_impl(CpuThreadState cpuThreadState, uint value) =>
+            cpuThreadState.PrefixDestination.Value = value;
+
+        public static void _vpfxs_impl(CpuThreadState cpuThreadState, uint value) =>
+            cpuThreadState.PrefixSource.Value = value;
+
+        public static void _vpfxt_impl(CpuThreadState cpuThreadState, uint value) =>
+            cpuThreadState.PrefixTarget.Value = value;
 
         public static uint _vi2uc_impl(int x, int y, int z, int w) => 0
                                                                       | (uint) ((x < 0) ? 0 : ((x >> 23) << 0))
@@ -341,7 +353,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
                                                                       | (uint) ((w < 0) ? 0 : ((w >> 23) << 24));
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint _vi2c_impl(uint x, uint y, uint z, uint w) => ((x >> 24) << 0) | ((y >> 24) << 8) | ((z >> 24) << 16) | ((w >> 24) << 24) | 0;
+        public static uint _vi2c_impl(uint x, uint y, uint z, uint w) =>
+            ((x >> 24) << 0) | ((y >> 24) << 8) | ((z >> 24) << 16) | ((w >> 24) << 24) | 0;
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         public static int _vf2iz(float value, int imm5)
@@ -364,7 +377,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public static float _vh2f_1(uint a) => HalfFloat.ToFloat((int) BitUtils.Extract(a, 16, 16));
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint _vf2h_impl(float a, float b) => (uint) ((HalfFloat.FloatToHalfFloat(b) << 16) | (HalfFloat.FloatToHalfFloat(a) << 0));
+        public static uint _vf2h_impl(float a, float b) =>
+            (uint) ((HalfFloat.FloatToHalfFloat(b) << 16) | (HalfFloat.FloatToHalfFloat(a) << 0));
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         public static int _vi2us_impl(int x, int y) => (

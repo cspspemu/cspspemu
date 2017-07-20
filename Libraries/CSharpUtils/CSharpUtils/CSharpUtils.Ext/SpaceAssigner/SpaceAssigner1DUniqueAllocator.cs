@@ -11,6 +11,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
     {
         protected SpaceAssigner1D SpaceAssigner;
         protected Dictionary<byte[], SpaceAssigner1D.Space> AllocatedSpaces;
+
         /// <summary>
         /// 
         /// </summary>

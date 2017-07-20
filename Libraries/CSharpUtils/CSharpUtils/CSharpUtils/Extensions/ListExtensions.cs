@@ -77,7 +77,8 @@ namespace CSharpUtils.Extensions
         /// <param name="including"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> LowerBound<T>(this List<T> sortedAndNonRepeatedItems, T item, bool including = true)
+        public static IEnumerable<T> LowerBound<T>(this List<T> sortedAndNonRepeatedItems, T item,
+            bool including = true)
             where T : IComparable
         {
             var index = Math.Min(sortedAndNonRepeatedItems.BoundIndex(item) + 1, sortedAndNonRepeatedItems.Count - 1);
@@ -100,7 +101,8 @@ namespace CSharpUtils.Extensions
         /// <param name="including"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> UpperBound<T>(this List<T> sortedAndNonRepeatedItems, T item, bool including = true)
+        public static IEnumerable<T> UpperBound<T>(this List<T> sortedAndNonRepeatedItems, T item,
+            bool including = true)
             where T : IComparable
         {
             var index = Math.Max(sortedAndNonRepeatedItems.BoundIndex(item) - 1, 0);

@@ -106,7 +106,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                     Name = "GpuImplEventHandling",
                     IsBackground = true
                 }.Start();
-                
+
                 completedEvent.WaitOne();
             }
         }

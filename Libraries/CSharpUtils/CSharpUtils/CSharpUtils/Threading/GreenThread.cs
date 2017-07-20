@@ -291,7 +291,7 @@ namespace CSharpUtils.Threading
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
                 catch (Exception e)
                 {
-	                Console.Error.WriteLine(e);
+                    Console.Error.WriteLine(e);
                     _rethrowException = e;
                 }
 #endif
@@ -409,12 +409,12 @@ namespace CSharpUtils.Threading
         /// </summary>
         public string Name
         {
-	        set
-	        {
-		        //CurrentThread.Name = value;
-	        }
-	        get => CurrentThread.Name;
-	    }
+            set
+            {
+                //CurrentThread.Name = value;
+            }
+            get => CurrentThread.Name;
+        }
     }
 #endif
 }

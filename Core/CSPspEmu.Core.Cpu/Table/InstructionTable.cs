@@ -47,7 +47,8 @@ namespace CSPspEmu.Core.Cpu.Table
             .Union(Bcu)
             .Union(VfpuBranch);
 
-        public static InstructionInfo Unknown = Id(InstructionNames.Unknown, Vm("111111:11111:11111:11111:11111:111111"), "",
+        public static InstructionInfo Unknown = Id(InstructionNames.Unknown,
+            Vm("111111:11111:11111:11111:11111:111111"), "",
             AddrTypeNone, 0);
 
         private static InstructionInfo[] _alu;

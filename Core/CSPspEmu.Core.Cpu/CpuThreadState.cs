@@ -15,7 +15,8 @@ using System.Runtime;
 
 namespace CSPspEmu.Core.Cpu
 {
-    internal unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint address, string errorDescription, bool canBeNull);
+    internal unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint address, string errorDescription,
+        bool canBeNull);
 
     internal unsafe delegate void* GetMemoryPtrNotNullDelegate(uint address);
 
@@ -851,7 +852,7 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         /// <returns></returns>
         public Action<CpuThreadState> GetFuncAtPc(uint pc) => CpuProcessor.MethodCache.GetForPc(pc).CallDelegate;
-        
+
         public struct Fcr31Struct
         {
             public enum TypeEnum : uint

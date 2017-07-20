@@ -89,7 +89,7 @@ namespace CSharpUtils
             _leftBits -= count;
 
             if (_leftBits != 0) return this;
-            
+
             //Console.WriteLine("Writting: {0:X" + (ByteCapacity * 2) + "}", CurrentValue);
             switch (_byteCapacity)
             {

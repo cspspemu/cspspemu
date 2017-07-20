@@ -98,7 +98,9 @@ namespace CSharpUtils.Json
 
             double numericResult;
             var numericStr = Convert.ToString(objectToEncode, CultureInfo.InvariantCulture.NumberFormat);
-            return double.TryParse(numericStr, out numericResult) ? numericStr : Stringify(objectToEncode.ToString(), singleQuotes);
+            return double.TryParse(numericStr, out numericResult)
+                ? numericStr
+                : Stringify(objectToEncode.ToString(), singleQuotes);
         }
 
         /// <summary>

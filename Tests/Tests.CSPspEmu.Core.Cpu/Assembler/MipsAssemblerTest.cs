@@ -50,10 +50,7 @@ namespace CSPspEmu.Core.Tests
         [Test]
         public void MatcherNoMatchTest()
         {
-            Assert.Throws<Exception>(() =>
-            {
-                MipsAssembler.Matcher("add %s, %t", "add 1, 2, 3");
-            });
+            Assert.Throws<Exception>(() => { MipsAssembler.Matcher("add %s, %t", "add 1, 2, 3"); });
         }
     }
 }

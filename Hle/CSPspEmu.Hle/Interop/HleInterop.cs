@@ -116,6 +116,7 @@ namespace CSPspEmu.Hle.Interop
             params object[] arguments)
         {
             var gprIndex = 4;
+
             //int FprIndex = 0;
             void Align(int alignment) => gprIndex = (int) MathUtils.NextAligned((uint) gprIndex, alignment);
 

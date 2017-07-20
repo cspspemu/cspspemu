@@ -45,7 +45,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
             int dwParam2)
         {
             if (uMsg != WaveNative.MmWomDone) return;
-            
+
             try
             {
                 var h = (GCHandle) wavhdr.dwUser;

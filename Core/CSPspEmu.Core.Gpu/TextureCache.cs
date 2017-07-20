@@ -8,7 +8,6 @@ using CSharpUtils.Drawing;
 using CSharpUtils.Drawing.Extensions;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
-
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Inject;

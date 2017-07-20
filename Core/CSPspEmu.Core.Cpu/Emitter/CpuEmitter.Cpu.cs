@@ -14,7 +14,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Addu)]
         public AstNodeStm Addu() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) + _ast.GPR_u(Rt));
-        
+
         [InstructionName(InstructionNames.Sub)]
         public AstNodeStm Sub() => _ast.AssignGpr(Rd, _ast.GPR_s(Rs) - _ast.GPR_s(Rt));
 
@@ -32,7 +32,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.And)]
         public AstNodeStm And() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) & _ast.GPR_u(Rt));
-        
+
         [InstructionName(InstructionNames.Or)]
         public AstNodeStm Or() => _ast.AssignGpr(Rd, _ast.GPR_u(Rs) | _ast.GPR_u(Rt));
 
@@ -55,13 +55,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Shift Left/Right Logical/Arithmethic (Variable).
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Sll)]
-        public AstNodeStm Sll() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), "<<", _ast.Immediate((uint) _instruction.Pos)));
+        public AstNodeStm Sll() =>
+            _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), "<<", _ast.Immediate((uint) _instruction.Pos)));
 
         [InstructionName(InstructionNames.Sra)]
-        public AstNodeStm Sra() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_s(Rt), ">>", _ast.Immediate((int) _instruction.Pos)));
+        public AstNodeStm Sra() =>
+            _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_s(Rt), ">>", _ast.Immediate((int) _instruction.Pos)));
 
         [InstructionName(InstructionNames.Srl)]
-        public AstNodeStm Srl() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), ">>", _ast.Immediate((uint) _instruction.Pos)));
+        public AstNodeStm Srl() =>
+            _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), ">>", _ast.Immediate((uint) _instruction.Pos)));
 
         [InstructionName(InstructionNames.Rotr)]
         public AstNodeStm Rotr() => _ast.AssignGpr(Rd,
@@ -70,7 +73,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Sllv)]
         public AstNodeStm Sllv() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_u(Rt), "<<", _ast.GPR_u(Rs) & 31));
-        
+
         [InstructionName(InstructionNames.Srav)]
         public AstNodeStm Srav() => _ast.AssignGpr(Rd, _ast.Binary(_ast.GPR_s(Rt), ">>", _ast.GPR_s(Rs) & 31));
 
@@ -115,7 +118,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // BIT REVerse.
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Bitrev)]
-        public AstNodeStm Bitrev() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._bitrev_impl, _ast.GPR_u(Rt)));
+        public AstNodeStm Bitrev() => _ast.AssignGpr(Rd,
+            _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._bitrev_impl, _ast.GPR_u(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // MAXimum/MINimum.
@@ -132,11 +136,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // DIVide (Unsigned).
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Div)]
-        public AstNodeStm Div() => (_ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._div_impl,
+        public AstNodeStm Div() => (_ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, int, int>) CpuEmitterUtils._div_impl,
             _ast.CpuThreadStateExpr, _ast.GPR_s(Rs), _ast.GPR_s(Rt))));
 
         [InstructionName(InstructionNames.Divu)]
-        public AstNodeStm Divu() => (_ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._divu_impl,
+        public AstNodeStm Divu() => (_ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, uint, uint>) CpuEmitterUtils._divu_impl,
             _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), _ast.GPR_u(Rt))));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,10 +185,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Move if Zero/Non zero.
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Movz)]
-        public AstNodeStm Movz() => _ast.If(_ast.Binary(_ast.GPR_s(Rt), "==", 0), _ast.Assign(_ast.Gpr(Rd), _ast.GPR_u(Rs)));
+        public AstNodeStm Movz() =>
+            _ast.If(_ast.Binary(_ast.GPR_s(Rt), "==", 0), _ast.Assign(_ast.Gpr(Rd), _ast.GPR_u(Rs)));
 
         [InstructionName(InstructionNames.Movn)]
-        public AstNodeStm Movn() => _ast.If(_ast.Binary(_ast.GPR_s(Rt), "!=", 0), _ast.Assign(_ast.Gpr(Rd), _ast.GPR_u(Rs)));
+        public AstNodeStm Movn() =>
+            _ast.If(_ast.Binary(_ast.GPR_s(Rt), "!=", 0), _ast.Assign(_ast.Gpr(Rd), _ast.GPR_u(Rs)));
 
         /// <summary>
         /// EXTract/INSert
@@ -201,19 +209,23 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Count Leading Ones/Zeros in word.
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Clz)]
-        public AstNodeStm Clz() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._clz_impl, _ast.GPR_u(Rs)));
+        public AstNodeStm Clz() =>
+            _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._clz_impl, _ast.GPR_u(Rs)));
 
         [InstructionName(InstructionNames.Clo)]
-        public AstNodeStm Clo() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._clo_impl, _ast.GPR_u(Rs)));
+        public AstNodeStm Clo() =>
+            _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._clo_impl, _ast.GPR_u(Rs)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Word Swap Bytes Within Halfwords/Words.
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Wsbh)]
-        public AstNodeStm Wsbh() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._wsbh_impl, _ast.GPR_u(Rt)));
+        public AstNodeStm Wsbh() => _ast.AssignGpr(Rd,
+            _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._wsbh_impl, _ast.GPR_u(Rt)));
 
         [InstructionName(InstructionNames.Wsbw)]
-        public AstNodeStm Wsbw() => _ast.AssignGpr(Rd, _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._wsbw_impl, _ast.GPR_u(Rt)));
+        public AstNodeStm Wsbw() => _ast.AssignGpr(Rd,
+            _ast.CallStatic((Func<uint, uint>) CpuEmitterUtils._wsbw_impl, _ast.GPR_u(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Move Control (From/To) Cop0
@@ -274,11 +286,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), IMM_s(), _ast.GPR_u(Rt)));
 
         [InstructionName(InstructionNames.Swl)]
-        public AstNodeStm Swl() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, int, uint>) CpuEmitterUtils._swl_exec,
+        public AstNodeStm Swl() => _ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, uint, int, uint>) CpuEmitterUtils._swl_exec,
             _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), IMM_s(), _ast.GPR_u(Rt)));
 
         [InstructionName(InstructionNames.Swr)]
-        public AstNodeStm Swr() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, int, uint>) CpuEmitterUtils._swr_exec,
+        public AstNodeStm Swr() => _ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, uint, int, uint>) CpuEmitterUtils._swr_exec,
             _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), IMM_s(), _ast.GPR_u(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -331,22 +345,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 return _ast.StatementsInline(
                     _ast.AssignPc(_pc),
                     _ast.GetTickCall(true),
-                    _ast.Statement(_ast.CallInstance(_ast.CpuThreadStateExpr, (Action<int>) CpuThreadState.Methods.Syscall,
+                    _ast.Statement(_ast.CallInstance(_ast.CpuThreadStateExpr,
+                        (Action<int>) CpuThreadState.Methods.Syscall,
                         (int) _instruction.Code))
                 );
             }
         }
 
         [InstructionName(InstructionNames.Cache)]
-        public AstNodeStm Cache() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._cache_impl,
+        public AstNodeStm Cache() => _ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, uint, uint>) CpuEmitterUtils._cache_impl,
             _ast.CpuThreadStateExpr, _pc, _instruction.Value));
 
         [InstructionName(InstructionNames.Sync)]
-        public AstNodeStm Sync() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._sync_impl,
+        public AstNodeStm Sync() => _ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, uint, uint>) CpuEmitterUtils._sync_impl,
             _ast.CpuThreadStateExpr, _pc, _instruction.Value));
 
         [InstructionName(InstructionNames.Break)]
-        public AstNodeStm Break() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, uint, uint>) CpuEmitterUtils._break_impl,
+        public AstNodeStm Break() => _ast.Statement(_ast.CallStatic(
+            (Action<CpuThreadState, uint, uint>) CpuEmitterUtils._break_impl,
             _ast.CpuThreadStateExpr, _pc, _instruction.Value));
 
         [InstructionName(InstructionNames.Dbreak)]
@@ -386,6 +404,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Unknown instruction
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Unknown)]
-        public AstNodeStm Unknown() => _ast.Unimplemented($"UNKNOWN INSTRUCTION: 0x{_instruction.Value:X8} : 0x{_instruction.Value:X8} at 0x{_pc:X8}").Statement();
+        public AstNodeStm Unknown() =>
+            _ast.Unimplemented(
+                    $"UNKNOWN INSTRUCTION: 0x{_instruction.Value:X8} : 0x{_instruction.Value:X8} at 0x{_pc:X8}")
+                .Statement();
     }
 }

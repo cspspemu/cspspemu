@@ -19,20 +19,23 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.LMODE)]
         public void OP_LMODE() => GpuState->LightingState.LightModel = (LightModelEnum) Param8(0);
-        
+
         LightStateStruct* GetLigth(int index) => &((&GpuState->LightingState.Light0)[index]);
-        
+
         private void _OP_LTE(int index) => GetLigth(index)->Enabled = Bool1;
-        
+
         [GpuInstructionAttribute(GpuOpCodes.LTE0)]
         public void OP_LTE0() => _OP_LTE(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LTE1)]
         public void OP_LTE1() => _OP_LTE(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LTE2)]
         public void OP_LTE2() => _OP_LTE(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LTE3)]
         public void OP_LTE3() => _OP_LTE(3);
-        
+
         private void _OP_LXP(int index) => GetLigth(index)->Position.X = Float1;
         private void _OP_LYP(int index) => GetLigth(index)->Position.Y = Float1;
         private void _OP_LZP(int index) => GetLigth(index)->Position.Z = Float1;
@@ -51,19 +54,25 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.LYP0)]
         public void OP_LYP0() => _OP_LYP(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LYP1)]
         public void OP_LYP1() => _OP_LYP(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LYP2)]
         public void OP_LYP2() => _OP_LYP(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LYP3)]
         public void OP_LYP3() => _OP_LYP(3);
-        
+
         [GpuInstructionAttribute(GpuOpCodes.LZP0)]
         public void OP_LZP0() => _OP_LZP(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LZP1)]
         public void OP_LZP1() => _OP_LZP(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LZP2)]
         public void OP_LZP2() => _OP_LZP(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LZP3)]
         public void OP_LZP3() => _OP_LZP(3);
 
@@ -90,10 +99,13 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.LT0)]
         public void OP_LT0() => _OP_LT(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LT1)]
         public void OP_LT1() => _OP_LT(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LT2)]
         public void OP_LT2() => _OP_LT(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LT3)]
         public void OP_LT3() => _OP_LT(3);
 
@@ -103,59 +115,77 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.LCA0)]
         public void OP_LCA0() => _OP_LCA(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LCA1)]
         public void OP_LCA1() => _OP_LCA(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LCA2)]
         public void OP_LCA2() => _OP_LCA(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LCA3)]
         public void OP_LCA3() => _OP_LCA(3);
-        
+
         [GpuInstructionAttribute(GpuOpCodes.LLA0)]
         public void OP_LLA0() => _OP_LLA(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LLA1)]
         public void OP_LLA1() => _OP_LLA(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LLA2)]
         public void OP_LLA2() => _OP_LLA(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LLA3)]
         public void OP_LLA3() => _OP_LLA(3);
-        
+
         [GpuInstructionAttribute(GpuOpCodes.LQA0)]
         public void OP_LQA0() => _OP_LQA(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LQA1)]
         public void OP_LQA1() => _OP_LQA(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LQA2)]
         public void OP_LQA2() => _OP_LQA(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LQA3)]
         public void OP_LQA3() => _OP_LQA(3);
-        
+
         private void _OP_LXD(int index) => GetLigth(index)->SpotDirection.X = Float1;
         private void _OP_LYD(int index) => GetLigth(index)->SpotDirection.Y = Float1;
         private void _OP_LZD(int index) => GetLigth(index)->SpotDirection.Z = Float1;
-        
+
         [GpuInstructionAttribute(GpuOpCodes.LXD0)]
         public void OP_LXD0() => _OP_LXD(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LXD1)]
         public void OP_LXD1() => _OP_LXD(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LXD2)]
         public void OP_LXD2() => _OP_LXD(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LXD3)]
         public void OP_LXD3() => _OP_LXD(3);
 
         [GpuInstructionAttribute(GpuOpCodes.LYD0)]
         public void OP_LYD0() => _OP_LYD(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LYD1)]
         public void OP_LYD1() => _OP_LYD(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LYD2)]
         public void OP_LYD2() => _OP_LYD(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LYD3)]
         public void OP_LYD3() => _OP_LYD(3);
-        
+
         [GpuInstructionAttribute(GpuOpCodes.LZD0)]
         public void OP_LZD0() => _OP_LZD(0);
+
         [GpuInstructionAttribute(GpuOpCodes.LZD1)]
         public void OP_LZD1() => _OP_LZD(1);
+
         [GpuInstructionAttribute(GpuOpCodes.LZD2)]
         public void OP_LZD2() => _OP_LZD(2);
+
         [GpuInstructionAttribute(GpuOpCodes.LZD3)]
         public void OP_LZD3() => _OP_LZD(3);
 
@@ -164,19 +194,25 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.SPOTEXP0)]
         public void OP_SPOTEXP0() => _OP_SPOTEXP(0);
+
         [GpuInstructionAttribute(GpuOpCodes.SPOTEXP1)]
         public void OP_SPOTEXP1() => _OP_SPOTEXP(1);
+
         [GpuInstructionAttribute(GpuOpCodes.SPOTEXP2)]
         public void OP_SPOTEXP2() => _OP_SPOTEXP(2);
+
         [GpuInstructionAttribute(GpuOpCodes.SPOTEXP3)]
         public void OP_SPOTEXP3() => _OP_SPOTEXP(3);
-        
+
         [GpuInstructionAttribute(GpuOpCodes.SPOTCUT0)]
         public void OP_SPOTCUT0() => _OP_SPOTCUT(0);
+
         [GpuInstructionAttribute(GpuOpCodes.SPOTCUT1)]
         public void OP_SPOTCUT1() => _OP_SPOTCUT(1);
+
         [GpuInstructionAttribute(GpuOpCodes.SPOTCUT2)]
         public void OP_SPOTCUT2() => _OP_SPOTCUT(2);
+
         [GpuInstructionAttribute(GpuOpCodes.SPOTCUT3)]
         public void OP_SPOTCUT3() => _OP_SPOTCUT(3);
 
@@ -186,31 +222,40 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.ALC0)]
         public void OP_ALC0() => _OP_ALC(0);
+
         [GpuInstructionAttribute(GpuOpCodes.ALC1)]
         public void OP_ALC1() => _OP_ALC(1);
+
         [GpuInstructionAttribute(GpuOpCodes.ALC2)]
         public void OP_ALC2() => _OP_ALC(2);
+
         [GpuInstructionAttribute(GpuOpCodes.ALC3)]
         public void OP_ALC3() => _OP_ALC(3);
 
         [GpuInstructionAttribute(GpuOpCodes.DLC0)]
         public void OP_DLC0() => _OP_DLC(0);
+
         [GpuInstructionAttribute(GpuOpCodes.DLC1)]
         public void OP_DLC1() => _OP_DLC(1);
+
         [GpuInstructionAttribute(GpuOpCodes.DLC2)]
         public void OP_DLC2() => _OP_DLC(2);
+
         [GpuInstructionAttribute(GpuOpCodes.DLC3)]
         public void OP_DLC3() => _OP_DLC(3);
 
         [GpuInstructionAttribute(GpuOpCodes.SLC0)]
         public void OP_SLC0() => _OP_SLC(0);
+
         [GpuInstructionAttribute(GpuOpCodes.SLC1)]
         public void OP_SLC1() => _OP_SLC(1);
+
         [GpuInstructionAttribute(GpuOpCodes.SLC2)]
         public void OP_SLC2() => _OP_SLC(2);
+
         [GpuInstructionAttribute(GpuOpCodes.SLC3)]
         public void OP_SLC3() => _OP_SLC(3);
-        
+
         [GpuInstructionAttribute(GpuOpCodes.SPOW)]
         public void OP_SPOW() => GpuState->LightingState.SpecularPower = Float1;
     }

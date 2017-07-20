@@ -26,7 +26,8 @@ namespace CSPspEmu.Core.Gpu.Run
         public void OP_CBP() => ClutState->Address = (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
 
         [GpuInstructionAttribute(GpuOpCodes.CBPH)]
-        public void OP_CBPH() => ClutState->Address = (ClutState->Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
+        public void OP_CBPH() =>
+            ClutState->Address = (ClutState->Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
 
         [GpuInstructionAttribute(GpuOpCodes.CLOAD)]
         public void OP_CLOAD() => ClutState->NumberOfColors = Param8(0) * 8;

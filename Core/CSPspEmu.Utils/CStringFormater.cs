@@ -17,7 +17,8 @@ namespace CSPspEmu.Utils
             float IArgumentReader.LoadFloat() => float.Parse(_arguments[_argumentIndex++].ToString());
         }
 
-        public static string Sprintf(string format, params object[] arguments) => Sprintf(format, new ArrayArgumentReader(arguments));
+        public static string Sprintf(string format, params object[] arguments) =>
+            Sprintf(format, new ArrayArgumentReader(arguments));
 
         static Regex FormatRegex = new Regex(@"%(‘.|0|\x20)?(-)?(\d+)?(\.\d+)?(%|b|c|d|u|f|o|s|x|X)",
             RegexOptions.ECMAScript | RegexOptions.Compiled);

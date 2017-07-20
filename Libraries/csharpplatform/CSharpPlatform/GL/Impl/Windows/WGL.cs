@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
+
 // ReSharper disable UnusedMember.Global
 
 namespace CSharpPlatform.GL.Impl.Windows

@@ -30,10 +30,7 @@ namespace CSPspEmu.Tests.Hle
         [Test]
         public void TestNextWithoutItems()
         {
-            Assert.Throws<Exception>(() =>
-            {
-                Scheduler.Next();
-            });
+            Assert.Throws<Exception>(() => { Scheduler.Next(); });
         }
 
         [Test]

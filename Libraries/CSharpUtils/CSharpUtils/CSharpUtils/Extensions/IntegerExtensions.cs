@@ -19,7 +19,8 @@
         /// <param name="value"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static byte RotateRight(this byte value, int count) => (byte) ((value >> count) | (value << (8 - count)));
+        public static byte RotateRight(this byte value, int count) =>
+            (byte) ((value >> count) | (value << (8 - count)));
 
         /// <summary>
         /// 

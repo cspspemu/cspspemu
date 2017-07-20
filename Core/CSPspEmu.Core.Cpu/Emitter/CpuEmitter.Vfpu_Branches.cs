@@ -72,7 +72,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
                             break;
                         //case ConditionEnum.VC_LE: Expr = ast.Binary(Left, "<=", Right); break;
                         case ConditionEnum.VcLe:
-                            expr = _ast.CallStatic((Func<float, float, bool>) MathFloat.IsLessOrEqualsThan, left, right);
+                            expr = _ast.CallStatic((Func<float, float, bool>) MathFloat.IsLessOrEqualsThan, left,
+                                right);
                             break;
 
                         case ConditionEnum.VcTr:
@@ -113,7 +114,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
                             expr = _ast.Unary("!", _ast.CallStatic((Func<float, bool>) MathFloat.IsInfinity, left));
                             break;
                         case ConditionEnum.VcNs:
-                            expr = _ast.Unary("!", _ast.CallStatic((Func<float, bool>) MathFloat.IsNanOrInfinity, left));
+                            expr = _ast.Unary("!",
+                                _ast.CallStatic((Func<float, bool>) MathFloat.IsNanOrInfinity, left));
                             break;
 
                         default: throw (new InvalidOperationException());
@@ -184,7 +186,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Vcmovf)]
         public AstNodeStm Vcmovf() => _vcmovtf(false);
-        
+
         [InstructionName(InstructionNames.Vcmovt)]
         public AstNodeStm Vcmovt() => _vcmovtf(true);
 
@@ -198,13 +200,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Bvf)]
         public AstNodeStm Bvf() => _bvtf(false);
-        
+
         [InstructionName(InstructionNames.Bvfl)]
         public AstNodeStm Bvfl() => Bvf();
-        
+
         [InstructionName(InstructionNames.Bvt)]
         public AstNodeStm Bvt() => _bvtf(true);
-        
+
         [InstructionName(InstructionNames.Bvtl)]
         public AstNodeStm Bvtl() => Bvt();
     }

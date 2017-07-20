@@ -12,6 +12,7 @@ using EGLClientBuffer = System.IntPtr;
 using EGLNativeDisplayType = System.IntPtr;
 using EGLNativeWindowType = System.IntPtr;
 using EGLNativePixmapType = System.IntPtr;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 

@@ -28,8 +28,9 @@ namespace CSPspEmu.Core.Gpu.Run
         public void OP_EMC() => GpuState->LightingState.EmissiveModelColor.SetRGB_A1(Params24);
 
         [GpuInstructionAttribute(GpuOpCodes.AMC)]
-        public void OP_AMC() => GpuState->LightingState.AmbientModelColor.SetRgb(Params24); // When lighting is off, this is like glColor*
-        
+        public void OP_AMC() =>
+            GpuState->LightingState.AmbientModelColor.SetRgb(Params24); // When lighting is off, this is like glColor*
+
         [GpuInstructionAttribute(GpuOpCodes.AMA)]
         public void OP_AMA() => GpuState->LightingState.AmbientModelColor.SetA(Params24);
 
@@ -46,7 +47,8 @@ namespace CSPspEmu.Core.Gpu.Run
         // void sceGuColorMaterial(int components); // OP_CMAT
         // Material Color
         [GpuInstructionAttribute(GpuOpCodes.CMAT)]
-        public void OP_CMAT() => GpuState->LightingState.MaterialColorComponents = (LightComponentsSet) BitUtils.Extract(Params24, 0, 8);
+        public void OP_CMAT() => GpuState->LightingState.MaterialColorComponents =
+            (LightComponentsSet) BitUtils.Extract(Params24, 0, 8);
 
         // Alpha Blend Enable (GU_BLEND)
         [GpuInstructionAttribute(GpuOpCodes.ABE)]

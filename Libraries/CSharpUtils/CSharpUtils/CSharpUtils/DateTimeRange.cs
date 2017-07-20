@@ -284,6 +284,7 @@ namespace CSharpUtils
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"DateTimeRange(TimeStart={TimeStart}, TimeEnd={TimeEnd}, Time={Time}, Precision={Precision})";
+        public override string ToString() =>
+            $"DateTimeRange(TimeStart={TimeStart}, TimeEnd={TimeEnd}, Time={Time}, Precision={Precision})";
     }
 }

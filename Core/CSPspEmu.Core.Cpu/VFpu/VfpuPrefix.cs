@@ -55,21 +55,24 @@ namespace CSPspEmu.Core.Cpu.VFpu
         //return (value >> (8 + i * 1)) & 1;
         public bool SourceAbsolute(int i) => BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
 
-        public void SourceAbsolute(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 8 + i * 1, 1, valueToInsert ? 1U : 0U);
+        public void SourceAbsolute(int i, bool valueToInsert) =>
+            BitUtils.Insert(ref Value, 8 + i * 1, 1, valueToInsert ? 1U : 0U);
 
         // cst(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (12 + i * 1)) & 1;
         public bool SourceConstant(int i) => BitUtils.Extract(Value, 12 + i * 1, 1) != 0;
 
-        public void SourceConstant(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 12 + i * 1, 1, valueToInsert ? 1U : 0U);
+        public void SourceConstant(int i, bool valueToInsert) =>
+            BitUtils.Insert(ref Value, 12 + i * 1, 1, valueToInsert ? 1U : 0U);
 
         // neg(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (16 + i * 1)) & 1;
         public bool SourceNegate(int i) => BitUtils.Extract(Value, 16 + i * 1, 1) != 0;
 
-        public void SourceNegate(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 16 + i * 1, 1, valueToInsert ? 1U : 0U);
+        public void SourceNegate(int i, bool valueToInsert) =>
+            BitUtils.Insert(ref Value, 16 + i * 1, 1, valueToInsert ? 1U : 0U);
 
         public void EnableAndSetValueAndPc(uint value, uint pc)
         {
@@ -154,21 +157,24 @@ namespace CSPspEmu.Core.Cpu.VFpu
 
         public static implicit operator uint(VfpuDestinationPrefix value) => value.Value;
 
-        public static implicit operator VfpuDestinationPrefix(uint value) => new VfpuDestinationPrefix() {Value = value};
+        public static implicit operator VfpuDestinationPrefix(uint value) =>
+            new VfpuDestinationPrefix() {Value = value};
 
         // sat(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (0 + i * 2)) & 3;
         public uint DestinationSaturation(int i) => BitUtils.Extract(Value, 0 + i * 2, 2);
 
-        public void DestinationSaturation(int i, uint valueToInsert) => BitUtils.Insert(ref Value, 0 + i * 2, 2, valueToInsert);
+        public void DestinationSaturation(int i, uint valueToInsert) =>
+            BitUtils.Insert(ref Value, 0 + i * 2, 2, valueToInsert);
 
         // msk(xyzw)
         //assert(i >= 0 && i < 4);
         //return (value >> (8 + i * 1)) & 1;
         public bool DestinationMask(int i) => BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
 
-        public void DestinationMask(int i, bool valueToInsert) => BitUtils.Insert(ref Value, 8 + i * 1, 1, valueToInsert ? 1U : 0U);
+        public void DestinationMask(int i, bool valueToInsert) =>
+            BitUtils.Insert(ref Value, 8 + i * 1, 1, valueToInsert ? 1U : 0U);
 
         public void EnableAndSetValueAndPc(uint value, uint pc)
         {
@@ -211,7 +217,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
             }
         }
 
-        public override string ToString() => $"VfpuDestinationPrefix(Enabled={Enabled}, UsedPC=0x{UsedPc:X}, DeclaredPC=0x{DeclaredPc:X})({Format})";
+        public override string ToString() =>
+            $"VfpuDestinationPrefix(Enabled={Enabled}, UsedPC=0x{UsedPc:X}, DeclaredPC=0x{DeclaredPc:X})({Format})";
 
         public bool IsValidIndex(int index) => (index >= 0) && (index < 4);
     }

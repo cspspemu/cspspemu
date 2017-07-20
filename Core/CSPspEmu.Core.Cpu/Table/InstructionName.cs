@@ -16,5 +16,5 @@ namespace CSPspEmu.Core.Cpu.Table
         {
             return $"{Name}";
         }
-    } 
+    }
 }

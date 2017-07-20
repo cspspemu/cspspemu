@@ -14,9 +14,9 @@ namespace CSharpUtils
         /// 
         /// </summary>
         public Func<T> Getter;
-        
+
         protected bool Setted;
-        
+
         /// <summary>
         /// 
         /// </summary>

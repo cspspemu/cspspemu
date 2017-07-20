@@ -39,7 +39,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
             FixedJump = 0,
             DynamicJump = (1 << 20),
         }
-       
+
         [InstructionName(InstructionNames.Bvf)]
         public JumpFlags bvf() => JumpFlags.BranchOrJumpInstruction | JumpFlags.VFpuInstruction;
 

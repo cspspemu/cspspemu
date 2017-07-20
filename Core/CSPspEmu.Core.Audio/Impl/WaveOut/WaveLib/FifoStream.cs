@@ -51,6 +51,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
 
         // Stream members
         public override bool CanRead => true;
+
         public override bool CanSeek => false;
         public override bool CanWrite => true;
 
@@ -58,7 +59,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
         {
             get
             {
-                lock (this)return _mSize;
+                lock (this) return _mSize;
             }
         }
 
