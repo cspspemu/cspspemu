@@ -9,7 +9,10 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules;
 using System;
 using System.Collections.Generic;
+using CSPspEmu.Core.Audio.Impl.Alsa;
 using CSPspEmu.Core.Audio.Impl.Null;
+using CSPspEmu.Core.Audio.Impl.Openal;
+using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Gpu.Impl.Null;
 
 namespace CSPspEmu.Runner
@@ -57,7 +60,6 @@ namespace CSPspEmu.Runner
                 {
                     //typeof(PspAudioOpenalImpl)
                 };
-
 
                 //if (Platform.OS == OS.Windows) audioPlugins.Add(typeof(PspAudioWaveOutImpl));
                 //if (Platform.OS == OS.Linux) audioPlugins.Add(typeof(AudioAlsaImpl));
