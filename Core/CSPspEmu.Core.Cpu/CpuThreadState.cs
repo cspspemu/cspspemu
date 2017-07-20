@@ -824,6 +824,7 @@ namespace CSPspEmu.Core.Cpu
         {
             try
             {
+                Pc = pc;
                 Ra = SpecialCpu.ReturnFromFunction;
                 MethodCache.GetForPc(Pc).CallDelegate(this);
             }

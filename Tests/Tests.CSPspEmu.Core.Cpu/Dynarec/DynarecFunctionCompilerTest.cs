@@ -19,7 +19,7 @@ namespace CSPspEmu.Tests.Cpu.Dynarec
 					jr r31
 					nop
 				").Instructions),
-                0
+                0, checkValidAddress: false
             );
 
             var CpuThreadState = new CpuThreadState(CpuProcessor);

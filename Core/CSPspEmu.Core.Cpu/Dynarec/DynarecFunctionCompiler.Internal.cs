@@ -75,7 +75,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
             internal InternalFunctionCompiler(InjectContext injectContext, MipsMethodEmitter mipsMethodEmitter,
                 DynarecFunctionCompiler dynarecFunctionCompiler, IInstructionReader instructionReader,
-                Action<uint> exploreNewPcCallback, uint entryPc, bool doLog)
+                Action<uint> exploreNewPcCallback, uint entryPc, bool doLog, bool checkValidAddress = true)
             {
                 injectContext.InjectDependencesTo(this);
                 _exploreNewPcCallback = exploreNewPcCallback;
@@ -91,10 +91,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                 _instructionReader = instructionReader;
                 _entryPc = entryPc;
 
-                if (!PspMemory.IsAddressValid(entryPc))
+                if (checkValidAddress && !PspMemory.IsAddressValid(entryPc))
                 {
-                    throw (new InvalidOperationException(string.Format("Trying to get invalid function 0x{0:X8}",
-                        entryPc)));
+                    throw (new InvalidOperationException($"Trying to get invalid function 0x{entryPc:X8}"));
                 }
             }
 
@@ -478,6 +477,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                 // Jumps to the entry point.
                 var nodes = new AstNodeStmContainer();
 
+                if (!_labels.ContainsKey(_entryPc))
+                {
+                    throw new KeyNotFoundException($"Can't find key {_entryPc:X} in list [{_labels.Select(it => $"{it.Key:X}").JoinToString(",")}]");
+                }
                 nodes.AddStatement(_ast.GotoAlways(_labels[_entryPc]));
 
                 for (_pc = _minPc; _pc <= _maxPc;)

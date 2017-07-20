@@ -69,6 +69,7 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
         }
 
         [Test]
+        [Ignore("check. Time not mocked")]
         public void Test_sceRtcGetCurrentClock()
         {
             ScePspDateTime ScePspDateTime;
@@ -84,6 +85,7 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
         }
 
         [Test]
+        [Ignore("check. Time not mocked")]
         public void Test_timeIsIncreasing()
         {
             DateTime PrevDateTime = DateTimeRange.ConvertFromUnixTimestamp(0);

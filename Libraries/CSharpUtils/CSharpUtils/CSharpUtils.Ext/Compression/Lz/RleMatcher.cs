@@ -65,7 +65,7 @@
                 fixed (byte* start = &Data[_offset])
                 fixed (byte* end = &Data[Data.Length - 1])
                 {
-                    var maxLen = (int) (end - start);
+                    var maxLen = (int) (end - start + 1);
                     Length = PointerUtils.FindLargestMatchByte(start, start[0], maxLen);
                 }
             }

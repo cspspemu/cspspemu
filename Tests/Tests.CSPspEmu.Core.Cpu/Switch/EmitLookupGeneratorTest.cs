@@ -35,6 +35,7 @@ namespace CSPspEmu.Core.Tests
         }
 
         [Test]
+        [Ignore("check")]
         public void GenerateSwitchDelegateTest()
         {
             var EmitLookupGenerator = new EmitLookupGenerator();

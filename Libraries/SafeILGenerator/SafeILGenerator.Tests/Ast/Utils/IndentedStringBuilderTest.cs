@@ -9,20 +9,24 @@ namespace SafeILGenerator.Tests.Ast.Utils
         [Test]
         public void TestIndentation()
         {
-            var Output = new IndentedStringBuilder();
-            Output.Write("{\n");
-            Output.Indent(() =>
+            var output = new IndentedStringBuilder();
+            output.Write("{");
+            output.WriteNewLine();
+            output.Indent(() =>
             {
-                Output.Write("Hello World!\n");
-                Output.Write("Goodbye World!\n");
+                output.Write("Hello World!");
+                output.WriteNewLine();
+                output.Write("Goodbye World!");
+                output.WriteNewLine();
             });
-            Output.Write("}\n");
+            output.Write("}");
+            output.WriteNewLine();
             Assert.AreEqual(
                 @"{\n" +
                 @"    Hello World!\n" +
                 @"    Goodbye World!\n" +
                 @"}\n",
-                AstStringUtils.ToLiteralRaw(Output.ToString())
+                AstStringUtils.ToLiteralRaw(output.ToString())
             );
         }
     }
