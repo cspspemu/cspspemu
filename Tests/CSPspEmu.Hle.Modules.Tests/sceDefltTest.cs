@@ -1,6 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using CSPspEmu.Hle.Modules._unknownPrx;
 using System.IO;
+using System.Net;
+using System.Reflection;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.Tests
 {
@@ -12,14 +16,14 @@ namespace CSPspEmu.Hle.Modules.Tests
         [Test]
         public void TestMethod1()
         {
-            var inflated = File.ReadAllBytes("../../../TestInput/sample.inflated");
-            var deflated = File.ReadAllBytes("../../../TestInput/sample.deflated");
+            var inflated = ReadResourceBytes("sample.inflated");
+            var deflated = ReadResourceBytes("sample.deflated");
             var buffer = new byte[inflated.Length];
             uint crc32;
-            fixed (byte* buffer_ptr = buffer)
-            fixed (byte* deflated_ptr = deflated)
+            fixed (byte* bufferPtr = buffer)
+            fixed (byte* deflatedPtr = deflated)
             {
-                sceDeflt.sceZlibDecompress(buffer_ptr, buffer.Length, deflated_ptr, &crc32);
+                sceDeflt.sceZlibDecompress(bufferPtr, buffer.Length, deflatedPtr, &crc32);
             }
 
             CollectionAssert.AreEqual(inflated, buffer);
