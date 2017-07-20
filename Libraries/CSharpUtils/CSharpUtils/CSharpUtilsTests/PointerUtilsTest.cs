@@ -179,5 +179,15 @@ namespace CSPspEmu.Tests
                 Assert.AreEqual(13, PointerUtils.FindLargestMatchByte(_A, (byte) 1, A.Length));
             }
         }
+        
+        [Test]
+        public void FindLargestMatchByte3()
+        {
+            var A = new byte[] {3, 3, 3};
+            fixed (byte* _A = A)
+            {
+                Assert.AreEqual(3, PointerUtils.FindLargestMatchByte(_A, (byte) 3, A.Length));
+            }
+        }
     }
 }
