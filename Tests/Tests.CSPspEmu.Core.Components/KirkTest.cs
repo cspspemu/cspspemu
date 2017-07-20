@@ -1,13 +1,13 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 
 namespace CSPspEmu.Core.Tests.Crypto
 {
-    [TestFixture]
+    
     public unsafe class KirkTest
     {
-        [Test]
+        [Fact]
         public void TestSha1()
         {
             var Kirk = new Kirk();
@@ -30,7 +30,7 @@ namespace CSPspEmu.Core.Tests.Crypto
 
             var Output = new byte[0x14];
 
-            Assert.AreEqual(0x24, Input.Length);
+            Assert.Equal(0x24, Input.Length);
 
             fixed (byte* OutputPtr = Output)
             fixed (byte* InputPtr = Input)
@@ -38,11 +38,11 @@ namespace CSPspEmu.Core.Tests.Crypto
                 Kirk.KirkSha1(OutputPtr, InputPtr, Input.Length);
             }
 
-            CollectionAssert.AreEqual(ExpectedOutput, Output);
+            Assert.Equal(ExpectedOutput, Output);
             //Console.WriteLine(BitConverter.ToString(Hash));
         }
 
-        [Test]
+        [Fact]
         public void TestCmd1()
         {
             var Kirk = new Kirk();
@@ -69,12 +69,12 @@ namespace CSPspEmu.Core.Tests.Crypto
                 //Console.WriteLine(BitConverter.ToString(_src));
                 //Console.WriteLine(BitConverter.ToString(_dst));
 
-                CollectionAssert.AreEqual(ExpectedOutput, _dst);
+                Assert.Equal(ExpectedOutput, _dst);
             }
         }
 
 
-        [Test]
+        [Fact]
         public void TestCmd7()
         {
             var Kirk = new Kirk();
@@ -102,7 +102,7 @@ namespace CSPspEmu.Core.Tests.Crypto
                 Console.WriteLine("_src: {0}", BitConverter.ToString(_src));
                 Console.WriteLine("_dst: {0}", BitConverter.ToString(_dst));
 
-                CollectionAssert.AreEqual(ExpectedOutput, _dst);
+                Assert.Equal(ExpectedOutput, _dst);
             }
         }
     }

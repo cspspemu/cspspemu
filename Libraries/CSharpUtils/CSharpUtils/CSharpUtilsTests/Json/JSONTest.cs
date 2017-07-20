@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using CSharpUtils.Json;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class JSONTest
     {
         sealed class TestJsonSerializable : IJsonSerializable
@@ -15,53 +16,53 @@ namespace CSharpUtilsTests
             }
         }
 
-        [Test]
+        [Fact]
         public void StringifyNullTest()
         {
-            Assert.AreEqual("null", Json.Stringify(null));
+            Assert.Equal("null", Json.Stringify(null));
         }
 
-        [Test]
+        [Fact]
         public void StringifyStringTest()
         {
-            Assert.AreEqual("\"Hello World!\"", Json.Stringify("Hello World!"));
+            Assert.Equal("\"Hello World!\"", Json.Stringify("Hello World!"));
         }
 
-        [Test]
+        [Fact]
         public void StringifyBooleanTest()
         {
-            Assert.AreEqual("true", Json.Stringify(true));
-            Assert.AreEqual("false", Json.Stringify(false));
+            Assert.Equal("true", Json.Stringify(true));
+            Assert.Equal("false", Json.Stringify(false));
         }
 
-        [Test]
+        [Fact]
         public void StringifyIntTest()
         {
-            Assert.AreEqual("777", Json.Stringify(777));
+            Assert.Equal("777", Json.Stringify(777));
         }
 
-        [Test]
+        [Fact]
         public void StringifyDoubleTest()
         {
-            Assert.AreEqual("777.777", Json.Stringify(777.777));
+            Assert.Equal("777.777", Json.Stringify(777.777));
         }
 
-        [Test]
+        [Fact]
         public void StringifyStringArrayTest()
         {
-            Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\"]", Json.Stringify(new string[] {"a", "b", "c", "d"}));
+            Assert.Equal("[\"a\",\"b\",\"c\",\"d\"]", Json.Stringify(new string[] {"a", "b", "c", "d"}));
         }
 
-        [Test]
+        [Fact]
         public void StringifyIntArrayTest()
         {
-            Assert.AreEqual("[1,2,3,4]", Json.Stringify(new int[] {1, 2, 3, 4}));
+            Assert.Equal("[1,2,3,4]", Json.Stringify(new int[] {1, 2, 3, 4}));
         }
 
-        [Test]
+        [Fact]
         public void StringifyDictionaryTest()
         {
-            Assert.AreEqual("{\"one\":1,\"two\":2,\"three\":3,\"four\":4}", Json.Stringify(new Dictionary<string, int>
+            Assert.Equal("{\"one\":1,\"two\":2,\"three\":3,\"four\":4}", Json.Stringify(new Dictionary<string, int>
             {
                 {"one", 1},
                 {"two", 2},
@@ -70,10 +71,10 @@ namespace CSharpUtilsTests
             }));
         }
 
-        [Test]
+        [Fact]
         public void StringifyJsonSerializableTest()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "TestJsonSerializable(123)",
                 Json.Stringify(new TestJsonSerializable())
             );

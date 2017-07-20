@@ -1,12 +1,13 @@
 ﻿using CSPspEmu.Core.Cpu.Table;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class InstructionTableTest
     {
-        [Test]
+        [Fact]
         public void PspInstructionsTest()
         {
             var Instructions = InstructionTable.All;

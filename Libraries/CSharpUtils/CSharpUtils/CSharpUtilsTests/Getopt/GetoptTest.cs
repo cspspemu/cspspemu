@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using CSharpUtils.Extensions;
 using CSharpUtils.Getopt;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class GetoptTest
     {
-        [Test]
+        [Fact]
         public void AddRuleTest()
         {
             bool BooleanValue = false;
@@ -18,11 +19,11 @@ namespace CSharpUtilsTests
             Getopt.AddRule("-i", ref IntegerValue);
             Getopt.Process();
 
-            Assert.AreEqual(true, BooleanValue);
-            Assert.AreEqual(50, IntegerValue);
+            Assert.Equal(true, BooleanValue);
+            Assert.Equal(50, IntegerValue);
         }
 
-        [Test]
+        [Fact]
         public void AddRule2Test()
         {
             bool BooleanValue = false;
@@ -34,29 +35,29 @@ namespace CSharpUtilsTests
             Getopt.AddRule("-s", (string _Value) => { StringValue = _Value; });
             Getopt.Process();
 
-            Assert.AreEqual(true, BooleanValue);
-            Assert.AreEqual(50, IntegerValue);
-            Assert.AreEqual("hello_world", StringValue);
+            Assert.Equal(true, BooleanValue);
+            Assert.Equal(50, IntegerValue);
+            Assert.Equal("hello_world", StringValue);
         }
 
-        [Test]
+        [Fact]
         public void AddRule3Test()
         {
             var Values = new List<int>();
             var Getopt = new Getopt(new string[] {"-i=50", "-i=25"});
             Getopt.AddRule("-i", (int Value) => { Values.Add(Value); });
             Getopt.Process();
-            Assert.AreEqual("50,25", Values.ToStringArray());
+            Assert.Equal("50,25", Values.ToStringArray());
         }
 
-        [Test]
+        [Fact]
         public void AddRule4Test()
         {
             int ExecutedCount = 0;
             var Getopt = new Getopt(new string[] {"-a", "-a"});
             Getopt.AddRule("-a", () => { ExecutedCount++; });
             Getopt.Process();
-            Assert.AreEqual(2, ExecutedCount);
+            Assert.Equal(2, ExecutedCount);
         }
     }
 }

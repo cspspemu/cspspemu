@@ -1,26 +1,27 @@
 ﻿using System.Linq;
-using NUnit.Framework;
+
 using CSharpUtils;
 using CSharpUtils.Extensions;
+using Xunit;
 
 namespace CSPspEmu.Tests
 {
-    [TestFixture]
+    
     public unsafe class PointerUtilsTest
     {
-        [Test]
+        [Fact]
         public void TestMemset()
         {
             var Data = new byte[131];
             PointerUtils.Memset(Data, 0x3E, Data.Length);
 
-            CollectionAssert.AreEqual(
+            Assert.Equal(
                 ((byte) 0x3E).Repeat(Data.Length),
                 Data
             );
         }
 
-        [Test]
+        [Fact]
         public void TestMemcpy()
         {
             int SizeStart = 17;
@@ -38,13 +39,13 @@ namespace CSPspEmu.Tests
             //Console.WriteLine(BitConverter.ToString(Dst));
             //Console.WriteLine(BitConverter.ToString(Expected));
 
-            CollectionAssert.AreEqual(
+            Assert.Equal(
                 Expected,
                 Dst
             );
         }
 
-        [Test]
+        [Fact]
         public void TestMemcpy4()
         {
             int TotalSize = 12;
@@ -66,14 +67,14 @@ namespace CSPspEmu.Tests
 
                         for (int m = 0; m < TotalSize; m++)
                         {
-                            Assert.AreEqual((m < count) ? m : 0, Dest[m]);
+                            Assert.Equal((m < count) ? m : 0, Dest[m]);
                         }
                     }
                 }
             }
         }
 
-        [Test]
+        [Fact]
         public void TestMemset4()
         {
             int TotalSize = 65;
@@ -93,14 +94,14 @@ namespace CSPspEmu.Tests
 
                         for (int m = 0; m < TotalSize; m++)
                         {
-                            Assert.AreEqual((m < count) ? 1 : 0, Dest[m]);
+                            Assert.Equal((m < count) ? 1 : 0, Dest[m]);
                         }
                     }
                 }
             }
         }
 
-        [Test]
+        [Fact]
         public void TestMemcpyOverlapping()
         {
             var _Data = new byte[] {1, 0, 0, 0, 0, 0};
@@ -109,10 +110,10 @@ namespace CSPspEmu.Tests
             {
                 PointerUtils.Memcpy(&Data[1], &Data[0], 5);
             }
-            CollectionAssert.AreEqual(Expected, _Data);
+            Assert.Equal(Expected, _Data);
         }
 
-        [Test]
+        [Fact]
         public void FastHash()
         {
             var A = new byte[] {1, 2, 3};
@@ -120,11 +121,11 @@ namespace CSPspEmu.Tests
             fixed (byte* _A = A)
             fixed (byte* _B = B)
             {
-                Assert.AreNotEqual(PointerUtils.FastHash(_A, 3), PointerUtils.FastHash(_B, 3));
+                Assert.NotEqual(PointerUtils.FastHash(_A, 3), PointerUtils.FastHash(_B, 3));
             }
         }
 
-        [Test]
+        [Fact]
         public void FindLargestMatch0()
         {
             var A = new byte[] {0, 2, 3, 4, 5, 6, 7};
@@ -132,11 +133,11 @@ namespace CSPspEmu.Tests
             fixed (byte* _A = A)
             fixed (byte* _B = B)
             {
-                Assert.AreEqual(0, PointerUtils.FindLargestMatch(_A, _B, 5));
+                Assert.Equal(0, PointerUtils.FindLargestMatch(_A, _B, 5));
             }
         }
 
-        [Test]
+        [Fact]
         public void FindLargestMatch1()
         {
             var A = new byte[] {1, 0, 3, 4, 5, 6, 7};
@@ -144,11 +145,11 @@ namespace CSPspEmu.Tests
             fixed (byte* _A = A)
             fixed (byte* _B = B)
             {
-                Assert.AreEqual(1, PointerUtils.FindLargestMatch(_A, _B, 5));
+                Assert.Equal(1, PointerUtils.FindLargestMatch(_A, _B, 5));
             }
         }
 
-        [Test]
+        [Fact]
         public void FindLargestMatch5()
         {
             var A = new byte[] {1, 2, 3, 4, 5, 0, 7};
@@ -156,37 +157,37 @@ namespace CSPspEmu.Tests
             fixed (byte* _A = A)
             fixed (byte* _B = B)
             {
-                Assert.AreEqual(5, PointerUtils.FindLargestMatch(_A, _B, A.Length));
+                Assert.Equal(5, PointerUtils.FindLargestMatch(_A, _B, A.Length));
             }
         }
 
-        [Test]
+        [Fact]
         public void FindLargestMatchByte1()
         {
             var A = new byte[] {1, 0, 2, 2, 2};
             fixed (byte* _A = A)
             {
-                Assert.AreEqual(1, PointerUtils.FindLargestMatchByte(_A, (byte) 1, A.Length - 3));
+                Assert.Equal(1, PointerUtils.FindLargestMatchByte(_A, (byte) 1, A.Length - 3));
             }
         }
 
-        [Test]
+        [Fact]
         public void FindLargestMatchByte13()
         {
             var A = new byte[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2};
             fixed (byte* _A = A)
             {
-                Assert.AreEqual(13, PointerUtils.FindLargestMatchByte(_A, (byte) 1, A.Length));
+                Assert.Equal(13, PointerUtils.FindLargestMatchByte(_A, (byte) 1, A.Length));
             }
         }
         
-        [Test]
+        [Fact]
         public void FindLargestMatchByte3()
         {
             var A = new byte[] {3, 3, 3};
             fixed (byte* _A = A)
             {
-                Assert.AreEqual(3, PointerUtils.FindLargestMatchByte(_A, (byte) 3, A.Length));
+                Assert.Equal(3, PointerUtils.FindLargestMatchByte(_A, (byte) 3, A.Length));
             }
         }
     }

@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿
+
+using Xunit;
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class TypeUtilsTest
     {
         public class MyType
@@ -17,7 +19,7 @@ namespace CSharpUtilsTests
         {
         }
 
-        [Test]
+        [Fact(Skip = "Inconclusive")]
         public void GetTypesExtendingTest()
         {
             /*
@@ -26,7 +28,7 @@ namespace CSharpUtilsTests
                 TypeUtils.GetTypesExtending(typeof(MyType)).ToStringArray()
             );
             */
-            Assert.Inconclusive();
+            //Assert.Inconclusive();
         }
     }
 }

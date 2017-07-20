@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿
+
+using Xunit;
 
 namespace Tests.CSPspEmu.Inject
 {
-    [TestFixture]
+    
     public class InjectTest
     {
         public class Test : IInjectInitialize
@@ -58,23 +60,23 @@ namespace Tests.CSPspEmu.Inject
             }
         }
 
-        [Test]
+        [Fact]
         public void TestInjection()
         {
             var Context = new InjectContext();
             var Test = Context.GetInstance<Test>();
-            Assert.AreEqual(Context, Test.InjectContext1);
-            Assert.AreEqual(Context, Test.InjectContext2);
-            Assert.AreEqual(null, Test.InjectContext3);
+            Assert.Equal(Context, Test.InjectContext1);
+            Assert.Equal(Context, Test.InjectContext2);
+            Assert.Equal(null, Test.InjectContext3);
         }
 
-        [Test]
+        [Fact]
         public void TestInjectionExtended()
         {
             var Context = new InjectContext();
             var Test = Context.GetInstance<Test3>();
-            Assert.AreEqual(Context, Test.InjectContext1);
-            Assert.AreEqual(Context, Test.InjectContext2);
+            Assert.Equal(Context, Test.InjectContext1);
+            Assert.Equal(Context, Test.InjectContext2);
         }
     }
 }

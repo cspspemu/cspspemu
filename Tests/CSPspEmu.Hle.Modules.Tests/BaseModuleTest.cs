@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+
 
 namespace CSPspEmu.Hle.Modules.Tests
 {
-    [TestFixture]
+    
     public class BaseModuleTest
     {
-        [SetUp]
-        public void SetUp()
+        public BaseModuleTest()
         {
             TestHleUtils.CreateInjectContext(this);
         }

@@ -3,18 +3,18 @@ using SafeILGenerator.Ast.Generators;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
 using System.Text.RegularExpressions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace SafeILGenerator.Tests.Ast.Generators
 {
-    [TestFixture]
+    
     public class GeneratorCSharpTest
     {
         GeneratorCSharp GeneratorCSharp;
         private static readonly AstGenerator ast = AstGenerator.Instance;
 
-        [SetUp]
-        public void SetUp()
+        public GeneratorCSharpTest()
         {
             GeneratorCSharp = new GeneratorCSharp();
         }
@@ -28,7 +28,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             return 0;
         }
 
-        [Test]
+        [Fact]
         public void TestAstSetGetLValue()
         {
             var AstIndex = ast.Immediate(777);
@@ -37,31 +37,31 @@ namespace SafeILGenerator.Tests.Ast.Generators
                     ast.SetGetLValuePlaceholder<int>()),
                 ast.CallStatic((Func<int, int>) TestAstSetGetLValue_Get, AstIndex)
             );
-            Assert.AreEqual("GeneratorCSharpTest.TestAstSetGetLValue_Set(777, 11);",
+            Assert.Equal("GeneratorCSharpTest.TestAstSetGetLValue_Set(777, 11);",
                 GeneratorCSharp.Reset().GenerateRoot(ast.Assign(AstSetGet, 11)).ToString());
-            Assert.AreEqual("GeneratorCSharpTest.TestAstSetGetLValue_Set(777, 12);",
+            Assert.Equal("GeneratorCSharpTest.TestAstSetGetLValue_Set(777, 12);",
                 GeneratorCSharp.Reset().GenerateRoot(ast.Assign(AstSetGet, 12)).ToString());
-            Assert.AreEqual(
+            Assert.Equal(
                 "GeneratorCSharpTest.TestAstSetGetLValue_Set(777, (GeneratorCSharpTest.TestAstSetGetLValue_Get(777) + 1));",
                 GeneratorCSharp.Reset().GenerateRoot(ast.Assign(AstSetGet, AstSetGet + 1)).ToString());
         }
 
-        [Test]
+        [Fact]
         public void TestAstExpression()
         {
             ;
-            Assert.AreEqual("(3 + 5)", GeneratorCSharp.GenerateRoot(ast.Binary(3, "+", 5)).ToString());
+            Assert.Equal("(3 + 5)", GeneratorCSharp.GenerateRoot(ast.Binary(3, "+", 5)).ToString());
         }
 
-        [Test]
+        [Fact]
         public void TestAstIf()
         {
             GeneratorCSharp.GenerateRoot(new AstNodeStmIfElse(new AstNodeExprImm(true), new AstNodeStmReturn(),
                 new AstNodeStmReturn()));
-            Assert.AreEqual("if (true) return; else return;", GeneratorCSharp.ToString());
+            Assert.Equal("if (true) return; else return;", GeneratorCSharp.ToString());
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleCall()
         {
             GeneratorCSharp.GenerateRoot(
@@ -73,10 +73,10 @@ namespace SafeILGenerator.Tests.Ast.Generators
                 )
             );
 
-            Assert.AreEqual("return GeneratorCSharpTest.GetTestValue(10);", GeneratorCSharp.ToString());
+            Assert.Equal("return GeneratorCSharpTest.GetTestValue(10);", GeneratorCSharp.ToString());
         }
 
-        [Test]
+        [Fact]
         public void TestAstSwitch()
         {
             var Local = AstLocal.Create<int>("Local");
@@ -110,7 +110,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Actual = new Regex(@"\s+").Replace(Actual, " ").Trim();
             Expected = new Regex(@"\s+").Replace(Expected, " ").Trim();
 
-            Assert.AreEqual(Expected, Actual);
+            Assert.Equal(Expected, Actual);
         }
 
         public static int GetTestValue(int Value)

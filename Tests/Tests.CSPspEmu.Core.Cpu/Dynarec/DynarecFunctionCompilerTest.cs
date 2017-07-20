@@ -1,14 +1,15 @@
 ﻿using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu;
 using Tests.CSPspEmu.Core.Cpu.Cpu;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSPspEmu.Tests.Cpu.Dynarec
 {
-    [TestFixture]
+    
     public class DynarecFunctionCompilerTest
     {
-        [Test]
+        [Fact(Skip = "Check")]
         public void TestMethod1()
         {
             var CpuProcessor = CpuUtils.CreateCpuProcessor();
@@ -23,9 +24,9 @@ namespace CSPspEmu.Tests.Cpu.Dynarec
             );
 
             var CpuThreadState = new CpuThreadState(CpuProcessor);
-            Assert.AreEqual(0, CpuThreadState.Gpr[1]);
+            Assert.Equal(0, CpuThreadState.Gpr[1]);
             DynarecFunction.Delegate(CpuThreadState);
-            Assert.AreEqual(1, CpuThreadState.Gpr[1]);
+            Assert.Equal(1, CpuThreadState.Gpr[1]);
         }
     }
 }

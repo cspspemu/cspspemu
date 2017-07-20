@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class LinqExExtensionsTest
     {
         public struct TestStruct
@@ -24,7 +25,7 @@ namespace CSharpUtilsTests
             }
         }
 
-        [Test]
+        [Fact]
         public void OrderByNaturalTest()
         {
             var Items = new TestStruct[]
@@ -38,7 +39,7 @@ namespace CSharpUtilsTests
             };
             var OrderedItems = Items.OrderByNatural(Item => Item.Title).ToArray();
 
-            CollectionAssert.AreEqual(
+            Assert.Equal(
                 new int[] {0, 1, 2, 3, 4, 5},
                 OrderedItems.Select(Item => Item.Index).ToArray()
             );

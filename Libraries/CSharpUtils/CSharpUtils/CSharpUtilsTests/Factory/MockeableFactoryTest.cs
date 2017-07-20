@@ -1,9 +1,10 @@
 ﻿using CSharpUtils.Factory;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class MockeableFactoryTest
     {
         class A
@@ -22,13 +23,13 @@ namespace CSharpUtilsTests
             }
         }
 
-        [Test]
+        [Fact]
         public void MockTypeTest()
         {
             var MockeableFactory = new MockeableFactory();
-            Assert.AreEqual("A", MockeableFactory.New<A>().Value);
+            Assert.Equal("A", MockeableFactory.New<A>().Value);
             MockeableFactory.MockType(typeof(A), typeof(B));
-            Assert.AreEqual("B", MockeableFactory.New<A>().Value);
+            Assert.Equal("B", MockeableFactory.New<A>().Value);
         }
     }
 }

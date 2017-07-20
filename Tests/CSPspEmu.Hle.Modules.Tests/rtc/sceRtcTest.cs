@@ -1,13 +1,14 @@
 ﻿using System;
-using NUnit.Framework;
+
 using CSPspEmu.Hle.Modules.rtc;
 using CSPspEmu.Hle.Vfs;
 using CSharpUtils;
 using CSPspEmu.Core.Components.Rtc;
+using Xunit;
 
 namespace CSPspEmu.Hle.Modules.Tests.rtc
 {
-    [TestFixture]
+    
     [InjectMap(typeof(PspRtc), typeof(PspRtcMock))]
     public class sceRtcTest : BaseModuleTest
     {
@@ -53,39 +54,36 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
             }
         }
 
-        [SetUp]
-        public void TestInitialize()
+        public sceRtcTest()
         {
             ResetTimes();
         }
 
-        [Test]
+        [Fact]
         public void Test_sceRtcGetDayOfWeek()
         {
-            Assert.AreEqual((int) PspDaysOfWeek.Monday, 1);
-            Assert.AreEqual(PspDaysOfWeek.Monday, sceRtc.sceRtcGetDayOfWeek(2012, 4, 30));
-            Assert.AreEqual(2, (int) sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
-            Assert.AreEqual(PspDaysOfWeek.Tuesday, sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
+            Assert.Equal((int) PspDaysOfWeek.Monday, 1);
+            Assert.Equal(PspDaysOfWeek.Monday, sceRtc.sceRtcGetDayOfWeek(2012, 4, 30));
+            Assert.Equal(2, (int) sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
+            Assert.Equal(PspDaysOfWeek.Tuesday, sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
         }
 
-        [Test]
-        [Ignore("check. Time not mocked")]
+        [Fact(Skip = "check. Time not mocked")]
         public void Test_sceRtcGetCurrentClock()
         {
             ScePspDateTime ScePspDateTime;
             var Result = sceRtc.sceRtcGetCurrentClock(out ScePspDateTime, 0);
-            Assert.AreEqual(0, Result);
-            Assert.AreEqual(FakedYear, (int) ScePspDateTime.Year);
-            Assert.AreEqual(FakedMonth, (int) ScePspDateTime.Month);
-            Assert.AreEqual(FakedDay, (int) ScePspDateTime.Day);
-            Assert.AreEqual(FakedHour, (int) ScePspDateTime.Hour);
-            Assert.AreEqual(FakedMinute, (int) ScePspDateTime.Minute);
-            Assert.AreEqual(FakedSecond, (int) ScePspDateTime.Second);
-            Assert.AreEqual(FakedMillisecond, (int) ScePspDateTime.Microsecond / 1000);
+            Assert.Equal(0, Result);
+            Assert.Equal(FakedYear, (int) ScePspDateTime.Year);
+            Assert.Equal(FakedMonth, (int) ScePspDateTime.Month);
+            Assert.Equal(FakedDay, (int) ScePspDateTime.Day);
+            Assert.Equal(FakedHour, (int) ScePspDateTime.Hour);
+            Assert.Equal(FakedMinute, (int) ScePspDateTime.Minute);
+            Assert.Equal(FakedSecond, (int) ScePspDateTime.Second);
+            Assert.Equal(FakedMillisecond, (int) ScePspDateTime.Microsecond / 1000);
         }
 
-        [Test]
-        [Ignore("check. Time not mocked")]
+        [Fact(Skip = "check. Time not mocked")]
         public void Test_timeIsIncreasing()
         {
             DateTime PrevDateTime = DateTimeRange.ConvertFromUnixTimestamp(0);
@@ -110,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
                     Console.WriteLine("P: {0}", PrevDateTime.Ticks);
                     Console.WriteLine("C: {0}", CurrentDateTime.Ticks);
                 }
-                Assert.IsTrue(CurrentDateTime.Ticks > PrevDateTime.Ticks);
+                Assert.True(CurrentDateTime.Ticks > PrevDateTime.Ticks);
                 PrevDateTime = CurrentDateTime;
             }
         }

@@ -1,9 +1,10 @@
 ﻿using CSharpUtils.Extensions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class StructExtensionsTest
     {
         public struct TestStruct
@@ -14,10 +15,10 @@ namespace CSharpUtilsTests
             public string Field4;
         }
 
-        [Test]
+        [Fact]
         public void ToStringDefaultTest()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "TestStruct(Field1=1,Field2=2,Field3=3,Field4=\"Hello World!\")",
                 new TestStruct()
                 {
@@ -29,19 +30,19 @@ namespace CSharpUtilsTests
             );
         }
 
-        [Test]
+        [Fact]
         public void ToStringDefaultTestArray()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "[1, 2, 3, 4]",
                 new int[] {1, 2, 3, 4}.ToStringDefault()
             );
         }
 
-        [Test]
+        [Fact]
         public void ToStringDefaultTestString()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "\"Hello \\\"\\' World\"",
                 "Hello \"' World".ToStringDefault()
             );

@@ -2,14 +2,15 @@
 using System.IO;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests.Streams
 {
-    [TestFixture]
+    
     public class MapStreamTest
     {
-        [Test]
+        [Fact]
         public void TestRead()
         {
             var Stream1 = new ZeroStream(5, 0x11);
@@ -23,20 +24,20 @@ namespace CSharpUtilsTests.Streams
             MapStream.Position = 4;
 
             Readed1 = MapStream.ReadBytesUpTo(3);
-            CollectionAssert.AreEqual(new byte[] {0x11, 0x11, 0x11}, Readed1);
+            Assert.Equal(new byte[] {0x11, 0x11, 0x11}, Readed1);
 
             Readed2 = MapStream.ReadBytesUpTo(3);
-            CollectionAssert.AreEqual(new byte[] {0x11, 0x22, 0x22}, Readed2);
+            Assert.Equal(new byte[] {0x11, 0x22, 0x22}, Readed2);
 
             Readed3 = MapStream.ReadBytesUpTo(1);
-            CollectionAssert.AreEqual(new byte[] {0x22}, Readed3);
+            Assert.Equal(new byte[] {0x22}, Readed3);
 
             MapStream.Position = 3;
             Readed4 = MapStream.ReadBytesUpTo(8);
-            CollectionAssert.AreEqual(new byte[] {0x11, 0x11, 0x11, 0x11, 0x11, 0x22, 0x22, 0x22}, Readed4);
+            Assert.Equal(new byte[] {0x11, 0x11, 0x11, 0x11, 0x11, 0x22, 0x22, 0x22}, Readed4);
         }
 
-        [Test]
+        [Fact]
         public void TestLongRead()
         {
             var Position = (long) 5197762560L;
@@ -50,24 +51,24 @@ namespace CSharpUtilsTests.Streams
 
             var MapStream2 = MapStream.Unserialize(new MemoryStream(SerializedData));
             MapStream2.Position = Position;
-            CollectionAssert.AreEqual(Array, MapStream2.ReadBytes(5));
+            Assert.Equal(Array, MapStream2.ReadBytes(5));
         }
 
-        [Test]
+        [Fact]
         public void TestReadUnmapped0()
         {
             var MapStream = new MapStream();
             MapStream.Read(new byte[1], 0, 0);
         }
 
-        [Test]
+        [Fact]
         public void TestReadUnmapped1()
         {
             try
             {
                 var MapStream = new MapStream();
                 MapStream.Read(new byte[1], 0, 1);
-                Assert.Fail();
+                Assert.False(true);
             }
             catch (InvalidOperationException)
             {

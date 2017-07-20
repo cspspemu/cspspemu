@@ -1,17 +1,18 @@
 ﻿using SafeILGenerator.Utils;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace SafeILGenerator.Tests.Util
 {
-    [TestFixture]
+    
     public class ILFieldInfoTest
     {
         public int Test;
 
-        [Test]
+        [Fact]
         public void TestGetFieldInfo()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 typeof(ILFieldInfoTest).GetField("Test"),
                 IlFieldInfo.GetFieldInfo(() => Test)
             );

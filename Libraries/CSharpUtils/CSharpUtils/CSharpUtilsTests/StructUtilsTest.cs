@@ -1,9 +1,10 @@
 ﻿using CSharpUtils;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class StructUtilsTest
     {
         struct TestShorts
@@ -16,7 +17,7 @@ namespace CSharpUtilsTests
             }
         }
 
-        [Test]
+        [Fact]
         public void BytesToStructArrayTest()
         {
             var Data = new byte[]
@@ -26,9 +27,9 @@ namespace CSharpUtilsTests
                 0x01, 0x02, 0x02, 0x02, 0x03, 0x02,
             };
             var TestShorts = StructUtils.BytesToStructArray<TestShorts>(Data);
-            Assert.AreEqual("TestShorts(0x0001, 0x0002, 0x0003)", TestShorts[0].ToString());
-            Assert.AreEqual("TestShorts(0x0101, 0x0102, 0x0103)", TestShorts[1].ToString());
-            Assert.AreEqual("TestShorts(0x0201, 0x0202, 0x0203)", TestShorts[2].ToString());
+            Assert.Equal("TestShorts(0x0001, 0x0002, 0x0003)", TestShorts[0].ToString());
+            Assert.Equal("TestShorts(0x0101, 0x0102, 0x0103)", TestShorts[1].ToString());
+            Assert.Equal("TestShorts(0x0201, 0x0202, 0x0203)", TestShorts[2].ToString());
         }
     }
 }

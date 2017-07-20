@@ -1,21 +1,22 @@
-﻿using NUnit.Framework;
+﻿
+
+using Xunit;
 
 namespace CSPspEmu.Core.Tests.Gpu
 {
-    [TestFixture]
+    
     public class GpuProcessorTest
     {
         //PspMemory Memory;
         //GpuProcessor Gpu;
 
-        [SetUp]
-        public void SetUp()
+        public GpuProcessorTest()
         {
             //Memory = new LazyPspMemory();
             //Gpu = new GpuProcessor(Memory);
         }
 
-        [Test]
+        [Fact]
         public void TestGpuProcessor()
         {
             //GpuDisplayList GpuDisplayList = Gpu.CreateDisplayList();

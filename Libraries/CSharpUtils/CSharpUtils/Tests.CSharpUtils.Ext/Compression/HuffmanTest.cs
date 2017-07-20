@@ -1,15 +1,15 @@
 ﻿using System.IO;
 using System.Text;
 using CSharpUtils.Ext.Compression;
-using NUnit.Framework;
+
 using CSharpUtils.Extensions;
+using Xunit;
 
 namespace CSharpUtilsTest
 {
-    [TestFixture]
     public class HuffmanTest
     {
-        [Test]
+        [Fact]
         public void HuffmanCompressUncompressTest()
         {
             var ThisEncoding = Encoding.UTF8;
@@ -27,7 +27,7 @@ namespace CSharpUtilsTest
             var DecompressedBytes = DecompressedStream.ReadAll();
             var DecompressedString = ThisEncoding.GetString(DecompressedBytes);
 
-            Assert.AreEqual(InputString, DecompressedString);
+            Assert.Equal(InputString, DecompressedString);
         }
     }
 }

@@ -4,20 +4,20 @@ using CSharpUtils;
 using CSharpUtils.Endian;
 using CSPspEmu.Hle.Formats.audio.At3;
 using CSPspEmu.Hle.Formats.video;
-using NUnit.Framework;
+
 using System;
 using System.Drawing;
 using System.IO;
 using CSharpUtils.Drawing;
 using CSharpUtils.Extensions;
+using Xunit;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public unsafe class PmfTest
     {
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void LoadTest()
         {
             var Pmf = new Pmf();
@@ -26,10 +26,10 @@ namespace CSPspEmu.Core.Tests
             Pmf.Load(File.OpenRead("c:/isos/psp/op.pmf"));
             //Console.WriteLine(Pmf.InfoHeader.ToStringDefault());
 
-            //Assert.AreEqual(0x800, Pmf.Header.StreamOffset);
-            //Assert.AreEqual(137216, Pmf.Header.StreamSize);
-            //Assert.AreEqual(144, Pmf.InfoHeader.Width);
-            //Assert.AreEqual(80, Pmf.InfoHeader.Height);
+            //Assert.Equal(0x800, Pmf.Header.StreamOffset);
+            //Assert.Equal(137216, Pmf.Header.StreamSize);
+            //Assert.Equal(144, Pmf.InfoHeader.Width);
+            //Assert.Equal(80, Pmf.InfoHeader.Height);
 
             var MpegPs = Pmf.GetMpegPs();
             int PmfWidth = Pmf.InfoHeader.Width;

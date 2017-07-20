@@ -1,17 +1,16 @@
 ﻿using System.Linq;
 using CSharpUtils.Containers.RedBlackTree;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
     public class RedBlackTreeWithStatsTest
     {
         RedBlackTreeWithStats<int> Stats;
 
-        [SetUp]
-        public void Initialize1()
+        public RedBlackTreeWithStatsTest()
         {
             Stats = new RedBlackTreeWithStats<int>();
             Stats.Add(5);
@@ -32,70 +31,70 @@ namespace CSharpUtilsTests
             Stats.Add(0);
         }
 
-        [Test]
+        [Fact]
         public void Test1()
         {
             Stats.DebugValidateTree();
         }
 
-        [Test]
+        [Fact]
         public void Test2()
         {
-            Assert.AreEqual(5, Stats.RealRootNode.Value);
-            Assert.AreEqual(0, Stats.RealRootNode.LeftMostNode.Value);
-            Assert.AreEqual(11, Stats.RealRootNode.RightMostNode.Value);
+            Assert.Equal(5, Stats.RealRootNode.Value);
+            Assert.Equal(0, Stats.RealRootNode.LeftMostNode.Value);
+            Assert.Equal(11, Stats.RealRootNode.RightMostNode.Value);
 
-            Assert.AreEqual(12, Stats.All.Count);
-            Assert.AreEqual(
+            Assert.Equal(12, Stats.All.Count);
+            Assert.Equal(
                 "0,1,2,3,4,5,6,7,8,9,10,11",
                 Stats.All.ToStringArray()
             );
             foreach (var Item in Stats.All)
             {
-                Assert.IsTrue(Stats.All.Contains(Item));
+                Assert.True(Stats.All.Contains(Item));
             }
-            Assert.IsFalse(Stats.All.Contains(-1));
-            Assert.IsFalse(Stats.All.Contains(12));
+            Assert.False(Stats.All.Contains(-1));
+            Assert.False(Stats.All.Contains(12));
         }
 
-        [Test]
+        [Fact]
         public void Test3()
         {
             var Slice1 = Stats.All.Slice(1, 4);
-            Assert.AreEqual(3, Slice1.Count);
-            Assert.AreEqual(
+            Assert.Equal(3, Slice1.Count);
+            Assert.Equal(
                 "1,2,3",
                 Slice1.ToStringArray()
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "0,4,5,6,7,8,9,10,11",
                 Stats.All.Where(Item => !Slice1.Contains(Item)).ToStringArray()
             );
         }
 
-        [Test]
+        [Fact]
         public void Test4()
         {
             var Slice1 = Stats.All.Slice(1, 6).Slice(2, 4);
-            Assert.AreEqual(2, Slice1.Count);
-            Assert.AreEqual(
+            Assert.Equal(2, Slice1.Count);
+            Assert.Equal(
                 "3,4",
                 Slice1.ToStringArray()
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "0,1,2,5,6,7,8,9,10,11",
                 Stats.All.Where(Item => !Slice1.Contains(Item)).ToStringArray()
             );
         }
 
-        [Test]
+        [Fact]
         public void Test5()
         {
             var Stats2 = new RedBlackTreeWithStats<int>();
-            Assert.AreEqual(0, Stats2.All.ToArray().Length);
+            Assert.Equal(0, Stats2.All.ToArray().Length);
         }
 
-        [Test]
+        [Fact]
         public void CappedCollectionTest()
         {
             var Stats2 = new RedBlackTreeWithStats<int>();
@@ -104,14 +103,14 @@ namespace CSharpUtilsTests
             Stats2.Add(1);
             Stats2.Add(2);
             Stats2.Add(3);
-            Assert.AreEqual("0,1,2,3", Stats2.All.ToStringArray());
-            Assert.AreEqual(4, Stats2.Count);
+            Assert.Equal("0,1,2,3", Stats2.All.ToStringArray());
+            Assert.Equal(4, Stats2.Count);
             Stats2.Add(4);
-            Assert.AreEqual("0,1,2,3", Stats2.All.ToStringArray());
-            Assert.AreEqual(4, Stats2.Count);
+            Assert.Equal("0,1,2,3", Stats2.All.ToStringArray());
+            Assert.Equal(4, Stats2.Count);
             Stats2.Add(-1);
-            Assert.AreEqual("-1,0,1,2", Stats2.All.ToStringArray());
-            Assert.AreEqual(4, Stats2.Count);
+            Assert.Equal("-1,0,1,2", Stats2.All.ToStringArray());
+            Assert.Equal(4, Stats2.Count);
         }
     }
 }

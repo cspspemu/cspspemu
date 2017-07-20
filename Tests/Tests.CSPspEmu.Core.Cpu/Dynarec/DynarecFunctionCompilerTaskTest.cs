@@ -1,14 +1,16 @@
-﻿using NUnit.Framework;
+﻿
+
+using Xunit;
 
 namespace CSPspEmu.Tests.Cpu.Dynarec
 {
-    [TestFixture]
+    
     public class DynarecFunctionCompilerTaskTest
     {
-        [Test]
+        [Fact(Skip = "Inconclusive")]
         public void TestMethod1()
         {
-            Assert.Inconclusive();
+            //Assert.Inconclusive();
             //var Config = new PspConfig();
             //var PspEmulatorContext = new PspEmulatorContext(Config);
             //PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
@@ -29,9 +31,9 @@ namespace CSPspEmu.Tests.Cpu.Dynarec
             //
             ////var DynarecFunction = DynarecFunctionCompilerTask.GetFunctionForAddress(PspMemory.MainSegment.Low);
             //
-            //Assert.AreEqual(0, CpuThreadState.GPR[1]);
+            //Assert.Equal(0, CpuThreadState.GPR[1]);
             //DynarecFunction.Delegate(CpuThreadState);
-            //Assert.AreEqual(1, CpuThreadState.GPR[1]);
+            //Assert.Equal(1, CpuThreadState.GPR[1]);
         }
     }
 }

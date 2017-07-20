@@ -1,15 +1,16 @@
-﻿using NUnit.Framework;
+﻿
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Generators;
+using Xunit;
 
 namespace SafeILGenerator.Tests
 {
-    [TestFixture]
+    
     public class BenchMarkTest
     {
         private static AstGenerator ast = AstGenerator.Instance;
 
-        [Test]
+        [Fact]
         public void TestBenchmark()
         {
             var GeneratorCSharp = new GeneratorCSharp();
@@ -18,7 +19,7 @@ namespace SafeILGenerator.Tests
             {
                 GeneratorCSharp.Reset().GenerateRoot(AstNode);
             }
-            Assert.AreEqual(GeneratorCSharp.ToString(), "((-((10 + 11) * 2)) ? 1 : 2)");
+            Assert.Equal(GeneratorCSharp.ToString(), "((-((10 + 11) * 2)) ? 1 : 2)");
         }
     }
 }

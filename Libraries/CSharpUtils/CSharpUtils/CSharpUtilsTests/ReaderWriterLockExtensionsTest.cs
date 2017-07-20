@@ -1,14 +1,15 @@
 ﻿using System.Threading;
 using System.Diagnostics;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class ReaderWriterLockExtensionsTest
     {
-        [Test]
+        [Fact]
         public void ReaderLockTest()
         {
             var ReaderWriterLock = new ReaderWriterLock();
@@ -38,10 +39,10 @@ namespace CSharpUtilsTests
             EndEvent.Wait();
             TestStopwatch.Stop();
 
-            Assert.IsTrue(TestStopwatch.ElapsedMilliseconds < 110);
+            Assert.True(TestStopwatch.ElapsedMilliseconds < 110);
         }
 
-        [Test]
+        [Fact]
         public void WriterLockTest()
         {
             var ReaderWriterLock = new ReaderWriterLock();
@@ -71,7 +72,7 @@ namespace CSharpUtilsTests
             EndEvent.Wait();
             TestStopwatch.Stop();
 
-            Assert.IsTrue(TestStopwatch.ElapsedMilliseconds > 110);
+            Assert.True(TestStopwatch.ElapsedMilliseconds > 110);
         }
     }
 }

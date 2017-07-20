@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿
 
 //using CSPspEmu.Core.Gpu.VertexReading;
 
@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
     /// Read_Normal();
     /// Read_Position();
     /// </summary>
-    [TestFixture]
+    
     public unsafe class VertexReaderDynarecTest
     {
 #if false
@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			new VertexType1() { X = 7f, Y = 8f, Z = -4f },
 		};
 
-		[Test]
+		[Fact]
 		public void VertexType1_Test1()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType1Info);
@@ -46,17 +46,17 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			{
 				ReadVertices(VertexData, VertexInfoPtr, 0, 1);
 			}
-			Assert.AreEqual("FVector3d(X=1,Y=2,Z=-1)", VertexInfoList[0].Position.ToString());
+			Assert.Equal("FVector3d(X=1,Y=2,Z=-1)", VertexInfoList[0].Position.ToString());
 
 			fixed (void* VertexData = VertexType1List)
 			fixed (VertexInfo* VertexInfoPtr = &VertexInfoList[0])
 			{
 				ReadVertices(VertexData, VertexInfoPtr, 1, 1);
 			}
-			Assert.AreEqual("FVector3d(X=3,Y=4,Z=-2)", VertexInfoList[0].Position.ToString());
+			Assert.Equal("FVector3d(X=3,Y=4,Z=-2)", VertexInfoList[0].Position.ToString());
 		}
 
-		[Test]
+		[Fact]
 		public void VertexType1_Test2()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType1Info);
@@ -67,9 +67,9 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 				ReadVertices(VertexData, VertexInfoPtr, 1, 3);
 			}
 
-			Assert.AreEqual("FVector3d(X=3,Y=4,Z=-2)", VertexInfoList[0].Position.ToString());
-			Assert.AreEqual("FVector3d(X=5,Y=6,Z=-3)", VertexInfoList[1].Position.ToString());
-			Assert.AreEqual("FVector3d(X=7,Y=8,Z=-4)", VertexInfoList[2].Position.ToString());
+			Assert.Equal("FVector3d(X=3,Y=4,Z=-2)", VertexInfoList[0].Position.ToString());
+			Assert.Equal("FVector3d(X=5,Y=6,Z=-3)", VertexInfoList[1].Position.ToString());
+			Assert.Equal("FVector3d(X=7,Y=8,Z=-4)", VertexInfoList[2].Position.ToString());
 		}
 
 		public struct VertexType2
@@ -93,7 +93,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			new VertexType2() { U = 32, V = 64, NX = -80, NY = -40, PX = 16000, PY = 32000, PZ = -200 },
 		};
 
-		[Test]
+		[Fact]
 		public void VertexType2_Test1()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType2Info);
@@ -104,11 +104,11 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 				ReadVertices(VertexData, VertexInfoPtr, 0, 2);
 			}
 
-			Assert.AreEqual(
+			Assert.Equal(
 				"VertexInfo(Position=(0,9765625, 0,4882813, -0,003051758), Normal=(-0,3125, -0,625, 0), UV=(0,5, 0,25, 0), COLOR=(R:0, G:0, B:0, A:0))",
 				VertexInfoList[0].ToString()
 			);
-			Assert.AreEqual(
+			Assert.Equal(
 				"VertexInfo(Position=(0,4882813, 0,9765625, -0,006103516), Normal=(-0,625, -0,3125, 0), UV=(0,25, 0,5, 0), COLOR=(R:0, G:0, B:0, A:0))",
 				VertexInfoList[1].ToString()
 			);
@@ -147,7 +147,7 @@ new Vector3(1.0f, 2.0f, 3.0f) },
 new Vector3(4.0f, 5.0f, 6.0f) },
 		};
 
-		[Test]
+		[Fact]
 		public void VertexType3_Test1()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType3Info);
@@ -158,7 +158,7 @@ new Vector3(4.0f, 5.0f, 6.0f) },
 				ReadVertices(VertexData, VertexInfoPtr, 0, 2);
 			}
 
-			Assert.AreEqual(
+			Assert.Equal(
 				"VertexInfo(Position=(1, 2, 3), Normal=(0, 0, 0), UV=(0, 0, 0), COLOR=(R:1, G:0,4666667, B:0,2, A:0,6))",
 				VertexInfoList[0].ToString()
 			);

@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+
 using CSharpUtils.Threading;
+using Xunit;
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class GreenThreadTest
     {
-        [Test]
+        [Fact]
         public void Test1Test()
         {
             var Values = new List<int>();
@@ -31,16 +32,16 @@ namespace CSharpUtilsTests
 
             Thread.Sleep(20);
             // Inits stopped.
-            Assert.AreEqual("[]", Values.ToJson());
+            Assert.Equal("[]", Values.ToJson());
             Thread1.SwitchTo();
-            Assert.AreEqual("[1]", Values.ToJson());
+            Assert.Equal("[1]", Values.ToJson());
             Thread2.SwitchTo();
-            Assert.AreEqual("[1,2]", Values.ToJson());
+            Assert.Equal("[1,2]", Values.ToJson());
             Thread.Sleep(20);
             Thread1.SwitchTo();
-            Assert.AreEqual("[1,2,3]", Values.ToJson());
+            Assert.Equal("[1,2,3]", Values.ToJson());
             Thread2.SwitchTo();
-            Assert.AreEqual("[1,2,3,4]", Values.ToJson());
+            Assert.Equal("[1,2,3,4]", Values.ToJson());
         }
     }
 }
