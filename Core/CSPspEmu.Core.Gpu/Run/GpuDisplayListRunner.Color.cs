@@ -18,10 +18,19 @@ namespace CSPspEmu.Core.Gpu.Run
         // void sceGuAmbientColor(unsigned int color); // OP_AMC + OP_AMA
         // void sceGuAmbient(unsigned int color); // OP_ALC + OP_ALA
 
+        [GpuInstructionAttribute(GpuOpCodes.DMC)]
         public void OP_DMC() => GpuState->LightingState.DiffuseModelColor.SetRGB_A1(Params24);
+
+        [GpuInstructionAttribute(GpuOpCodes.SMC)]
         public void OP_SMC() => GpuState->LightingState.SpecularModelColor.SetRGB_A1(Params24);
+
+        [GpuInstructionAttribute(GpuOpCodes.EMC)]
         public void OP_EMC() => GpuState->LightingState.EmissiveModelColor.SetRGB_A1(Params24);
+
+        [GpuInstructionAttribute(GpuOpCodes.AMC)]
         public void OP_AMC() => GpuState->LightingState.AmbientModelColor.SetRgb(Params24); // When lighting is off, this is like glColor*
+        
+        [GpuInstructionAttribute(GpuOpCodes.AMA)]
         public void OP_AMA() => GpuState->LightingState.AmbientModelColor.SetA(Params24);
 
         /**
@@ -36,9 +45,11 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuColorMaterial(int components); // OP_CMAT
         // Material Color
+        [GpuInstructionAttribute(GpuOpCodes.CMAT)]
         public void OP_CMAT() => GpuState->LightingState.MaterialColorComponents = (LightComponentsSet) BitUtils.Extract(Params24, 0, 8);
 
         // Alpha Blend Enable (GU_BLEND)
+        [GpuInstructionAttribute(GpuOpCodes.ABE)]
         public void OP_ABE() => GpuState->BlendingState.Enabled = Bool1;
 
         /**
@@ -78,6 +89,7 @@ namespace CSPspEmu.Core.Gpu.Run
         // void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int destfix);
 
         // Blend Equation and Functions
+        [GpuInstructionAttribute(GpuOpCodes.ALPHA)]
         public void OP_ALPHA()
         {
             GpuState->BlendingState.FunctionSource = (GuBlendingFactorSource) ((Params24 >> 0) & 0xF);
@@ -93,7 +105,10 @@ namespace CSPspEmu.Core.Gpu.Run
             */
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.SFIX)]
         public void OP_SFIX() => GpuState->BlendingState.FixColorSource.SetRGB_A1(Params24);
+
+        [GpuInstructionAttribute(GpuOpCodes.DFIX)]
         public void OP_DFIX() => GpuState->BlendingState.FixColorDestination.SetRGB_A1(Params24);
 
         /**
@@ -104,6 +119,7 @@ namespace CSPspEmu.Core.Gpu.Run
         // void sceGuPixelMask(unsigned int mask);
 
         // Pixel MasK Color
+        [GpuInstructionAttribute(GpuOpCodes.PMSKC)]
         public void OP_PMSKC()
         {
             GpuState->BlendingState.ColorMask.R = Param8(0);
@@ -112,10 +128,14 @@ namespace CSPspEmu.Core.Gpu.Run
             //Console.Error.WriteLine("OP_PMSKC");
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.PMSKA)]
         public void OP_PMSKA() => GpuState->BlendingState.ColorMask.A = Param8(0);
+
+        [GpuInstructionAttribute(GpuOpCodes.CTST)]
         public void OP_CTST() => GpuState->ColorTestState.Function = (ColorTestFunctionEnum) Extract(0, 2);
 
         // Color REFerence
+        [GpuInstructionAttribute(GpuOpCodes.CREF)]
         public void OP_CREF()
         {
             //Console.Error.WriteLine("OP_CREF");
@@ -127,6 +147,7 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         // Color MaSK
+        [GpuInstructionAttribute(GpuOpCodes.CMSK)]
         public void OP_CMSK()
         {
             //Console.Error.WriteLine("OP_CMSK");

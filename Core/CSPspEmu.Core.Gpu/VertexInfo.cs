@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 //using OpenTK;
 using CSharpPlatform;
-using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu.Core.Gpu
 {

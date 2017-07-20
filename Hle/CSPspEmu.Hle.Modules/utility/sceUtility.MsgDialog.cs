@@ -1,5 +1,4 @@
 ﻿using CSharpPlatform.UI;
-using System;
 
 namespace CSPspEmu.Hle.Modules.utility
 {

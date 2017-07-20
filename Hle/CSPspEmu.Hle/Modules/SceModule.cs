@@ -1,9 +1,6 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Formats;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace CSPspEmu.Hle.Modules

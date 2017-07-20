@@ -1,13 +1,7 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using CSPspEmu.Core;
+﻿using NUnit.Framework;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Iso;
-using CSPspEmu.Hle.Modules.rtc;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Formats;
 

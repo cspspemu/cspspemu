@@ -1,7 +1,5 @@
 ﻿using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
-using CSPspEmu.Hle.Modules.threadman;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.audio

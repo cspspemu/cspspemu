@@ -4,7 +4,6 @@ using System.Linq;
 using CSharpUtils;
 using CSPspEmu.Hle.Formats.Font;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {

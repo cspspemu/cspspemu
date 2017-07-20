@@ -1,12 +1,5 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 //using CSPspEmu.Core.Gpu.VertexReading;
-using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Gpu;
-using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 {

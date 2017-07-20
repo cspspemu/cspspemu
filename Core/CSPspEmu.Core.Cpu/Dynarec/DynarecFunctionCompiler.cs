@@ -1,6 +1,5 @@
 ﻿using System;
 using CSPspEmu.Core.Cpu.Emitter;
-using CSPspEmu.Core.Cpu.Assembler;
 using SafeILGenerator.Ast.Nodes;
 using System.Collections.Generic;
 

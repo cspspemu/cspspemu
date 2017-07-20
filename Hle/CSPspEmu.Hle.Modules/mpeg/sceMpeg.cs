@@ -3,7 +3,6 @@ using CSharpUtils;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Types;
 using System;
-using CSharpUtils.Streams;
 using System.IO;
 using CSPspEmu.Hle.Formats.video;
 using CSPspEmu.Core.Memory;

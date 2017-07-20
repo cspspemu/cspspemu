@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CSharpUtilsTests
+﻿namespace CSharpUtilsTests
 {
     class Config
     {

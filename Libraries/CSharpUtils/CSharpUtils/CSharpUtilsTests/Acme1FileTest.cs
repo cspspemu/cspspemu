@@ -4,7 +4,6 @@ using System.Linq;
 using CSharpUtils.Extensions;
 using NUnit.Framework;
 using CSharpUtils.Misc.Acme1;
-using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {

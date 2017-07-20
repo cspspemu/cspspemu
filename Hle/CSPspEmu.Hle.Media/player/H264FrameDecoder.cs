@@ -1,14 +1,7 @@
 ﻿using cscodec.av;
 using cscodec.h264.decoder;
-using cscodec.util;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using cscodec;
-using CSharpUtils;
 
 namespace cscodec.h264.player
 {

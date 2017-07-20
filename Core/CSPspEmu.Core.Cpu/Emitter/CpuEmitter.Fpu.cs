@@ -65,10 +65,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Move (from/to) float point registers (reinterpreted)
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Mfc1)]
-        public AstNodeStm mfc1() => _ast.AssignGpr(Rt, _ast.CallStatic((Func<float, int>) MathFloat.ReinterpretFloatAsInt, _ast.Fpr(Fs)));
+        public AstNodeStm Mfc1() => _ast.AssignGpr(Rt, _ast.CallStatic((Func<float, int>) MathFloat.ReinterpretFloatAsInt, _ast.Fpr(Fs)));
 
         [InstructionName(InstructionNames.Mtc1)]
-        public AstNodeStm mtc1() => _ast.AssignFPR_F(Fs,
+        public AstNodeStm Mtc1() => _ast.AssignFPR_F(Fs,
             _ast.CallStatic((Func<int, float>) MathFloat.ReinterpretIntAsFloat, _ast.GPR_s(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,20 +76,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Store Word from Cop1 floating point.
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Lwc1)]
-        public AstNodeStm lwc1() => _ast.AssignFPR_I(Ft, _ast.MemoryGetValue<int>(_memory, this.Address_RS_IMM()));
+        public AstNodeStm Lwc1() => _ast.AssignFPR_I(Ft, _ast.MemoryGetValue<int>(_memory, this.Address_RS_IMM()));
 
         [InstructionName(InstructionNames.Swc1)]
-        public AstNodeStm swc1() => _ast.MemorySetValue<int>(_memory, this.Address_RS_IMM(), _ast.FPR_I(Ft));
+        public AstNodeStm Swc1() => _ast.MemorySetValue<int>(_memory, this.Address_RS_IMM(), _ast.FPR_I(Ft));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // CFC1 -- move Control word from/to floating point (C1)
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Cfc1)]
-        public AstNodeStm cfc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._cfc1_impl,
+        public AstNodeStm Cfc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._cfc1_impl,
             _ast.CpuThreadStateExpr, Rd, Rt));
 
         [InstructionName(InstructionNames.Ctc1)]
-        public AstNodeStm ctc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._ctc1_impl,
+        public AstNodeStm Ctc1() => _ast.Statement(_ast.CallStatic((Action<CpuThreadState, int, int>) CpuEmitterUtils._ctc1_impl,
             _ast.CpuThreadStateExpr, Rd, Rt));
 
         /// <summary>

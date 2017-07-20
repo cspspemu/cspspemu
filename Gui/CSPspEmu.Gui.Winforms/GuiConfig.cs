@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Gui.Winforms
+﻿namespace CSPspEmu.Gui.Winforms
 {
     public class GuiConfig
     {

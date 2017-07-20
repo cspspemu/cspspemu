@@ -1,10 +1,6 @@
 ﻿using CSharpPlatform.GL.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Gui.XBR.Shader

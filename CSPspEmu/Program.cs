@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
@@ -16,15 +15,10 @@ using CSPspEmu.Hle.Vfs.Iso;
 using System.Diagnostics;
 using CSharpPlatform.GL;
 using CSharpPlatform.GL.Utils;
-using CSPspEmu.Core.Gpu;
-using System.Runtime.InteropServices;
-using CSharpPlatform.GL.Impl;
-using System.Windows;
 using System.Drawing;
 using CSharpUtils.Drawing;
 using CSharpUtils.Drawing.Extensions;
 using CSharpUtils.Extensions;
-using CSPspEmu.Gui.SMAA;
 using CSPspEmu.Gui.XBR.Shader;
 
 namespace CSPspEmu

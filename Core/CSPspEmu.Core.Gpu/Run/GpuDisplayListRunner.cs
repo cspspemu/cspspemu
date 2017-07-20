@@ -1,7 +1,6 @@
 ﻿using System;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using System.Runtime.CompilerServices;
 using System.Runtime;
 
 namespace CSPspEmu.Core.Gpu.Run
@@ -61,6 +60,7 @@ namespace CSPspEmu.Core.Gpu.Run
             }
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.UNKNOWN)]
         public void OP_UNKNOWN() => Console.WriteLine("Unhandled GpuOpCode: {0} : {1:X}", OpCode, Params24);
     }
 }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using CSPspEmu.Hle.Modules._unknownPrx;
-using CSPspEmu.Core;
 using System.IO;
 
 namespace CSPspEmu.Hle.Modules.Tests

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using CSharpUtils;
-using CSharpUtils.Arrays;
 using CSharpUtils.Endian;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Formats.audio;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules.audio;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu;

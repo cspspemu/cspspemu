@@ -69,7 +69,7 @@ namespace CSPspEmu.Core.Cpu.Switch
                 if (instructionName != null)
                 {
                     customNamesToMethodInfo[instructionName.Name] = methodInfo;
-                    Console.WriteLine($"{instructionName.Name} -> {methodInfo}");
+                    //Console.WriteLine($"{instructionName.Name} -> {methodInfo}");
                     if (NormalizeName(instructionName.Name) != NormalizeName(methodInfo.Name))
                     {
                         Console.WriteLine(

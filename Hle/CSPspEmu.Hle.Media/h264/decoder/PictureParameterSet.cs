@@ -1,5 +1,4 @@
 using cscodec.util;
-using System;
 
 namespace cscodec.h264.decoder
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using CSharpUtils.Ext.Compression.Lz;
 
 namespace Tests.CSharpUtils.Ext.Compression

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using CSharpUtils;
-using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.utility
 {

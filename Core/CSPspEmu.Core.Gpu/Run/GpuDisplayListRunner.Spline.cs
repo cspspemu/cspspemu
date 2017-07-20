@@ -2,6 +2,7 @@
 {
     public sealed unsafe partial class GpuDisplayListRunner
     {
+        [GpuInstructionAttribute(GpuOpCodes.PSUB)]
         public void OP_PSUB()
         {
             GpuState->PatchState.DivS = Param8(0);
@@ -10,6 +11,7 @@
 
         [GpuOpCodesNotImplemented]
         // ReSharper disable once UnusedMember.Global
+        [GpuInstructionAttribute(GpuOpCodes.PPRIM)]
         public void OP_PPRIM()
         {
             //gpu.state.patch.type = command.extract!(PatchPrimitiveType, 0);
@@ -17,6 +19,7 @@
 
         [GpuOpCodesNotImplemented]
         // ReSharper disable once UnusedMember.Global
+        [GpuInstructionAttribute(GpuOpCodes.SPLINE)]
         public void OP_SPLINE()
         {
             /*
@@ -29,6 +32,7 @@
         }
 
         // ReSharper disable once UnusedMember.Global
+        [GpuInstructionAttribute(GpuOpCodes.PFACE)]
         public void OP_PFACE() => GpuState->PatchCullingState.FaceFlag = (Params24 != 0);
     }
 }

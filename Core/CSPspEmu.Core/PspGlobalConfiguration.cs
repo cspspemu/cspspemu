@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using CSharpUtils.Extensions;
-
-namespace CSPspEmu.Core
+﻿namespace CSPspEmu.Core
 {
     public static class PspGlobalConfiguration
     {

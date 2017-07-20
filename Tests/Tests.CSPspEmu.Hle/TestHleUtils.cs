@@ -2,13 +2,7 @@
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Tests;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Hle.Modules.interruptman;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Audio.Impl.Null;
 using CSPspEmu.Core.Gpu.Impl.Null;
 

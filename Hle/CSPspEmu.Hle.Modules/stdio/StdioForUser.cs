@@ -2,7 +2,6 @@
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.stdio
 {

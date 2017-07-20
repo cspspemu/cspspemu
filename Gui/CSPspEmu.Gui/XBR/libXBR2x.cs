@@ -23,7 +23,7 @@
 
 
 #if !NET35
-using System.Diagnostics.Contracts;
+
 
 #endif
 

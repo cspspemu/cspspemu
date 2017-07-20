@@ -1,7 +1,6 @@
 ﻿using System;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.modulemgr;
-using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu;
 

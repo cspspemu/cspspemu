@@ -1,8 +1,6 @@
 ﻿using System;
-using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Threading.EventFlags;
 using CSharpUtils;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

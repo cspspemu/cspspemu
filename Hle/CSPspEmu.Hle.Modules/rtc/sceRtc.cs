@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using CSPspEmu.Core;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
 using CSharpUtils;

@@ -1,9 +1,5 @@
 ﻿using System;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Hle.Managers;
-using CSharpUtils;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

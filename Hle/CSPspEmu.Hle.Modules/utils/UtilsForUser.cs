@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Core;
 using System.Security.Cryptography;
 using CSharpUtils;
 using CSharpUtils.Extensions;

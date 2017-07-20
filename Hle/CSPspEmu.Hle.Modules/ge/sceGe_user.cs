@@ -1,7 +1,6 @@
 ﻿using System;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Hle.Modules.sysmem;
@@ -10,7 +9,6 @@ using CSharpUtils;
 using System.Collections.Generic;
 using CSPspEmu.Hle.Managers;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace CSPspEmu.Hle.Modules.ge
 {

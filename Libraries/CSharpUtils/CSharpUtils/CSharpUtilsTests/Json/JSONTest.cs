@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using CSharpUtils.Json;
 using NUnit.Framework;
-using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {

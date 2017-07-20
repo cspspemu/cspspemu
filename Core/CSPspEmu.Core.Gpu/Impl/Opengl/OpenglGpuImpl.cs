@@ -8,10 +8,7 @@
 #endif
 
 using System;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.ExceptionServices;
-using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
 //using Cloo;
@@ -19,14 +16,8 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Gpu.Formats;
 using CSPspEmu.Core.Types;
 using CSharpPlatform;
-using System.Collections.Generic;
-using CSPspEmu.Core.Cpu;
-using System.Threading;
 using CSharpPlatform.GL;
 using CSharpPlatform.GL.Utils;
-using System.Runtime.InteropServices;
-using CSharpPlatform.GL.Impl;
-using System.IO;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Utils;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;

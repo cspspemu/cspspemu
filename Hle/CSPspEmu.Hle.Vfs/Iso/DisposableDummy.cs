@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Hle.Vfs.Iso
+﻿namespace CSPspEmu.Hle.Vfs.Iso
 {
     /*
     public class DisposableDummy<TType> : IDisposable

@@ -389,9 +389,7 @@ namespace CSharpUtils
 
             while (size > 0)
             {
-                *destination = *source;
-                destination++;
-                source++;
+                *destination++ = *source++;
                 size--;
             }
         }

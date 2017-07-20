@@ -1,10 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Gpu;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests.Gpu
 {

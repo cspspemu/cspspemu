@@ -1,5 +1,4 @@
 ﻿using System;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Vfs.MemoryStick

@@ -1,8 +1,4 @@
-﻿using System;
-using SafeILGenerator.Ast;
-using SafeILGenerator.Ast.Nodes;
-using System.Runtime.CompilerServices;
-using System.IO;
+﻿using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Emitter

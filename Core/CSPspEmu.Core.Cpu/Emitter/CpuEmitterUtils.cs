@@ -2,7 +2,6 @@
 using CSPspEmu.Core.Cpu.VFpu;
 using System;
 using System.Runtime;
-using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

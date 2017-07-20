@@ -1,7 +1,6 @@
 ﻿using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr

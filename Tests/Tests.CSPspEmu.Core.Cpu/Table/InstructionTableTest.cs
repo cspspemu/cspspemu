@@ -1,7 +1,5 @@
 ﻿using CSPspEmu.Core.Cpu.Table;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Tests
 {

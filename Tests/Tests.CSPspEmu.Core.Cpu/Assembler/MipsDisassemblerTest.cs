@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.IO;
-using CSharpUtils.Streams;
-using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Cpu.Assembler;
+﻿using CSPspEmu.Core.Cpu.Assembler;
 using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests.Cpu.Assembler

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
@@ -16,16 +15,12 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Resources;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Types;
 using CSPspEmu.Hle.Loader;
 using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Hle;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Gui.Winforms.Winforms;
 using System.Threading.Tasks;
-using CSharpPlatform.GL.Impl;
-using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Components.Controller;
 

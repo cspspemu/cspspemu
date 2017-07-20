@@ -3,7 +3,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils.Streams;
-using CSPspEmu.Core.Audio;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Types;

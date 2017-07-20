@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;

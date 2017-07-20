@@ -1,5 +1,4 @@
-﻿using CSPspEmu.Core;
-using CSPspEmu.Hle.Threading.Semaphores;
+﻿using CSPspEmu.Hle.Threading.Semaphores;
 
 namespace CSPspEmu.Hle.Managers
 {

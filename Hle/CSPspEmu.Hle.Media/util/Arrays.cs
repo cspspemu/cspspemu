@@ -1,5 +1,3 @@
-using System;
-
 namespace cscodec.util
 {
 	public class Arrays

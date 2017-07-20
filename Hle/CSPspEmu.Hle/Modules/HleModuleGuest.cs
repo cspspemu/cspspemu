@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Loader;
-using CSPspEmu.Core.Memory;
-using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 using CSPspEmu.Utils;
 
 namespace CSPspEmu.Hle

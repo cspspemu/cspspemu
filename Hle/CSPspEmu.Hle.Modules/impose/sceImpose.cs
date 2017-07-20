@@ -1,5 +1,4 @@
-﻿using CSPspEmu.Core;
-using CSPspEmu.Core.Types;
+﻿using CSPspEmu.Core.Types;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.impose

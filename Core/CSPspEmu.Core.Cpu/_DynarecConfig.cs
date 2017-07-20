@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSPspEmu.Core.Cpu
+﻿namespace CSPspEmu.Core.Cpu
 {
     public class DynarecConfig
     {

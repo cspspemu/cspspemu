@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Interop;
-using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 
 #pragma warning disable 649

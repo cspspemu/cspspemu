@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.threadman;
-using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.mediaman

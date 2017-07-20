@@ -1,5 +1,4 @@
-﻿using System;
-using CSharpUtils;
+﻿using CSharpUtils;
 using System.IO;
 using System.Linq;
 using CSharpUtils.Extensions;

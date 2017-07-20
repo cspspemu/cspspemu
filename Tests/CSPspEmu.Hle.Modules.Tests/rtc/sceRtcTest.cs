@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
-using CSPspEmu.Core;
 using CSPspEmu.Hle.Modules.rtc;
 using CSPspEmu.Hle.Vfs;
 using CSharpUtils;
 using CSPspEmu.Core.Components.Rtc;
-using NUnit.Framework;
 
 namespace CSPspEmu.Hle.Modules.Tests.rtc
 {

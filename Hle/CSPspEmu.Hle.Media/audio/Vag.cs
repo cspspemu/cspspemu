@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using CSharpUtils;
-using CSPspEmu.Core.Audio;
-using CSPspEmu.Core;
-using System.Runtime.CompilerServices;
 using CSharpUtils.Endian;
 using CSPspEmu.Core.Types;
 

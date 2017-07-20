@@ -1,7 +1,6 @@
 ﻿using System;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using System.Runtime.ExceptionServices;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl

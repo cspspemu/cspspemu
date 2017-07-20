@@ -1,9 +1,5 @@
 ﻿using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Tests.CSPspEmu.Core.Cpu.Cpu
 {

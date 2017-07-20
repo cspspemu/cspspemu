@@ -1,5 +1,4 @@
-﻿using System;
-using CSharpUtils;
+﻿using CSharpUtils;
 using NUnit.Framework;
 
 namespace CSharpUtilsTests

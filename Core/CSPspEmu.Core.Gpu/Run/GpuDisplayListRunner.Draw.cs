@@ -3,7 +3,6 @@
 using CSharpPlatform;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using System;
 using CSPspEmu.Core.Gpu.VertexReading;
 
 namespace CSPspEmu.Core.Gpu.Run
@@ -43,6 +42,7 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuClear(int flags);
 
+        [GpuInstructionAttribute(GpuOpCodes.CLEAR)]
         public void OP_CLEAR()
         {
             // Set flags and Start the clearing mode.
@@ -128,15 +128,22 @@ namespace CSPspEmu.Core.Gpu.Run
         //void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const void* vertices);
 
         // Vertex Type
+        [GpuInstructionAttribute(GpuOpCodes.VTYPE)]
         public void OP_VTYPE() => GpuState->VertexState.Type.Value = Params24;
 
+        [GpuInstructionAttribute(GpuOpCodes.RNORM)]
         public void OP_RNORM() => GpuState->VertexState.Type.ReversedNormal = Bool1;
+
+        [GpuInstructionAttribute(GpuOpCodes.VADDR)]
         public void OP_VADDR() => GpuState->VertexAddress = Params24;
+
+        [GpuInstructionAttribute(GpuOpCodes.IADDR)]
         public void OP_IADDR() => GpuState->IndexAddress = Params24;
 
         /// <summary>
         /// Bezier Patch Kick
         /// </summary>
+        [GpuInstructionAttribute(GpuOpCodes.BEZIER)]
         public void OP_BEZIER()
         {
             var uCount = Param8(0);
@@ -313,6 +320,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// Primitive Kick - draw PRIMitive
         /// </summary>
+        [GpuInstructionAttribute(GpuOpCodes.PRIM)]
         public void OP_PRIM()
         {
             var primitiveType = (GuPrimitiveType) Extract(16, 3);

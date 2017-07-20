@@ -1,12 +1,5 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Cpu.Dynarec;
-using CSPspEmu.Core.Cpu.Assembler;
+﻿using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Memory;
 using Tests.CSPspEmu.Core.Cpu.Cpu;
 using NUnit.Framework;
 

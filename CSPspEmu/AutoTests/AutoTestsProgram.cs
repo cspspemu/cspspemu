@@ -8,10 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using CSharpUtils;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
-using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Runner;
@@ -20,11 +17,9 @@ using System.Diagnostics;
 using System.Drawing;
 using CSharpUtils.Drawing;
 using CSharpUtils.Extensions;
-using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu.Impl.Null;
-using CSPspEmu.Hle.Modules;
 
 namespace CSPspEmu.AutoTests
 {

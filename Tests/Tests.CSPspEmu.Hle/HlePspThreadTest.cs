@@ -1,14 +1,8 @@
-﻿using CSPspEmu.Hle;
-using NUnit.Framework;
-using System;
+﻿using NUnit.Framework;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Audio;
-using System.Reflection;
-using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Tests
 {

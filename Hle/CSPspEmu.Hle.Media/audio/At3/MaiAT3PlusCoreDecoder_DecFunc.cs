@@ -1,11 +1,4 @@
-﻿using CSharpUtils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSPspEmu.Hle.Formats.audio.At3
+﻿namespace CSPspEmu.Hle.Formats.audio.At3
 {
 	public sealed unsafe partial class MaiAT3PlusCoreDecoder
 	{

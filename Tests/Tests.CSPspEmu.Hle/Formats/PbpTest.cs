@@ -1,6 +1,5 @@
 ﻿using CSPspEmu.Hle.Formats;
 using NUnit.Framework;
-using System;
 using System.IO;
 
 namespace CSPspEmu.Core.Tests

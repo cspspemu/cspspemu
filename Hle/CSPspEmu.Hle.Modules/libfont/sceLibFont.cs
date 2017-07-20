@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Formats.Font;
-using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {

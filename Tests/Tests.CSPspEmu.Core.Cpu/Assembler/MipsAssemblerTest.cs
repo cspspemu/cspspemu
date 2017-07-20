@@ -1,10 +1,6 @@
 ﻿using CSPspEmu.Core.Cpu.Assembler;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using CSharpUtils.Streams;
-using CSharpUtils;
 using CSharpUtils.Extensions;
 using NUnit.Framework;
 

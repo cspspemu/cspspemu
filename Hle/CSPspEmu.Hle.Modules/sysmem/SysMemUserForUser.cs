@@ -4,7 +4,6 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.sysmem

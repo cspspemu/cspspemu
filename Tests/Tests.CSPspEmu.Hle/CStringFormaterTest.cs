@@ -1,6 +1,4 @@
-﻿using System;
-using CSPspEmu.Hle;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Tests.Hle

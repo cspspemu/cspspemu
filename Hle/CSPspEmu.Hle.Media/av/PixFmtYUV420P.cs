@@ -1,5 +1,3 @@
-using cscodec.av;
-
 namespace cscodec.av
 {
 	public class PixFmtYUV420P : AVPixFmtDescriptor

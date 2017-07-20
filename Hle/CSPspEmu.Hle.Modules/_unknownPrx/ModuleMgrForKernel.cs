@@ -1,7 +1,6 @@
 ﻿using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.modulemgr;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {

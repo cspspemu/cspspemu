@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Types.Controller;
-
-namespace CSPspEmu.Core.Types
+﻿namespace CSPspEmu.Core.Types.Controller
 {
     public struct SceCtrlData
     {
@@ -41,8 +35,8 @@ namespace CSPspEmu.Core.Types
 
         public SceCtrlData Init()
         {
-            this.X = 0;
-            this.Y = 0;
+            X = 0;
+            Y = 0;
             return this;
         }
 
@@ -51,8 +45,8 @@ namespace CSPspEmu.Core.Types
         /// </summary>
         public float X
         {
-            get { return (((float) Lx / 255.0f) - 0.5f) * 2.0f; }
-            set { Lx = (byte) (((value / 2.0f) + 0.5f) * 255.0f); }
+            get => ((Lx / 255.0f) - 0.5f) * 2.0f;
+            set => Lx = (byte) (((value / 2.0f) + 0.5f) * 255.0f);
         }
 
         /// <summary>
@@ -60,19 +54,19 @@ namespace CSPspEmu.Core.Types
         /// </summary>
         public float Y
         {
-            get { return (((float) Ly / 255.0f) - 0.5f) * 2.0f; }
-            set { Ly = (byte) (((value / 2.0f) + 0.5f) * 255.0f); }
+            get => ((Ly / 255.0f) - 0.5f) * 2.0f;
+            set => Ly = (byte) (((value / 2.0f) + 0.5f) * 255.0f);
         }
 
-        public void UpdateButtons(PspCtrlButtons Buttons, bool Pressed)
+        public void UpdateButtons(PspCtrlButtons buttons, bool pressed)
         {
-            if (Pressed)
+            if (pressed)
             {
-                this.Buttons |= Buttons;
+                Buttons |= buttons;
             }
             else
             {
-                this.Buttons &= ~Buttons;
+                Buttons &= ~buttons;
             }
         }
     }

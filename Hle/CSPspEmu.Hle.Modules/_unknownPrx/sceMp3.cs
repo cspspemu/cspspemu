@@ -1,6 +1,5 @@
 ﻿using System;
 using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Hle.Managers;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 

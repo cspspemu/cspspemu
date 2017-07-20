@@ -1,8 +1,6 @@
 ﻿using CSPspEmu.Hle;
 using NUnit.Framework;
-using System;
 using CSharpUtils;
-using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests
 {

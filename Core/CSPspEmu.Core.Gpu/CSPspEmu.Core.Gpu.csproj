@@ -68,6 +68,7 @@
     <Compile Include="Formats\WavefrontObjWriter.cs" />
     <Compile Include="GpuConfig.cs" />
     <Compile Include="GpuImpl.cs" />
+    <Compile Include="GpuInstructionAttribute.cs" />
     <Compile Include="GpuOpCodes.cs" />
     <Compile Include="GpuDisplayList.cs" />
     <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />

@@ -2,7 +2,6 @@
 using SafeILGenerator.Ast.Generators;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 

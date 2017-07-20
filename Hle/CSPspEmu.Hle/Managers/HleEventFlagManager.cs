@@ -1,5 +1,4 @@
 ﻿using CSPspEmu.Hle.Threading.EventFlags;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
 {

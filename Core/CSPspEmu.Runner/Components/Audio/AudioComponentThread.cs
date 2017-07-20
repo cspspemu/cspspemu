@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 using System;
 

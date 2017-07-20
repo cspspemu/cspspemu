@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace cscodec.av
+﻿namespace cscodec.av
 {
 	public class Constants
 	{

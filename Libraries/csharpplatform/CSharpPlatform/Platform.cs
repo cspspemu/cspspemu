@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using CSharpUtils;
-using System.Security;
 
 namespace CSPspEmu.Core
 {

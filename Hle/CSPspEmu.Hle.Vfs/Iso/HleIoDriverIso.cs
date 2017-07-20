@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats;

@@ -1,5 +1,4 @@
 ﻿using System;
-using CSharpPlatform.GL.Impl;
 using CSharpPlatform.GL.Impl.Windows;
 
 namespace CSharpPlatform.GL

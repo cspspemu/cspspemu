@@ -1,5 +1,4 @@
 ﻿using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 using CSharpUtils;
 

@@ -35,11 +35,22 @@
 
         // (GU_SCISSOR_TEST) // OP_SCISSOR1 + OP_SCISSOR2
 
+        [GpuInstructionAttribute(GpuOpCodes.BCE)]
         public void OP_BCE() => GpuState->BackfaceCullingState.Enabled = Bool1;
+
+        [GpuInstructionAttribute(GpuOpCodes.DTE)]
         public void OP_DTE() => GpuState->DitheringState.Enabled = Bool1;
+
+        [GpuInstructionAttribute(GpuOpCodes.CPE)]
         public void OP_CPE() => GpuState->ClipPlaneState.Enabled = Bool1;
+
+        [GpuInstructionAttribute(GpuOpCodes.AAE)]
         public void OP_AAE() => GpuState->LineSmoothState.Enabled = Bool1;
+
+        [GpuInstructionAttribute(GpuOpCodes.PCE)]
         public void OP_PCE() => GpuState->PatchCullingState.Enabled = Bool1;
+
+        [GpuInstructionAttribute(GpuOpCodes.CTE)]
         public void OP_CTE() => GpuState->ColorTestState.Enabled = Bool1;
     }
 }

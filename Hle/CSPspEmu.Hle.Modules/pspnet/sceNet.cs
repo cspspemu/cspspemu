@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
-using System.Net.NetworkInformation;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {

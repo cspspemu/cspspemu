@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using CSPspEmu.Core.Memory;
-using System;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {

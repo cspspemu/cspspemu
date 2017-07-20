@@ -1,7 +1,5 @@
 ﻿using CSPspEmu.Hle.Managers;
 using NUnit.Framework;
-using System;
-using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Local;
 
 namespace CSPspEmu.Core.Tests

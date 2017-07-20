@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using CSPspEmu.Hle.Vfs.Iso;
-using System;
 
 namespace CSPspEmu.Hle.Formats
 {

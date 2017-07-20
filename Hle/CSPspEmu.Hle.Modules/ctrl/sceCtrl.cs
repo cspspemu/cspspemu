@@ -1,5 +1,4 @@
-﻿using CSPspEmu.Core;
-using CSPspEmu.Core.Components.Controller;
+﻿using CSPspEmu.Core.Components.Controller;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Types.Controller;
 using CSPspEmu.Hle.Attributes;

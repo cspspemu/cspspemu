@@ -1,5 +1,4 @@
 ﻿using SafeILGenerator.Ast.Generators;
-using System;
 
 namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 {

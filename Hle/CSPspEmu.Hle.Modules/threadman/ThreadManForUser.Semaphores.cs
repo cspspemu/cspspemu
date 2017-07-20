@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CSPspEmu.Hle.Threading.Semaphores;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

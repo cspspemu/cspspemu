@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Text;
-using CSharpUtils;
 using System.Collections.Generic;
 using CSharpUtils.Ext.Compression.Lz;
 using CSharpUtils.Extensions;

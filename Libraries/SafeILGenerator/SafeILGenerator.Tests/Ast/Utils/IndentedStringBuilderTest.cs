@@ -1,5 +1,4 @@
-﻿using System;
-using SafeILGenerator.Ast.Utils;
+﻿using SafeILGenerator.Ast.Utils;
 using NUnit.Framework;
 
 namespace SafeILGenerator.Tests.Ast.Utils

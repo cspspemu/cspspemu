@@ -1,10 +1,6 @@
 ﻿using CSPspEmu.Hle.Formats.audio.At3;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cscodec.h264.player
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using NUnit.Framework;
 using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 

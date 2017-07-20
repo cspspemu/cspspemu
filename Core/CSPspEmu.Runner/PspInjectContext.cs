@@ -1,7 +1,5 @@
 ﻿using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
-using CSPspEmu.Core.Audio.Impl.Openal;
-using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
@@ -11,7 +9,6 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules;
 using System;
 using System.Collections.Generic;
-using CSPspEmu.Core.Audio.Impl.Alsa;
 using CSPspEmu.Core.Audio.Impl.Null;
 using CSPspEmu.Core.Gpu.Impl.Null;
 

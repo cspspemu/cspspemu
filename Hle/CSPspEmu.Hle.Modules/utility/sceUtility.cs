@@ -4,7 +4,6 @@ using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Cpu;
 

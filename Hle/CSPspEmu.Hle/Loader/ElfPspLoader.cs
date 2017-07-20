@@ -441,16 +441,9 @@ namespace CSPspEmu.Hle.Loader
 
             foreach (var moduleExport in moduleExports)
             {
-                var moduleExportName = "";
-
-                try
-                {
-                    moduleExportName = ElfLoader.MemoryStream.ReadStringzAt(moduleExport.Name);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+                var moduleExportName = (moduleExport.Name > 0)
+                    ? ElfLoader.MemoryStream.ReadStringzAt(moduleExport.Name)
+                    : "";
 
                 Console.WriteLine("  * Export: '{0}'", moduleExportName);
 

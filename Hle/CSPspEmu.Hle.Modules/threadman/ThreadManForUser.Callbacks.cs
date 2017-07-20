@@ -1,6 +1,5 @@
 ﻿using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

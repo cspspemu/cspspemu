@@ -82,14 +82,17 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuSendList(int mode, const void* list, PspGeContext* context);
 
+        [GpuInstructionAttribute(GpuOpCodes.JUMP)]
         public void OP_JUMP() => GpuDisplayList.JumpRelativeOffset((uint) (Params24 & ~3));
 
+        [GpuInstructionAttribute(GpuOpCodes.END)]
         public void OP_END()
         {
             GpuDisplayList.Done = true;
             GpuDisplayList.GpuProcessor.GpuImpl.End(GpuState);
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.FINISH)]
         public void OP_FINISH()
         {
             GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
@@ -97,9 +100,11 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         //[GpuOpCodesNotImplemented]
+        [GpuInstructionAttribute(GpuOpCodes.CALL)]
         public void OP_CALL() => GpuDisplayList.CallRelativeOffset((uint) (Params24 & ~3));
 
         //[GpuOpCodesNotImplemented]
+        [GpuInstructionAttribute(GpuOpCodes.RET)]
         public void OP_RET() => GpuDisplayList.Ret();
 
         /**
@@ -114,6 +119,7 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuSignal(int signal, int behavior);
         [GpuOpCodesNotImplemented]
+        [GpuInstructionAttribute(GpuOpCodes.SIGNAL)]
         public void OP_SIGNAL()
         {
             var signal = Extract(0, 16);

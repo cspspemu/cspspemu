@@ -1,5 +1,4 @@
 ﻿using System;
-using SafeILGenerator;
 using SafeILGenerator.Ast.Nodes;
 using CSharpUtils;
 using SafeILGenerator.Ast;
@@ -31,7 +30,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vcmp)]
-        public AstNodeStm vcmp()
+        public AstNodeStm Vcmp()
         {
             var vectorSize = _instruction.OneTwo;
             var cond = _instruction.Imm4;
@@ -58,8 +57,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     AstNodeExpr expr;
                     //bool UsedForAggregate;
 
-                    var left = VEC_VS[index];
-                    var right = VEC_VT[index];
+                    var left = VecVs[index];
+                    var right = VecVt[index];
                     switch (cond2)
                     {
                         case ConditionEnum.VcFl:
@@ -134,24 +133,24 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vslt)]
-        public AstNodeStm vslt() => VEC_VD.SetVector(
-            index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vslt_impl, VEC_VS[index],
-                VEC_VT[index]), _pc);
+        public AstNodeStm Vslt() => VecVd.SetVector(
+            index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vslt_impl, VecVs[index],
+                VecVt[index]), _pc);
 
         [InstructionName(InstructionNames.Vsge)]
-        public AstNodeStm vsge() => VEC_VD.SetVector(
-            index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vsge_impl, VEC_VS[index],
-                VEC_VT[index]), _pc);
+        public AstNodeStm Vsge() => VecVd.SetVector(
+            index => _ast.CallStatic((Func<float, float, float>) CpuEmitterUtils._vsge_impl, VecVs[index],
+                VecVt[index]), _pc);
 
         [InstructionName(InstructionNames.Vscmp)]
-        public AstNodeStm vscmp() => VEC_VD.SetVector(
-            index => _ast.CallStatic((Func<float, float, float>) MathFloat.Sign2, VEC_VS[index], VEC_VT[index]), _pc);
+        public AstNodeStm Vscmp() => VecVd.SetVector(
+            index => _ast.CallStatic((Func<float, float, float>) MathFloat.Sign2, VecVs[index], VecVt[index]), _pc);
 
         public AstNodeStm _vcmovtf(bool True)
         {
             var register = (int) _instruction.Imm3;
 
-            Func<int, AstNodeExpr> _VCC = index =>
+            Func<int, AstNodeExpr> vcc = index =>
             {
                 AstNodeExpr ret = _ast.Vcc(index);
                 if (!True) ret = _ast.Unary("!", ret);
@@ -162,19 +161,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
             {
                 // TODO: CHECK THIS!
                 return _ast.IfElse(
-                    _VCC(register),
-                    VEC_VD.SetVector(index => VEC_VS[index], _pc),
+                    vcc(register),
+                    VecVd.SetVector(index => VecVs[index], _pc),
                     _ast.Statements(
                         _ast.Assign(_ast.PrefixSourceEnabled(), false),
                         //ast.If(ast.PrefixDestinationEnabled(), VEC_VD.SetVector(Index => VEC_VD[Index], PC))
-                        _ast.If(_ast.PrefixDestinationEnabled(), VEC_VD.SetVector(index => VEC_VD[index], _pc))
+                        _ast.If(_ast.PrefixDestinationEnabled(), VecVd.SetVector(index => VecVd[index], _pc))
                     )
                 );
             }
 
             if (register == 6)
             {
-                return VEC_VD.SetVector(index => _ast.Ternary(_VCC(index), VEC_VS[index], VEC_VD[index]), _pc);
+                return VecVd.SetVector(index => _ast.Ternary(vcc(index), VecVs[index], VecVd[index]), _pc);
             }
 
             // Register == 7
@@ -184,10 +183,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vcmovf)]
-        public AstNodeStm vcmovf() => _vcmovtf(false);
+        public AstNodeStm Vcmovf() => _vcmovtf(false);
         
         [InstructionName(InstructionNames.Vcmovt)]
-        public AstNodeStm vcmovt() => _vcmovtf(true);
+        public AstNodeStm Vcmovt() => _vcmovtf(true);
 
         private AstNodeStm _bvtf(bool True)
         {
@@ -198,15 +197,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Bvf)]
-        public AstNodeStm bvf() => _bvtf(false);
+        public AstNodeStm Bvf() => _bvtf(false);
         
         [InstructionName(InstructionNames.Bvfl)]
-        public AstNodeStm bvfl() => bvf();
+        public AstNodeStm Bvfl() => Bvf();
         
         [InstructionName(InstructionNames.Bvt)]
-        public AstNodeStm bvt() => _bvtf(true);
+        public AstNodeStm Bvt() => _bvtf(true);
         
         [InstructionName(InstructionNames.Bvtl)]
-        public AstNodeStm bvtl() => bvt();
+        public AstNodeStm Bvtl() => Bvt();
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 using CSharpUtils;
 using CSPspEmu.Core.Components.Display;

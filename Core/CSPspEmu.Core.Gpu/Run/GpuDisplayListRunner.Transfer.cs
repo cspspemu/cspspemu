@@ -4,8 +4,10 @@ namespace CSPspEmu.Core.Gpu.Run
 {
     public sealed unsafe partial class GpuDisplayListRunner
     {
+        [GpuInstructionAttribute(GpuOpCodes.TRXSBP)]
         public void OP_TRXSBP() => GpuState->TextureTransferState.SourceAddress.Low24 = Params24;
 
+        [GpuInstructionAttribute(GpuOpCodes.TRXSBW)]
         public void OP_TRXSBW()
         {
             GpuState->TextureTransferState.SourceAddress.High8 = Params24 << 8;
@@ -14,14 +16,17 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->TextureTransferState.SourceY = 0;
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.TRXSPOS)]
         public void OP_TRXSPOS()
         {
             GpuState->TextureTransferState.SourceX = (ushort) Extract(10 * 0, 10);
             GpuState->TextureTransferState.SourceY = (ushort) Extract(10 * 1, 10);
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.TRXDBP)]
         public void OP_TRXDBP() => GpuState->TextureTransferState.DestinationAddress.Low24 = Params24;
 
+        [GpuInstructionAttribute(GpuOpCodes.TRXDBW)]
         public void OP_TRXDBW()
         {
             ref var textureTransferStateStruct = ref GpuState->TextureTransferState;
@@ -31,18 +36,21 @@ namespace CSPspEmu.Core.Gpu.Run
             textureTransferStateStruct.DestinationY = 0;
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.TRXDPOS)]
         public void OP_TRXDPOS()
         {
             GpuState->TextureTransferState.DestinationX = (ushort) Extract(10 * 0, 10);
             GpuState->TextureTransferState.DestinationY = (ushort) Extract(10 * 1, 10);
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.TRXSIZE)]
         public void OP_TRXSIZE()
         {
             GpuState->TextureTransferState.Width = (ushort) (Extract(10 * 0, 10) + 1);
             GpuState->TextureTransferState.Height = (ushort) (Extract(10 * 1, 10) + 1);
         }
 
+        [GpuInstructionAttribute(GpuOpCodes.TRXKICK)]
         public void OP_TRXKICK()
         {
             GpuState->TextureTransferState.TexelSize = (TextureTransferStateStruct.TexelSizeEnum) Extract(0, 1);

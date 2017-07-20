@@ -1,6 +1,5 @@
 ﻿using System;
 using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Core;
 using Kirk = CSPspEmu.Core.Components.Crypto.Kirk;
 
 namespace CSPspEmu.Hle.Modules.kirk

@@ -5,12 +5,8 @@
 using System;
 using System.Globalization;
 using System.Threading;
-using CSharpUtils;
-using System.Diagnostics;
-using System.Runtime.ExceptionServices;
 using CSharpPlatform.GL;
 using System.Runtime.InteropServices;
-using CSharpPlatform.GL.Impl;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {

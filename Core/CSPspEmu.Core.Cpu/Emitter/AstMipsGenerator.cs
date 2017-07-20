@@ -117,7 +117,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 GprCache[n] = Ast.FieldAccess(Ast.CpuThreadStateExpr, CpuThreadStateType.GetField(CpuThreadState.GprNames[n]));
         }
 
-        private AstNodeExprLValue RefGPRIndex(int index)
+        private AstNodeExprLValue RefGprIndex(int index)
         {
             return GprCache[index];
         }
@@ -131,7 +131,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             Ast.Indirect(Ast.Cast(typeof(int*), Ast.GetAddress(Reg(CpuThreadState.FprNames[index])), Explicit: false));
 
         public AstNodeExprLValue GPR_F(int index) =>
-            Ast.Indirect(Ast.Cast(typeof(float*), Ast.GetAddress(RefGPRIndex(index)), Explicit: false));
+            Ast.Indirect(Ast.Cast(typeof(float*), Ast.GetAddress(RefGprIndex(index)), Explicit: false));
 
         public AstNodeStm AssignFPR_F(int index, AstNodeExpr expr) => Ast.Assign(Ast.Fpr(index), expr);
 
@@ -196,7 +196,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeExprLValue C0R(int index) => Reg(CpuThreadState.C0RNames[index]);
 
-        public AstNodeExprLValue Gpr(int index) => index == 0 ? throw new Exception("Can't get reference to GPR0") : RefGPRIndex(index);
+        public AstNodeExprLValue Gpr(int index) => index == 0 ? throw new Exception("Can't get reference to GPR0") : RefGprIndex(index);
 
         public AstNodeExprLValue GPR_l(int index) => Ast.Indirect(Ast.Cast(typeof(long*), Ast.GetAddress(Gpr(index))));
 

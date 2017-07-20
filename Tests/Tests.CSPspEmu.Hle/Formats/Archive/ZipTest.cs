@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 using CSPspEmu.Hle.Formats.Archive;
 using CSPspEmu.Resources;
-using CSharpUtils;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Tests.Hle.Formats.Archive

@@ -1,5 +1,4 @@
-﻿using CSPspEmu.Core;
-using CSPspEmu.Core.Memory;
+﻿using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Managers
 {

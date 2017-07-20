@@ -4,9 +4,6 @@ using CSPspEmu.Inject;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CSPspEmu.Core.Components.Display;
 
 namespace CSPspEmu.cheats

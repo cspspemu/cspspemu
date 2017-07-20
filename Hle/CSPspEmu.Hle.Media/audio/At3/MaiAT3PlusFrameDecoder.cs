@@ -1,9 +1,4 @@
 ﻿using CSPspEmu.Hle.Formats.audio.At3.SUB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3
 {

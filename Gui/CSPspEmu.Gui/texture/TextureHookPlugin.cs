@@ -1,5 +1,4 @@
-﻿using CSharpUtils;
-using CSPspEmu.Core;
+﻿using CSPspEmu.Core;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Inject;
@@ -8,9 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CSharpUtils.Drawing;
 using CSharpUtils.Drawing.Extensions;
 

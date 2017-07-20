@@ -1,11 +1,7 @@
-﻿using System.IO;
-using System.Linq;
-using CSharpUtils.Streams;
+﻿using System.Linq;
 using NUnit.Framework;
 using CSharpUtils;
 using System;
-using System.Collections;
-using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {

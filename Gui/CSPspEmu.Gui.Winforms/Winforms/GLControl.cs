@@ -1,12 +1,6 @@
 ﻿using CSharpPlatform.GL;
-using CSharpPlatform.GL.Impl;
-using CSharpUtils;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using CSharpUtils.Drawing;
 using CSharpUtils.Drawing.Extensions;

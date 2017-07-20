@@ -1,13 +1,4 @@
-﻿using CSharpUtils;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
-using CSPspEmu.Core.Types;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System;
 using System.Windows.Forms;
 
 namespace CSPspEmu.Gui.Winforms.Winforms

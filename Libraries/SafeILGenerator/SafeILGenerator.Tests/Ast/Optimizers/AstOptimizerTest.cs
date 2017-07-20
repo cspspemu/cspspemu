@@ -1,12 +1,7 @@
-﻿using System;
-using SafeILGenerator.Ast;
+﻿using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Optimizers;
 using SafeILGenerator.Ast.Generators;
 using SafeILGenerator.Ast.Nodes;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using System.Text;
-using System.IO;
 using SafeILGenerator.Ast.Serializers;
 using NUnit.Framework;
 

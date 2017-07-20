@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Memory
 {

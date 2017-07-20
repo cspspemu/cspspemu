@@ -1,5 +1,4 @@
 ﻿using System;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {

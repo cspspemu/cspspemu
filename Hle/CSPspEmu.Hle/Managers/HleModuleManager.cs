@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CSPspEmu.Core.Cpu;
 using System.Reflection;
-using CSPspEmu.Core;
 using CSharpUtils;
 using SafeILGenerator.Utils;
 

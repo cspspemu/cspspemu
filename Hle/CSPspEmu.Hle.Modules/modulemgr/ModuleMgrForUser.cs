@@ -2,7 +2,6 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using CSharpUtils;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;

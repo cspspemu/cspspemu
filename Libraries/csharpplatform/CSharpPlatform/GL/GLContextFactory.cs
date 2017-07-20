@@ -1,5 +1,4 @@
 ﻿using System;
-using CSharpPlatform.GL.Impl;
 using CSharpPlatform.GL.Impl.Android;
 using CSharpPlatform.GL.Impl.Linux;
 using CSharpPlatform.GL.Impl.Windows;

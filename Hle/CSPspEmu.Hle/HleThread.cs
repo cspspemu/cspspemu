@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Threading.EventFlags;

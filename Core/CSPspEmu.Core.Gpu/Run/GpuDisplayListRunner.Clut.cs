@@ -22,10 +22,13 @@ namespace CSPspEmu.Core.Gpu.Run
 
         // Clut Buffer Pointer (High)
         // Clut LOAD
+        [GpuInstructionAttribute(GpuOpCodes.CBP)]
         public void OP_CBP() => ClutState->Address = (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
 
+        [GpuInstructionAttribute(GpuOpCodes.CBPH)]
         public void OP_CBPH() => ClutState->Address = (ClutState->Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
 
+        [GpuInstructionAttribute(GpuOpCodes.CLOAD)]
         public void OP_CLOAD() => ClutState->NumberOfColors = Param8(0) * 8;
 
         /**
@@ -45,6 +48,7 @@ namespace CSPspEmu.Core.Gpu.Run
         ///void sceGuClutMode(uint cpsm, uint shift, uint mask, uint a3); // OP_CMODE
 
         // Clut MODE
+        [GpuInstructionAttribute(GpuOpCodes.CMODE)]
         public void OP_CMODE()
         {
             ClutState->PixelFormat = (GuPixelFormats) Extract(0, 2);

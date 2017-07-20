@@ -27,7 +27,6 @@ using CSPspEmu.Hle.Vfs.Iso;
 using CSPspEmu.Hle.Vfs.Zip;
 using CSPspEmu.Resources;
 using CSPspEmu.Hle.Formats.Archive;
-using System.Reflection;
 using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Hle.Interop;
 using CSPspEmu.Hle.Vfs.Emulator;

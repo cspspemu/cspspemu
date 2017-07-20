@@ -1,6 +1,5 @@
 ﻿using CSPspEmu.Core.Cpu.Assembler;
 using SafeILGenerator.Ast.Nodes;
-using System;
 using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Cpu.Dynarec.Ast

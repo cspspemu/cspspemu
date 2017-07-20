@@ -2,8 +2,6 @@
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.VFpu;
 using CSharpUtils;
-using System.Linq;
-using System.Numerics;
 using CSPspEmu.Core.Cpu.Table;
 
 namespace CSPspEmu.Core.Cpu.Emitter
@@ -15,25 +13,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Vfpu SCaLe/ROTate
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Vdot)]
-        public AstNodeStm vdot() => CEL_VD.Set(
-            _Aggregate(0f, OneTwo, (aggregated, index) => aggregated + (VEC_VS[index] * VEC_VT[index])), _pc);
+        public AstNodeStm Vdot() => CelVd.Set(
+            _Aggregate(0f, OneTwo, (aggregated, index) => aggregated + (VecVs[index] * VecVt[index])), _pc);
 
         [InstructionName(InstructionNames.Vscl)]
-        public AstNodeStm vscl() => VEC_VD.SetVector(index => VEC_VS[index] * CEL_VT.Get(), _pc);
+        public AstNodeStm Vscl() => VecVd.SetVector(index => VecVs[index] * CelVt.Get(), _pc);
 
         /// <summary>
         /// Vector ROTate
         /// </summary>
         [InstructionName(InstructionNames.Vrot)]
-        public AstNodeStm vrot()
+        public AstNodeStm Vrot()
         {
             var imm5 = _instruction.Imm5;
             var cosIndex = BitUtils.Extract(imm5, 0, 2);
             var sinIndex = BitUtils.Extract(imm5, 2, 2);
             var negateSin = BitUtils.ExtractBool(imm5, 4);
 
-            var dest = VEC_VD;
-            var src = CEL_VS;
+            var dest = VecVd;
+            var src = CelVs;
 
             AstNodeExpr sine = _ast.CallStatic((Func<float, float>) MathFloat.SinV1, src.Get());
             AstNodeExpr cosine = _ast.CallStatic((Func<float, float>) MathFloat.CosV1, src.Get());
@@ -52,100 +50,100 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // vzero: Vector ZERO
         // vone : Vector ONE
         [InstructionName(InstructionNames.Vzero)]
-        public AstNodeStm vzero() => VEC_VD.SetVector(index => 0f, _pc);
+        public AstNodeStm Vzero() => VecVd.SetVector(index => 0f, _pc);
 
         [InstructionName(InstructionNames.Vone)]
-        public AstNodeStm vone() => VEC_VD.SetVector(index => 1f, _pc);
+        public AstNodeStm Vone() => VecVd.SetVector(index => 1f, _pc);
 
         // vmov  : Vector MOVe
         // vsgn  : Vector SiGN
         // *     : Vector Reverse SQuare root/COSine/Arc SINe/LOG2
         // @CHECK
         [InstructionName(InstructionNames.Vmov)]
-        public AstNodeStm vmov()
+        public AstNodeStm Vmov()
         {
             PrefixTarget.Consume();
-            return VEC_VD.SetVector(index => VEC_VS[index], _pc);
+            return VecVd.SetVector(index => VecVs[index], _pc);
         }
 
         [InstructionName(InstructionNames.Vabs)]
-        public AstNodeStm vabs() =>
-            VEC_VD.SetVector(index => _ast.CallStatic((Func<float, float>) MathFloat.Abs, VEC_VS[index]), _pc);
+        public AstNodeStm Vabs() =>
+            VecVd.SetVector(index => _ast.CallStatic((Func<float, float>) MathFloat.Abs, VecVs[index]), _pc);
 
         [InstructionName(InstructionNames.Vneg)]
-        public AstNodeStm vneg() => VEC_VD.SetVector(index => -VEC_VS[index], _pc);
+        public AstNodeStm Vneg() => VecVd.SetVector(index => -VecVs[index], _pc);
 
         [InstructionName(InstructionNames.Vocp)]
-        public AstNodeStm vocp() => VEC_VD.SetVector(index => 1f - VEC_VS[index], _pc);
+        public AstNodeStm Vocp() => VecVd.SetVector(index => 1f - VecVs[index], _pc);
 
         [InstructionName(InstructionNames.Vsgn)]
-        public AstNodeStm vsgn() =>
-            VEC_VD.SetVector(index => _ast.CallStatic((Func<float, float>) MathFloat.Sign, VEC_VS[index]), _pc);
+        public AstNodeStm Vsgn() =>
+            VecVd.SetVector(index => _ast.CallStatic((Func<float, float>) MathFloat.Sign, VecVs[index]), _pc);
 
         [InstructionName(InstructionNames.Vrcp)]
-        public AstNodeStm vrcp() => VEC_VD.SetVector(index => 1f / VEC_VS[index], _pc);
+        public AstNodeStm Vrcp() => VecVd.SetVector(index => 1f / VecVs[index], _pc);
 
         private AstNodeStm _vfpu_call_ff(Delegate Delegate) =>
-            VEC_VD.SetVector(index => _ast.CallStatic(Delegate, VEC_VS[index]), _pc);
+            VecVd.SetVector(index => _ast.CallStatic(Delegate, VecVs[index]), _pc);
 
         // OP_V_INTERNAL_IN_N!(1, "1.0f / sqrt(v)");
         // vcst: Vfpu ConSTant
         [InstructionName(InstructionNames.Vsqrt)]
-        public AstNodeStm vsqrt() => _vfpu_call_ff((Func<float, float>) MathFloat.Sqrt);
+        public AstNodeStm Vsqrt() => _vfpu_call_ff((Func<float, float>) MathFloat.Sqrt);
 
         [InstructionName(InstructionNames.Vrsq)]
-        public AstNodeStm vrsq() => _vfpu_call_ff((Func<float, float>) MathFloat.RSqrt);
+        public AstNodeStm Vrsq() => _vfpu_call_ff((Func<float, float>) MathFloat.RSqrt);
 
         [InstructionName(InstructionNames.Vsin)]
-        public AstNodeStm vsin() => _vfpu_call_ff((Func<float, float>) MathFloat.SinV1);
+        public AstNodeStm Vsin() => _vfpu_call_ff((Func<float, float>) MathFloat.SinV1);
 
         [InstructionName(InstructionNames.Vcos)]
-        public AstNodeStm vcos() => _vfpu_call_ff((Func<float, float>) MathFloat.CosV1);
+        public AstNodeStm Vcos() => _vfpu_call_ff((Func<float, float>) MathFloat.CosV1);
 
         [InstructionName(InstructionNames.Vexp2)]
-        public AstNodeStm vexp2() => _vfpu_call_ff((Func<float, float>) MathFloat.Exp2);
+        public AstNodeStm Vexp2() => _vfpu_call_ff((Func<float, float>) MathFloat.Exp2);
 
         [InstructionName(InstructionNames.Vlog2)]
-        public AstNodeStm vlog2() => _vfpu_call_ff((Func<float, float>) MathFloat.Log2);
+        public AstNodeStm Vlog2() => _vfpu_call_ff((Func<float, float>) MathFloat.Log2);
 
         [InstructionName(InstructionNames.Vasin)]
-        public AstNodeStm vasin() => _vfpu_call_ff((Func<float, float>) MathFloat.AsinV1);
+        public AstNodeStm Vasin() => _vfpu_call_ff((Func<float, float>) MathFloat.AsinV1);
 
         [InstructionName(InstructionNames.Vnrcp)]
-        public AstNodeStm vnrcp() => _vfpu_call_ff((Func<float, float>) MathFloat.NRcp);
+        public AstNodeStm Vnrcp() => _vfpu_call_ff((Func<float, float>) MathFloat.NRcp);
 
         [InstructionName(InstructionNames.Vnsin)]
-        public AstNodeStm vnsin() => _vfpu_call_ff((Func<float, float>) MathFloat.NSinV1);
+        public AstNodeStm Vnsin() => _vfpu_call_ff((Func<float, float>) MathFloat.NSinV1);
 
         [InstructionName(InstructionNames.Vrexp2)]
-        public AstNodeStm vrexp2() => _vfpu_call_ff((Func<float, float>) MathFloat.RExp2);
+        public AstNodeStm Vrexp2() => _vfpu_call_ff((Func<float, float>) MathFloat.RExp2);
 
         [InstructionName(InstructionNames.Vsat0)]
-        public AstNodeStm vsat0() => _vfpu_call_ff((Func<float, float>) MathFloat.Vsat0);
+        public AstNodeStm Vsat0() => _vfpu_call_ff((Func<float, float>) MathFloat.Vsat0);
 
         [InstructionName(InstructionNames.Vsat1)]
-        public AstNodeStm vsat1() => _vfpu_call_ff((Func<float, float>) MathFloat.Vsat1);
+        public AstNodeStm Vsat1() => _vfpu_call_ff((Func<float, float>) MathFloat.Vsat1);
 
         // Vector -> Cell operations
         [InstructionName(InstructionNames.Vcst)]
-        public AstNodeStm vcst() =>
-            CEL_VD.Set(VfpuConstants.GetConstantValueByIndex((int) _instruction.Imm5).Value, _pc);
+        public AstNodeStm Vcst() =>
+            CelVd.Set(VfpuConstants.GetConstantValueByIndex((int) _instruction.Imm5).Value, _pc);
 
         [InstructionName(InstructionNames.Vhdp)]
-        public AstNodeStm vhdp()
+        public AstNodeStm Vhdp()
         {
             var vectorSize = (uint) OneTwo;
-            return CEL_VD.Set(_Aggregate(0f, (aggregate, index) =>
-                aggregate + VEC_VT[index] * ((index == vectorSize - 1) ? 1f : VEC_VS[index])
+            return CelVd.Set(_Aggregate(0f, (aggregate, index) =>
+                aggregate + VecVt[index] * ((index == vectorSize - 1) ? 1f : VecVs[index])
             ), _pc);
         }
 
         [InstructionName(InstructionNames.VcrsT)]
         public AstNodeStm vcrs_t()
         {
-            var vVd = VEC(VD, VType.VFloat, 3);
-            var vVs = VEC(VS, VType.VFloat, 3);
-            var vVt = VEC(VT, VType.VFloat, 3);
+            var vVd = Vec(Vd, VType.VFloat, 3);
+            var vVs = Vec(Vs, VType.VFloat, 3);
+            var vVt = Vec(Vt, VType.VFloat, 3);
             return vVd.SetVector(index =>
             {
                 switch (index)
@@ -164,9 +162,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
         [InstructionName(InstructionNames.VcrspT)]
         public AstNodeStm vcrsp_t()
         {
-            var d = VEC(VD, VType.VFloat, 3);
-            var s = VEC(VS, VType.VFloat, 3);
-            var t = VEC(VT, VType.VFloat, 3);
+            var d = Vec(Vd, VType.VFloat, 3);
+            var s = Vec(Vs, VType.VFloat, 3);
+            var t = Vec(Vt, VType.VFloat, 3);
 
             return d.SetVector(index =>
             {
@@ -182,66 +180,66 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         // Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
         [InstructionName(InstructionNames.Vmin)]
-        public AstNodeStm vmin() => VEC_VD.SetVector(
-            index => _ast.CallStatic((Func<float, float, float>) MathFloat.Min, VEC_VS[index], VEC_VT[index]), _pc);
+        public AstNodeStm Vmin() => VecVd.SetVector(
+            index => _ast.CallStatic((Func<float, float, float>) MathFloat.Min, VecVs[index], VecVt[index]), _pc);
 
         [InstructionName(InstructionNames.Vmax)]
-        public AstNodeStm vmax() => VEC_VD.SetVector(
-            index => _ast.CallStatic((Func<float, float, float>) MathFloat.Max, VEC_VS[index], VEC_VT[index]), _pc);
+        public AstNodeStm Vmax() => VecVd.SetVector(
+            index => _ast.CallStatic((Func<float, float, float>) MathFloat.Max, VecVs[index], VecVt[index]), _pc);
 
         [InstructionName(InstructionNames.Vadd)]
-        public AstNodeStm vadd() => VEC_VD.SetVector(index => VEC_VS[index] + VEC_VT[index], _pc);
+        public AstNodeStm Vadd() => VecVd.SetVector(index => VecVs[index] + VecVt[index], _pc);
         
         [InstructionName(InstructionNames.Vsub)]
-        public AstNodeStm vsub() => VEC_VD.SetVector(index => VEC_VS[index] - VEC_VT[index], _pc);
+        public AstNodeStm Vsub() => VecVd.SetVector(index => VecVs[index] - VecVt[index], _pc);
         
         [InstructionName(InstructionNames.Vdiv)]
-        public AstNodeStm vdiv() => VEC_VD.SetVector(index => VEC_VS[index] / VEC_VT[index], _pc);
+        public AstNodeStm Vdiv() => VecVd.SetVector(index => VecVs[index] / VecVt[index], _pc);
         
         [InstructionName(InstructionNames.Vmul)]
-        public AstNodeStm vmul() => VEC_VD.SetVector(index => VEC_VS[index] * VEC_VT[index], _pc);
+        public AstNodeStm Vmul() => VecVd.SetVector(index => VecVs[index] * VecVt[index], _pc);
 
         // Vfpu (Matrix) IDenTity
         [InstructionName(InstructionNames.Vidt)]
-        public AstNodeStm vidt() => VEC_VD.SetVector(index => (index == (_instruction.Imm7 % OneTwo)) ? 1f : 0f, _pc);
+        public AstNodeStm Vidt() => VecVd.SetVector(index => (index == (_instruction.Imm7 % OneTwo)) ? 1f : 0f, _pc);
 
         // Vfpu load Integer IMmediate
         [InstructionName(InstructionNames.Viim)]
-        public AstNodeStm viim() => CEL_VT_NoPrefix.Set((float) _instruction.Imm, _pc);
+        public AstNodeStm Viim() => CelVtNoPrefix.Set((float) _instruction.Imm, _pc);
 
         [InstructionName(InstructionNames.Vdet)]
-        public AstNodeStm vdet()
+        public AstNodeStm Vdet()
         {
-            var v1 = VEC(VS, VType.VFloat, 2);
-            var v2 = VEC(VT, VType.VFloat, 2);
-            return CEL_VD.Set(v1[0] * v2[1] - v1[1] * v2[0], _pc);
+            var v1 = Vec(Vs, VType.VFloat, 2);
+            var v2 = Vec(Vt, VType.VFloat, 2);
+            return CelVd.Set(v1[0] * v2[1] - v1[1] * v2[0], _pc);
         }
 
         [InstructionName(InstructionNames.Mfvme)]
-        public AstNodeStm mfvme() => _ast.NotImplemented();
+        public AstNodeStm Mfvme() => _ast.NotImplemented();
         
         [InstructionName(InstructionNames.Mtvme)]
-        public AstNodeStm mtvme() => _ast.NotImplemented();
+        public AstNodeStm Mtvme() => _ast.NotImplemented();
         
         [InstructionName(InstructionNames.Vfim)]
-        public AstNodeStm vfim() => CEL_VT_NoPrefix.Set(_instruction.ImmHf, _pc);
+        public AstNodeStm Vfim() => CelVtNoPrefix.Set(_instruction.ImmHf, _pc);
         
         [InstructionName(InstructionNames.Vlgb)]
-        public AstNodeStm vlgb() => _ast.NotImplemented();
+        public AstNodeStm Vlgb() => _ast.NotImplemented();
         
         [InstructionName(InstructionNames.Vsbn)]
-        public AstNodeStm vsbn() => _ast.NotImplemented();
+        public AstNodeStm Vsbn() => _ast.NotImplemented();
         
         [InstructionName(InstructionNames.Vsbz)]
-        public AstNodeStm vsbz() => _ast.NotImplemented();
+        public AstNodeStm Vsbz() => _ast.NotImplemented();
 
         [InstructionName(InstructionNames.Vsocp)]
-        public AstNodeStm vsocp()
+        public AstNodeStm Vsocp()
         {
             var vectorSize = OneTwo;
             //Console.WriteLine("VECTOR_SIZE: {0}", VectorSize);
-            var vvd = VEC(VD, VType.VFloat, vectorSize * 2);
-            var vvs = VEC(VS, VType.VFloat, vectorSize);
+            var vvd = Vec(Vd, VType.VFloat, vectorSize * 2);
+            var vvs = Vec(Vs, VType.VFloat, vectorSize);
             return vvd.SetVector(index =>
             {
                 switch (index)
@@ -258,41 +256,41 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vus2I)]
-        public AstNodeStm vus2i() => _ast.NotImplemented();
+        public AstNodeStm Vus2I() => _ast.NotImplemented();
 
         public static float _vwbn_impl(float source, int imm8)
         {
             return 0f;
-#if true
-            var exp = new BigInteger((int) Math.Pow(2, 127 - imm8));
-            var bn = new BigInteger((int) source);
-            if ((int) bn > 0)
-            {
-                bn = BigInteger.ModPow(bn, exp, bn);
-            }
-            return (float) (bn + ((source < 0.0f) ? -exp : exp));
-
-#else
-			double exp = Math.Pow(2.0, 127 - Imm8);
-			double bn = (double)Source;
-			if (bn > 0.0) bn = Math.Pow(bn, exp) % bn;
-			return (float)((Source < 0.0f) ? (bn - exp) : (bn + exp));
-#endif
+            //#if true
+            //            var exp = new BigInteger((int) Math.Pow(2, 127 - imm8));
+            //            var bn = new BigInteger((int) source);
+            //            if ((int) bn > 0)
+            //            {
+            //                bn = BigInteger.ModPow(bn, exp, bn);
+            //            }
+            //            return (float) (bn + ((source < 0.0f) ? -exp : exp));
+            //
+            //#else
+            //			double exp = Math.Pow(2.0, 127 - Imm8);
+            //			double bn = (double)Source;
+            //			if (bn > 0.0) bn = Math.Pow(bn, exp) % bn;
+            //			return (float)((Source < 0.0f) ? (bn - exp) : (bn + exp));
+            //#endif
         }
 
         [InstructionName(InstructionNames.Vwbn)]
-        public AstNodeStm vwbn() => VEC_VD.SetVector(
-            index => _ast.CallStatic((Func<float, int, float>) _vwbn_impl, VEC_VS[index], (int) _instruction.Imm8),
+        public AstNodeStm Vwbn() => VecVd.SetVector(
+            index => _ast.CallStatic((Func<float, int, float>) _vwbn_impl, VecVs[index], (int) _instruction.Imm8),
             _pc);
 
         [InstructionName(InstructionNames.Vnop)]
-        public AstNodeStm vnop() => _ast.Statement();
+        public AstNodeStm Vnop() => _ast.Statement();
 
         [InstructionName(InstructionNames.Vsync)]
-        public AstNodeStm vsync() => _ast.Statement();
+        public AstNodeStm Vsync() => _ast.Statement();
 
         [InstructionName(InstructionNames.Vflush)]
-        public AstNodeStm vflush() => _ast.Statement();
+        public AstNodeStm Vflush() => _ast.Statement();
 
         public static uint _vt4444_step(uint i0, uint i1)
         {
@@ -338,16 +336,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
             return o0;
         }
 
-        private AstNodeStm _vtXXXX_q(Func<uint, uint, uint> _vtXXXX_stepCallback)
+        private AstNodeStm _vtXXXX_q(Func<uint, uint, uint> vtXxxxStepCallback)
         {
             var vectorSize = _instruction.OneTwo;
             if (vectorSize != 4) throw new Exception("Not implemented _vtXXXX_q for VectorSize=" + vectorSize);
-            var dest = VEC(VD_NoPrefix, VUInt, 2);
-            var src = VEC(VS_NoPrefix, VUInt, 4);
+            var dest = Vec(VdNoPrefix, VuInt, 2);
+            var src = Vec(VsNoPrefix, VuInt, 4);
             //AstLoadVfpuReg
 
             var node = dest.SetVector(index => _ast.CallStatic(
-                _vtXXXX_stepCallback,
+                vtXxxxStepCallback,
                 src[index * 2 + 0],
                 src[index * 2 + 1]
             ), _pc);
@@ -367,39 +365,39 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm vt5650_q() => _vtXXXX_q(_vt5650_step);
 
         [InstructionName(InstructionNames.Vbfy1)]
-        public AstNodeStm vbfy1() => VEC_VD.SetVector(index =>
+        public AstNodeStm Vbfy1() => VecVd.SetVector(index =>
         {
             switch (index)
             {
-                case 0: return VEC_VS[0] + VEC_VS[1];
-                case 1: return VEC_VS[0] - VEC_VS[1];
-                case 2: return VEC_VS[2] + VEC_VS[3];
-                case 3: return VEC_VS[2] - VEC_VS[3];
+                case 0: return VecVs[0] + VecVs[1];
+                case 1: return VecVs[0] - VecVs[1];
+                case 2: return VecVs[2] + VecVs[3];
+                case 3: return VecVs[2] - VecVs[3];
                 default: throw (new InvalidOperationException("vbfy1.Assert!"));
             }
         }, _pc);
 
         [InstructionName(InstructionNames.Vbfy2)]
-        public AstNodeStm vbfy2() => VEC_VD.SetVector(index =>
+        public AstNodeStm Vbfy2() => VecVd.SetVector(index =>
         {
             switch (index)
             {
-                case 0: return VEC_VS[0] + VEC_VS[2];
-                case 1: return VEC_VS[1] + VEC_VS[3];
-                case 2: return VEC_VS[0] - VEC_VS[2];
-                case 3: return VEC_VS[1] - VEC_VS[3];
+                case 0: return VecVs[0] + VecVs[2];
+                case 1: return VecVs[1] + VecVs[3];
+                case 2: return VecVs[0] - VecVs[2];
+                case 3: return VecVs[1] - VecVs[3];
                 default: throw (new InvalidOperationException("vbfy2.Assert!"));
             }
         }, _pc);
 
         [InstructionName(InstructionNames.Vsrt1)]
-        public AstNodeStm vsrt1()
+        public AstNodeStm Vsrt1()
         {
             var vectorSize = OneTwo;
             if (vectorSize != 4) return _ast.Statement();
 
-            var vvd = VEC(VD, VType.VFloat, vectorSize);
-            var vvs = VEC(VS, VType.VFloat, vectorSize);
+            var vvd = Vec(Vd, VType.VFloat, vectorSize);
+            var vvs = Vec(Vs, VType.VFloat, vectorSize);
 
             return vvd.SetVector(index =>
             {
@@ -415,13 +413,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vsrt2)]
-        public AstNodeStm vsrt2()
+        public AstNodeStm Vsrt2()
         {
             var vectorSize = OneTwo;
             if (vectorSize != 4) return _ast.Statement();
 
-            var vvd = VEC(VD, VType.VFloat, vectorSize);
-            var vvs = VEC(VS, VType.VFloat, vectorSize);
+            var vvd = Vec(Vd, VType.VFloat, vectorSize);
+            var vvs = Vec(Vs, VType.VFloat, vectorSize);
 
             return vvd.SetVector(index =>
             {
@@ -437,13 +435,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vsrt3)]
-        public AstNodeStm vsrt3()
+        public AstNodeStm Vsrt3()
         {
             var vectorSize = OneTwo;
             if (vectorSize != 4) return _ast.Statement();
 
-            var vvd = VEC(VD, VType.VFloat, vectorSize);
-            var vvs = VEC(VS, VType.VFloat, vectorSize);
+            var vvd = Vec(Vd, VType.VFloat, vectorSize);
+            var vvs = Vec(Vs, VType.VFloat, vectorSize);
 
             return vvd.SetVector(index =>
             {
@@ -459,13 +457,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vsrt4)]
-        public AstNodeStm vsrt4()
+        public AstNodeStm Vsrt4()
         {
             var vectorSize = OneTwo;
             if (vectorSize != 4) return _ast.Statement();
 
-            var vvd = VEC(VD, VType.VFloat, vectorSize);
-            var vvs = VEC(VS, VType.VFloat, vectorSize);
+            var vvd = Vec(Vd, VType.VFloat, vectorSize);
+            var vvs = Vec(Vs, VType.VFloat, vectorSize);
 
             return vvd.SetVector(index =>
             {
@@ -481,11 +479,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vfad)]
-        public AstNodeStm vfad() => CEL_VD.Set(_Aggregate(0f, (value, index) => value + VEC_VS[index]), _pc);
+        public AstNodeStm Vfad() => CelVd.Set(_Aggregate(0f, (value, index) => value + VecVs[index]), _pc);
 
         [InstructionName(InstructionNames.Vavg)]
-        public AstNodeStm vavg() =>
-            CEL_VD.Set(_Aggregate(0f, (value, index) => value + VEC_VS[index]) / (float) OneTwo, _pc);
+        public AstNodeStm Vavg() =>
+            CelVd.Set(_Aggregate(0f, (value, index) => value + VecVs[index]) / (float) OneTwo, _pc);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Prefixes
@@ -498,13 +496,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vpfxd)]
-        public AstNodeStm vpfxd() => _vpfx_dst(PrefixDestination, CpuEmitterUtils._vpfxd_impl);
+        public AstNodeStm Vpfxd() => _vpfx_dst(PrefixDestination, CpuEmitterUtils._vpfxd_impl);
         
         [InstructionName(InstructionNames.Vpfxs)]
-        public AstNodeStm vpfxs() => _vpfx_dst(PrefixSource, CpuEmitterUtils._vpfxs_impl);
+        public AstNodeStm Vpfxs() => _vpfx_dst(PrefixSource, CpuEmitterUtils._vpfxs_impl);
         
         [InstructionName(InstructionNames.Vpfxt)]
-        public AstNodeStm vpfxt() => _vpfx_dst(PrefixTarget, CpuEmitterUtils._vpfxt_impl);
+        public AstNodeStm Vpfxt() => _vpfx_dst(PrefixTarget, CpuEmitterUtils._vpfxt_impl);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // Random:
@@ -514,22 +512,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
         [InstructionName(InstructionNames.Vrnds)]
-        public AstNodeStm vrnds() => _ast.Statement(_ast.CallStatic(
+        public AstNodeStm Vrnds() => _ast.Statement(_ast.CallStatic(
             (Action<CpuThreadState, int>) CpuEmitterUtils._vrnds,
             _ast.CpuThreadStateExpr));
 
         [InstructionName(InstructionNames.Vrndi)]
-        public AstNodeStm vrndi() => VEC_VD_i.SetVector(
+        public AstNodeStm Vrndi() => VecVdI.SetVector(
             index => _ast.CallStatic((Func<CpuThreadState, int>) CpuEmitterUtils._vrndi, _ast.CpuThreadStateExpr),
             _pc);
 
         [InstructionName(InstructionNames.Vrndf1)]
-        public AstNodeStm vrndf1() => VEC_VD.SetVector(
+        public AstNodeStm Vrndf1() => VecVd.SetVector(
             index => _ast.CallStatic((Func<CpuThreadState, float>) CpuEmitterUtils._vrndf1, _ast.CpuThreadStateExpr),
             _pc);
 
         [InstructionName(InstructionNames.Vrndf2)]
-        public AstNodeStm vrndf2() => VEC_VD.SetVector(
+        public AstNodeStm Vrndf2() => VecVd.SetVector(
             index => _ast.CallStatic((Func<CpuThreadState, float>) CpuEmitterUtils._vrndf2, _ast.CpuThreadStateExpr),
             _pc);
 
@@ -540,15 +538,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // Vfpu Matrix MULtiplication
         // @FIX!!!
         [InstructionName(InstructionNames.Vmmul)]
-        public AstNodeStm vmmul()
+        public AstNodeStm Vmmul()
         {
             var vectorSize = _instruction.OneTwo;
             //var Dest = MAT(VD_NoPrefix);
             //var Src = MAT(VS_NoPrefix);
             //var Target = MAT(VT_NoPrefix);
-            var dest = MAT_VD;
-            var src = MAT_VS;
-            var target = MAT_VT;
+            var dest = MatVd;
+            var src = MatVs;
+            var target = MatVt;
 
             return dest.SetMatrix((column, row) =>
             {
@@ -568,9 +566,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private AstNodeStm _vtfm_x(int vectorSize)
         {
-            var vecVd = VEC(VD, VType.VFloat, vectorSize);
-            var vecVt = VEC(VT, VType.VFloat, vectorSize);
-            var matVs = MAT(VS, VType.VFloat, vectorSize);
+            var vecVd = Vec(Vd, VType.VFloat, vectorSize);
+            var vecVt = Vec(Vt, VType.VFloat, vectorSize);
+            var matVs = Mat(Vs, VType.VFloat, vectorSize);
 
             return vecVd.SetVector(index =>
                     _Aggregate(0f, vectorSize,
@@ -580,9 +578,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private AstNodeStm _vhtfm_x(int vectorSize)
         {
-            var vecVd = VEC(VD, VType.VFloat, vectorSize);
-            var vecVt = VEC(VT, VType.VFloat, vectorSize);
-            var matVs = MAT(VS, VType.VFloat, vectorSize);
+            var vecVd = Vec(Vd, VType.VFloat, vectorSize);
+            var vecVt = Vec(Vt, VType.VFloat, vectorSize);
+            var matVs = Mat(Vs, VType.VFloat, vectorSize);
 
             return vecVd.SetVector(index =>
                     _Aggregate(0f, vectorSize,
@@ -592,42 +590,42 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vtfm2)]
-        public AstNodeStm vtfm2() => _vtfm_x(2);
+        public AstNodeStm Vtfm2() => _vtfm_x(2);
         
         [InstructionName(InstructionNames.Vtfm3)]
-        public AstNodeStm vtfm3() => _vtfm_x(3);
+        public AstNodeStm Vtfm3() => _vtfm_x(3);
         
         [InstructionName(InstructionNames.Vtfm4)]
-        public AstNodeStm vtfm4() => _vtfm_x(4);
+        public AstNodeStm Vtfm4() => _vtfm_x(4);
         
         [InstructionName(InstructionNames.Vhtfm2)]
-        public AstNodeStm vhtfm2() => _vhtfm_x(2);
+        public AstNodeStm Vhtfm2() => _vhtfm_x(2);
         
         [InstructionName(InstructionNames.Vhtfm3)]
-        public AstNodeStm vhtfm3() => _vhtfm_x(3);
+        public AstNodeStm Vhtfm3() => _vhtfm_x(3);
         
         [InstructionName(InstructionNames.Vhtfm4)]
-        public AstNodeStm vhtfm4() => _vhtfm_x(4);
+        public AstNodeStm Vhtfm4() => _vhtfm_x(4);
         
         [InstructionName(InstructionNames.Vmidt)]
-        public AstNodeStm vmidt() => MAT_VD.SetMatrix((column, row) => (column == row) ? 1f : 0f, _pc);
+        public AstNodeStm Vmidt() => MatVd.SetMatrix((column, row) => (column == row) ? 1f : 0f, _pc);
         
         [InstructionName(InstructionNames.Vmzero)]
-        public AstNodeStm vmzero() => MAT_VD.SetMatrix((column, row) => 0f, _pc);
+        public AstNodeStm Vmzero() => MatVd.SetMatrix((column, row) => 0f, _pc);
         
         [InstructionName(InstructionNames.Vmone)]
-        public AstNodeStm vmone() => MAT_VD.SetMatrix((column, row) => 1f, _pc);
+        public AstNodeStm Vmone() => MatVd.SetMatrix((column, row) => 1f, _pc);
         
         [InstructionName(InstructionNames.Vmscl)]
-        public AstNodeStm vmscl() => MAT_VD.SetMatrix((column, row) => MAT_VS[column, row] * CEL_VT.Get(), _pc);
+        public AstNodeStm Vmscl() => MatVd.SetMatrix((column, row) => MatVs[column, row] * CelVt.Get(), _pc);
 
         [InstructionName(InstructionNames.Vqmul)]
-        public AstNodeStm vqmul()
+        public AstNodeStm Vqmul()
         {
-            var v1 = VEC(VS, VType.VFloat, 4);
-            var v2 = VEC(VT, VType.VFloat, 4);
+            var v1 = Vec(Vs, VType.VFloat, 4);
+            var v2 = Vec(Vt, VType.VFloat, 4);
 
-            return VEC(VD, VType.VFloat, 4).SetVector(index =>
+            return Vec(Vd, VType.VFloat, 4).SetVector(index =>
             {
                 switch (index)
                 {
@@ -641,42 +639,42 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vmmov)]
-        public AstNodeStm vmmov() => MAT_VD.SetMatrix((Column, Row) => MAT_VS[Column, Row], _pc);
+        public AstNodeStm Vmmov() => MatVd.SetMatrix((column, row) => MatVs[column, row], _pc);
 
         [InstructionName(InstructionNames.Vuc2I)]
-        public AstNodeStm vuc2i() => VEC_VD_u.SetVector(
-            index => _ast.Binary((_ast.Binary(CEL_VS_u.Get(), ">>", (index * 8)) & 0xFF) * 0x01010101, ">>", 1), _pc);
+        public AstNodeStm Vuc2I() => VecVdU.SetVector(
+            index => _ast.Binary((_ast.Binary(CelVsU.Get(), ">>", (index * 8)) & 0xFF) * 0x01010101, ">>", 1), _pc);
 
         [InstructionName(InstructionNames.Vc2I)]
-        public AstNodeStm vc2i() =>
-            VEC_VD_u.SetVector(Index => _ast.Binary(CEL_VS_u.Get(), "<<", ((3 - Index) * 8)) & 0xFF000000, _pc);
+        public AstNodeStm Vc2I() =>
+            VecVdU.SetVector(index => _ast.Binary(CelVsU.Get(), "<<", ((3 - index) * 8)) & 0xFF000000, _pc);
 
         // Vfpu Integer to(2) Color?
         [InstructionName(InstructionNames.Vi2C)]
-        public AstNodeStm vi2c()
+        public AstNodeStm Vi2C()
         {
-            var vecVs = VEC(VS, VType.VUInt, 4);
-            return CEL_VD_u.Set(
+            var vecVs = Vec(Vs, VType.VuInt, 4);
+            return CelVdU.Set(
                 _ast.CallStatic((Func<uint, uint, uint, uint, uint>) CpuEmitterUtils._vi2c_impl, vecVs[0], vecVs[1],
                     vecVs[2], vecVs[3]), _pc);
         }
 
         [InstructionName(InstructionNames.Vi2Uc)]
-        public AstNodeStm vi2uc()
+        public AstNodeStm Vi2Uc()
         {
-            var vecVs = VEC(VS, VType.VInt, 4);
-            return CEL_VD_u.Set(
+            var vecVs = Vec(Vs, VType.VInt, 4);
+            return CelVdU.Set(
                 _ast.CallStatic((Func<int, int, int, int, uint>) CpuEmitterUtils._vi2uc_impl, vecVs[0], vecVs[1],
                     vecVs[2], vecVs[3]), _pc);
         }
 
         [InstructionName(InstructionNames.Vs2I)]
-        public AstNodeStm vs2i()
+        public AstNodeStm Vs2I()
         {
             var vectorSize = _instruction.OneTwo;
             if (vectorSize > 2) throw (new NotImplementedException("vs2i.VectorSize"));
-            var dest = _Vector(VD, VUInt, vectorSize * 2);
-            var src = _Vector(VS, VUInt, vectorSize);
+            var dest = _Vector(Vd, VuInt, vectorSize * 2);
+            var src = _Vector(Vs, VuInt, vectorSize);
             return dest.SetVector(index =>
             {
                 var value = src[index / 2];
@@ -686,21 +684,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vi2F)]
-        public AstNodeStm vi2f()
+        public AstNodeStm Vi2F()
         {
-            return VEC_VD.SetVector(
-                index => _ast.CallStatic((Func<float, int, float>) MathFloat.Scalb, _ast.Cast<float>(VEC_VS_i[index]),
+            return VecVd.SetVector(
+                index => _ast.CallStatic((Func<float, int, float>) MathFloat.Scalb, _ast.Cast<float>(VecVsI[index]),
                     -(int) _instruction.Imm5), _pc);
         }
 
         private AstNodeStm _vf2i_dnu(Func<float, int> roundingFunc)
         {
-            return VEC_VD_i.SetVector(index =>
+            return VecVdI.SetVector(index =>
                     _ast.CallStatic(
                         roundingFunc,
                         _ast.CallStatic(
                             (Func<float, int, float>) MathFloat.Scalb,
-                            VEC_VS[index],
+                            VecVs[index],
                             (int) _instruction.Imm5
                         )
                     )
@@ -708,41 +706,41 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vf2Id)]
-        public AstNodeStm vf2id() => _vf2i_dnu(MathFloat.Floor);
+        public AstNodeStm Vf2Id() => _vf2i_dnu(MathFloat.Floor);
 
         [InstructionName(InstructionNames.Vf2In)]
-        public AstNodeStm vf2in() => _vf2i_dnu(MathFloat.Round);
+        public AstNodeStm Vf2In() => _vf2i_dnu(MathFloat.Round);
 
         [InstructionName(InstructionNames.Vf2Iu)]
-        public AstNodeStm vf2iu() => _vf2i_dnu(MathFloat.Ceil);
+        public AstNodeStm Vf2Iu() => _vf2i_dnu(MathFloat.Ceil);
 
         [InstructionName(InstructionNames.Vf2Iz)]
-        public AstNodeStm vf2iz() => VEC_VD_i.SetVector(Index =>
+        public AstNodeStm Vf2Iz() => VecVdI.SetVector(index =>
                 _ast.CallStatic(
                     (Func<float, int, int>) CpuEmitterUtils._vf2iz,
-                    VEC_VS[Index],
+                    VecVs[index],
                     (int) _instruction.Imm5
                 )
             , _pc);
 
         [InstructionName(InstructionNames.Vi2S)]
-        public AstNodeStm vi2s()
+        public AstNodeStm Vi2S()
         {
             var vectorSize = OneTwo;
-            return _Vector(VD, VType.VUInt, vectorSize / 2)
+            return _Vector(Vd, VType.VuInt, vectorSize / 2)
                     .SetVector(index => _ast.CallStatic(
                         (Func<uint, uint, uint>) CpuEmitterUtils._vi2s_impl,
-                        VEC_VS_u[index * 2 + 0],
-                        VEC_VS_u[index * 2 + 1]
+                        VecVsU[index * 2 + 0],
+                        VecVsU[index * 2 + 1]
                     ), _pc)
                 ;
         }
 
         [InstructionName(InstructionNames.Vf2H)]
-        public AstNodeStm vf2h()
+        public AstNodeStm Vf2H()
         {
-            var vecVd = VEC(VD, VType.VUInt, OneTwo / 2);
-            var vecVs = VEC(VS, VType.VFloat, OneTwo);
+            var vecVd = Vec(Vd, VType.VuInt, OneTwo / 2);
+            var vecVs = Vec(Vs, VType.VFloat, OneTwo);
             return vecVd.SetVector(index =>
                     _ast.CallStatic(
                         (Func<float, float, uint>) CpuEmitterUtils._vf2h_impl,
@@ -753,10 +751,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vh2F)]
-        public AstNodeStm vh2f()
+        public AstNodeStm Vh2F()
         {
-            var vecVd = VEC(VD, VType.VFloat, OneTwo * 2);
-            var vecVs = VEC(VS, VType.VUInt, OneTwo);
+            var vecVd = Vec(Vd, VType.VFloat, OneTwo * 2);
+            var vecVs = Vec(Vs, VType.VuInt, OneTwo);
             return vecVd.SetVector(index => _ast.CallStatic(
                 index % 2 == 0
                     ? (Func<uint, float>) CpuEmitterUtils._vh2f_0
@@ -766,35 +764,35 @@ namespace CSPspEmu.Core.Cpu.Emitter
         }
 
         [InstructionName(InstructionNames.Vi2Us)]
-        public AstNodeStm vi2us()
+        public AstNodeStm Vi2Us()
         {
             var vectorSize = OneTwo;
-            return _Vector(VD, VType.VInt, vectorSize / 2)
+            return _Vector(Vd, VType.VInt, vectorSize / 2)
                     .SetVector(index => _ast.CallStatic(
                         (Func<int, int, int>) CpuEmitterUtils._vi2us_impl,
-                        VEC_VS_i[index * 2 + 0],
-                        VEC_VS_i[index * 2 + 1]
+                        VecVsI[index * 2 + 0],
+                        VecVsI[index * 2 + 1]
                     ), _pc)
                 ;
         }
 
         [InstructionName(InstructionNames.Vmfvc)]
-        public AstNodeStm vmfvc() => _ast.NotImplemented();
+        public AstNodeStm Vmfvc() => _ast.NotImplemented();
         
         [InstructionName(InstructionNames.Vmtvc)]
-        public AstNodeStm vmtvc() => _ast.NotImplemented();
+        public AstNodeStm Vmtvc() => _ast.NotImplemented();
         
         [InstructionName(InstructionNames.Mtv)]
-        public AstNodeStm mtv() => CEL_VD.Set(_ast.GPR_f(Rt), _pc);
+        public AstNodeStm Mtv() => CelVd.Set(_ast.GPR_f(Rt), _pc);
 
         [InstructionName(InstructionNames.Mtvc)]
-        public AstNodeStm mtvc()
+        public AstNodeStm Mtvc()
         {
             return _ast.Statement(_ast.CallStatic(
                 (Action<CpuThreadState, VfpuControlRegistersEnum, uint>) CpuEmitterUtils._mtvc_impl,
                 _ast.CpuThreadStateExpr,
                 _ast.Cast<VfpuControlRegistersEnum>((int) (_instruction.Imm7 + 128), false),
-                CEL_VD_u.Get()
+                CelVdU.Get()
             ));
             //_mtvc_impl
         }
@@ -803,7 +801,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /// Copies a vfpu control register into a general purpose register.
         /// </summary>
         [InstructionName(InstructionNames.Mfvc)]
-        public AstNodeStm mfvc() => _ast.AssignGpr(Rt, _ast.CallStatic(
+        public AstNodeStm Mfvc() => _ast.AssignGpr(Rt, _ast.CallStatic(
             (Func<CpuThreadState, VfpuControlRegistersEnum, uint>) CpuEmitterUtils._mfvc_impl,
             _ast.CpuThreadStateExpr,
             _ast.Cast<VfpuControlRegistersEnum>((int) (_instruction.Imm7 + 128), false)
@@ -811,7 +809,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         // Move From/to Vfpu (C?)_
         [InstructionName(InstructionNames.Mfv)]
-        public AstNodeStm mfv() => _ast.AssignGPR_F(Rt, CEL_VD.Get());
+        public AstNodeStm Mfv() => _ast.AssignGPR_F(Rt, CelVd.Get());
 
         // Load/Store Vfpu (Left/Right)_
         // ID("lv.q",        VM("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
@@ -819,7 +817,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm lv_q()
         {
             const int vectorSize = 4;
-            var dest = _Vector(VT5_1, VFloat, size: vectorSize);
+            var dest = _Vector(Vt51, VFloat, size: vectorSize);
             var memoryVector = _MemoryVectorIMM14<float>(vectorSize);
             return dest.SetVector(index => memoryVector[index], _pc);
         }
@@ -830,9 +828,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
         [InstructionName(InstructionNames.SvQ)]
         public AstNodeStm sv_q()
         {
-            var VectorSize = 4;
-            var dest = _Vector(VT5_1, VFloat, VectorSize);
-            var memoryVector = _MemoryVectorIMM14<float>(VectorSize);
+            var vectorSize = 4;
+            var dest = _Vector(Vt51, VFloat, vectorSize);
+            var memoryVector = _MemoryVectorIMM14<float>(vectorSize);
             return memoryVector.SetVector(index => dest[index]);
         }
 
@@ -847,7 +845,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     : CpuEmitterUtils._lvr_svr_q
                 ;
 
-            var vt5 = _Vector(VT5_1, VFloat, 4);
+            var vt5 = _Vector(Vt51, VFloat, 4);
 
             return _ast.Statement(_ast.CallStatic(
                 methodInfo,
@@ -857,7 +855,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 _ast.GetAddress(vt5.GetIndexRef(1)),
                 _ast.GetAddress(vt5.GetIndexRef(2)),
                 _ast.GetAddress(vt5.GetIndexRef(3)),
-                Address_RS_IMM14(0)
+                Address_RS_IMM14()
             ));
         }
 
@@ -874,9 +872,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm svr_q() => _lv_sv_l_r_q(left: false, save: true);
         
         [InstructionName(InstructionNames.LvS)]
-        public AstNodeStm lv_s() => _Cell(VT5_2).Set(_ast.MemoryGetValue<float>(_memory, Address_RS_IMM14()), _pc);
+        public AstNodeStm lv_s() => _Cell(Vt52).Set(_ast.MemoryGetValue<float>(_memory, Address_RS_IMM14()), _pc);
         
         [InstructionName(InstructionNames.SvS)]
-        public AstNodeStm sv_s() => _ast.MemorySetValue<float>(_memory, Address_RS_IMM14(), _Cell(VT5_2).Get());
+        public AstNodeStm sv_s() => _ast.MemorySetValue<float>(_memory, Address_RS_IMM14(), _Cell(Vt52).Get());
     }
 }

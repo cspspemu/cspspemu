@@ -1,6 +1,5 @@
 ﻿using System;
 using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Core;
 using CSPspEmu.Core.Components.Battery;
 
 namespace CSPspEmu.Hle.Modules.power

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ALCdevice = System.IntPtr;
+﻿using ALCdevice = System.IntPtr;
 using ALCcontext = System.IntPtr;
 using ALCboolean = System.Boolean;
 using ALCchar = System.Byte;

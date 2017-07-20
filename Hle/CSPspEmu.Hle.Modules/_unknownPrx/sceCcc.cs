@@ -1,6 +1,4 @@
-﻿using CSPspEmu.Hle.Attributes;
-
-namespace CSPspEmu.Hle.Modules._unknownPrx //vsh/module/vshmain.prx vsh_module
+﻿namespace CSPspEmu.Hle.Modules._unknownPrx //vsh/module/vshmain.prx vsh_module
 {
     public unsafe partial class sceCcc : HleModuleHost
     {
