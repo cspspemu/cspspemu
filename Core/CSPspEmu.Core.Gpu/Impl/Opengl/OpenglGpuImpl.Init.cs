@@ -57,7 +57,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         public override void InitSynchronizedOnce()
         {
             //Memory.WriteBytesHook += OnMemoryWrite;
-            this.ScaleViewport = PspStoredConfig.RenderScale;
+            ScaleViewport = PspStoredConfig.RenderScale;
 
             if (!AlreadyInitialized)
             {

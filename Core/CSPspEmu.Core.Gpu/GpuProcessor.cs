@@ -130,12 +130,12 @@ namespace CSPspEmu.Core.Gpu
 
         void IInjectInitialize.Initialize()
         {
-            this.DisplayListQueue = new LinkedList<GpuDisplayList>();
-            this.DisplayListFreeQueue = new Queue<GpuDisplayList>();
+            DisplayListQueue = new LinkedList<GpuDisplayList>();
+            DisplayListFreeQueue = new Queue<GpuDisplayList>();
             for (int n = 0; n < DisplayListsCount; n++)
             {
                 var DisplayList = new GpuDisplayList(Memory, this, n);
-                this.DisplayLists[n] = DisplayList;
+                DisplayLists[n] = DisplayList;
                 //this.DisplayListFreeQueue.Enqueue(DisplayLists[n]);
                 EnqueueFreeDisplayList(DisplayLists[n]);
             }
@@ -151,7 +151,7 @@ namespace CSPspEmu.Core.Gpu
         {
             lock (DisplayListFreeQueue)
             {
-                var DisplayList = this.DisplayListFreeQueue.Dequeue();
+                var DisplayList = DisplayListFreeQueue.Dequeue();
                 DisplayList.Available = false;
                 return DisplayList;
             }
@@ -166,7 +166,7 @@ namespace CSPspEmu.Core.Gpu
             //Console.WriteLine("EnqueueFreeDisplayList: {0}", this.DisplayListFreeQueue.Count);
             lock (DisplayListFreeQueue)
             {
-                this.DisplayListFreeQueue.Enqueue(GpuDisplayList);
+                DisplayListFreeQueue.Enqueue(GpuDisplayList);
                 GpuDisplayList.SetFree();
             }
             DisplayListFreeEvent.Set();

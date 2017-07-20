@@ -24,8 +24,8 @@ namespace CSPspEmu.Core.Gpu.Run
 
         public GpuDisplayListRunner(GpuDisplayList gpuDisplayList, GlobalGpuState globalGpuState)
         {
-            this.GpuDisplayList = gpuDisplayList;
-            this.GlobalGpuState = globalGpuState;
+            GpuDisplayList = gpuDisplayList;
+            GlobalGpuState = globalGpuState;
         }
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]

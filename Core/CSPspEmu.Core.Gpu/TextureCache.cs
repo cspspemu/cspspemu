@@ -50,7 +50,7 @@ namespace CSPspEmu.Core.Gpu
 
         public void Save(string File)
         {
-            var Bitmap = new Bitmap(this.Width, this.Height);
+            var Bitmap = new Bitmap(Width, Height);
             fixed (OutputPixel* DataPtr = Data)
             {
                 BitmapUtils.TransferChannelsDataInterleaved(
@@ -70,7 +70,7 @@ namespace CSPspEmu.Core.Gpu
         public Texture<TGpuImpl> Load(string FileName)
         {
             var Bitmap = new Bitmap(Image.FromFile(FileName));
-            this.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.Argb).CastToStructArray<OutputPixel>(),
+            SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.Argb).CastToStructArray<OutputPixel>(),
                 Bitmap.Width, Bitmap.Height);
             return this;
         }

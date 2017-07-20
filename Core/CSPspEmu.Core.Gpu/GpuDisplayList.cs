@@ -122,7 +122,7 @@ namespace CSPspEmu.Core.Gpu
         public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner,
             GpuOpCodes GpuOpCode, uint Params);
 
-        private static readonly GpuDisplayListRunnerDelegate InstructionSwitch = GpuDisplayList.GenerateSwitch();
+        private static readonly GpuDisplayListRunnerDelegate InstructionSwitch = GenerateSwitch();
         internal PspMemory Memory;
 
 
@@ -149,14 +149,14 @@ namespace CSPspEmu.Core.Gpu
             this.Memory = Memory;
             this.GpuProcessor = GpuProcessor;
             this.Id = Id;
-            this.GlobalGpuState = GpuProcessor.GlobalGpuState;
-            this.GpuDisplayListRunner = new GpuDisplayListRunner(this, GpuProcessor.GlobalGpuState);
+            GlobalGpuState = GpuProcessor.GlobalGpuState;
+            GpuDisplayListRunner = new GpuDisplayListRunner(this, GpuProcessor.GlobalGpuState);
         }
 
         public void SetInstructionAddressStartAndCurrent(uint value)
         {
-            this.InstructionAddressCurrent = value & PspMemory.MemoryMask;
-            this.InstructionAddressStart = value & PspMemory.MemoryMask;
+            InstructionAddressCurrent = value & PspMemory.MemoryMask;
+            InstructionAddressStart = value & PspMemory.MemoryMask;
         }
 
         public void SetInstructionAddressStall(uint value)
@@ -179,8 +179,8 @@ namespace CSPspEmu.Core.Gpu
             Status.SetValue(DisplayListStatusEnum.Drawing);
 
             if (Debug)
-                Console.WriteLine("Process() : {0} : 0x{1:X8} : 0x{2:X8} : 0x{3:X8}", this.Id,
-                    this.InstructionAddressCurrent, this.InstructionAddressStart, this.InstructionAddressStall);
+                Console.WriteLine("Process() : {0} : 0x{1:X8} : 0x{2:X8} : 0x{3:X8}", Id,
+                    InstructionAddressCurrent, InstructionAddressStart, InstructionAddressStall);
 
             Done = false;
             while (!Done)
@@ -396,7 +396,7 @@ namespace CSPspEmu.Core.Gpu
 
         public void DeQueue()
         {
-            this.Done = true;
+            Done = true;
             GpuProcessor.DisplayListQueue.Remove(this);
         }
     }

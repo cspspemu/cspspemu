@@ -124,7 +124,7 @@ namespace CSPspEmu.Core.Gpu.State
             {
                 valuesPtr[15] = 1.0f;
             }
-            this.Index = index;
+            Index = index;
         }
 
         public void Dump()
