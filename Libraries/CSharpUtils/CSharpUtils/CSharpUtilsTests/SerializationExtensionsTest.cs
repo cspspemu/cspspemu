@@ -31,7 +31,7 @@ namespace CSharpUtilsTests
         {
             Assert.AreEqual(
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
-                "<SampleStruct xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n" +
+                "<SampleStruct>\r\n" +
                 "  <Id>Test</Id>\r\n" +
                 "  <Values>\r\n" +
                 "    <int>0</int>\r\n" +
@@ -45,6 +45,8 @@ namespace CSharpUtilsTests
                     Id = "Test",
                     Values = new int[] {0, 1, 2, 3},
                 }.ToXmlString()
+                    .Replace(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "")
+                .Replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "")
             );
         }
 
