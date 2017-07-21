@@ -1,125 +1,126 @@
 ﻿using CSharpUtils.Ext.SpaceAssigner;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class SpaceAssigner1D_SpaceTest
     {
-        [Test]
+        [Fact]
         public void IntersectionInnerTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Space2 = new SpaceAssigner1D.Space(-1, +1);
 
-            Assert.AreEqual(Space2, Space1.Intersection(Space2));
-            Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
+            Assert.Equal(Space2, Space1.Intersection(Space2));
+            Assert.Equal(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [Test]
+        [Fact]
         public void IntersectionNoneTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Space2 = new SpaceAssigner1D.Space(+3, +6);
 
-            Assert.AreEqual(null, Space1.Intersection(Space2));
-            Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
+            Assert.Equal(null, Space1.Intersection(Space2));
+            Assert.Equal(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [Test]
+        [Fact]
         public void IntersectionExactTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Space2 = new SpaceAssigner1D.Space(-3, +3);
 
-            Assert.AreEqual(Space1, Space1.Intersection(Space2));
-            Assert.AreEqual(Space2, Space1.Intersection(Space2));
-            Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
+            Assert.Equal(Space1, Space1.Intersection(Space2));
+            Assert.Equal(Space2, Space1.Intersection(Space2));
+            Assert.Equal(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [Test]
+        [Fact]
         public void IntersectionLeftTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Space2 = new SpaceAssigner1D.Space(-6, -1);
 
-            Assert.AreEqual(new SpaceAssigner1D.Space(-3, -1), Space1.Intersection(Space2));
-            Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
+            Assert.Equal(new SpaceAssigner1D.Space(-3, -1), Space1.Intersection(Space2));
+            Assert.Equal(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [Test]
+        [Fact]
         public void IntersectionRightTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Space2 = new SpaceAssigner1D.Space(+2, +100);
 
-            Assert.AreEqual(new SpaceAssigner1D.Space(+2, 100), Space1.Intersection(Space2));
-            Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
+            Assert.Equal(new SpaceAssigner1D.Space(+2, 100), Space1.Intersection(Space2));
+            Assert.Equal(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [Test]
+        [Fact]
         public void SubstractInsideTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Space2 = new SpaceAssigner1D.Space(-2, +2);
 
             var Spaces = Space1 - Space2;
-            Assert.AreEqual(2, Spaces.Length);
-            Assert.AreEqual(new SpaceAssigner1D.Space(-3, -2), Spaces[0]);
-            Assert.AreEqual(new SpaceAssigner1D.Space(+2, +3), Spaces[1]);
+            Assert.Equal(2, Spaces.Length);
+            Assert.Equal(new SpaceAssigner1D.Space(-3, -2), Spaces[0]);
+            Assert.Equal(new SpaceAssigner1D.Space(+2, +3), Spaces[1]);
         }
 
-        [Test]
+        [Fact]
         public void SubstractExactTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Spaces = Space1 - Space1;
-            Assert.AreEqual(0, Spaces.Length);
+            Assert.Equal(0, Spaces.Length);
         }
 
-        [Test]
+        [Fact]
         public void SubstractNoneOutsideTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Spaces = Space1 - new SpaceAssigner1D.Space(4, 4);
-            Assert.AreEqual(1, Spaces.Length);
-            Assert.AreEqual(Space1, Spaces[0]);
+            Assert.Equal(1, Spaces.Length);
+            Assert.Equal(Space1, Spaces[0]);
         }
 
-        [Test]
+        [Fact]
         public void SubstractNoneInsideTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Spaces = Space1 - new SpaceAssigner1D.Space(0, 0);
-            Assert.AreEqual(1, Spaces.Length);
-            Assert.AreEqual(Space1, Spaces[0]);
+            Assert.Equal(1, Spaces.Length);
+            Assert.Equal(Space1, Spaces[0]);
         }
 
-        [Test]
+        [Fact]
         public void SubstractLeftExactTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Spaces = Space1 - new SpaceAssigner1D.Space(-3, 0);
-            Assert.AreEqual(1, Spaces.Length);
-            Assert.AreEqual(new SpaceAssigner1D.Space(0, 3), Spaces[0]);
+            Assert.Equal(1, Spaces.Length);
+            Assert.Equal(new SpaceAssigner1D.Space(0, 3), Spaces[0]);
         }
 
-        [Test]
+        [Fact]
         public void SubstractLeftTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Spaces = Space1 - new SpaceAssigner1D.Space(-4, 0);
-            Assert.AreEqual(1, Spaces.Length);
-            Assert.AreEqual(new SpaceAssigner1D.Space(0, 3), Spaces[0]);
+            Assert.Equal(1, Spaces.Length);
+            Assert.Equal(new SpaceAssigner1D.Space(0, 3), Spaces[0]);
         }
 
-        [Test]
+        [Fact]
         public void SubstractRightTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
             var Spaces = Space1 - new SpaceAssigner1D.Space(+2, +100);
-            Assert.AreEqual(1, Spaces.Length);
-            Assert.AreEqual(new SpaceAssigner1D.Space(-3, +2), Spaces[0]);
+            Assert.Equal(1, Spaces.Length);
+            Assert.Equal(new SpaceAssigner1D.Space(-3, +2), Spaces[0]);
         }
     }
 }

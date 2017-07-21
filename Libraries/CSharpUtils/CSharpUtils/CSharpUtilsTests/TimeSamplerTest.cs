@@ -1,13 +1,14 @@
 ﻿using System;
 using CSharpUtils;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class TimeSamplerTest
     {
-        [Test]
+        [Fact]
         public void GetLastIncrementTest()
         {
             var TimeSampler = new TimeSampler();
@@ -18,7 +19,7 @@ namespace CSharpUtilsTests
             TimeSampler.AddAt(DateTime0, 100);
             TimeSampler.AddAt(DateTime1, 200);
             TimeSampler.AddAt(DateTime2, 400);
-            Assert.AreEqual(DateTime0, TimeSampler.GetNearestDateTimeAt(DateTimeStart + TimeSpan.FromMilliseconds(5)));
+            Assert.Equal(DateTime0, TimeSampler.GetNearestDateTimeAt(DateTimeStart + TimeSpan.FromMilliseconds(5)));
             Console.WriteLine(TimeSampler.GetNearestDateTimeAt(DateTimeStart + TimeSpan.FromMilliseconds(5)));
             Console.WriteLine(TimeSampler.GetNearestDateTimeAt(DateTimeStart + TimeSpan.FromMilliseconds(15)));
             Console.WriteLine(TimeSampler.GetNearestDateTimeAt(DateTimeStart + TimeSpan.FromMilliseconds(1000)));

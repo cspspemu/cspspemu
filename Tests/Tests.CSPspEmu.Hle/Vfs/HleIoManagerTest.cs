@@ -1,13 +1,14 @@
 ﻿using CSPspEmu.Hle.Managers;
-using NUnit.Framework;
+
 using CSPspEmu.Hle.Vfs.Local;
+using Xunit;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class HleIoManagerTest
     {
-        [Test]
+        [Fact]
         public void ParsePathTest()
         {
             var InjectContext = new InjectContext();
@@ -18,9 +19,9 @@ namespace CSPspEmu.Core.Tests
 
             var Parts = HleIoManager.ParsePath("ms3:/path/to/file.txt");
 
-            Assert.AreEqual(Driver, Parts.HleIoDrvFileArg.HleIoDriver);
-            Assert.AreEqual(3, Parts.HleIoDrvFileArg.FileSystemNumber);
-            Assert.AreEqual("/path/to/file.txt", Parts.LocalPath);
+            Assert.Equal(Driver, Parts.HleIoDrvFileArg.HleIoDriver);
+            Assert.Equal(3, Parts.HleIoDrvFileArg.FileSystemNumber);
+            Assert.Equal("/path/to/file.txt", Parts.LocalPath);
         }
     }
 }

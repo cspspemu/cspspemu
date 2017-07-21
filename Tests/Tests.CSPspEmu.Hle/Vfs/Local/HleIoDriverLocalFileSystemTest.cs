@@ -1,22 +1,23 @@
 ﻿using CSPspEmu.Hle.Vfs.Local;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class HleIoDriverLocalFileSystemTest
     {
-        [Test]
+        [Fact]
         public void GetSanitizedPathTest()
         {
-            Assert.AreEqual("/test/1/2", HleIoDriverLocalFileSystem.GetSanitizedPath("/test/1/2"));
-            Assert.AreEqual("/test/1/2", HleIoDriverLocalFileSystem.GetSanitizedPath("/test///1//2"));
-            Assert.AreEqual("/test/1/2", HleIoDriverLocalFileSystem.GetSanitizedPath("/test/\\/1\\\\2"));
-            Assert.AreEqual("1/2/3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/3"));
-            Assert.AreEqual("1/3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/../3"));
-            Assert.AreEqual("1/3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/.././././3"));
-            Assert.AreEqual("3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/../../../../../3"));
-            Assert.AreEqual("1/2/3/4", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/3/4/////"));
+            Assert.Equal("/test/1/2", HleIoDriverLocalFileSystem.GetSanitizedPath("/test/1/2"));
+            Assert.Equal("/test/1/2", HleIoDriverLocalFileSystem.GetSanitizedPath("/test///1//2"));
+            Assert.Equal("/test/1/2", HleIoDriverLocalFileSystem.GetSanitizedPath("/test/\\/1\\\\2"));
+            Assert.Equal("1/2/3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/3"));
+            Assert.Equal("1/3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/../3"));
+            Assert.Equal("1/3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/.././././3"));
+            Assert.Equal("3", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/../../../../../3"));
+            Assert.Equal("1/2/3/4", HleIoDriverLocalFileSystem.GetSanitizedPath("1/2/3/4/////"));
         }
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System.IO;
 using System.Text;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class StreamExtensionsTest
     {
-        [Test]
+        [Fact]
         public void CopyToFastTest()
         {
             var Input = new MemoryStream();
@@ -25,28 +26,28 @@ namespace CSharpUtilsTests
             Input.Position = 0;
             Input.CopyToFast(Output);
 
-            Assert.AreEqual(Output.Length, Input.Length);
-            CollectionAssert.AreEqual(Input.ToArray(), Output.ToArray());
-            CollectionAssert.AreEqual(Input.ToArray(), Output2.ToArray());
+            Assert.Equal(Output.Length, Input.Length);
+            Assert.Equal(Input.ToArray(), Output.ToArray());
+            Assert.Equal(Input.ToArray(), Output2.ToArray());
         }
 
-        [Test]
+        [Fact]
         public void SliceStreamTest()
         {
             MemoryStream MemoryStream = new MemoryStream(Encoding.ASCII.GetBytes("Hello World"));
             MemoryStream.ReadBytes(6);
             var SliceStream = MemoryStream.ReadStream();
-            Assert.AreEqual("Wo", Encoding.ASCII.GetString(SliceStream.ReadBytes(2)));
+            Assert.Equal("Wo", Encoding.ASCII.GetString(SliceStream.ReadBytes(2)));
             var SliceStream2 = SliceStream.ReadStream();
-            Assert.AreEqual(0, SliceStream.Available());
-            Assert.AreEqual("rld", Encoding.ASCII.GetString(SliceStream2.ReadBytes(3)));
-            Assert.AreEqual(0, SliceStream2.Available());
+            Assert.Equal(0, SliceStream.Available());
+            Assert.Equal("rld", Encoding.ASCII.GetString(SliceStream2.ReadBytes(3)));
+            Assert.Equal(0, SliceStream2.Available());
         }
 
-        [Test]
+        [Fact]
         public void PreservePositionAndLockWithNewMemoryStreamTest()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "010203",
                 new MemoryStream().PreservePositionAndLock((Stream) =>
                 {

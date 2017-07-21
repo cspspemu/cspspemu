@@ -3,14 +3,15 @@ using CSharpUtils.Ext.Extensions;
 using CSharpUtils.Ext.SpaceAssigner;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests.Extensions
 {
-    [TestFixture]
+    
     public class StreamExtensionsExtTest
     {
-        [Test]
+        [Fact]
         public void TestJoinWithThresold()
         {
             var Spaces = new SpaceAssigner1D.Space[]
@@ -23,10 +24,10 @@ namespace CSharpUtilsTests.Extensions
             };
 
             var JoinedSpaces = Spaces.JoinWithThresold(thresold: 4);
-            Assert.AreEqual("Space(Min=0, Max=16),Space(Min=60, Max=99)", JoinedSpaces.ToStringArray());
+            Assert.Equal("Space(Min=0, Max=16),Space(Min=60, Max=99)", JoinedSpaces.ToStringArray());
         }
 
-        [Test]
+        [Fact]
         public void TestConvertSpacesToMapStream()
         {
             var Stream = new MemoryStream(new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
@@ -36,7 +37,7 @@ namespace CSharpUtilsTests.Extensions
                 new SpaceAssigner1D.Space(6, 9)
             });
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "StreamEntry(1, 2, CSharpUtils.Streams.SliceStream),StreamEntry(6, 3, CSharpUtils.Streams.SliceStream)",
                 MapStream.StreamEntries.ToStringArray()
             );
@@ -46,7 +47,7 @@ namespace CSharpUtilsTests.Extensions
             //Console.WriteLine(SerializedData.ToHexString());
             //SerializerUtils.SerializeToMemoryStream(MapStream.Serialize).CopyToFile(@"c:\temp\test.bin");
 
-            CollectionAssert.AreEqual(
+            Assert.Equal(
                 new byte[]
                 {
                     // Magic
@@ -68,14 +69,14 @@ namespace CSharpUtilsTests.Extensions
             );
 
             var MapStream2 = MapStream.Unserialize(new MemoryStream(SerializedData));
-            Assert.AreEqual(
+            Assert.Equal(
                 "StreamEntry(1, 2, CSharpUtils.Streams.SliceStream),StreamEntry(6, 3, CSharpUtils.Streams.SliceStream)",
                 MapStream2.StreamEntries.ToStringArray()
             );
 
             var ZeroStream = new MemoryStream(((byte) 0).Repeat(10));
             MapStream2.WriteSegmentsToStream(ZeroStream);
-            CollectionAssert.AreEqual(
+            Assert.Equal(
                 new byte[] {0, 2, 3, 0, 0, 0, 7, 8, 9, 0},
                 ZeroStream.ToArray()
             );

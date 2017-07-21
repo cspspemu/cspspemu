@@ -1,15 +1,16 @@
-﻿using NUnit.Framework;
+﻿
 using System.Text;
 using System.Collections.Generic;
 using CSharpUtils.Ext.Compression.Lz;
 using CSharpUtils.Extensions;
+using Xunit;
 
 namespace CSharpUtilsTests.Compression
 {
-    [TestFixture]
+    
     public class LzBufferTest
     {
-        [Test]
+        [Fact]
         public void FindMaxSequenceTest()
         {
             var data = new byte[]
@@ -22,10 +23,10 @@ namespace CSharpUtilsTests.Compression
 
             var Result = LzMatcher.FindMaxSequence();
 
-            Assert.AreEqual("LzMatcher.FindSequenceResult(Offset=7, Size=5)", Result.ToString());
+            Assert.Equal("LzMatcher.FindSequenceResult(Offset=7, Size=5)", Result.ToString());
         }
 
-        [Test]
+        [Fact]
         public void HandleWithOverlappingTest()
         {
             var Data = Encoding.UTF8.GetBytes("abccccccabc");
@@ -38,13 +39,13 @@ namespace CSharpUtilsTests.Compression
                 }
             );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "PUT(97),PUT(98),PUT(99),REPEAT(-1,5),REPEAT(-8,3)",
                 Results.ToStringArray()
             );
         }
 
-        [Test]
+        [Fact]
         public void HandleWithoutOverlappingTest()
         {
             var Data = Encoding.UTF8.GetBytes("abccccccccccccccccccccccabc");
@@ -57,7 +58,7 @@ namespace CSharpUtilsTests.Compression
                 }
             );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "PUT(97),PUT(98),PUT(99),PUT(99),PUT(99),REPEAT(-3,3),REPEAT(-6,6),REPEAT(-12,9),PUT(99),REPEAT(-24,3)",
                 Results.ToStringArray()
             );

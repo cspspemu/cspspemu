@@ -1,16 +1,17 @@
 ﻿using System;
 using SafeILGenerator.Ast.Serializers;
 using SafeILGenerator.Ast;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace SafeILGenerator.Tests.Ast.Serializers
 {
-    [TestFixture]
+    
     public class UnitTest1
     {
         private static AstGenerator ast = AstGenerator.Instance;
 
-        [Test]
+        [Fact]
         public void TestMethod1()
         {
             var Ast = ast.Statements(

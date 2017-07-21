@@ -1,21 +1,15 @@
-﻿using System;
-using NUnit.Framework;
-using CSPspEmu.Hle.Modules._unknownPrx;
+﻿using CSPspEmu.Hle.Modules._unknownPrx;
 using System.IO;
-using System.Net;
-using System.Reflection;
-using System.Resources;
-using CSharpUtils.Extensions;
+using Xunit;
 
 namespace CSPspEmu.Hle.Modules.Tests
 {
-    [TestFixture]
+    
     public unsafe class sceDefltTest : BaseModuleTest
     {
         [Inject] sceDeflt sceDeflt = null;
 
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void TestMethod1()
         {
             //global::packageName.Properties.Resources.ThatFileName
@@ -31,10 +25,10 @@ namespace CSPspEmu.Hle.Modules.Tests
                 sceDeflt.sceZlibDecompress(bufferPtr, buffer.Length, deflatedPtr, &crc32);
             }
 
-            CollectionAssert.AreEqual(inflated, buffer);
+            Assert.Equal(inflated, buffer);
 
-            //Assert.AreEqual((uint)0x3496193C, (uint)crc32);
-            Assert.Inconclusive("Missing CRC check! We should check this is correct.");
+            //Assert.Equal((uint)0x3496193C, (uint)crc32);
+            //Assert.Inconclusive("Missing CRC check! We should check this is correct.");
 
             File.WriteAllBytes("../../../TestOutput/sample.inflated.again", buffer);
         }

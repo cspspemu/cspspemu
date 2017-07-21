@@ -1,4 +1,3 @@
-./Tests/Tests.All/bin/Release/Tests.All.dll
 ./Libraries/CSharpUtils/CSharpUtils/CSharpUtilsTests/bin/Release/CSharpUtilsTests.dll
 ./Libraries/CSharpUtils/CSharpUtils/Tests.CSharpUtils.Drawing/bin/Release/Tests.CSharpUtils.Drawing.dll
 ./Libraries/CSharpUtils/CSharpUtils/Tests.CSharpUtils.Ext/bin/Release/Tests.CSharpUtils.Ext.dll

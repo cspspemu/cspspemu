@@ -2,21 +2,22 @@
 using System.Threading;
 using System.Collections.Generic;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class CustomThreadPoolTest
     {
-        [Test]
+        [Fact]
         public void TestStop()
         {
             var CustomThreadPool = new CustomThreadPool(2);
             CustomThreadPool.Stop();
         }
 
-        [Test]
+        [Fact]
         public void Test()
         {
             var CustomThreadPool = new CustomThreadPool(2);
@@ -42,10 +43,10 @@ namespace CSharpUtilsTests
 
             CountdownEvent.Wait();
             Thread.Sleep(10);
-            Assert.IsTrue(CustomThreadPool.GetLoopIterCount(0) <= 2);
-            Assert.IsTrue(CustomThreadPool.GetLoopIterCount(1) <= 2);
-            Assert.AreEqual("0,1", Results0.ToStringArray());
-            Assert.AreEqual("0", Results1.ToStringArray());
+            Assert.True(CustomThreadPool.GetLoopIterCount(0) <= 2);
+            Assert.True(CustomThreadPool.GetLoopIterCount(1) <= 2);
+            Assert.Equal("0,1", Results0.ToStringArray());
+            Assert.Equal("0", Results1.ToStringArray());
             CustomThreadPool.Stop();
         }
     }

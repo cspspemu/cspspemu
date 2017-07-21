@@ -1,27 +1,27 @@
 ﻿using CSPspEmu.Hle.Formats;
-using NUnit.Framework;
+
 using System.IO;
 using System.Linq;
+using Xunit;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class CsoTest
     {
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void ReadSectorDecompressedTest()
         {
             var Cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
             var IsoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
             int ExpectedNumberOfBlocks = 229;
             int ExpectedBlockSize = 2048;
-            Assert.AreEqual(ExpectedNumberOfBlocks, Cso.NumberOfBlocks);
-            Assert.AreEqual(ExpectedBlockSize, Cso.BlockSize);
+            Assert.Equal(ExpectedNumberOfBlocks, Cso.NumberOfBlocks);
+            Assert.Equal(ExpectedBlockSize, Cso.BlockSize);
             for (uint Block = 0; Block < ExpectedNumberOfBlocks; Block++)
             {
                 var DecompressedBlockData = Cso.ReadBlocksDecompressed(Block, 1)[0];
-                CollectionAssert.AreEqual(
+                Assert.Equal(
                     IsoBytes.Skip((int) (ExpectedBlockSize * Block)).Take(ExpectedBlockSize).ToArray(),
                     DecompressedBlockData.ToArray()
                 );

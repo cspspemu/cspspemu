@@ -1,11 +1,13 @@
-﻿using NUnit.Framework;
+﻿
+
+using Xunit;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class InstructionTest
     {
-        [Test]
+        [Fact]
         public void InstructionConstructorTest()
         {
         }

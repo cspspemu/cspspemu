@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using System.Text;
 using System.Linq;
-using NUnit.Framework;
+
 using CSharpUtils.Streams;
+using Xunit;
 
 namespace CSharpUtilsTests.Streams
 {
-    [TestFixture]
+    
     public class StreamChunker2Test
     {
         protected string BList(params string[] strings)
@@ -22,17 +23,17 @@ namespace CSharpUtilsTests.Streams
             ).Select((Item) => Encoding.ASCII.GetString(Item)).ToArray());
         }
 
-        [Test]
+        [Fact]
         public void TestMethod1()
         {
-            Assert.AreEqual(BList("A", "A"), ChunkStr("A*******A", "*******"));
-            Assert.AreEqual(BList("AA", "A"), ChunkStr("AA*******A", "*******"));
-            Assert.AreEqual(BList("AAA", "A"), ChunkStr("AAA*******A", "*******"));
-            Assert.AreEqual(BList("AAAA", "A"), ChunkStr("AAAA*******A", "*******"));
-            Assert.AreEqual(BList("AAAAA", "A"), ChunkStr("AAAAA*******A", "*******"));
-            Assert.AreEqual(BList("AAAAAA", "A"), ChunkStr("AAAAAA*******A", "*******"));
-            Assert.AreEqual(BList("AAAAAAA", "A"), ChunkStr("AAAAAAA*******A", "*******"));
-            Assert.AreEqual(BList("AAAAAAAA", "A"), ChunkStr("AAAAAAAA*******A", "*******"));
+            Assert.Equal(BList("A", "A"), ChunkStr("A*******A", "*******"));
+            Assert.Equal(BList("AA", "A"), ChunkStr("AA*******A", "*******"));
+            Assert.Equal(BList("AAA", "A"), ChunkStr("AAA*******A", "*******"));
+            Assert.Equal(BList("AAAA", "A"), ChunkStr("AAAA*******A", "*******"));
+            Assert.Equal(BList("AAAAA", "A"), ChunkStr("AAAAA*******A", "*******"));
+            Assert.Equal(BList("AAAAAA", "A"), ChunkStr("AAAAAA*******A", "*******"));
+            Assert.Equal(BList("AAAAAAA", "A"), ChunkStr("AAAAAAA*******A", "*******"));
+            Assert.Equal(BList("AAAAAAAA", "A"), ChunkStr("AAAAAAAA*******A", "*******"));
         }
     }
 }

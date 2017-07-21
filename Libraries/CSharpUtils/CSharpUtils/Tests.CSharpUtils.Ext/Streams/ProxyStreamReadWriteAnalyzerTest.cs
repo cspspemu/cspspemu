@@ -1,14 +1,15 @@
 ﻿using CSharpUtils.Ext.Streams;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests.Streams
 {
-    [TestFixture]
+    
     public class ProxyStreamReadWriteAnalyzerTest
     {
-        [Test]
+        [Fact]
         public void TestReadAnalyzing()
         {
             var ZeroStream = new ZeroStream(0x1000000);
@@ -23,7 +24,7 @@ namespace CSharpUtilsTests.Streams
 
             var Usage = StreamAnalyzer.ReadUsage;
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "Space(Min=100, Max=112),Space(Min=200, Max=216)",
                 Usage.ToStringArray()
             );

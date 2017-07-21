@@ -1,17 +1,17 @@
 ﻿using CSPspEmu.Hle.Loader;
-using NUnit.Framework;
+
 using System.IO;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
 using CSharpUtils.Extensions;
+using Xunit;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class ElfLoaderTest
     {
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void ElfLoaderConstructorTest()
         {
             var InjectContext = new InjectContext();
@@ -25,10 +25,10 @@ namespace CSPspEmu.Core.Tests
 
             ElfLoader.Load(File.OpenRead("../../../TestInput/minifire.elf"), "minifire.elf");
             ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition);
-            Assert.AreEqual(1, ElfLoader.ProgramHeaders.Length);
-            Assert.AreEqual(3, ElfLoader.SectionHeaders.Length);
+            Assert.Equal(1, ElfLoader.ProgramHeaders.Length);
+            Assert.Equal(3, ElfLoader.SectionHeaders.Length);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "['','.rodata.sceModuleInfo']".Replace('\'', '"'),
                 ElfLoader.SectionHeadersByName.Keys.ToJson()
             );
@@ -41,8 +41,8 @@ namespace CSPspEmu.Core.Tests
             var PC = ElfLoader.Header.EntryPoint;
             //var GP = ModuleInfo.GP;
 
-            Assert.AreEqual(0x08900008, (int) PC);
-            //Assert.AreEqual(0x00004821, (int)GP);
+            Assert.Equal(0x08900008, (int) PC);
+            //Assert.Equal(0x00004821, (int)GP);
         }
     }
 }

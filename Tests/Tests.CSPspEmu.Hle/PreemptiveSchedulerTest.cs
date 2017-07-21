@@ -1,10 +1,11 @@
 ﻿using System;
 using CSPspEmu.Hle;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSPspEmu.Tests.Hle
 {
-    [TestFixture]
+    
     public class PreemptiveSchedulerTest
     {
         public class PreemptiveItem : IPreemptiveItem
@@ -27,14 +28,13 @@ namespace CSPspEmu.Tests.Hle
 
         PreemptiveItem PreemptiveItem4 = new PreemptiveItem() {Name = "4", Priority = 8, Ready = true};
 
-        [Test]
-        [Ignore("check")]
+        [Fact(Skip = "check")]
         public void TestNextWithoutItems()
         {
             Assert.Throws<Exception>(() => { Scheduler.Next(); });
         }
 
-        [Test]
+        [Fact]
         public void TestNextSingleItem()
         {
             Scheduler.Update(PreemptiveItem1);
@@ -42,11 +42,11 @@ namespace CSPspEmu.Tests.Hle
             for (int n = 0; n < 3; n++)
             {
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem1, Scheduler.Current);
+                Assert.Equal(PreemptiveItem1, Scheduler.Current);
             }
         }
 
-        [Test]
+        [Fact]
         public void TestNextTwoItemsWithSamePriority()
         {
             Scheduler.Update(PreemptiveItem1);
@@ -56,14 +56,14 @@ namespace CSPspEmu.Tests.Hle
             for (int n = 0; n < 3; n++)
             {
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem1, Scheduler.Current);
+                Assert.Equal(PreemptiveItem1, Scheduler.Current);
 
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem2, Scheduler.Current);
+                Assert.Equal(PreemptiveItem2, Scheduler.Current);
             }
         }
 
-        [Test]
+        [Fact]
         public void TestNextTwoItemsWithSamePriorityAndOtherWithLowerPriority()
         {
             Scheduler.Update(PreemptiveItem1);
@@ -74,10 +74,10 @@ namespace CSPspEmu.Tests.Hle
             for (int n = 0; n < 3; n++)
             {
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem1, Scheduler.Current);
+                Assert.Equal(PreemptiveItem1, Scheduler.Current);
 
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem2, Scheduler.Current);
+                Assert.Equal(PreemptiveItem2, Scheduler.Current);
             }
 
             PreemptiveItem1.Ready = false;
@@ -86,7 +86,7 @@ namespace CSPspEmu.Tests.Hle
             for (int n = 0; n < 3; n++)
             {
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem2, Scheduler.Current);
+                Assert.Equal(PreemptiveItem2, Scheduler.Current);
             }
 
             PreemptiveItem2.Ready = false;
@@ -94,7 +94,7 @@ namespace CSPspEmu.Tests.Hle
             for (int n = 0; n < 3; n++)
             {
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem4, Scheduler.Current);
+                Assert.Equal(PreemptiveItem4, Scheduler.Current);
             }
 
             PreemptiveItem4.Ready = false;
@@ -106,7 +106,7 @@ namespace CSPspEmu.Tests.Hle
             for (int n = 0; n < 3; n++)
             {
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem1, Scheduler.Current);
+                Assert.Equal(PreemptiveItem1, Scheduler.Current);
             }
 
             PreemptiveItem4.Priority = 11;
@@ -116,7 +116,7 @@ namespace CSPspEmu.Tests.Hle
             for (int n = 0; n < 3; n++)
             {
                 Scheduler.Next();
-                Assert.AreEqual(PreemptiveItem4, Scheduler.Current);
+                Assert.Equal(PreemptiveItem4, Scheduler.Current);
             }
         }
     }

@@ -1,13 +1,13 @@
-﻿using NUnit.Framework;
+﻿
 using CSPspEmu.Hle.Formats.Font;
+using Xunit;
 
 namespace CSPspEmu.Core.Tests.Hle.Formats.Font
 {
-    [TestFixture]
+    
     public class PGFTest
     {
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void TestMethod1()
         {
             var PGF = new PGF().Load("../../../TestInput/ltn0.pgf");

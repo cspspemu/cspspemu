@@ -1,58 +1,58 @@
 ﻿using System.Linq;
-using NUnit.Framework;
+
 using CSharpUtils;
 using System;
+using Xunit;
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class RingBufferTest
     {
         RingBuffer<byte> RingBuffer;
 
-        [SetUp]
-        public void InitializeTest()
+        public RingBufferTest()
         {
             RingBuffer = new RingBuffer<byte>(32);
         }
 
-        [Test]
+        [Fact]
         public void TestInitialState()
         {
-            Assert.AreEqual(32, RingBuffer.Capacity);
-            Assert.AreEqual(32, RingBuffer.WriteAvailable);
-            Assert.AreEqual(0, RingBuffer.ReadAvailable);
+            Assert.Equal(32, RingBuffer.Capacity);
+            Assert.Equal(32, RingBuffer.WriteAvailable);
+            Assert.Equal(0, RingBuffer.ReadAvailable);
         }
 
-        [Test]
+        [Fact]
         public void ReadEmpty()
         {
             Assert.Throws<OverflowException>(() => { RingBuffer.Read(); });
         }
 
-        [Test]
+        [Fact]
         public void WriteReadSingle()
         {
-            Assert.AreEqual(32, RingBuffer.Capacity);
-            Assert.AreEqual(32, RingBuffer.WriteAvailable);
-            Assert.AreEqual(0, RingBuffer.ReadAvailable);
+            Assert.Equal(32, RingBuffer.Capacity);
+            Assert.Equal(32, RingBuffer.WriteAvailable);
+            Assert.Equal(0, RingBuffer.ReadAvailable);
 
             RingBuffer.Write(1);
 
-            Assert.AreEqual(32, RingBuffer.Capacity);
-            Assert.AreEqual(31, RingBuffer.WriteAvailable);
-            Assert.AreEqual(1, RingBuffer.ReadAvailable);
+            Assert.Equal(32, RingBuffer.Capacity);
+            Assert.Equal(31, RingBuffer.WriteAvailable);
+            Assert.Equal(1, RingBuffer.ReadAvailable);
 
-            Assert.AreEqual(1, RingBuffer.Read());
+            Assert.Equal(1, RingBuffer.Read());
         }
 
-        [Test]
+        [Fact]
         public void WriteFull()
         {
             foreach (var n in Enumerable.Range(0, RingBuffer.Capacity)) RingBuffer.Write(0);
         }
 
-        [Test]
+        [Fact]
         public void WriteFullPlus1()
         {
             Assert.Throws<OverflowException>(() =>

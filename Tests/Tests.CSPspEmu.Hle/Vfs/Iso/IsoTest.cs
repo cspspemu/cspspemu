@@ -2,15 +2,15 @@
 using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class IsoTest
     {
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void IsoConstructorTest()
         {
             var CsoName = "../../../TestInput/test.cso";

@@ -2,15 +2,15 @@
 using System.Text;
 using System.Linq;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+
 using CSharpUtils.Misc.Acme1;
+using Xunit;
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
     public class Acme1FileTest
     {
-        [Test]
+        [Fact]
         public void LoadTest()
         {
             var acme1File = new Acme1File();
@@ -36,27 +36,27 @@ with several new lines at the end.
 End of the file.
 
 ")), testEncoding);
-            Assert.AreEqual(
+            Assert.Equal(
                 "Text\r\nWith Line",
                 acme1File[0].Text
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "	 Spaces at the beggining",
                 acme1File[2].Text
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "Another single-line text.",
                 acme1File[3].Text
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "Multi line text\r\nwith several new lines at the end.",
                 acme1File[43].Text
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "End of the file.",
                 acme1File[571].Text
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "0,2,3,43,571",
                 acme1File.Select(Entry => Entry.Id).ToStringArray()
             );

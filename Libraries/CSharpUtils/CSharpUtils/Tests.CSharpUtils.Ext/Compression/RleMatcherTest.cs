@@ -1,39 +1,40 @@
-﻿using NUnit.Framework;
+﻿
 using CSharpUtils.Ext.Compression.Lz;
+using Xunit;
 
 namespace Tests.CSharpUtils.Ext.Compression
 {
-    [TestFixture]
+    
     public class RleMatcherTest
     {
-        [Test]
+        [Fact]
         public void TestMatchEmpty()
         {
             var rleMatcher = new RleMatcher(new byte[] { });
-            Assert.AreEqual(0, rleMatcher.Length);
+            Assert.Equal(0, rleMatcher.Length);
             rleMatcher.Skip();
-            Assert.AreEqual(0, rleMatcher.Length);
+            Assert.Equal(0, rleMatcher.Length);
         }
 
-        [Test]
+        [Fact]
         public void TestMatch3()
         {
             byte bb = 77;
             var rleMatcher = new RleMatcher(new[] {bb, bb, bb});
-            Assert.AreEqual(bb, rleMatcher.Byte);
-            Assert.AreEqual(3, rleMatcher.Length);
+            Assert.Equal(bb, rleMatcher.Byte);
+            Assert.Equal(3, rleMatcher.Length);
             rleMatcher.Skip();
-            Assert.AreEqual(bb, rleMatcher.Byte);
-            Assert.AreEqual(2, rleMatcher.Length);
+            Assert.Equal(bb, rleMatcher.Byte);
+            Assert.Equal(2, rleMatcher.Length);
             rleMatcher.Skip();
-            Assert.AreEqual(bb, rleMatcher.Byte);
-            Assert.AreEqual(1, rleMatcher.Length);
+            Assert.Equal(bb, rleMatcher.Byte);
+            Assert.Equal(1, rleMatcher.Length);
             rleMatcher.Skip();
-            Assert.AreEqual(bb, rleMatcher.Byte);
-            Assert.AreEqual(0, rleMatcher.Length);
+            Assert.Equal(bb, rleMatcher.Byte);
+            Assert.Equal(0, rleMatcher.Length);
             rleMatcher.Skip();
-            Assert.AreEqual(bb, rleMatcher.Byte);
-            Assert.AreEqual(0, rleMatcher.Length);
+            Assert.Equal(bb, rleMatcher.Byte);
+            Assert.Equal(0, rleMatcher.Length);
         }
     }
 }

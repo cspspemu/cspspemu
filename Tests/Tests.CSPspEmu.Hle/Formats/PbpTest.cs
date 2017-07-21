@@ -1,14 +1,14 @@
 ﻿using CSPspEmu.Hle.Formats;
-using NUnit.Framework;
+
 using System.IO;
+using Xunit;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class PbpTest
     {
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void LoadTest()
         {
             var Pbp = new Pbp();

@@ -1,21 +1,20 @@
 ﻿using System.Threading;
 using CSharpUtils;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
     public class AsyncTaskTest
     {
-        [Test]
+        [Fact]
         public void SimpleTest()
         {
             var Result = new AsyncTask<string>(delegate() { return "Hello"; });
-            Assert.AreEqual("Hello", Result.Result);
+            Assert.Equal("Hello", Result.Result);
         }
 
-        [Test]
-        [Ignore("fails on mono")]
+        [Fact(Skip = "fails on mono")]
         public void Complex1Test()
         {
             var Result = new AsyncTask<string>(delegate()
@@ -23,12 +22,12 @@ namespace CSharpUtilsTests
                 Thread.Yield();
                 return "Test";
             });
-            Assert.IsFalse(Result.Ready);
+            Assert.False(Result.Ready);
             Thread.Sleep(2);
-            Assert.IsTrue(Result.Ready);
+            Assert.True(Result.Ready);
         }
 
-        [Test]
+        [Fact]
         public void Complex2Test()
         {
             var Result = new AsyncTask<string>(delegate()
@@ -36,8 +35,8 @@ namespace CSharpUtilsTests
                 Thread.Yield();
                 return "Test";
             });
-            Assert.AreEqual("Test", Result.Result);
-            Assert.IsTrue(Result.Ready);
+            Assert.Equal("Test", Result.Result);
+            Assert.True(Result.Ready);
         }
     }
 }

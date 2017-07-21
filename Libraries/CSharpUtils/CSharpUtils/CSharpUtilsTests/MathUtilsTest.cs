@@ -1,15 +1,16 @@
-﻿using NUnit.Framework;
+﻿
 using CSharpUtils;
+using Xunit;
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class MathUtilsTest
     {
-        [Test]
+        [Fact]
         public void TestNextAligned()
         {
-            Assert.AreEqual(0x014000, (int) MathUtils.NextAligned((long) 0x013810, (long) 0x800));
+            Assert.Equal(0x014000, (int) MathUtils.NextAligned((long) 0x013810, (long) 0x800));
         }
     }
 }

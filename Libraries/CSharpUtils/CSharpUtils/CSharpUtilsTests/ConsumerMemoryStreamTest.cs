@@ -1,14 +1,14 @@
 ﻿using System;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
     public class ConsumerMemoryStreamTest
     {
-        [Test]
+        [Fact]
         public void WriteTest()
         {
             var Stream = new ConsumerMemoryStream();
@@ -16,12 +16,12 @@ namespace CSharpUtilsTests
             Stream.WriteByte(2);
             Stream.WriteBytes(new byte[] {3, 4, 5});
             var ReadedBlock1 = Stream.ReadBytes(3);
-            CollectionAssert.AreEqual(ReadedBlock1, new byte[] {1, 2, 3});
+            Assert.Equal(ReadedBlock1, new byte[] {1, 2, 3});
             Stream.WriteBytes(new byte[] {6, 7});
             var ReadedBlock2 = Stream.ReadBytes(4);
-            CollectionAssert.AreEqual(ReadedBlock2, new byte[] {4, 5, 6, 7});
+            Assert.Equal(ReadedBlock2, new byte[] {4, 5, 6, 7});
             Console.WriteLine(Stream.Contents.Implode(","));
-            CollectionAssert.AreEqual(Stream.Contents, new byte[] { });
+            Assert.Equal(Stream.Contents, new byte[] { });
         }
     }
 }

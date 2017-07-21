@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using CSharpUtils.Extensions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace CSharpUtilsTests
 {
-    [TestFixture]
+    
     public class SerializationExtensionsTest
     {
-        [Test]
+        [Fact]
         public void ToJsonTest()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "{\"Hello\":1,\"World\":-1}",
                 new Dictionary<string, int>()
                 {
@@ -26,11 +27,10 @@ namespace CSharpUtilsTests
             public int[] Values;
         }
 
-        [Test]
-        [Ignore("Fails on mono")]
+        [Fact(Skip = "Fails on mono")]
         public void ToXmlStringTest()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                 "<SampleStruct>\r\n" +
                 "  <Id>Test</Id>\r\n" +
@@ -51,7 +51,7 @@ namespace CSharpUtilsTests
             );
         }
 
-        [Test]
+        [Fact]
         public void FromXmlStringTest()
         {
             var SampleStruct = new SampleStruct()
@@ -63,7 +63,7 @@ namespace CSharpUtilsTests
             var SampleStructString1 = SampleStruct.ToXmlString();
             var SampleStructString2 = SampleStructString1.FromXmlString<SampleStruct>().ToXmlString();
 
-            Assert.AreEqual(SampleStructString1, SampleStructString2);
+            Assert.Equal(SampleStructString1, SampleStructString2);
         }
     }
 }

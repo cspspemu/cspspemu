@@ -1,13 +1,14 @@
-﻿using NUnit.Framework;
+﻿
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Iso;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Formats;
+using Xunit;
 
 namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 {
-    [TestFixture]
+    
     public unsafe class ioctlTest : BaseModuleTest, IInjectInitialize
     {
         [Inject] IoFileMgrForUser IoFileMgrForUser = null;
@@ -26,8 +27,7 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
                 IoFileMgrForUser.sceIoOpen("disc0:/PSP_GAME/SYSDIR/BOOT.BIN", HleIoFlags.Read, SceMode.All);
         }
 
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void GetPrimaryVolumeDescriptorTest()
         {
             var PrimaryVolumeDescriptor = default(PrimaryVolumeDescriptor);
@@ -40,19 +40,19 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
                 OutputLength: sizeof(PrimaryVolumeDescriptor)
             );
 
-            Assert.AreEqual(0, result, "Expected no error");
-            Assert.AreEqual(
+            //Assert.Equal(0, result, "Expected no error");
+            Assert.Equal(0, result);
+            Assert.Equal(
                 "CD001",
                 PrimaryVolumeDescriptor.VolumeDescriptorHeader.IdString
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 VolumeDescriptorHeader.TypeEnum.PrimaryVolumeDescriptor,
                 PrimaryVolumeDescriptor.VolumeDescriptorHeader.Type
             );
         }
 
-        [Test]
-        [Ignore("file not found")]
+        [Fact(Skip = "file not found")]
         public void GetSectorSizeTest()
         {
             uint SectorSize;
@@ -66,7 +66,7 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
                 OutputLength: sizeof(uint)
             );
 
-            Assert.AreEqual(IsoFile.SectorSize, SectorSize);
+            Assert.Equal(IsoFile.SectorSize, SectorSize);
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using CSPspEmu.Core.Cpu.Table;
-using NUnit.Framework;
+
 using System;
 using System.Collections.Generic;
 using CSPspEmu.Core.Cpu.Switch;
+using Xunit;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestFixture]
+    
     public class EmitLookupGeneratorTest
     {
         public class HandlerClass
@@ -34,8 +35,7 @@ namespace CSPspEmu.Core.Tests
             }
         }
 
-        [Test]
-        [Ignore("check")]
+        [Fact(Skip = "check")]
         public void GenerateSwitchDelegateTest()
         {
             var EmitLookupGenerator = new EmitLookupGenerator();
@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Tests
             Callback(Convert.ToUInt32("0100", 2), HandlerClass);
             Callback(Convert.ToUInt32("0110", 2), HandlerClass);
             Callback(Convert.ToUInt32("1110", 2), HandlerClass);
-            Assert.AreEqual("0,1,2,0,3,3,0", string.Join(",", HandlerClass.Values));
+            Assert.Equal("0,1,2,0,3,3,0", string.Join(",", HandlerClass.Values));
         }
     }
 }
