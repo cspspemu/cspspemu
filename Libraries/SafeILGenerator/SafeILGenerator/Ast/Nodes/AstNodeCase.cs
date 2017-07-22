@@ -23,7 +23,7 @@
 
         public AstNodeCaseDefault(AstNodeStm code)
         {
-            this.Code = code;
+            Code = code;
         }
 
         public override void TransformNodes(TransformNodesDelegate transformer)

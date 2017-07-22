@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         public static readonly MethodCache Methods = new MethodCache();
 
         private static readonly AstMipsGenerator Ast = AstMipsGenerator.Instance;
-        private static readonly GeneratorIL GeneratorIlInstance = new GeneratorIL();
+        private static readonly GeneratorIl GeneratorIlInstance = new GeneratorIl();
 
         private readonly Dictionary<uint, MethodCacheInfo> _methodMapping =
             new Dictionary<uint, MethodCacheInfo>(64 * 1024);

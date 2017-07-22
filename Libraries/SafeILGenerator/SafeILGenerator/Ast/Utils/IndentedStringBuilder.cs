@@ -5,7 +5,7 @@ namespace SafeILGenerator.Ast.Utils
 {
     public sealed class IndentedStringBuilder
     {
-        private StringBuilder StringBuilder = new StringBuilder();
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
         private bool _startingLine = true;
         private int _indentLevel;
         private int IndentLevelSpaceCount = 4;
@@ -42,16 +42,16 @@ namespace SafeILGenerator.Ast.Utils
             if (_startingLine)
             {
                 _startingLine = false;
-                StringBuilder.Append(new string(' ', Math.Max(_indentLevel, 0) * IndentLevelSpaceCount));
+                _stringBuilder.Append(new string(' ', Math.Max(_indentLevel, 0) * IndentLevelSpaceCount));
             }
-            StringBuilder.Append(inlineText);
+            _stringBuilder.Append(inlineText);
             return this;
         }
 
         public IndentedStringBuilder WriteNewLine()
         {
             _startingLine = true;
-            StringBuilder.Append("\n");
+            _stringBuilder.Append("\n");
             return this;
         }
 
@@ -72,7 +72,7 @@ namespace SafeILGenerator.Ast.Utils
 
         public override string ToString()
         {
-            return StringBuilder.ToString();
+            return _stringBuilder.ToString();
         }
     }
 }

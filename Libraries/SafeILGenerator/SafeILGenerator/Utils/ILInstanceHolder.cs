@@ -44,9 +44,9 @@ namespace SafeILGenerator.Utils
             }
         }
 
-        public static ILInstanceHolderPoolItem<TType> TAlloc<TType>(TType value = default(TType))
+        public static IlInstanceHolderPoolItem<TType> TaAlloc<TType>(TType value = default(TType))
         {
-            return new ILInstanceHolderPoolItem<TType>(Alloc(typeof(TType), value));
+            return new IlInstanceHolderPoolItem<TType>(Alloc(typeof(TType), value));
         }
 
         public static int FreeCount

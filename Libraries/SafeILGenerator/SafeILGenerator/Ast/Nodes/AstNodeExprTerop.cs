@@ -18,11 +18,11 @@ namespace SafeILGenerator.Ast.Nodes
 
         protected override Type UncachedType => True.Type;
 
-        public override void TransformNodes(TransformNodesDelegate Transformer)
+        public override void TransformNodes(TransformNodesDelegate transformer)
         {
-            Transformer.Ref(ref Cond);
-            Transformer.Ref(ref True);
-            Transformer.Ref(ref False);
+            transformer.Ref(ref Cond);
+            transformer.Ref(ref True);
+            transformer.Ref(ref False);
         }
     }
 }

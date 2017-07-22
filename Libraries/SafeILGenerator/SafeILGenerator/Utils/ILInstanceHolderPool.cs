@@ -7,37 +7,6 @@ using System.Runtime;
 
 namespace SafeILGenerator.Utils
 {
-    public class ILInstanceHolderPoolItem<TType>
-    {
-        private IlInstanceHolderPoolItem Item;
-        public int Index => Item.Index;
-        public FieldInfo FieldInfo => Item.FieldInfo;
-
-        public ILInstanceHolderPoolItem(IlInstanceHolderPoolItem item)
-        {
-            Item = item;
-        }
-
-        public TType Value
-        {
-            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-            set { Item.Value = value; }
-            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-            get { return (TType) Item.Value; }
-        }
-
-        public void Free() => Item.Free();
-
-        public AstNodeExprStaticFieldAccess AstFieldAccess => Item.GetAstFieldAccess();
-
-        //public AstNodeExprStaticFieldAccess GetAstFieldAccess()
-        //{
-        //	return Item.GetAstFieldAccess();
-        //}
-    }
-
     public class IlInstanceHolderPoolItem : IDisposable
     {
         private readonly IlInstanceHolderPool _parent;
@@ -86,24 +55,24 @@ namespace SafeILGenerator.Utils
         //private static AstGenerator _ast = AstGenerator.Instance;
 
         public readonly Type ItemType;
-        private IlInstanceHolderPoolItem[] FieldInfos;
-        private LinkedList<int> FreeItems = new LinkedList<int>();
+        private readonly IlInstanceHolderPoolItem[] _fieldInfos;
+        private readonly LinkedList<int> _freeItems = new LinkedList<int>();
         private static int _autoincrement;
         public readonly int CapacityCount;
 
-        public int FreeCount => FreeItems.Count;
+        public int FreeCount => _freeItems.Count;
         public bool HasAvailable => FreeCount > 0;
 
         public IlInstanceHolderPoolItem Alloc()
         {
-            var item = FieldInfos[FreeItems.First.Value];
-            FreeItems.RemoveFirst();
+            var item = _fieldInfos[_freeItems.First.Value];
+            _freeItems.RemoveFirst();
             item.Allocated = true;
             item.Value = null;
             return item;
         }
 
-        internal void Free(IlInstanceHolderPoolItem item) => FreeItems.AddLast(item.Index);
+        internal void Free(IlInstanceHolderPoolItem item) => _freeItems.AddLast(item.Index);
 
         private static string DllName = "Temp.dll";
         private static readonly ModuleBuilder ModuleBuilder;
@@ -125,7 +94,7 @@ namespace SafeILGenerator.Utils
             if (typeName == null) typeName = "DynamicType" + _autoincrement++;
             var typeBuilder = ModuleBuilder.DefineType(typeName,
                 TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.Class);
-            FieldInfos = new IlInstanceHolderPoolItem[count];
+            _fieldInfos = new IlInstanceHolderPoolItem[count];
             var names = new string[count];
             for (var n = 0; n < count; n++)
             {
@@ -138,8 +107,8 @@ namespace SafeILGenerator.Utils
             var fields = holderType.GetFields();
             for (var n = 0; n < count; n++)
             {
-                FieldInfos[n] = new IlInstanceHolderPoolItem(this, n, fields[n]);
-                FreeItems.AddLast(n);
+                _fieldInfos[n] = new IlInstanceHolderPoolItem(this, n, fields[n]);
+                _freeItems.AddLast(n);
             }
         }
     }

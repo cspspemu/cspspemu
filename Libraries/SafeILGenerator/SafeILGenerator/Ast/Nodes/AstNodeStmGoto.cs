@@ -6,10 +6,7 @@ namespace SafeILGenerator.Ast.Nodes
     {
         public readonly AstLabel AstLabel;
 
-        protected AstNodeStmGoto(AstLabel astLabel)
-        {
-            this.AstLabel = astLabel;
-        }
+        protected AstNodeStmGoto(AstLabel astLabel) => AstLabel = astLabel;
 
         public override void TransformNodes(TransformNodesDelegate transformer)
         {
@@ -25,15 +22,9 @@ namespace SafeILGenerator.Ast.Nodes
     {
         public AstNodeExpr Condition;
 
-        public AstNodeStmGotoIf(AstLabel astLabel, AstNodeExpr condition) : base(astLabel)
-        {
-            Condition = condition;
-        }
+        protected AstNodeStmGotoIf(AstLabel astLabel, AstNodeExpr condition) : base(astLabel) => Condition = condition;
 
-        public override void TransformNodes(TransformNodesDelegate transformer)
-        {
-            transformer.Ref(ref Condition);
-        }
+        public override void TransformNodes(TransformNodesDelegate transformer) => transformer.Ref(ref Condition);
     }
 
     public class AstNodeStmGotoAlways : AstNodeStmGoto

@@ -69,7 +69,7 @@ namespace SafeILGenerator.Ast.Generators
 
         protected Generator()
         {
-            foreach (var method in this.GetType()
+            foreach (var method in GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(method => method.ReturnType == typeof(void))
                 .Where(method => method.GetParameters().Count() == 1)
@@ -119,8 +119,7 @@ namespace SafeILGenerator.Ast.Generators
                 {
                     Console.WriteLine(generateMapping);
                 }
-                throw (new NotImplementedException(string.Format("Don't know how to generate {0} for {1}", astNodeType,
-                    GetType())));
+                throw (new NotImplementedException($"Don't know how to generate {astNodeType} for {GetType()}"));
             }
 
             GenerateMappings[astNodeType].Call(this, astNode);

@@ -48,7 +48,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// <summary>
         /// Static Field that will hold the Delegate
         /// </summary>
-        public ILInstanceHolderPoolItem<Action<CpuThreadState>> StaticField;
+        public IlInstanceHolderPoolItem<Action<CpuThreadState>> StaticField;
 
         /// <summary>
         /// 
@@ -63,7 +63,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         {
             MethodCache = methodCache;
             _functionDelegate = delegateGeneratorForPc;
-            StaticField = IlInstanceHolder.TAlloc(delegateGeneratorForPc);
+            StaticField = IlInstanceHolder.TaAlloc(delegateGeneratorForPc);
             Pc = pc;
         }
 

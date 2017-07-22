@@ -12,9 +12,7 @@
         public override void TransformNodes(TransformNodesDelegate transformer)
         {
             if (Expression != null)
-            {
                 transformer.Ref(ref Expression);
-            }
         }
     }
 }

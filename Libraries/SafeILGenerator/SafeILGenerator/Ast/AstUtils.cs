@@ -73,7 +73,7 @@ namespace SafeILGenerator.Ast
             if (castType == typeof(sbyte)) return (sbyte) Convert.ToInt64(value);
             if (castType == typeof(short)) return (short) Convert.ToInt64(value);
             if (castType == typeof(int)) return (int) Convert.ToInt64(value);
-            if (castType == typeof(long)) return (long) Convert.ToInt64(value);
+            if (castType == typeof(long)) return Convert.ToInt64(value);
 
             if (castType == typeof(byte)) return (byte) Convert.ToInt64(value);
             if (castType == typeof(ushort)) return (ushort) Convert.ToInt64(value);

@@ -20,15 +20,9 @@ namespace SafeILGenerator.Ast.Nodes
             Nodes = nodes.ToList();
         }
 
-        public void AddStatement(AstNodeStm node)
-        {
-            Nodes.Add(node);
-        }
+        public void AddStatement(AstNodeStm node) => Nodes.Add(node);
 
-        public override void TransformNodes(TransformNodesDelegate transformer)
-        {
-            transformer.Ref(ref Nodes);
-        }
+        public override void TransformNodes(TransformNodesDelegate transformer) => transformer.Ref(ref Nodes);
 
         public override Dictionary<string, string> Info => new Dictionary<string, string>
         {

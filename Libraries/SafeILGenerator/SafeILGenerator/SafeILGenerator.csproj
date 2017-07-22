@@ -114,6 +114,7 @@
     <Compile Include="Utils\ILFieldInfo.cs" />
     <Compile Include="Utils\ILInstanceHolder.cs" />
     <Compile Include="Utils\ILInstanceHolderPool.cs" />
+    <Compile Include="Utils\ILInstanceHolderPoolItem.cs" />
     <Compile Include="Utils\MethodCreator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

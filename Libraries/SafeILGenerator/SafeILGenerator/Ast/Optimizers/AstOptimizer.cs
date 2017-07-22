@@ -8,17 +8,17 @@ namespace SafeILGenerator.Ast.Optimizers
 {
     public class AstOptimizer
     {
-        private Dictionary<Type, MethodInfo> GenerateMappings = new Dictionary<Type, MethodInfo>();
+        private readonly Dictionary<Type, MethodInfo> _generateMappings = new Dictionary<Type, MethodInfo>();
 
         public AstOptimizer()
         {
             foreach (var method in GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(method => method.ReturnType == typeof(AstNode))
-                .Where(method => method.GetParameters().Count() == 1)
+                .Where(method => method.GetParameters().Length == 1)
             )
             {
-                GenerateMappings[method.GetParameters().First().ParameterType] = method;
+                _generateMappings[method.GetParameters().First().ParameterType] = method;
             }
         }
 
@@ -31,9 +31,9 @@ namespace SafeILGenerator.Ast.Optimizers
 
                 var astNodeType = astNode.GetType();
 
-                if (GenerateMappings.ContainsKey(astNodeType))
+                if (_generateMappings.ContainsKey(astNodeType))
                 {
-                    astNode = (AstNode) GenerateMappings[astNodeType].Invoke(this, new object[] {astNode});
+                    astNode = (AstNode) _generateMappings[astNodeType].Invoke(this, new object[] {astNode});
                 }
                 else
                 {
@@ -108,16 +108,17 @@ namespace SafeILGenerator.Ast.Optimizers
             }
 
             // Double Cast
-            if (cast.Expr is AstNodeExprCast)
+            var expr = cast.Expr as AstNodeExprCast;
+            if (expr != null)
             {
                 //Console.WriteLine("Double Cast");
-                var firstCastType = (cast.Expr as AstNodeExprCast).CastedType;
+                var firstCastType = expr.CastedType;
                 var secondCastType = cast.CastedType;
                 if (firstCastType.IsPrimitive && secondCastType.IsPrimitive)
                 {
                     if (AstUtils.GetTypeSize(firstCastType) >= AstUtils.GetTypeSize(secondCastType))
                     {
-                        return Optimize(new AstNodeExprCast(cast.CastedType, (cast.Expr as AstNodeExprCast).Expr));
+                        return Optimize(new AstNodeExprCast(cast.CastedType, expr.Expr));
                     }
                 }
 
@@ -125,10 +126,11 @@ namespace SafeILGenerator.Ast.Optimizers
             }
 
             // Cast to immediate
-            if (cast.Expr is AstNodeExprImm)
+            var imm = cast.Expr as AstNodeExprImm;
+            if (imm != null)
             {
                 //Console.WriteLine("Cast to immediate");
-                return new AstNodeExprImm(AstUtils.CastType((cast.Expr as AstNodeExprImm).Value, cast.CastedType));
+                return new AstNodeExprImm(AstUtils.CastType(imm.Value, cast.CastedType));
             }
 
             return cast;
@@ -215,9 +217,10 @@ namespace SafeILGenerator.Ast.Optimizers
                 }
                 else
                 {
-                    if (binary.RightNode is AstNodeExprUnop)
+                    var unop = binary.RightNode as AstNodeExprUnop;
+                    if (unop != null)
                     {
-                        var rightUnary = binary.RightNode as AstNodeExprUnop;
+                        var rightUnary = unop;
                         if (Operator == "+" || Operator == "-")
                         {
                             if (rightUnary.Operator == "-")

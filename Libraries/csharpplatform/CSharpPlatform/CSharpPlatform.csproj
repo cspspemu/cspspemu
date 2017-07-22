@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AL\AL.cs" />
-    <Compile Include="AL\ALC.cs" />
     <Compile Include="GL\DynamicLibraryGL.cs" />
     <Compile Include="GL\GL.cs" />
     <Compile Include="GL\Impl\Android\AndroidGLContext.cs" />

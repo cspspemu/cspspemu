@@ -49,7 +49,7 @@ namespace SafeILGenerator.Ast.Nodes
 
     public class AstNodeExprNull : AstNodeExpr
     {
-        public readonly Type Type;
+        public new readonly Type Type;
 
         public AstNodeExprNull(Type type)
         {

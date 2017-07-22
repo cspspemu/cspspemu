@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 {
-    public class GeneratorIlPsp : GeneratorIL
+    public class GeneratorIlPsp : GeneratorIl
     {
         protected void _Generate(AstNodeStmPspInstruction pspInstruction)
         {

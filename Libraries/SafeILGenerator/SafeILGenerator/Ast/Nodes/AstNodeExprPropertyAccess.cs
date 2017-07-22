@@ -23,10 +23,7 @@ namespace SafeILGenerator.Ast.Nodes
 
         protected override Type UncachedType => Property.PropertyType;
 
-        public override void TransformNodes(TransformNodesDelegate transformer)
-        {
-            transformer.Ref(ref Instance);
-        }
+        public override void TransformNodes(TransformNodesDelegate transformer) => transformer.Ref(ref Instance);
 
         public override Dictionary<string, string> Info => new Dictionary<string, string>
         {

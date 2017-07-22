@@ -4,14 +4,12 @@ namespace SafeILGenerator.Ast.Nodes
 {
     public class AstNodeExprSetGetLValuePlaceholder : AstNodeExpr
     {
-        private new Type Type;
-
         public AstNodeExprSetGetLValuePlaceholder(Type type)
         {
-            Type = type;
+            UncachedType = type;
         }
 
-        protected override Type UncachedType => Type;
+        protected override Type UncachedType { get; }
 
         public override void TransformNodes(TransformNodesDelegate transformer)
         {

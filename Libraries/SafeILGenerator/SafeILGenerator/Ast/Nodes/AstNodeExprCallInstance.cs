@@ -15,7 +15,7 @@ namespace SafeILGenerator.Ast.Nodes
         public AstNodeExprCallInstance(AstNodeExpr instance, MethodInfo methodInfo, params AstNodeExpr[] parameters)
             : base(methodInfo, parameters)
         {
-            this.Instance = instance;
+            Instance = instance;
         }
 
         public override void TransformNodes(TransformNodesDelegate transformer)

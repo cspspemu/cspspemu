@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu
                 )
             );
 
-            new GeneratorIL().Reset().Init(method, method.GetILGenerator()).GenerateRoot(astTree);
+            new GeneratorIl().Reset().Init(method, method.GetILGenerator()).GenerateRoot(astTree);
 
             var type = typeBuilder.CreateType();
             Cache[cacheKey] = type.GetMethod(methodName);

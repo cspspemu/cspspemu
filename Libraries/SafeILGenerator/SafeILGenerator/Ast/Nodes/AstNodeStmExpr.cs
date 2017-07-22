@@ -4,10 +4,7 @@
     {
         public AstNodeExpr AstNodeExpr;
 
-        public AstNodeStmExpr(AstNodeExpr astNodeExpr)
-        {
-            AstNodeExpr = astNodeExpr;
-        }
+        public AstNodeStmExpr(AstNodeExpr astNodeExpr) => AstNodeExpr = astNodeExpr;
 
         public override void TransformNodes(TransformNodesDelegate transformer)
         {

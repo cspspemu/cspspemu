@@ -9,7 +9,7 @@ namespace SafeILGenerator.Ast.Nodes
 
         public AstNodeExprLocal(AstLocal astLocal)
         {
-            this.AstLocal = astLocal;
+            AstLocal = astLocal;
         }
 
         protected override Type UncachedType => AstLocal.Type;

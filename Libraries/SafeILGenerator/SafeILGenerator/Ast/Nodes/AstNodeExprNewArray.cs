@@ -23,11 +23,7 @@ namespace SafeILGenerator.Ast.Nodes
 
         public int Length => Values.Count;
 
-        public override void TransformNodes(TransformNodesDelegate transformer)
-        {
-            transformer.Ref(ref Values);
-        }
-
+        public override void TransformNodes(TransformNodesDelegate transformer) => transformer.Ref(ref Values);
         protected override Type UncachedType => ElementType.MakeArrayType();
     }
 }

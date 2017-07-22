@@ -12,7 +12,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
     public unsafe class GeneratorILTest
     {
         private static AstGenerator ast = AstGenerator.Instance;
-        private GeneratorIL GeneratorIL = new GeneratorIL();
+        private GeneratorIl GeneratorIL = new GeneratorIl();
 
         public static void TestAstSetGetLValue_Set(int Index, int Value)
         {
@@ -198,11 +198,11 @@ namespace SafeILGenerator.Tests.Ast.Generators
                 ast.Return()
             );
 
-            var GeneratorIL = new GeneratorIL();
+            var GeneratorIL = new GeneratorIl();
             var Method = GeneratorIL.GenerateDelegate<Action<string>>("TestWriteLine", Ast);
 
             Console.WriteLine(new GeneratorCSharp().GenerateRoot(Ast).ToString());
-            Console.WriteLine("{0}", new GeneratorIL().GenerateToString(Method.Method, Ast));
+            Console.WriteLine("{0}", new GeneratorIl().GenerateToString(Method.Method, Ast));
 
             var Output = AstStringUtils.CaptureOutput(() => { Method("Hello World!"); });
 
@@ -222,7 +222,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
                 ),
                 ast.Return("Invalid!")
             );
-            var GeneratorIL = new GeneratorIL();
+            var GeneratorIL = new GeneratorIl();
             var Method = GeneratorIL.GenerateDelegate<Func<int, string>>("TestSwitch", Ast);
             Assert.Equal("-", Method(0));
             Assert.Equal("One", Method(1));

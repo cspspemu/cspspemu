@@ -15,9 +15,6 @@ namespace SafeILGenerator.Ast.Nodes
 
         protected override Type UncachedType => ClassType;
 
-        public override void TransformNodes(TransformNodesDelegate transformer)
-        {
-            transformer.Ref(ref Params);
-        }
+        public override void TransformNodes(TransformNodesDelegate transformer) => transformer.Ref(ref Params);
     }
 }

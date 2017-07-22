@@ -34,7 +34,7 @@ namespace SafeILGenerator.Tests.Util
                 ast.Return()
             );
             Console.WriteLine(GeneratorCSharp.GenerateString<GeneratorCSharp>(astNode));
-            var generatorIl = new GeneratorIL();
+            var generatorIl = new GeneratorIl();
             var itemSet = generatorIl.GenerateDelegate<Action<int>>("ItemSet", astNode);
             itemSet(10);
             Assert.Equal(10, item.Value);
@@ -59,7 +59,7 @@ namespace SafeILGenerator.Tests.Util
             Assert.Equal(0, IlInstanceHolder.CapacityCount);
             Assert.Equal(0, IlInstanceHolder.FreeCount);
 
-            var globalKey = IlInstanceHolder.TAlloc<int>();
+            var globalKey = IlInstanceHolder.TaAlloc<int>();
 
             Assert.Equal(4, IlInstanceHolder.CapacityCount);
             Assert.Equal(3, IlInstanceHolder.FreeCount);

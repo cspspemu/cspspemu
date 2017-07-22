@@ -50,8 +50,8 @@ namespace CSharpUtils.Ext.SpaceAssigner
         /// <returns></returns>
         public SpaceAssigner1D.Space[] AllocateUnique(byte[][] data)
         {
-            /// @TODO Has to use data.Distinct() and the Allocate[] function in order
-            ///       to be able to avoid a greedy behaviour.
+            // @TODO Has to use data.Distinct() and the Allocate[] function in order
+            //       to be able to avoid a greedy behaviour.
 
             var spaces = new SpaceAssigner1D.Space[data.Length];
             for (var n = 0; n < data.Length; n++)
@@ -74,7 +74,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
         /// <returns></returns>
         public SpaceAssigner1D.Space AllocateUnique(string String, Encoding encoding = null)
         {
-            if (encoding == null) encoding = this.Encoding;
+            if (encoding == null) encoding = Encoding;
             return AllocateUnique(String.GetStringzBytes(encoding));
         }
     }

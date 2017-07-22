@@ -6,10 +6,7 @@ namespace SafeILGenerator.Ast.Nodes
     {
         public readonly AstLabel AstLabel;
 
-        public AstNodeStmLabel(AstLabel astLabel)
-        {
-            AstLabel = astLabel;
-        }
+        public AstNodeStmLabel(AstLabel astLabel) => AstLabel = astLabel;
 
         public override void TransformNodes(TransformNodesDelegate transformer)
         {

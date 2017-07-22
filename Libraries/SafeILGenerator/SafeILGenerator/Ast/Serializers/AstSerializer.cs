@@ -44,12 +44,12 @@ namespace SafeILGenerator.Ast.Serializers
                 {
                     Out.Indent(() =>
                     {
-                        foreach (var child in node.Childs) SerializeAsXml(child, Out, spaces);
+                        foreach (var child in node.Childs) SerializeAsXml(child, Out, spaces: true);
                     });
                 }
                 else
                 {
-                    foreach (var child in node.Childs) SerializeAsXml(child, Out, spaces);
+                    foreach (var child in node.Childs) SerializeAsXml(child, Out, spaces: false);
                 }
                 Out.Write("</" + nodeName + ">");
                 if (spaces) Out.WriteNewLine();

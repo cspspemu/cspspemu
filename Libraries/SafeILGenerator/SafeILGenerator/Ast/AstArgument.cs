@@ -16,15 +16,10 @@ namespace SafeILGenerator.Ast
             Name = name ?? ("@ARG(" + index + ")");
         }
 
-        public static AstArgument Create(Type type, int index, string name = null)
-        {
-            return new AstArgument(index, type, name);
-        }
+        public static AstArgument Create(Type type, int index, string name = null) =>
+            new AstArgument(index, type, name);
 
-        public static AstArgument Create<TType>(int index, string name = null)
-        {
-            return Create(typeof(TType), index, name);
-        }
+        public static AstArgument Create<TType>(int index, string name = null) => Create(typeof(TType), index, name);
 
         public static AstArgument Create(MethodInfo methodInfo, int index, string name = null)
         {

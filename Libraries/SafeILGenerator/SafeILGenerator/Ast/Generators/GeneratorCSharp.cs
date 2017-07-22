@@ -45,7 +45,7 @@ namespace SafeILGenerator.Ast.Generators
             if (value is IntPtr) return $"0x{((IntPtr) value).ToInt64():X}";
             if (value is string) return $"{AstStringUtils.ToLiteral(value as string)}";
             if (AstUtils.IsTypeSigned(type)) return value.ToString();
-            if (Convert.ToInt64(value) > 9) return string.Format("0x{0:X}", value);
+            if (Convert.ToInt64(value) > 9) return $"0x{value:X}";
             return value.ToString();
         }
 

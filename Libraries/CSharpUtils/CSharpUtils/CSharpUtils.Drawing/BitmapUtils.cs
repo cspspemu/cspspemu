@@ -191,7 +191,6 @@ namespace CSharpUtils.Drawing
         public static unsafe void TransferChannelsDataLinear(Rectangle rectangle, Bitmap bitmap, byte* newDataPtr,
             Direction direction, params BitmapChannel[] channels)
         {
-            var widthHeight = bitmap.Width * bitmap.Height;
             var fullRectangle = bitmap.GetFullRectangle();
             if (!fullRectangle.Contains(rectangle.Location))
                 throw (new InvalidOperationException("TransferChannelsDataLinear"));
@@ -213,7 +212,6 @@ namespace CSharpUtils.Drawing
                 {
                     var bitmapDataScan0 = (byte*) bitmapData.Scan0.ToPointer();
                     var width = bitmap.Width;
-                    var height = bitmap.Height;
                     var stride = bitmapData.Stride;
                     if (numberOfChannels == 1)
                     {

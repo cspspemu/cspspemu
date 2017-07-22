@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace SafeILGenerator.Ast.Generators
 {
-    public class GeneratorIL : Generator<GeneratorIL>
+    public class GeneratorIl : Generator<GeneratorIl>
     {
         protected MethodInfo MethodInfo;
         protected ILGenerator IlGenerator;
@@ -16,11 +16,7 @@ namespace SafeILGenerator.Ast.Generators
         private Dictionary<AstLocal, LocalBuilder> _localBuilderCache = new Dictionary<AstLocal, LocalBuilder>();
         private Dictionary<AstLabel, Label> _labelCache = new Dictionary<AstLabel, Label>();
         private Stack<AstNodeExpr> _placeholderStack = new Stack<AstNodeExpr>();
-        private int _switchVarCount = 0;
-
-        public GeneratorIL() : base()
-        {
-        }
+        private int _switchVarCount;
 
         //LocalBuilder
         private LocalBuilder _GetLocalBuilderFromAstLocal(AstLocal astLocal)
@@ -47,21 +43,21 @@ namespace SafeILGenerator.Ast.Generators
             return _labelCache[astLabel];
         }
 
-        public GeneratorIL Init(MethodInfo methodInfo, ILGenerator ilGenerator, bool generateLines = false)
+        public GeneratorIl Init(MethodInfo methodInfo, ILGenerator ilGenerator, bool generateLines = false)
         {
-            this.MethodInfo = methodInfo;
-            this.IlGenerator = ilGenerator;
-            this.GenerateLines = generateLines;
+            MethodInfo = methodInfo;
+            IlGenerator = ilGenerator;
+            GenerateLines = generateLines;
             return this;
         }
 
-        public override GeneratorIL Reset()
+        public override GeneratorIl Reset()
         {
-            this._localBuilderCache = new Dictionary<AstLocal, LocalBuilder>();
-            this._labelCache = new Dictionary<AstLabel, Label>();
-            this._placeholderStack = new Stack<AstNodeExpr>();
-            this.Lines = new List<string>();
-            this._switchVarCount = 0;
+            _localBuilderCache = new Dictionary<AstLocal, LocalBuilder>();
+            _labelCache = new Dictionary<AstLabel, Label>();
+            _placeholderStack = new Stack<AstNodeExpr>();
+            Lines = new List<string>();
+            _switchVarCount = 0;
             return base.Reset();
         }
 
@@ -100,7 +96,7 @@ namespace SafeILGenerator.Ast.Generators
             );
             var ilGenerator = dynamicMethod.GetILGenerator();
             Reset();
-            Init(dynamicMethod, ilGenerator, generateLines: false);
+            Init(dynamicMethod, ilGenerator);
             Generate(astNode);
             return (TDelegate) (object) dynamicMethod.CreateDelegate(typeof(TDelegate));
         }
@@ -109,7 +105,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (GenerateLines)
             {
-                Lines.Add(string.Format("  {0} {1}", opCode, param));
+                Lines.Add($"  {opCode} {param}");
             }
         }
 
@@ -117,7 +113,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (GenerateLines)
             {
-                Lines.Add(string.Format("; {0}", text));
+                Lines.Add($"; {text}");
             }
         }
 
@@ -129,7 +125,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (GenerateLines)
             {
-                Lines.Add(string.Format("Label_{0}:;", label.Name));
+                Lines.Add($"Label_{label.Name}:;");
             }
         }
 
@@ -142,86 +138,85 @@ namespace SafeILGenerator.Ast.Generators
         protected void MarkLabel(AstLabel label)
         {
             MarkLabelHook(label);
-            if (IlGenerator != null) IlGenerator.MarkLabel(_GetLabelFromAstLabel(label));
+            IlGenerator?.MarkLabel(_GetLabelFromAstLabel(label));
         }
 
         protected void Emit(OpCode opCode)
         {
             EmitHook(opCode, null);
-            if (IlGenerator != null) IlGenerator.Emit(opCode);
+            IlGenerator?.Emit(opCode);
         }
 
         protected void Emit(OpCode opCode, int value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, long value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, float value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, double value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, string value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, LocalBuilder value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, MethodInfo value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, ConstructorInfo value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, FieldInfo value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, Type value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, value);
+            IlGenerator?.Emit(opCode, value);
         }
 
         protected void Emit(OpCode opCode, AstLabel value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null) IlGenerator.Emit(opCode, _GetLabelFromAstLabel(value));
+            IlGenerator?.Emit(opCode, _GetLabelFromAstLabel(value));
         }
 
         protected void Emit(OpCode opCode, params AstLabel[] value)
         {
             EmitHook(opCode, value);
-            if (IlGenerator != null)
-                IlGenerator.Emit(opCode, value.Select(Item => _GetLabelFromAstLabel(Item)).ToArray());
+            IlGenerator?.Emit(opCode, value.Select(item => _GetLabelFromAstLabel(item)).ToArray());
         }
 
         protected virtual void _Generate(AstNodeExprNull Null)
@@ -327,7 +322,7 @@ namespace SafeILGenerator.Ast.Generators
             }
             else
             {
-                throw (new NotImplementedException(string.Format("Can't handle immediate type {0}", itemType)));
+                throw new NotImplementedException($"Can't handle immediate type {itemType}");
             }
         }
 
@@ -421,23 +416,58 @@ namespace SafeILGenerator.Ast.Generators
             Generate(arrayAccess.ArrayInstance);
             Generate(arrayAccess.Index);
 
-            if (false)
+            if (arrayAccess.ElementType == typeof(byte))
             {
+                Emit(OpCodes.Ldelem_U1);
+                return;
             }
 
-            else if (arrayAccess.ElementType == typeof(byte)) Emit(OpCodes.Ldelem_U1);
-            else if (arrayAccess.ElementType == typeof(ushort)) Emit(OpCodes.Ldelem_U2);
-            else if (arrayAccess.ElementType == typeof(uint)) Emit(OpCodes.Ldelem_U4);
-            else if (arrayAccess.ElementType == typeof(ulong)) Emit(OpCodes.Ldelem_I8);
+            if (arrayAccess.ElementType == typeof(ushort))
+            {
+                Emit(OpCodes.Ldelem_U2);
+                return;
+            }
 
-            else if (arrayAccess.ElementType == typeof(sbyte)) Emit(OpCodes.Ldelem_I1);
-            else if (arrayAccess.ElementType == typeof(short)) Emit(OpCodes.Ldelem_I2);
-            else if (arrayAccess.ElementType == typeof(int)) Emit(OpCodes.Ldelem_I4);
-            else if (arrayAccess.ElementType == typeof(long)) Emit(OpCodes.Ldelem_I8);
+            if (arrayAccess.ElementType == typeof(uint))
+            {
+                Emit(OpCodes.Ldelem_U4);
+                return;
+            }
+            if (arrayAccess.ElementType == typeof(ulong))
+            {
+                Emit(OpCodes.Ldelem_I8);
+                return;
+            }
 
-            else if (arrayAccess.ElementType.IsPointer) Emit(OpCodes.Ldelem_I);
+            if (arrayAccess.ElementType == typeof(sbyte))
+            {
+                Emit(OpCodes.Ldelem_I1);
+                return;
+            }
 
-            else Emit(OpCodes.Ldelem_Ref);
+            if (arrayAccess.ElementType == typeof(short))
+            {
+                Emit(OpCodes.Ldelem_I2);
+                return;
+            }
+            if (arrayAccess.ElementType == typeof(int))
+            {
+                Emit(OpCodes.Ldelem_I4);
+                return;
+            }
+            if (arrayAccess.ElementType == typeof(long))
+            {
+                Emit(OpCodes.Ldelem_I8);
+                return;
+            }
+
+            if (arrayAccess.ElementType.IsPointer)
+            {
+                Emit(OpCodes.Ldelem_I);
+                return;
+            }
+
+            Emit(OpCodes.Ldelem_Ref);
         }
 
         protected virtual void _Generate(AstNodeExprIndirect indirect)
@@ -458,13 +488,13 @@ namespace SafeILGenerator.Ast.Generators
             else if (pointerType == typeof(float)) Emit(OpCodes.Ldind_R4);
             else if (pointerType == typeof(double)) Emit(OpCodes.Ldind_R8);
 
-            else throw (new NotImplementedException("Can't load indirect value"));
+            else throw new NotImplementedException("Can't load indirect value");
         }
 
         protected virtual void _Generate(AstNodeExprGetAddress getAddress)
         {
-            var astNodeExprFieldAccess = (getAddress.Expression as AstNodeExprFieldAccess);
-            var astNodeExprArgument = (getAddress.Expression as AstNodeExprArgument);
+            var astNodeExprFieldAccess = getAddress.Expression as AstNodeExprFieldAccess;
+            var astNodeExprArgument = getAddress.Expression as AstNodeExprArgument;
 
             if (astNodeExprFieldAccess != null)
             {
@@ -477,8 +507,8 @@ namespace SafeILGenerator.Ast.Generators
             }
             else
             {
-                throw (new NotImplementedException("Can't implement AstNodeExprGetAddress for '" +
-                                                   getAddress.Expression.GetType() + "'"));
+                throw new NotImplementedException("Can't implement AstNodeExprGetAddress for '" +
+                                                  getAddress.Expression.GetType() + "'");
             }
         }
 
@@ -486,8 +516,8 @@ namespace SafeILGenerator.Ast.Generators
         {
             var astExpr = _placeholderStack.Pop();
             if (astExpr.Type != placeholder.Type)
-                throw (new Exception("Invalid Expression for placeholder " + astExpr.Type + " != " + placeholder.Type +
-                                     "."));
+                throw new Exception("Invalid Expression for placeholder " + astExpr.Type + " != " + placeholder.Type +
+                                    ".");
             Generate(astExpr);
         }
 
@@ -552,7 +582,7 @@ namespace SafeILGenerator.Ast.Generators
                 else if (pointerType == typeof(float)) Emit(OpCodes.Stind_R4);
                 else if (pointerType == typeof(double)) Emit(OpCodes.Stind_R8);
                 else if (pointerType == typeof(bool)) Emit(OpCodes.Stind_I1);
-                else throw (new NotImplementedException("Can't store indirect value"));
+                else throw new NotImplementedException("Can't store indirect value");
             }
             else if (astNodeExprPropertyAccess != null)
             {
@@ -571,20 +601,19 @@ namespace SafeILGenerator.Ast.Generators
             }
             else
             {
-                throw (new NotImplementedException("Not implemented AstNodeStmAssign LValue: " +
-                                                   assign.LeftValue.GetType()));
+                throw new NotImplementedException("Not implemented AstNodeStmAssign LValue: " +
+                                                  assign.LeftValue.GetType());
             }
             //Assign.Local
         }
 
         protected virtual void _Generate(AstNodeStmReturn Return)
         {
-            var expressionType = (Return.Expression != null) ? Return.Expression.Type : typeof(void);
+            var expressionType = Return.Expression != null ? Return.Expression.Type : typeof(void);
 
             if (expressionType != MethodInfo.ReturnType)
             {
-                throw (new Exception(string.Format("Return type mismatch {0} != {1}", expressionType,
-                    MethodInfo.ReturnType)));
+                throw new Exception($"Return type mismatch {expressionType} != {MethodInfo.ReturnType}");
             }
 
             if (Return.Expression != null) Generate(Return.Expression);
@@ -601,7 +630,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (call.MethodInfo.CallingConvention.HasFlag(CallingConventions.HasThis))
             {
-                throw (new Exception("CallString calling convention shouldn't have this '" + call.MethodInfo + "'"));
+                throw new Exception("CallString calling convention shouldn't have this '" + call.MethodInfo + "'");
             }
             switch (call.MethodInfo.CallingConvention & CallingConventions.Any)
             {
@@ -611,8 +640,7 @@ namespace SafeILGenerator.Ast.Generators
                     Emit(OpCodes.Call, call.MethodInfo);
                     break;
                 default:
-                    throw (new Exception(string.Format("Can't handle calling convention {0}",
-                        call.MethodInfo.CallingConvention)));
+                    throw new Exception($"Can't handle calling convention {call.MethodInfo.CallingConvention}");
             }
         }
 
@@ -625,7 +653,7 @@ namespace SafeILGenerator.Ast.Generators
         {
             if (!call.MethodInfo.CallingConvention.HasFlag(CallingConventions.HasThis))
             {
-                throw(new Exception("CallInstance calling convention should have this"));
+                throw new Exception("CallInstance calling convention should have this");
             }
             switch (call.MethodInfo.CallingConvention & CallingConventions.Any)
             {
@@ -636,16 +664,13 @@ namespace SafeILGenerator.Ast.Generators
                     Emit(OpCodes.Callvirt, call.MethodInfo);
                     break;
                 default:
-                    throw (new Exception($"Can't handle calling convention {call.MethodInfo.CallingConvention}"));
+                    throw new Exception($"Can't handle calling convention {call.MethodInfo.CallingConvention}");
             }
         }
 
         protected virtual void _GenerateCastToType(Type castedType)
         {
-            if (false)
-            {
-            }
-            else if (castedType == typeof(sbyte)) Emit(OpCodes.Conv_I1);
+            if (castedType == typeof(sbyte)) Emit(OpCodes.Conv_I1);
             else if (castedType == typeof(short)) Emit(OpCodes.Conv_I2);
             else if (castedType == typeof(int)) Emit(OpCodes.Conv_I4);
             else if (castedType == typeof(long)) Emit(OpCodes.Conv_I8);
@@ -665,7 +690,7 @@ namespace SafeILGenerator.Ast.Generators
 
             else if (castedType.IsPrimitive)
             {
-                throw (new NotImplementedException("Not implemented cast other primitives"));
+                throw new NotImplementedException("Not implemented cast other primitives");
             }
 
             else if (castedType.IsEnum)
@@ -696,8 +721,8 @@ namespace SafeILGenerator.Ast.Generators
         protected virtual void _Generate(AstNodeExprTerop terop)
         {
             if (terop.True.Type != terop.False.Type)
-                throw (new InvalidOperationException(string.Format("AstNodeExprTerop '?:' types must match {0} != {1}",
-                    terop.True.Type, terop.False.Type)));
+                throw new InvalidOperationException(
+                    $"AstNodeExprTerop '?:' types must match {terop.True.Type} != {terop.False.Type}");
             var ternaryType = terop.True.Type;
             var ternaryTempAstLocal = AstLocal.Create(ternaryType);
 
@@ -815,7 +840,7 @@ namespace SafeILGenerator.Ast.Generators
                 case ">>":
                     Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Shr : OpCodes.Shr_Un);
                     break;
-                default: throw(new NotImplementedException($"Not implemented operator '{item.Operator}'"));
+                default: throw new NotImplementedException($"Not implemented operator '{item.Operator}'");
             }
         }
 
@@ -875,7 +900,7 @@ namespace SafeILGenerator.Ast.Generators
                     Emit(OpCodes.Ldc_I4_0);
                     Emit(OpCodes.Ceq);
                     break;
-                default: throw(new NotImplementedException($"Not implemented operator '{item.Operator}'"));
+                default: throw new NotImplementedException($"Not implemented operator '{item.Operator}'");
             }
         }
 
@@ -885,7 +910,7 @@ namespace SafeILGenerator.Ast.Generators
             var caseValues = allCaseValues as IList<object> ?? allCaseValues.ToList();
             if (caseValues.Count != caseValues.Distinct().Count())
             {
-                throw(new Exception("Repeated case in switch!"));
+                throw new Exception("Repeated case in switch!");
             }
 
             // Check types and unique values.
@@ -898,7 +923,7 @@ namespace SafeILGenerator.Ast.Generators
                 var commonType = Switch.Cases.First().CaseValue.GetType();
                 if (Switch.Cases.Any(Case => Case.CaseValue.GetType() != commonType))
                 {
-                    throw(new Exception("All cases should have the same type"));
+                    throw new Exception("All cases should have the same type");
                 }
 
                 var doneSpecialized = false;
@@ -908,7 +933,7 @@ namespace SafeILGenerator.Ast.Generators
                 {
                     var commonMin = Switch.Cases.Min(Case => AstUtils.CastType<long>(Case.CaseValue));
                     var commonMax = Switch.Cases.Max(Case => AstUtils.CastType<long>(Case.CaseValue));
-                    var casesLength = (commonMax - commonMin) + 1;
+                    var casesLength = commonMax - commonMin + 1;
 
                     // No processing tables greater than 4096 elements.
                     if (casesLength <= 4096)

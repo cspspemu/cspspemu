@@ -50,8 +50,8 @@ namespace SafeILGenerator.Ast
             if (instance.Type.GetField(fieldPropertyName) != null) return FieldAccess(instance, fieldPropertyName);
             if (instance.Type.GetProperty(fieldPropertyName) != null)
                 return PropertyAccess(instance, fieldPropertyName);
-            throw (new InvalidOperationException(string.Format("Can't find Field/Property '{0}' for type '{1}'",
-                fieldPropertyName, instance.Type)));
+            throw (new InvalidOperationException(
+                $"Can't find Field/Property '{fieldPropertyName}' for type '{instance.Type}'"));
         }
 
         public AstNodeExprPropertyAccess PropertyAccess(AstNodeExpr instance, PropertyInfo propertyInfo) =>
