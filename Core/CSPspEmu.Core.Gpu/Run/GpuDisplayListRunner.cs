@@ -64,7 +64,7 @@ namespace CSPspEmu.Core.Gpu.Run
                     Params24);
             }
         }
-        
+
         [GpuOpCodesNotImplemented]
         [GpuInstructionAttribute(GpuOpCodes.BBOX)]
         public void OP_BBOX()
@@ -76,21 +76,9 @@ namespace CSPspEmu.Core.Gpu.Run
         public void OP_BJUMP()
         {
         }
-        
-        /**
-        * Upload CLUT (Color Lookup Table)
-        *
-        * @note Data must be aligned to 1 quad word (16 bytes)
-        *
-        * @param num_blocks - How many blocks of 8 entries to upload (32*8 is 256 colors)
-        * @param cbp        - Pointer to palette (16 byte aligned)
-        **/
-        ///void sceGuClutLoad(int num_blocks, const void* cbp); // OP_CBP + OP_CBPH + OP_CLOAD
-        ///
+
         ClutStateStruct* ClutState => &GpuState->TextureMappingState.ClutState;
 
-        // Clut Buffer Pointer (High)
-        // Clut LOAD
         [GpuInstructionAttribute(GpuOpCodes.CBP)]
         public void OP_CBP() => ClutState->Address = (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
 
@@ -101,22 +89,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.CLOAD)]
         public void OP_CLOAD() => ClutState->NumberOfColors = Param8(0) * 8;
 
-        /**
-         * Set current CLUT mode
-         *
-         * Available pixel formats for palettes are:
-         *   - GU_PSM_5650
-         *   - GU_PSM_5551
-         *   - GU_PSM_4444
-         *   - GU_PSM_8888
-         *
-         * @param cpsm  - Which pixel format to use for the palette
-         * @param shift - Shifts color index by that many bits to the right
-         * @param mask  - Masks the color index with this bitmask after the shift (0-0xFF)
-         * @param start - Unknown, set to 0
-         **/
-        ///void sceGuClutMode(uint cpsm, uint shift, uint mask, uint a3); // OP_CMODE
-
         // Clut MODE
         [GpuInstructionAttribute(GpuOpCodes.CMODE)]
         public void OP_CMODE()
@@ -126,18 +98,6 @@ namespace CSPspEmu.Core.Gpu.Run
             ClutState->Mask = (int) Extract(8, 8);
             ClutState->Start = (int) Extract(16, 5);
         }
-        
-         /**
-         * Set current primitive color
-         *
-         * @param color - Which color to use (overriden by vertex-colors)
-         **/
-        // void sceGuColor(unsigned int color); // sceGuMaterial(7, color); // OP_AMC + OP_AMA + OP_DMC + OP_SMC
-
-        // void sceGuMaterial(int mode, int color); // if (mode & 1) { OP_AMC + OP_AMA } if (mode & 2) { OP_DMC } if (mode & 4) { OP_SMC }
-        // void sceGuModelColor(unsigned int emissive, unsigned int ambient, unsigned int diffuse, unsigned int specular); // OP_EMC + OP_DMC + OP_AMC + OP_SMC
-        // void sceGuAmbientColor(unsigned int color); // OP_AMC + OP_AMA
-        // void sceGuAmbient(unsigned int color); // OP_ALC + OP_ALA
 
         [GpuInstructionAttribute(GpuOpCodes.DMC)]
         public void OP_DMC() => GpuState->LightingState.DiffuseModelColor.SetRGB_A1(Params24);
@@ -155,18 +115,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.AMA)]
         public void OP_AMA() => GpuState->LightingState.AmbientModelColor.SetA(Params24);
 
-        /**
-         * Set which color components that the material will receive
-         *
-         * The components are ORed together from the following values:
-         *   - GU_AMBIENT
-         *   - GU_DIFFUSE
-         *   - GU_SPECULAR
-         *
-         * @param components - Which components to receive
-         **/
-        // void sceGuColorMaterial(int components); // OP_CMAT
-        // Material Color
         [GpuInstructionAttribute(GpuOpCodes.CMAT)]
         public void OP_CMAT() => GpuState->LightingState.MaterialColorComponents =
             (LightComponentsSet) BitUtils.Extract(Params24, 0, 8);
@@ -175,42 +123,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.ABE)]
         public void OP_ABE() => GpuState->BlendingState.Enabled = Bool1;
 
-        /**
-         * Set the blending-mode
-         *
-         * Keys for the blending operations:
-         *   - Cs - Source color
-         *   - Cd - Destination color
-         *   - Bs - Blend function for source fragment
-         *   - Bd - Blend function for destination fragment
-         *
-         * Available blending-operations are:
-         *   - GU_ADD              - (Cs*Bs) + (Cd*Bd)
-         *   - GU_SUBTRACT         - (Cs*Bs) - (Cd*Bd)
-         *   - GU_REVERSE_SUBTRACT - (Cd*Bd) - (Cs*Bs)
-         *   - GU_MIN              - Cs less Cd ? Cs : Cd
-         *   - GU_MAX              - Cs less Cd ? Cd : Cs
-         *   - GU_ABS              - |Cs-Cd|
-         *
-         * Available blending-functions are:
-         *   - GU_SRC_COLOR
-         *   - GU_ONE_MINUS_SRC_COLOR
-         *   - GU_SRC_ALPHA
-         *   - GU_ONE_MINUS_SRC_ALPHA
-         *   - GU_DST_ALPHA
-         *   - GU_ONE_MINUS_DST_ALPHA
-         *   - GU_DST_COLOR
-         *   - GU_ONE_MINUS_DST_COLOR
-         *   - GU_FIX
-         *
-         * @param op      - Blending Operation
-         * @param src     - Blending function for source operand
-         * @param dest    - Blending function for dest operand
-         * @param srcfix  - Fix value for GU_FIX (source operand)
-         * @param destfix - Fix value for GU_FIX (dest operand)
-         **/
-        // void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int destfix);
-
         // Blend Equation and Functions
         [GpuInstructionAttribute(GpuOpCodes.ALPHA)]
         public void OP_ALPHA()
@@ -218,14 +130,6 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->BlendingState.FunctionSource = (GuBlendingFactorSource) ((Params24 >> 0) & 0xF);
             GpuState->BlendingState.FunctionDestination = (GuBlendingFactorDestination) ((Params24 >> 4) & 0xF);
             GpuState->BlendingState.Equation = (BlendingOpEnum) ((Params24 >> 8) & 0xF);
-            /*
-            Console.WriteLine(
-                "Alpha! : {0}, {1}, {2}",
-                GpuState->BlendingState.FunctionSource,
-                GpuState->BlendingState.FunctionDestination,
-                GpuState->BlendingState.Equation
-            );
-            */
         }
 
         [GpuInstructionAttribute(GpuOpCodes.SFIX)]
@@ -233,13 +137,6 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.DFIX)]
         public void OP_DFIX() => GpuState->BlendingState.FixColorDestination.SetRGB_A1(Params24);
-
-        /**
-         * Set mask for which bits of the pixels to write
-         *
-         * @param mask - Which bits to filter against writes
-         **/
-        // void sceGuPixelMask(unsigned int mask);
 
         // Pixel MasK Color
         [GpuInstructionAttribute(GpuOpCodes.PMSKC)]
@@ -280,15 +177,6 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->ColorTestState.Mask.A = 0x00;
             //Console.Error.WriteLine("CMSK: {0}", GpuState->ColorTestState.ToStringDefault());
         }
-        
-         /**
-         * Set depth buffer parameters
-         *
-         * @param zbp - VRAM pointer where the depthbuffer should start
-         * @param zbw - The width of the depth-buffer (block-aligned)
-         *
-         **/
-        // void sceGuDepthBuffer(void* zbp, int zbw);
 
         // Depth Buffer Pointer
         [GpuInstructionAttribute(GpuOpCodes.ZBP)]
@@ -306,21 +194,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.ZTE)]
         public void OP_ZTE() => GpuState->DepthTestState.Enabled = Bool1;
 
-        /**
-         * Select which depth-test function to use
-         *
-         * Valid choices for the depth-test are:
-         *   - GU_NEVER - No pixels pass the depth-test
-         *   - GU_ALWAYS - All pixels pass the depth-test
-         *   - GU_EQUAL - Pixels that match the depth-test pass
-         *   - GU_NOTEQUAL - Pixels that doesn't match the depth-test pass
-         *   - GU_LESS - Pixels that are less in depth passes
-         *   - GU_LEQUAL - Pixels that are less or equal in depth passes
-         *   - GU_GREATER - Pixels that are greater in depth passes
-         *   - GU_GEQUAL - Pixels that are greater or equal passes
-         *
-         * @param function - Depth test function to use
-         **/
         // void sceGuDepthFunc(int function); // OP_ZTST
         [GpuInstructionAttribute(GpuOpCodes.ZTST)]
         public void OP_ZTST() => GpuState->DepthTestState.Function = (TestFunctionEnum) Param8(0);
@@ -329,23 +202,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.ATE)]
         public void OP_ATE() => GpuState->AlphaTestState.Enabled = Bool1;
 
-        /**
-         * Set the alpha test parameters
-         * 
-         * Available comparison functions are:
-         *   - GU_NEVER
-         *   - GU_ALWAYS
-         *   - GU_EQUAL
-         *   - GU_NOTEQUAL
-         *   - GU_LESS
-         *   - GU_LEQUAL
-         *   - GU_GREATER
-         *   - GU_GEQUAL
-         *
-         * @param func - Specifies the alpha comparison function.
-         * @param value - Specifies the reference value that incoming alpha values are compared to.
-         * @param mask - Specifies the mask that both values are ANDed with before comparison.
-         **/
         // void sceGuAlphaFunc(int func, int value, int mask); // OP_ATST
         [GpuInstructionAttribute(GpuOpCodes.ATST)]
         public void OP_ATST()
@@ -359,26 +215,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.STE)]
         public void OP_STE() => GpuState->StencilState.Enabled = Bool1;
 
-        /**
-         * Set stencil function and reference value for stencil testing
-         *
-         * Available functions are:
-         *   - GU_NEVER
-         *   - GU_ALWAYS
-         *   - GU_EQUAL
-         *   - GU_NOTEQUAL
-         *   - GU_LESS
-         *   - GU_LEQUAL
-         *   - GU_GREATER
-         *   - GU_GEQUAL
-         *
-         * @param func - Test function
-         * @param ref - The reference value for the stencil test
-         * @param mask - Mask that is ANDed with both the reference value and stored stencil value when the test is done
-         **/
-        // void sceGuStencilFunc(int func, int ref, int mask); // OP_STST
-        // sendCommandi(220,func | ((ref & 0xff) << 8) | ((mask & 0xff) << 16));
-        // Stencil Test
         [GpuInstructionAttribute(GpuOpCodes.STST)]
         public void OP_STST()
         {
@@ -386,26 +222,6 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->StencilState.FunctionRef = Param8(8);
             GpuState->StencilState.FunctionMask = Param8(16);
         }
-
-        /**
-         * Set the stencil test actions
-         *
-         * Available actions are:
-         *   - GU_KEEP - Keeps the current value
-         *   - GU_ZERO - Sets the stencil buffer value to zero
-         *   - GU_REPLACE - Sets the stencil buffer value to ref, as specified by sceGuStencilFunc()
-         *   - GU_INCR - Increments the current stencil buffer value
-         *   - GU_DECR - Decrease the current stencil buffer value
-         *   - GU_INVERT - Bitwise invert the current stencil buffer value
-         *
-         * As stencil buffer shares memory with framebuffer alpha, resolution of the buffer
-         * is directly in relation.
-         *
-         * @param fail - The action to take when the stencil test fails
-         * @param zfail - The action to take when stencil test passes, but the depth test fails
-         * @param zpass - The action to take when both stencil test and depth test passes
-         **/
-        // void sceGuStencilOp(int fail, int zfail, int zpass); // OP_SOP
 
         // Stencil OPeration
         [GpuInstructionAttribute(GpuOpCodes.SOP)]
@@ -416,30 +232,10 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->StencilState.OperationZPass = (StencilOperationEnum) Param8(16);
         }
 
-        /**
-         * Mask depth buffer writes
-         *
-         * @param mask - GU_TRUE(1) to disable Z writes, GU_FALSE(0) to enable
-         **/
-        // void sceGuDepthMask(int mask);
-
         // glDepthMask
         [GpuInstructionAttribute(GpuOpCodes.ZMSK)]
         public void OP_ZMSK() => GpuState->DepthTestState.Mask = Param16(0);
 
-        /**
-         * Set which range to use for depth calculations.
-         *
-         * @note The depth buffer is inversed, and takes values from 65535 to 0.
-         *
-         * Example: Use the entire depth-range for calculations:
-         * @code
-         * sceGuDepthRange(65535,0);
-         * @endcode
-         *
-         * @param near - Value to use for the near plane
-         * @param far - Value to use for the far plane
-         **/
         // void sceGuDepthRange(int near, int far); // OP_NEARZ + OP_FARZ
         // void sceGuDepthOffset(unsigned int offset);
         [GpuInstructionAttribute(GpuOpCodes.NEARZ)]
@@ -447,25 +243,6 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.FARZ)]
         public void OP_FARZ() => GpuState->DepthTestState.RangeNear = ((float) Param16(0)) / ushort.MaxValue;
-        
-        /**
-         * Set ordered pixel dither matrix
-         *
-         * This dither matrix is only applied if GU_DITHER is enabled.
-         *
-         * @param matrix - Dither matrix
-         **/
-        // void sceGuSetDither(const ScePspIMatrix4* matrix);
-        // sendCommandi(226,(matrix->x.x & 0x0f)|((matrix->x.y & 0x0f) << 4)|((matrix->x.z & 0x0f) << 8)|((matrix->x.w & 0x0f) << 12));
-        // sendCommandi(227,(matrix->y.x & 0x0f)|((matrix->y.y & 0x0f) << 4)|((matrix->y.z & 0x0f) << 8)|((matrix->y.w & 0x0f) << 12));
-        // sendCommandi(228,(matrix->z.x & 0x0f)|((matrix->z.y & 0x0f) << 4)|((matrix->z.z & 0x0f) << 8)|((matrix->z.w & 0x0f) << 12));
-        // sendCommandi(229,(matrix->w.x & 0x0f)|((matrix->w.y & 0x0f) << 4)|((matrix->w.z & 0x0f) << 8)|((matrix->w.w & 0x0f) << 12));
-        // Dither
-        /*
-        mixin (ArrayOperation("OP_DTH_n", 0, 3, q{
-            alias Index rowIndex;
-        }));
-        */
 
         private void _OP_DTH(int n)
         {
@@ -486,39 +263,6 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.DTH3)]
         public void OP_DTH3() => _OP_DTH(3);
-        
-         /**
-         * Set the current clear-color
-         *
-         * @param color - Color to clear with
-         **/
-        // void sceGuClearColor(unsigned int color);
-
-        /**
-         * Set the current clear-depth
-         *
-         * @param depth - Set which depth to clear with (0x0000-0xffff)
-         **/
-        // void sceGuClearDepth(unsigned int depth);
-
-        /**
-         * Set the current stencil clear value
-         *
-         * @param stencil - Set which stencil value to clear with (0-255)
-         **/
-        // void sceGuClearStencil(unsigned int stencil);
-
-        /**
-         * Clear current drawbuffer
-         *
-         * Available clear-flags are (OR them together to get final clear-mode):
-         *   - GU_COLOR_BUFFER_BIT   - Clears the color-buffer
-         *   - GU_STENCIL_BUFFER_BIT - Clears the stencil-buffer
-         *   - GU_DEPTH_BUFFER_BIT   - Clears the depth-buffer
-         *
-         * @param flags - Which part of the buffer to clear
-         **/
-        // void sceGuClear(int flags);
 
         [GpuInstructionAttribute(GpuOpCodes.CLEAR)]
         public void OP_CLEAR()
@@ -536,75 +280,6 @@ namespace CSPspEmu.Core.Gpu.Run
             }
         }
 
-        /**
-         * Draw array of vertices forming primitives
-         *
-         * Available primitive-types are:
-         *   - GU_POINTS         - Single pixel points (1 vertex per primitive)
-         *   - GU_LINES          - Single pixel lines (2 vertices per primitive)
-         *   - GU_LINE_STRIP     - Single pixel line-strip (2 vertices for the first primitive, 1 for every following)
-         *   - GU_TRIANGLES      - Filled triangles (3 vertices per primitive)
-         *   - GU_TRIANGLE_STRIP - Filled triangles-strip (3 vertices for the first primitive, 1 for every following)
-         *   - GU_TRIANGLE_FAN   - Filled triangle-fan (3 vertices for the first primitive, 1 for every following)
-         *   - GU_SPRITES        - Filled blocks (2 vertices per primitive)
-         *
-         * The vertex-type decides how the vertices align and what kind of information they contain.
-         * The following flags are ORed together to compose the final vertex format:
-         *   - GU_TEXTURE_8BIT   - 8-bit texture coordinates
-         *   - GU_TEXTURE_16BIT  - 16-bit texture coordinates
-         *   - GU_TEXTURE_32BITF - 32-bit texture coordinates (float)
-         *
-         *   - GU_COLOR_5650     - 16-bit color (R5G6B5A0)
-         *   - GU_COLOR_5551     - 16-bit color (R5G5B5A1)
-         *   - GU_COLOR_4444     - 16-bit color (R4G4B4A4)
-         *   - GU_COLOR_8888     - 32-bit color (R8G8B8A8)
-         *
-         *   - GU_NORMAL_8BIT    - 8-bit normals
-         *   - GU_NORMAL_16BIT   - 16-bit normals
-         *   - GU_NORMAL_32BITF  - 32-bit normals (float)
-         *
-         *   - GU_VERTEX_8BIT    - 8-bit vertex position
-         *   - GU_VERTEX_16BIT   - 16-bit vertex position
-         *   - GU_VERTEX_32BITF  - 32-bit vertex position (float)
-         *
-         *   - GU_WEIGHT_8BIT    - 8-bit weights
-         *   - GU_WEIGHT_16BIT   - 16-bit weights
-         *   - GU_WEIGHT_32BITF  - 32-bit weights (float)
-         *
-         *   - GU_INDEX_8BIT     - 8-bit vertex index
-         *   - GU_INDEX_16BIT    - 16-bit vertex index
-         *
-         *   - GU_WEIGHTS(n)     - Number of weights (1-8)
-         *   - GU_VERTICES(n)    - Number of vertices (1-8)
-         *
-         *   - GU_TRANSFORM_2D   - Coordinate is passed directly to the rasterizer
-         *   - GU_TRANSFORM_3D   - Coordinate is transformed before passed to rasterizer
-         *
-         * @note Every vertex has to be aligned to the maxium size of all of its component.
-         *
-         * Vertex order:
-         * [for vertices(1-8)]
-         *     [weights (0-8)]
-         *     [texture uv]
-         *     [color]
-         *     [normal]
-         *     [vertex]
-         * [/for]
-         *
-         * @par Example: Render 400 triangles, with floating-point texture coordinates, and floating-point position, no indices
-         *
-         * <code>
-         *     sceGuDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_VERTEX_32BITF, 400 * 3, 0, vertices);
-         * </code>
-         *
-         * @param prim     - What kind of primitives to render
-         * @param vtype    - Vertex type to process
-         * @param count    - How many vertices to process
-         * @param indices  - Optional pointer to an index-list
-         * @param vertices - Pointer to a vertex-list
-         **/
-        //void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const void* vertices);
-
         // Vertex Type
         [GpuInstructionAttribute(GpuOpCodes.VTYPE)]
         public void OP_VTYPE() => GpuState->VertexState.Type.Value = Params24;
@@ -618,9 +293,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.IADDR)]
         public void OP_IADDR() => GpuState->IndexAddress = Params24;
 
-        /// <summary>
-        /// Bezier Patch Kick
-        /// </summary>
         [GpuInstructionAttribute(GpuOpCodes.BEZIER)]
         public void OP_BEZIER()
         {
@@ -692,20 +364,7 @@ namespace CSPspEmu.Core.Gpu.Run
                 return;
             }
 
-            //initRendering();
-            //boolean useTexture = context.vinfo.texture != 0 || context.textureFlag.isEnabled();
-            //boolean useNormal = context.lightingFlag.isEnabled();
-
             var anchors = GetControlPoints(uCount, vCount);
-
-            // Don't capture the ram if the vertex list is embedded in the display list. TODO handle stall_addr == 0 better
-            // TODO may need to move inside the loop if indices are used, or find the largest index so we can calculate the size of the vertex list
-            /*
-            if (State.captureGeNextFrame && !isVertexBufferEmbedded()) {
-                Logger.Info("Capture drawBezier");
-                CaptureManager.captureRAM(context.vinfo.ptr_vertex, context.vinfo.vertexSize * ucount * vcount);
-            }
-            */
 
             // Generate patch VertexState.
             var patch = new VertexInfo[divS + 1, divT + 1];
@@ -749,14 +408,6 @@ namespace CSPspEmu.Core.Gpu.Run
                     {
                         for (var jj = 0; jj < 4; ++jj)
                         {
-                            /*
-                            Console.WriteLine(
-                                "({0}, {1}) : {2} : {3} : {4}",
-                                ii, jj,
-                                p.Position, anchors[3 * upatch + ii, 3 * vpatch + jj].Position,
-                                ucoeff[i][ii] * vcoeff[jj]
-                            );
-                            */
                             PointMultAdd(
                                 ref p,
                                 ref anchors[3 * upatch + ii, 3 * vpatch + jj],
@@ -769,22 +420,6 @@ namespace CSPspEmu.Core.Gpu.Run
                     p.Texture.Y = vglobal;
 
                     patch[i, j] = p;
-
-                    /*
-                    Console.WriteLine(
-                        "W: ({0}, {1}) : {2}",
-                        i, j,
-                        patch[i, j] 
-                    );
-                    */
-
-                    /*
-                    if (useTexture && context.vinfo.texture == 0)
-                    {
-                        p.t[0] = uglobal;
-                        p.t[1] = vglobal;
-                    }
-                    */
                 }
             }
 
@@ -839,39 +474,6 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuDisplayList.GpuProcessor.GpuImpl.PrimEnd(GlobalGpuState, GpuDisplayList.GpuStateStructPointer);
 #endif
         }
-        
-        /**
-        * Enable GE state
-        *
-        * The currently available states are:
-        *   - GU_ALPHA_TEST
-        *   - GU_DEPTH_TEST
-        *   - GU_SCISSOR_TEST
-        *   - GU_STENCIL_TEST
-        *   - GU_BLEND
-        *   - GU_CULL_FACE
-        *   - GU_DITHER
-        *   - GU_FOG
-        *   - GU_CLIP_PLANES
-        *   - GU_TEXTURE_2D
-        *   - GU_LIGHTING
-        *   - GU_LIGHT0
-        *   - GU_LIGHT1
-        *   - GU_LIGHT2
-        *   - GU_LIGHT3
-        *   - GU_LINE_SMOOTH
-        *   - GU_PATCH_CULL_FACE
-        *   - GU_COLOR_TEST
-        *   - GU_COLOR_LOGIC_OP
-        *   - GU_FACE_NORMAL_REVERSE
-        *   - GU_PATCH_FACE
-        *   - GU_FRAGMENT_2X
-        *
-        * @param state - Which state to enable
-        **/
-        // void sceGuEnable(int state);
-
-        // (GU_SCISSOR_TEST) // OP_SCISSOR1 + OP_SCISSOR2
 
         [GpuInstructionAttribute(GpuOpCodes.BCE)]
         public void OP_BCE() => GpuState->BackfaceCullingState.Enabled = Bool1;
@@ -890,84 +492,6 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.CTE)]
         public void OP_CTE() => GpuState->ColorTestState.Enabled = Bool1;
-        
-         /**
-         * Start filling a new display-context
-         *
-         * Contexts available are:
-         *   - GU_DIRECT - Rendering is performed as list is filled
-         *   - GU_CALL - List is setup to be called from the main list
-         *   - GU_SEND - List is buffered for a later call to sceGuSendList()
-         *
-         * The previous context-type is stored so that it can be restored at sceGuFinish().
-         *
-         * @param cid - Context Type
-         * @param list - Pointer to display-list (16 byte aligned)
-         **/
-        // void sceGuStart(int cid, void* list);
-
-        /**
-         * Finish current display list and go back to the parent context
-         *
-         * If the context is GU_DIRECT, the stall-address is updated so that the entire list will
-         * execute. Otherwise, only the terminating action is written to the list, depending on
-         * context-type.
-         *
-         * The finish-callback will get a zero as argument when using this function.
-         *
-         * This also restores control back to whatever context that was active prior to this call.
-         *
-         * @return Size of finished display list
-         **/
-        // int sceGuFinish(void);
-
-        /**
-         * Finish current display list and go back to the parent context, sending argument id for
-         * the finish callback.
-         *
-         * If the context is GU_DIRECT, the stall-address is updated so that the entire list will
-         * execute. Otherwise, only the terminating action is written to the list, depending on
-         * context-type.
-         *
-         * @param id - Finish callback id (16-bit)
-         * @return Size of finished display list
-         **/
-        // int sceGuFinishId(unsigned int id);
-
-        /**
-         * Call previously generated display-list
-         *
-         * @param list - Display list to call
-         **/
-        // void sceGuCallList(const void* list);
-
-        /**
-         * Set wether to use stack-based calls or signals to handle execution of called lists.
-         *
-         * @param mode - GU_TRUE(1) to enable signals, GU_FALSE(0) to disable signals and use
-         * normal calls instead.
-         **/
-        // void sceGuCallMode(int mode);
-
-        /**
-         * Check how large the current display-list is
-         *
-         * @return The size of the current display list
-         **/
-        // int sceGuCheckList(void);
-
-        /**
-         * Send a list to the GE directly
-         *
-         * Available modes are:
-         *   - GU_TAIL - Place list last in the queue, so it executes in-order
-         *   - GU_HEAD - Place list first in queue so that it executes as soon as possible
-         *
-         * @param mode - Whether to place the list first or last in queue
-         * @param list - List to send
-         * @param context - Temporary storage for the GE context
-         **/
-        // void sceGuSendList(int mode, const void* list, PspGeContext* context);
 
         [GpuInstructionAttribute(GpuOpCodes.JUMP)]
         public void OP_JUMP() => GpuDisplayList.JumpRelativeOffset((uint) (Params24 & ~3));
@@ -994,16 +518,6 @@ namespace CSPspEmu.Core.Gpu.Run
         [GpuInstructionAttribute(GpuOpCodes.RET)]
         public void OP_RET() => GpuDisplayList.Ret();
 
-        /**
-         * Trigger signal to call code from the command stream
-         *
-         * Available behaviors are:
-         *   - GU_BEHAVIOR_SUSPEND - Stops display list execution until callback function finished
-         *   - GU_BEHAVIOR_CONTINUE - Do not stop display list execution during callback
-         *
-         * @param signal - Signal to trigger
-         * @param behavior - Behavior type
-         **/
         // void sceGuSignal(int signal, int behavior);
         [GpuOpCodesNotImplemented]
         [GpuInstructionAttribute(GpuOpCodes.SIGNAL)]
@@ -1033,15 +547,6 @@ namespace CSPspEmu.Core.Gpu.Run
 
             GpuDisplayList.DoSignal(Pc, signal, behaviour, ExecuteNow: true);
         }
-        
-        /**
-         * Set current Fog
-         *
-         * @param near  - 
-         * @param far   - 
-         * @param color - 0x00RRGGBB
-         **/
-        // void sceGuFog(float near, float far, unsigned int color); // OP_FCOL + OP_FFAR + OP_FDIST
 
         [GpuInstructionAttribute(GpuOpCodes.FGE)]
         public void OP_FGE() => GpuState->FogState.Enabled = Bool1;
@@ -1054,8 +559,8 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.FDIST)]
         public void OP_FDIST() => GpuState->FogState.Dist = Float1;
-        
-         //string LightArrayOperation(string type, string code, int step = 1) { return ArrayOperation(type, 0, 3, code, step); }
+
+        //string LightArrayOperation(string type, string code, int step = 1) { return ArrayOperation(type, 0, 3, code, step); }
         //string LightArrayOperationStep3(string type, string code) { return LightArrayOperation(type, code, 3); }
 
         [GpuInstructionAttribute(GpuOpCodes.LTE)]
@@ -1308,7 +813,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.SPOW)]
         public void OP_SPOW() => GpuState->LightingState.SpecularPower = Float1;
-        
+
         [GpuInstructionAttribute(GpuOpCodes.VMS)]
         public void OP_VMS() => GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Reset(Params24);
 
@@ -1340,7 +845,7 @@ namespace CSPspEmu.Core.Gpu.Run
                 .WriteAt(SkinningState->CurrentBoneIndex % 12, Float1);
             SkinningState->CurrentBoneIndex++;
         }
-        
+
         private void _OP_MW(int index) => GpuState->MorphingState.MorphWeight[index] = Float1;
 
         [GpuInstructionAttribute(GpuOpCodes.MW0)]
@@ -1366,8 +871,8 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.MW7)]
         public void OP_MW7() => _OP_MW(7);
-        
-         [GpuInstructionAttribute(GpuOpCodes.NOP)]
+
+        [GpuInstructionAttribute(GpuOpCodes.NOP)]
         public void OP_NOP()
         {
         }
@@ -1415,7 +920,7 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         //[GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
+
         [GpuInstructionAttribute(GpuOpCodes.REGION2)]
         public void OP_REGION2()
         {
@@ -1432,10 +937,7 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->ClipPlaneState.Scissor.Top = (short) BitUtils.Extract(Params24, 10, 10);
         }
 
-        /// <summary>
-        /// SCISSOR end (2)
-        /// </summary>
-        // ReSharper disable once UnusedMember.Global
+
         [GpuInstructionAttribute(GpuOpCodes.SCISSOR2)]
         public void OP_SCISSOR2()
         {
@@ -1478,7 +980,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.LOP)]
         public void OP_LOP() => GpuState->LogicalOperationState.Operation = (LogicalOperationEnum) Param8(0);
-        
+
         [GpuInstructionAttribute(GpuOpCodes.PSUB)]
         public void OP_PSUB()
         {
@@ -1487,7 +989,6 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.PPRIM)]
         public void OP_PPRIM()
         {
@@ -1495,33 +996,25 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.SPLINE)]
         public void OP_SPLINE()
         {
-            /*
-            auto sp_ucount = command.extract!(uint,  0, 8); 
-            auto sp_vcount = command.extract!(uint,  8, 8);
-            auto sp_utype  = command.extract!(uint, 16, 2);
-            auto sp_vtype  = command.extract!(uint, 18, 2);
-            gpu.logWarning("OP_SPLINE(%d, %d, %d, %d)", sp_ucount, sp_vcount, sp_utype, sp_vtype);
-            */
         }
 
-        // ReSharper disable once UnusedMember.Global
+
         [GpuInstructionAttribute(GpuOpCodes.PFACE)]
         public void OP_PFACE() => GpuState->PatchCullingState.FaceFlag = (Params24 != 0);
-        
-         private TextureStateStruct* TextureState => &GpuState->TextureMappingState.TextureState;
+
+        private TextureStateStruct* TextureState => &GpuState->TextureMappingState.TextureState;
 
         [GpuInstructionAttribute(GpuOpCodes.TME)]
         public void OP_TME() => GpuState->TextureMappingState.Enabled = Bool1;
 
-        // ReSharper disable once UnusedMember.Global
+
         [GpuInstructionAttribute(GpuOpCodes.TMS)]
         public void OP_TMS() => GpuState->TextureMappingState.Matrix.Reset();
 
-        // ReSharper disable once UnusedMember.Global
+
         [GpuInstructionAttribute(GpuOpCodes.TMATRIX)]
         public void OP_TMATRIX() => GpuState->TextureMappingState.Matrix.Write(Float1);
 
@@ -1534,24 +1027,18 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         // Texture Pixel Storage Mode
-        // ReSharper disable once UnusedMember.Global
+
         [GpuInstructionAttribute(GpuOpCodes.TPSM)]
         public void OP_TPSM() => TextureState->PixelFormat = (GuPixelFormats) Extract(0, 4);
 
         private TextureStateStruct.MipmapState* MipMapState(int index) => &(&TextureState->Mipmap0)[index];
 
-        /// <summary>
-        /// TextureMipmap Buffer Pointer.
-        /// </summary>
         private void _OP_TBP(int index)
         {
             var mipMap = MipMapState(index);
             mipMap->Address = (mipMap->Address & 0xFF000000) | (Params24 & 0x00FFFFFF);
         }
 
-        /// <summary>
-        /// TextureMipmap Buffer Width.
-        /// </summary>
         private void _OP_TBW(int index)
         {
             var mipMap = MipMapState(index);
@@ -1723,8 +1210,8 @@ namespace CSPspEmu.Core.Gpu.Run
 
         [GpuInstructionAttribute(GpuOpCodes.TSLOPE)]
         public void OP_TSLOPE() => GpuState->TextureMappingState.SlopeLevel = Float1;
-        
-         [GpuInstructionAttribute(GpuOpCodes.TRXSBP)]
+
+        [GpuInstructionAttribute(GpuOpCodes.TRXSBP)]
         public void OP_TRXSBP() => GpuState->TextureTransferState.SourceAddress.Low24 = Params24;
 
         [GpuInstructionAttribute(GpuOpCodes.TRXSBW)]
@@ -1776,237 +1263,205 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuState->TextureTransferState.TexelSize = (TextureTransferStateStruct.TexelSizeEnum) Extract(0, 1);
             GpuDisplayList.GpuProcessor.GpuImpl.Transfer(GpuDisplayList.GpuStateStructPointer);
         }
-        
-         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
+
+        [GpuOpCodesNotImplemented]
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x03)]
         public void OP_Unknown0x03()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x0D)]
         public void OP_Unknown0x0D()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x11)]
         public void OP_Unknown0x11()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x29)]
         public void OP_Unknown0x29()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x34)]
         public void OP_Unknown0x34()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x35)]
         public void OP_Unknown0x35()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x39)]
         public void OP_Unknown0x39()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x4E)]
         public void OP_Unknown0x4E()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x4F)]
         public void OP_Unknown0x4F()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x52)]
         public void OP_Unknown0x52()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x59)]
         public void OP_Unknown0x59()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0x5A)]
         public void OP_Unknown0x5A()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xB6)]
         public void OP_Unknown0xB6()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xB7)]
         public void OP_Unknown0xB7()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xD1)]
         public void OP_Unknown0xD1()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xED)]
         public void OP_Unknown0xED()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xEF)]
         public void OP_Unknown0xEF()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF0)]
         public void OP_Unknown0xF0()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF1)]
         public void OP_Unknown0xF1()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF2)]
         public void OP_Unknown0xF2()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF3)]
         public void OP_Unknown0xF3()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF4)]
         public void OP_Unknown0xF4()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF5)]
         public void OP_Unknown0xF5()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF6)]
         public void OP_Unknown0xF6()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF7)]
         public void OP_Unknown0xF7()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF8)]
         public void OP_Unknown0xF8()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xF9)]
         public void OP_Unknown0xF9()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xFA)]
         public void OP_Unknown0xFA()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xFB)]
         public void OP_Unknown0xFB()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xFC)]
         public void OP_Unknown0xFC()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xFD)]
         public void OP_Unknown0xFD()
         {
         }
 
         [GpuOpCodesNotImplemented]
-        // ReSharper disable once UnusedMember.Global
         [GpuInstructionAttribute(GpuOpCodes.Unknown0xFE)]
         public void OP_Unknown0xFE()
         {
         }
 
-        // ReSharper disable once UnusedMember.Global
+
         [GpuInstructionAttribute(GpuOpCodes.Dummy)]
         public void OP_Dummy()
         {
         }
-        
+
         [GpuInstructionAttribute(GpuOpCodes.UNKNOWN)]
         public void OP_UNKNOWN() => Console.WriteLine("Unhandled GpuOpCode: {0} : {1:X}", OpCode, Params24);
     }
