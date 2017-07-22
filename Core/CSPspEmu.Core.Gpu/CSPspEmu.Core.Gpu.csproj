@@ -89,23 +89,7 @@
     <Compile Include="Impl\Opengl\Utils\VertexUtils.cs" />
     <Compile Include="MessagePipe.cs" />
     <Compile Include="PspGeCallbackData.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.BoundingBox.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Clut.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Color.cs" />
     <Compile Include="Run\GpuDisplayListRunner.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Depth.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Dither.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Draw.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Enable.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Flow.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Fog.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Lights.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Matrix.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Morph.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Special.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Spline.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Texture.cs" />
-    <Compile Include="Run\GpuDisplayListRunner.Unknown.cs" />
     <Compile Include="State\GpuMatrixStruct.cs" />
     <Compile Include="State\GpuRectStruct.cs" />
     <Compile Include="State\GpuState.cs" />
@@ -151,9 +135,6 @@
       <Project>{9A93C7E4-09DA-46CF-B7DD-6BB09681D5AB}</Project>
       <Name>SafeILGenerator</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Run\GpuDisplayListRunner.Transfer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Impl\Opengl\shader.frag" />
