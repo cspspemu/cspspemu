@@ -1,29 +1,32 @@
 ﻿using CSPspEmu.Core.Audio;
+using CSPspEmu.Core.Audio.Impl.Null;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu;
+using CSPspEmu.Core.Gpu.Impl.Null;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core.Audio.Impl.Null;
-using CSPspEmu.Core.Gpu.Impl.Null;
 
-[InjectMap(typeof(PspMemory), typeof(LazyPspMemory))]
-[InjectMap(typeof(GpuImpl), typeof(GpuImplNull))]
-[InjectMap(typeof(PspAudioImpl), typeof(AudioImplNull))]
-[InjectMap(typeof(ICpuConnector), typeof(CpuConnector))]
-[InjectMap(typeof(IInterruptManager), typeof(HleInterruptManager))]
-public class TestHleUtils
+namespace CSPspEmu.Hle.Modules.Tests
 {
-    class CpuConnector : ICpuConnector
+    [InjectMap(typeof(PspMemory), typeof(LazyPspMemory))]
+    [InjectMap(typeof(GpuImpl), typeof(GpuImplNull))]
+    [InjectMap(typeof(PspAudioImpl), typeof(AudioImplNull))]
+    [InjectMap(typeof(ICpuConnector), typeof(CpuConnector))]
+    [InjectMap(typeof(IInterruptManager), typeof(HleInterruptManager))]
+    public class TestHleUtils
     {
-        public void Yield(CpuThreadState CpuThreadState)
+        class CpuConnector : ICpuConnector
         {
+            public void Yield(CpuThreadState cpuThreadState)
+            {
+            }
         }
-    }
 
-    public static InjectContext CreateInjectContext(object Bootstrap)
-    {
-        var _InjectContext = InjectContext.Bootstrap(new TestHleUtils());
-        _InjectContext.InjectDependencesTo(Bootstrap);
-        return _InjectContext;
+        public static InjectContext CreateInjectContext(object bootstrap)
+        {
+            var injectContext = InjectContext.Bootstrap(new TestHleUtils());
+            injectContext.InjectDependencesTo(bootstrap);
+            return injectContext;
+        }
     }
 }

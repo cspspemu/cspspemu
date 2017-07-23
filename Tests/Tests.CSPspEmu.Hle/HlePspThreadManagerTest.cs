@@ -1,24 +1,22 @@
 ﻿using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
+using CSPspEmu.Core.Memory;
 using Xunit;
 
-
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle
 {
     
     public class HlePspThreadManagerTest
     {
-        [Inject] InjectContext InjectContext;
+        [Inject] protected InjectContext InjectContext;
+        [Inject] protected CpuProcessor Processor;
 
-        [Inject] CpuProcessor Processor;
-
-        MipsAssembler MipsAssembler;
+        MipsAssembler _mipsAssembler;
 
         public HlePspThreadManagerTest()
         {
             TestHleUtils.CreateInjectContext(this);
-            MipsAssembler = new MipsAssembler(new PspMemoryStream(InjectContext.GetInstance<PspMemory>()));
+            _mipsAssembler = new MipsAssembler(new PspMemoryStream(InjectContext.GetInstance<PspMemory>()));
         }
 
         [Fact]

@@ -8,7 +8,7 @@ using Xunit;
 namespace SafeILGenerator.Tests.Util
 {
     
-    public class ILInstanceHolderPoolTest
+    public class IlInstanceHolderPoolTest
     {
         private static AstGenerator ast = AstGenerator.Instance;
 

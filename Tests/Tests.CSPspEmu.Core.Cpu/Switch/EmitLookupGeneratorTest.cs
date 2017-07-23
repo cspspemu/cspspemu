@@ -1,11 +1,10 @@
-﻿using CSPspEmu.Core.Cpu.Table;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CSPspEmu.Core.Cpu.Switch;
+using CSPspEmu.Core.Cpu.Table;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Core.Cpu.Switch
 {
     
     public class EmitLookupGeneratorTest
@@ -14,22 +13,22 @@ namespace CSPspEmu.Core.Tests
         {
             public List<int> Values = new List<int>();
 
-            public void test1()
+            public void Test1()
             {
                 Values.Add(1);
             }
 
-            public void test2()
+            public void Test2()
             {
                 Values.Add(2);
             }
 
-            public void test3()
+            public void Test3()
             {
                 Values.Add(3);
             }
 
-            public void unknown()
+            public void Unknown()
             {
                 Values.Add(0);
             }
@@ -38,9 +37,11 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "check")]
         public void GenerateSwitchDelegateTest()
         {
-            var EmitLookupGenerator = new EmitLookupGenerator();
-            var Callback = EmitLookupGenerator.GenerateSwitchDelegate<HandlerClass>("GenerateSwitchDelegateTest",
-                new InstructionInfo[]
+            // ReSharper disable once ObjectCreationAsStatement
+            new EmitLookupGenerator();
+            
+            var callback = EmitLookupGenerator.GenerateSwitchDelegate<HandlerClass>("GenerateSwitchDelegateTest",
+                new[]
                 {
                     new InstructionInfo()
                     {
@@ -59,15 +60,15 @@ namespace CSPspEmu.Core.Tests
                     },
                 });
 
-            var HandlerClass = new HandlerClass();
-            Callback(Convert.ToUInt32("0000", 2), HandlerClass);
-            Callback(Convert.ToUInt32("0001", 2), HandlerClass);
-            Callback(Convert.ToUInt32("0010", 2), HandlerClass);
-            Callback(Convert.ToUInt32("0011", 2), HandlerClass);
-            Callback(Convert.ToUInt32("0100", 2), HandlerClass);
-            Callback(Convert.ToUInt32("0110", 2), HandlerClass);
-            Callback(Convert.ToUInt32("1110", 2), HandlerClass);
-            Assert.Equal("0,1,2,0,3,3,0", string.Join(",", HandlerClass.Values));
+            var handlerClass = new HandlerClass();
+            callback(Convert.ToUInt32("0000", 2), handlerClass);
+            callback(Convert.ToUInt32("0001", 2), handlerClass);
+            callback(Convert.ToUInt32("0010", 2), handlerClass);
+            callback(Convert.ToUInt32("0011", 2), handlerClass);
+            callback(Convert.ToUInt32("0100", 2), handlerClass);
+            callback(Convert.ToUInt32("0110", 2), handlerClass);
+            callback(Convert.ToUInt32("1110", 2), handlerClass);
+            Assert.Equal("0,1,2,0,3,3,0", string.Join(",", handlerClass.Values));
         }
     }
 }

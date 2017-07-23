@@ -1,46 +1,44 @@
-﻿using CSPspEmu.Hle.Vfs.Iso;
-
-using CSPspEmu.Hle.Formats;
-using System.IO;
+﻿using System.IO;
 using CSharpUtils.Extensions;
+using CSPspEmu.Hle.Formats;
+using CSPspEmu.Hle.Vfs.Iso;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Vfs.Iso
 {
-    
     public class CsoProxyStreamTest
     {
         [Fact(Skip = "file not found")]
         public void ReadTest()
         {
-            var Cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
-            var IsoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
-            var CsoStream = new CompressedIsoProxyStream(Cso);
-            Assert.Equal(0x72800, CsoStream.Length);
-            var Data = new byte[2048];
-            var Data2 = new byte[3000];
-            Assert.Equal(Data.Length, CsoStream.Read(Data, 0, Data.Length));
-            Assert.Equal(Data.Length, CsoStream.Read(Data, 0, Data.Length));
-            Assert.Equal(3000, CsoStream.Read(Data2, 0, 3000));
+            var cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
+            var isoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
+            var csoStream = new CompressedIsoProxyStream(cso);
+            Assert.Equal(0x72800, csoStream.Length);
+            var data = new byte[2048];
+            var data2 = new byte[3000];
+            Assert.Equal(data.Length, csoStream.Read(data, 0, data.Length));
+            Assert.Equal(data.Length, csoStream.Read(data, 0, data.Length));
+            Assert.Equal(3000, csoStream.Read(data2, 0, 3000));
 
-            CsoStream.Position = 0x72800 - Data.Length;
-            Assert.Equal(Data.Length, CsoStream.Read(Data, 0, Data.Length));
+            csoStream.Position = 0x72800 - data.Length;
+            Assert.Equal(data.Length, csoStream.Read(data, 0, data.Length));
 
-            CsoStream.Position = 0x72800 - 10;
-            Assert.Equal(10, CsoStream.Read(Data, 0, 10));
+            csoStream.Position = 0x72800 - 10;
+            Assert.Equal(10, csoStream.Read(data, 0, 10));
 
-            CsoStream.Position = 0x72800 - 10;
-            Assert.Equal(10, CsoStream.Read(Data, 0, 100));
+            csoStream.Position = 0x72800 - 10;
+            Assert.Equal(10, csoStream.Read(data, 0, 100));
 
             Assert.Equal(
-                IsoBytes,
-                CsoStream.ReadAll(true)
+                isoBytes,
+                csoStream.ReadAll()
             );
 
-            CsoStream.Position = 0x10 * 2048 - 100;
+            csoStream.Position = 0x10 * 2048 - 100;
             Assert.Equal(
-                IsoBytes.Slice(0x10 * 2048 - 100, 300),
-                CsoStream.ReadBytes(300)
+                isoBytes.Slice(0x10 * 2048 - 100, 300),
+                csoStream.ReadBytes(300)
             );
         }
     }

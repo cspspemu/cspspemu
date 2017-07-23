@@ -2,7 +2,7 @@
 
 using Xunit;
 
-namespace CSPspEmu.Tests.Cpu.Dynarec
+namespace Tests.CSPspEmu.Core.Cpu.Dynarec
 {
     
     public class DynarecFunctionCompilerTaskTest

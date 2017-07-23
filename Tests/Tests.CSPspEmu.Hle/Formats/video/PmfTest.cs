@@ -1,18 +1,13 @@
-﻿using cscodec;
-using cscodec.h264.player;
+﻿using System;
+using System.IO;
 using CSharpUtils;
 using CSharpUtils.Endian;
+using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats.audio.At3;
 using CSPspEmu.Hle.Formats.video;
-
-using System;
-using System.Drawing;
-using System.IO;
-using CSharpUtils.Drawing;
-using CSharpUtils.Extensions;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Formats.video
 {
     
     public unsafe class PmfTest
@@ -20,10 +15,10 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "file not found")]
         public void LoadTest()
         {
-            var Pmf = new Pmf();
+            var pmf = new Pmf();
             //Pmf.Load(File.OpenRead("../../../TestInput/test.pmf"));
             //Pmf.Load(File.OpenRead("../../../TestInput/sample.pmf"));
-            Pmf.Load(File.OpenRead("c:/isos/psp/op.pmf"));
+            pmf.Load(File.OpenRead("c:/isos/psp/op.pmf"));
             //Console.WriteLine(Pmf.InfoHeader.ToStringDefault());
 
             //Assert.Equal(0x800, Pmf.Header.StreamOffset);
@@ -31,38 +26,39 @@ namespace CSPspEmu.Core.Tests
             //Assert.Equal(144, Pmf.InfoHeader.Width);
             //Assert.Equal(80, Pmf.InfoHeader.Height);
 
-            var MpegPs = Pmf.GetMpegPs();
-            int PmfWidth = Pmf.InfoHeader.Width;
-            int PmfHeight = Pmf.InfoHeader.Height;
+            var mpegPs = pmf.GetMpegPs();
+            // ReSharper disable once UnusedVariable
+            var pmfWidth = pmf.InfoHeader.Width;
+            // ReSharper disable once UnusedVariable
+            var pmfHeight = pmf.InfoHeader.Height;
 
-            var VideoOutStream = new ProduceConsumerBufferStream();
-            var AudioOutStream = new ProduceConsumerBufferStream();
-            int FrameNumber = 0;
+            var videoOutStream = new ProduceConsumerBufferStream();
+            var audioOutStream = new ProduceConsumerBufferStream();
 
             try
             {
-                while (MpegPs.HasMorePackets)
+                while (mpegPs.HasMorePackets)
                 {
-                    var Packet = MpegPs.ReadPacketizedElementaryStreamHeader();
-                    var Info = MpegPs.ParsePacketizedStream(Packet.Stream);
+                    var packet = mpegPs.ReadPacketizedElementaryStreamHeader();
+                    var info = mpegPs.ParsePacketizedStream(packet.Stream);
 
-                    if (Packet.Type == MpegPsDemuxer.ChunkType.ST_Video1)
+                    if (packet.Type == MpegPsDemuxer.ChunkType.ST_Video1)
                     {
-                        Info.Stream.CopyToFast(VideoOutStream);
+                        info.Stream.CopyToFast(videoOutStream);
                     }
-                    if (Packet.Type == MpegPsDemuxer.ChunkType.ST_Private1)
+                    if (packet.Type == MpegPsDemuxer.ChunkType.ST_Private1)
                     {
                         //Console.WriteLine(Info.dts);
                         //Info
-                        var Channel = Info.Stream.ReadByte();
-                        Info.Stream.Skip(3);
-                        if (Channel >= 0xB0 && Channel <= 0xBF)
+                        var channel = info.Stream.ReadByte();
+                        info.Stream.Skip(3);
+                        if (channel >= 0xB0 && channel <= 0xBF)
                         {
-                            Info.Stream.Skip(1);
+                            info.Stream.Skip(1);
                         }
 
                         //Info.Stream.Skip(8);
-                        Info.Stream.CopyToFast(AudioOutStream);
+                        info.Stream.CopyToFast(audioOutStream);
                     }
 
                     //if (VideoOutStream.Length >= 1 * 1024 * 1024) break;
@@ -73,34 +69,37 @@ namespace CSPspEmu.Core.Tests
             {
             }
 
-            var At3Data = AudioOutStream.ReadAll();
-            File.WriteAllBytes(@"c:\isos\psp\out\audio.raw", At3Data);
-            fixed (byte* At3DataPtr = At3Data)
+            var at3Data = audioOutStream.ReadAll();
+            File.WriteAllBytes(@"c:\isos\psp\out\audio.raw", at3Data);
+            fixed (byte* at3DataPtr = at3Data)
             {
-                byte* At3Ptr = At3DataPtr;
-                byte* At3End = &At3DataPtr[At3Data.Length];
-                var MaiAT3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
-                int frame = 0;
+                var at3Ptr = at3DataPtr;
+                // ReSharper disable once UnusedVariable
+                var at3End = &at3DataPtr[at3Data.Length];
+                var maiAt3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
+                var frame = 0;
 
                 for (int n = 0; n < 1000; n++, frame++)
                 {
-                    var FrameSize = (*(UshortBe*) &At3Ptr[2] & 0x3FF) * 8 + 8;
-                    At3Ptr += 8;
+                    var frameSize = (*(UshortBe*) &at3Ptr[2] & 0x3FF) * 8 + 8;
+                    at3Ptr += 8;
                     //Console.WriteLine(FrameSize);
 
-                    int channels = 0;
-                    short[] SamplesData;
+                    var channels = 0;
+                    short[] samplesData;
                     File.WriteAllBytes(@"c:\isos\psp\out\samples" + frame + ".in",
-                        new MemoryStream().WriteBytes(PointerUtils.PointerToByteArray(At3Ptr, FrameSize)).ToArray());
-                    Console.WriteLine("{0}, {1}, {2}", 0, channels, FrameSize);
-                    int Out = MaiAT3PlusFrameDecoder.decodeFrame(At3Ptr, FrameSize, out channels, out SamplesData);
+                        new MemoryStream().WriteBytes(PointerUtils.PointerToByteArray(at3Ptr, frameSize)).ToArray());
+                    Console.WriteLine("{0}, {1}, {2}", 0, channels, frameSize);
+                    // ReSharper disable once UnusedVariable
+                    var Out = maiAt3PlusFrameDecoder.decodeFrame(at3Ptr, frameSize, out channels, out samplesData);
                     //Console.WriteLine("{0}, {1}, {2}", Out, channels, FrameSize);
                     File.WriteAllBytes(@"c:\isos\psp\out\samples" + frame + ".out",
-                        new MemoryStream().WriteStructVector(SamplesData).ToArray());
-                    At3Ptr += FrameSize;
+                        new MemoryStream().WriteStructVector(samplesData).ToArray());
+                    at3Ptr += frameSize;
                 }
             }
 
+            /*
             return;
 
             //FileUtils.CreateAndAppendStream(@"c:/isos/psp/out/opening.h264", VideoOutStream.Slice());
@@ -136,32 +135,33 @@ namespace CSPspEmu.Core.Tests
 
             //return;
 
-            var Sample5Reference = new Bitmap(Image.FromFile("../../../TestInput/sample_5.png"));
+            var sample5Reference = new Bitmap(Image.FromFile("../../../TestInput/sample_5.png"));
 
-            var FrameDecoder = new H264FrameDecoder(VideoOutStream);
-            FrameNumber = 0;
-            while (FrameDecoder.HasMorePackets)
+            var frameDecoder = new H264FrameDecoder(videoOutStream);
+            frameNumber = 0;
+            while (frameDecoder.HasMorePackets)
             {
-                var Frame = FrameDecoder.DecodeFrame();
+                var frame = frameDecoder.DecodeFrame();
                 //Console.WriteLine(Frame.imageWidth);
                 //Console.WriteLine(Frame.imageWidthWOEdge);
                 //Console.WriteLine(Frame.imageHeight);
                 //Console.WriteLine(Frame.imageHeightWOEdge);
-                if (FrameNumber <= 70)
+                if (frameNumber <= 70)
                 {
-                    if (FrameNumber == 70)
+                    if (frameNumber == 70)
                     {
-                        var Sample5Output = FrameUtils.imageFromFrameWithoutEdges(Frame, PmfWidth, PmfHeight);
-                        Sample5Output.Save(@"c:\isos\psp\out\frame_" + (FrameNumber) + ".png");
-                        var CompareResult = BitmapUtils.CompareBitmaps(Sample5Reference, Sample5Output);
+                        var sample5Output = FrameUtils.imageFromFrameWithoutEdges(frame, pmfWidth, pmfHeight);
+                        sample5Output.Save(@"c:\isos\psp\out\frame_" + (frameNumber) + ".png");
+                        var compareResult = BitmapUtils.CompareBitmaps(sample5Reference, sample5Output);
                     }
                 }
                 else
                 {
                     break;
                 }
-                FrameNumber++;
+                frameNumber++;
             }
+            */
         }
     }
 }

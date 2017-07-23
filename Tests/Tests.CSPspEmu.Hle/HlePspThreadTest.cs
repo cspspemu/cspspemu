@@ -1,11 +1,10 @@
-﻿
-using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Memory;
+﻿using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle
 {
     
     public class HlePspThreadTest
@@ -16,7 +15,7 @@ namespace CSPspEmu.Core.Tests
 
         [Inject] protected CpuProcessor Processor;
 
-        [Inject] private HleThreadManager ThreadManager;
+        [Inject] protected HleThreadManager ThreadManager;
 
         protected MipsAssembler MipsAssembler;
 

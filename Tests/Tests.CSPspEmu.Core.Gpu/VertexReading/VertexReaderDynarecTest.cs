@@ -2,7 +2,7 @@
 
 //using CSPspEmu.Core.Gpu.VertexReading;
 
-namespace CSPspEmu.Core.Tests.Gpu.VertexReading
+namespace Tests.CSPspEmu.Core.Gpu.VertexReading
 {
     /// <summary>
     /// Read_Weights();
@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
     /// Read_Position();
     /// </summary>
     
-    public unsafe class VertexReaderDynarecTest
+    public class VertexReaderDynarecTest
     {
 #if false
 		VertexInfo[] VertexInfoList = new VertexInfo[16];

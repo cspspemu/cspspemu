@@ -1,8 +1,7 @@
 ﻿using CSPspEmu.Core.Cpu.Table;
 using Xunit;
 
-
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Core.Cpu.Table
 {
     
     public class InstructionTableTest
@@ -10,7 +9,7 @@ namespace CSPspEmu.Core.Tests
         [Fact]
         public void PspInstructionsTest()
         {
-            var Instructions = InstructionTable.All;
+            var unused = InstructionTable.All;
         }
     }
 }

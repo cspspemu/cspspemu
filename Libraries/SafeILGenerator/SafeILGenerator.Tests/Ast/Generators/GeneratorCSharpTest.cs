@@ -8,22 +8,21 @@ using Xunit;
 
 namespace SafeILGenerator.Tests.Ast.Generators
 {
-    
     public class GeneratorCSharpTest
     {
         GeneratorCSharp GeneratorCSharp;
-        private static readonly AstGenerator ast = AstGenerator.Instance;
+        private static readonly AstGenerator Ast = AstGenerator.Instance;
 
         public GeneratorCSharpTest()
         {
             GeneratorCSharp = new GeneratorCSharp();
         }
 
-        public static void TestAstSetGetLValue_Set(int Index, int Value)
+        public static void TestAstSetGetLValue_Set(int index, int value)
         {
         }
 
-        public static int TestAstSetGetLValue_Get(int Index)
+        public static int TestAstSetGetLValue_Get(int index)
         {
             return 0;
         }
@@ -31,26 +30,25 @@ namespace SafeILGenerator.Tests.Ast.Generators
         [Fact]
         public void TestAstSetGetLValue()
         {
-            var AstIndex = ast.Immediate(777);
-            var AstSetGet = ast.SetGetLValue(
-                ast.CallStatic((Action<int, int>) TestAstSetGetLValue_Set, AstIndex,
-                    ast.SetGetLValuePlaceholder<int>()),
-                ast.CallStatic((Func<int, int>) TestAstSetGetLValue_Get, AstIndex)
+            var astIndex = Ast.Immediate(777);
+            var astSetGet = Ast.SetGetLValue(
+                Ast.CallStatic((Action<int, int>) TestAstSetGetLValue_Set, astIndex,
+                    Ast.SetGetLValuePlaceholder<int>()),
+                Ast.CallStatic((Func<int, int>) TestAstSetGetLValue_Get, astIndex)
             );
             Assert.Equal("GeneratorCSharpTest.TestAstSetGetLValue_Set(777, 11);",
-                GeneratorCSharp.Reset().GenerateRoot(ast.Assign(AstSetGet, 11)).ToString());
+                GeneratorCSharp.Reset().GenerateRoot(Ast.Assign(astSetGet, 11)).ToString());
             Assert.Equal("GeneratorCSharpTest.TestAstSetGetLValue_Set(777, 12);",
-                GeneratorCSharp.Reset().GenerateRoot(ast.Assign(AstSetGet, 12)).ToString());
+                GeneratorCSharp.Reset().GenerateRoot(Ast.Assign(astSetGet, 12)).ToString());
             Assert.Equal(
                 "GeneratorCSharpTest.TestAstSetGetLValue_Set(777, (GeneratorCSharpTest.TestAstSetGetLValue_Get(777) + 1));",
-                GeneratorCSharp.Reset().GenerateRoot(ast.Assign(AstSetGet, AstSetGet + 1)).ToString());
+                GeneratorCSharp.Reset().GenerateRoot(Ast.Assign(astSetGet, astSetGet + 1)).ToString());
         }
 
         [Fact]
         public void TestAstExpression()
         {
-            ;
-            Assert.Equal("(3 + 5)", GeneratorCSharp.GenerateRoot(ast.Binary(3, "+", 5)).ToString());
+            Assert.Equal("(3 + 5)", GeneratorCSharp.GenerateRoot(Ast.Binary(3, "+", 5)).ToString());
         }
 
         [Fact]
@@ -79,19 +77,19 @@ namespace SafeILGenerator.Tests.Ast.Generators
         [Fact]
         public void TestAstSwitch()
         {
-            var Local = AstLocal.Create<int>("Local");
-            var Ast = ast.Statements(
-                ast.Switch(
-                    ast.Local(Local),
-                    ast.Default(ast.Return("Nor One, nor Three")),
-                    ast.Case(1, ast.Return("One")),
-                    ast.Case(3, ast.Return("Three"))
+            var local = AstLocal.Create<int>("Local");
+            var ast = Ast.Statements(
+                Ast.Switch(
+                    Ast.Local(local),
+                    Ast.Default(Ast.Return("Nor One, nor Three")),
+                    Ast.Case(1, Ast.Return("One")),
+                    Ast.Case(3, Ast.Return("Three"))
                 ),
-                ast.Return("Invalid!")
+                Ast.Return("Invalid!")
             );
 
-            var Actual = GeneratorCSharp.GenerateString<GeneratorCSharp>(Ast);
-            var Expected = @"
+            var actual = GeneratorCSharp.GenerateString<GeneratorCSharp>(ast);
+            var expected = @"
 				{
 					switch (Local) {
 						case 1:
@@ -107,15 +105,15 @@ namespace SafeILGenerator.Tests.Ast.Generators
 					return ""Invalid!"";
 				}
 			";
-            Actual = new Regex(@"\s+").Replace(Actual, " ").Trim();
-            Expected = new Regex(@"\s+").Replace(Expected, " ").Trim();
+            actual = new Regex(@"\s+").Replace(actual, " ").Trim();
+            expected = new Regex(@"\s+").Replace(expected, " ").Trim();
 
-            Assert.Equal(Expected, Actual);
+            Assert.Equal(expected, actual);
         }
 
-        public static int GetTestValue(int Value)
+        public static int GetTestValue(int value)
         {
-            return 333 * Value;
+            return 333 * value;
         }
     }
 }

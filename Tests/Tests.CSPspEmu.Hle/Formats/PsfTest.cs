@@ -1,10 +1,9 @@
-﻿using CSPspEmu.Hle.Formats;
-
-using System;
+﻿using System;
 using System.IO;
+using CSPspEmu.Hle.Formats;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Formats
 {
     
     public class PsfTest
@@ -12,23 +11,23 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "file not found")]
         public void LoadTest()
         {
-            var Psf = new Psf();
-            Psf.Load(File.OpenRead("../../../TestInput/PARAM.SFO"));
-            foreach (var Pair in Psf.EntryDictionary)
+            var psf = new Psf();
+            psf.Load(File.OpenRead("../../../TestInput/PARAM.SFO"));
+            foreach (var pair in psf.EntryDictionary)
             {
-                Console.WriteLine("{0}:{1}", Pair.Key, Pair.Value);
+                Console.WriteLine("{0}:{1}", pair.Key, pair.Value);
             }
 
-            Assert.Equal(Psf.EntryDictionary["BOOTABLE"], 1);
-            Assert.Equal(Psf.EntryDictionary["CATEGORY"], "UG");
-            Assert.Equal(Psf.EntryDictionary["DISC_ID"], "TEST99999");
-            Assert.Equal(Psf.EntryDictionary["DISC_NUMBER"], 1);
-            Assert.Equal(Psf.EntryDictionary["DISC_TOTAL"], 1);
-            Assert.Equal(Psf.EntryDictionary["DISC_VERSION"], "9.99");
-            Assert.Equal(Psf.EntryDictionary["PARENTAL_LEVEL"], 5);
-            Assert.Equal(Psf.EntryDictionary["PSP_SYSTEM_VER"], "3.33");
-            Assert.Equal(Psf.EntryDictionary["REGION"], 32768);
-            Assert.Equal(Psf.EntryDictionary["TITLE"], "GAME TITLE TITLE");
+            Assert.Equal(psf.EntryDictionary["BOOTABLE"], 1);
+            Assert.Equal(psf.EntryDictionary["CATEGORY"], "UG");
+            Assert.Equal(psf.EntryDictionary["DISC_ID"], "TEST99999");
+            Assert.Equal(psf.EntryDictionary["DISC_NUMBER"], 1);
+            Assert.Equal(psf.EntryDictionary["DISC_TOTAL"], 1);
+            Assert.Equal(psf.EntryDictionary["DISC_VERSION"], "9.99");
+            Assert.Equal(psf.EntryDictionary["PARENTAL_LEVEL"], 5);
+            Assert.Equal(psf.EntryDictionary["PSP_SYSTEM_VER"], "3.33");
+            Assert.Equal(psf.EntryDictionary["REGION"], 32768);
+            Assert.Equal(psf.EntryDictionary["TITLE"], "GAME TITLE TITLE");
         }
     }
 }

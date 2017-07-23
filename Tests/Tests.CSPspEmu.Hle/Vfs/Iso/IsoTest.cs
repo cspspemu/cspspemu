@@ -4,8 +4,7 @@ using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
 using Xunit;
 
-
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Vfs.Iso
 {
     
     public class IsoTest
@@ -13,14 +12,14 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "file not found")]
         public void IsoConstructorTest()
         {
-            var CsoName = "../../../TestInput/test.cso";
-            var Cso = new Cso(File.OpenRead(CsoName));
-            var Iso = new IsoFile(new CompressedIsoProxyStream(Cso), CsoName);
-            var ContentNode = Iso.Root.Locate("path/content.txt");
-            var Lines = ContentNode.Open().ReadAllContentsAsString().Split('\n');
-            foreach (var Line in Lines)
+            var csoName = "../../../TestInput/test.cso";
+            var cso = new Cso(File.OpenRead(csoName));
+            var iso = new IsoFile(new CompressedIsoProxyStream(cso), csoName);
+            var contentNode = iso.Root.Locate("path/content.txt");
+            var lines = contentNode.Open().ReadAllContentsAsString().Split('\n');
+            foreach (var line in lines)
             {
-                Iso.Root.Locate(Line);
+                iso.Root.Locate(line);
             }
         }
     }

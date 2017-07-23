@@ -1,8 +1,7 @@
 ﻿using CSPspEmu.Hle.Vfs.Local;
 using Xunit;
 
-
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Vfs.Local
 {
     
     public class HleIoDriverLocalFileSystemTest

@@ -1,14 +1,13 @@
-﻿using CSPspEmu.Hle;
-
-using CSharpUtils;
+﻿using CSharpUtils;
+using CSPspEmu.Hle;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle
 {
     
     public class MemoryPartitionTest
     {
-        InjectContext InjectContext;
+        protected InjectContext InjectContext;
         protected MemoryPartition PartitionRoot;
 
         public MemoryPartitionTest()
@@ -19,8 +18,8 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "check")]
         public void Allocate1Test()
         {
-            var Partition1 = PartitionRoot.Allocate(0x0FF);
-            var Partition2 = PartitionRoot.Allocate(0x001);
+            PartitionRoot.Allocate(0x0FF);
+            PartitionRoot.Allocate(0x001);
             Assert.Equal(
                 "MemoryPartition(Low=0, High=100, Allocated=True, Name='<Unknown>', ChildPartitions=[" +
                 "MemoryPartition(Low=0, High=FF, Allocated=True, Name='<Unknown>')," +
@@ -41,14 +40,16 @@ namespace CSPspEmu.Core.Tests
         }
 
         [Fact(Skip = "check")]
+        // ReSharper disable RedundantArgumentDefaultValue
+        // ReSharper disable UnusedVariable
         public void AllocateFreeNormalizeTest()
         {
-            var Partition1 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
-            var Partition2 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
-            var Partition3 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
-            var Partition4 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
-            PartitionRoot.DeallocateLow(Partition2.Low);
-            PartitionRoot.DeallocateHigh(Partition3.High);
+            var partition1 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
+            var partition2 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
+            var partition3 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
+            var partition4 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
+            PartitionRoot.DeallocateLow(partition2.Low);
+            PartitionRoot.DeallocateHigh(partition3.High);
             Assert.Equal(
                 "MemoryPartition(Low=0, High=100, Allocated=True, Name='<Unknown>', ChildPartitions=[" +
                 "MemoryPartition(Low=0, High=40, Allocated=True, Name='<Unknown>')," +
@@ -62,7 +63,7 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "check")]
         public void AllocateFixedPositionTest()
         {
-            var Partition1 = PartitionRoot.AllocateLowSize(0x60, 0x40);
+            var partition1 = PartitionRoot.AllocateLowSize(0x60, 0x40);
             Assert.Equal(
                 "MemoryPartition(Low=0, High=100, Allocated=True, Name='<Unknown>', ChildPartitions=[" +
                 "MemoryPartition(Low=0, High=60, Allocated=False, Name='<Free>')," +

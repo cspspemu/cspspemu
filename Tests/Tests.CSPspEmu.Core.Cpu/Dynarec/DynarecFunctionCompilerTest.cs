@@ -1,10 +1,8 @@
-﻿using CSPspEmu.Core.Cpu.Assembler;
-using CSPspEmu.Core.Cpu;
-using Tests.CSPspEmu.Core.Cpu.Cpu;
+﻿using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core.Cpu.Assembler;
 using Xunit;
 
-
-namespace CSPspEmu.Tests.Cpu.Dynarec
+namespace Tests.CSPspEmu.Core.Cpu.Dynarec
 {
     
     public class DynarecFunctionCompilerTest
@@ -12,9 +10,9 @@ namespace CSPspEmu.Tests.Cpu.Dynarec
         [Fact(Skip = "Check")]
         public void TestMethod1()
         {
-            var CpuProcessor = CpuUtils.CreateCpuProcessor();
+            var cpuProcessor = CpuUtils.CreateCpuProcessor();
 
-            var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(
+            var dynarecFunction = cpuProcessor.DynarecFunctionCompiler.CreateFunction(
                 new InstructionArrayReader(MipsAssembler.StaticAssembleInstructions(@"
 					addi r1, r1, 1
 					jr r31
@@ -23,10 +21,10 @@ namespace CSPspEmu.Tests.Cpu.Dynarec
                 0, checkValidAddress: false
             );
 
-            var CpuThreadState = new CpuThreadState(CpuProcessor);
-            Assert.Equal(0, CpuThreadState.Gpr[1]);
-            DynarecFunction.Delegate(CpuThreadState);
-            Assert.Equal(1, CpuThreadState.Gpr[1]);
+            var cpuThreadState = new CpuThreadState(cpuProcessor);
+            Assert.Equal(0, cpuThreadState.Gpr[1]);
+            dynarecFunction.Delegate(cpuThreadState);
+            Assert.Equal(1, cpuThreadState.Gpr[1]);
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using CSPspEmu.Core.Cpu.Assembler;
 using Xunit;
 
-
-namespace CSPspEmu.Core.Tests.Cpu.Assembler
+namespace Tests.CSPspEmu.Core.Cpu.Assembler
 {
     
     public class MipsDisassemblerTest
@@ -17,7 +16,7 @@ namespace CSPspEmu.Core.Tests.Cpu.Assembler
         [Fact(Skip = "Check")]
         public void DisassembleJumpInstruction()
         {
-            var AssemblerResult = MipsAssembler.StaticAssembleInstructions(@"
+            var assemblerResult = MipsAssembler.StaticAssembleInstructions(@"
 			label1:
 				j label2
 			label2:
@@ -25,15 +24,15 @@ namespace CSPspEmu.Core.Tests.Cpu.Assembler
 				nop
 			");
 
-            Assert.Equal((uint) 4, AssemblerResult.Labels["label2"]);
-            Assert.Equal((uint) 0, AssemblerResult.Labels["label1"]);
+            Assert.Equal((uint) 4, assemblerResult.Labels["label2"]);
+            Assert.Equal((uint) 0, assemblerResult.Labels["label1"]);
 
             Assert.Equal(@"j 0x00000004",
-                new MipsDisassembler().Disassemble(pc: 0 * 4, instruction: AssemblerResult.Instructions[0]).ToString());
+                new MipsDisassembler().Disassemble(pc: 0 * 4, instruction: assemblerResult.Instructions[0]).ToString());
             Assert.Equal(@"j 0x00000000",
-                new MipsDisassembler().Disassemble(pc: 1 * 4, instruction: AssemblerResult.Instructions[1]).ToString());
+                new MipsDisassembler().Disassemble(pc: 1 * 4, instruction: assemblerResult.Instructions[1]).ToString());
             Assert.Equal(@"and r0, r0, r0",
-                new MipsDisassembler().Disassemble(pc: 2 * 4, instruction: AssemblerResult.Instructions[2]).ToString());
+                new MipsDisassembler().Disassemble(pc: 2 * 4, instruction: assemblerResult.Instructions[2]).ToString());
         }
     }
 }

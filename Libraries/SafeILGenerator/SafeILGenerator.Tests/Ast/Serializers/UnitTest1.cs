@@ -14,11 +14,11 @@ namespace SafeILGenerator.Tests.Ast.Serializers
         [Fact]
         public void TestMethod1()
         {
-            var Ast = ast.Statements(
+            var ast2 = ast.Statements(
                 ast.Assign(ast.Argument<int>(0, "Argument0"), 777),
                 ast.Return()
             );
-            Console.WriteLine(AstSerializer.SerializeAsXml(Ast));
+            Console.WriteLine(AstSerializer.SerializeAsXml(ast2));
         }
     }
 }

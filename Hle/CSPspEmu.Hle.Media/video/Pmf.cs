@@ -51,15 +51,9 @@ namespace CSPspEmu.Hle.Formats.video
             public byte _WidthShifted;
             public byte _HeightShifted;
 
-            public int Width
-            {
-                get { return (int) (_WidthShifted * 0x10); }
-            }
+            public int Width => _WidthShifted * 0x10;
 
-            public int Height
-            {
-                get { return (int) (_HeightShifted * 0x10); }
-            }
+            public int Height => _HeightShifted * 0x10;
         }
 
         public class Chunk

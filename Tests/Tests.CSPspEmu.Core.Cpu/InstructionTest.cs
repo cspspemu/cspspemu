@@ -2,7 +2,7 @@
 
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Core.Cpu
 {
     
     public class InstructionTest

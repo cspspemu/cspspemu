@@ -1,9 +1,8 @@
-﻿using CSPspEmu.Hle.Formats;
-
-using System.IO;
+﻿using System.IO;
+using CSPspEmu.Hle.Formats;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Formats
 {
     
     public class PbpTest
@@ -11,8 +10,8 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "file not found")]
         public void LoadTest()
         {
-            var Pbp = new Pbp();
-            Pbp.Load(File.OpenRead("../../../TestInput/HelloJpcsp.pbp"));
+            var pbp = new Pbp();
+            pbp.Load(File.OpenRead("../../../TestInput/HelloJpcsp.pbp"));
         }
     }
 }

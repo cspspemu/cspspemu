@@ -5,7 +5,7 @@ using Xunit;
 namespace SafeILGenerator.Tests.Util
 {
     
-    public class ILFieldInfoTest
+    public class IlFieldInfoTest
     {
         public int Test;
 
@@ -13,7 +13,7 @@ namespace SafeILGenerator.Tests.Util
         public void TestGetFieldInfo()
         {
             Assert.Equal(
-                typeof(ILFieldInfoTest).GetField("Test"),
+                typeof(IlFieldInfoTest).GetField("Test"),
                 IlFieldInfo.GetFieldInfo(() => Test)
             );
         }

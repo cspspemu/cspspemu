@@ -10,51 +10,51 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
 {
     
     [InjectMap(typeof(PspRtc), typeof(PspRtcMock))]
-    public class sceRtcTest : BaseModuleTest
+    public class SceRtcTest : BaseModuleTest
     {
-        [Inject] sceRtc sceRtc = null;
+        [Inject] protected sceRtc SceRtc = null;
 
-        int FakedYear;
-        int FakedMonth;
-        int FakedDay;
-        int FakedHour;
-        int FakedMinute;
-        int FakedSecond;
-        int FakedMillisecond;
+        int _fakedYear;
+        int _fakedMonth;
+        int _fakedDay;
+        int _fakedHour;
+        int _fakedMinute;
+        int _fakedSecond;
+        int _fakedMillisecond;
 
         private void ResetTimes()
         {
-            FakedYear = 2012;
-            FakedMonth = 4;
-            FakedDay = 30;
-            FakedHour = 12;
-            FakedMinute = 13;
-            FakedSecond = 14;
-            FakedMillisecond = 973;
+            _fakedYear = 2012;
+            _fakedMonth = 4;
+            _fakedDay = 30;
+            _fakedHour = 12;
+            _fakedMinute = 13;
+            _fakedSecond = 14;
+            _fakedMillisecond = 973;
         }
 
         public class PspRtcMock : PspRtc
         {
-            public sceRtcTest sceRtcTest;
+            public SceRtcTest SceRtcTest;
 
             protected override void UpdateInternal()
             {
                 Console.WriteLine("PspRtcMock.UpdateInternal()");
-                var DateTime = new DateTime(
-                    sceRtcTest.FakedYear,
-                    sceRtcTest.FakedMonth,
-                    sceRtcTest.FakedDay,
-                    sceRtcTest.FakedHour,
-                    sceRtcTest.FakedMinute,
-                    sceRtcTest.FakedSecond,
-                    sceRtcTest.FakedMillisecond
+                var dateTime = new DateTime(
+                    SceRtcTest._fakedYear,
+                    SceRtcTest._fakedMonth,
+                    SceRtcTest._fakedDay,
+                    SceRtcTest._fakedHour,
+                    SceRtcTest._fakedMinute,
+                    SceRtcTest._fakedSecond,
+                    SceRtcTest._fakedMillisecond
                 );
-                CurrentTime.SetToDateTime(DateTime);
-                this.CurrentDateTime = DateTime;
+                CurrentTime.SetToDateTime(dateTime);
+                CurrentDateTime = dateTime;
             }
         }
 
-        public sceRtcTest()
+        public SceRtcTest()
         {
             ResetTimes();
         }
@@ -63,53 +63,53 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
         public void Test_sceRtcGetDayOfWeek()
         {
             Assert.Equal((int) PspDaysOfWeek.Monday, 1);
-            Assert.Equal(PspDaysOfWeek.Monday, sceRtc.sceRtcGetDayOfWeek(2012, 4, 30));
-            Assert.Equal(2, (int) sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
-            Assert.Equal(PspDaysOfWeek.Tuesday, sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
+            Assert.Equal(PspDaysOfWeek.Monday, SceRtc.sceRtcGetDayOfWeek(2012, 4, 30));
+            Assert.Equal(2, (int) SceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
+            Assert.Equal(PspDaysOfWeek.Tuesday, SceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
         }
 
         [Fact(Skip = "check. Time not mocked")]
         public void Test_sceRtcGetCurrentClock()
         {
-            ScePspDateTime ScePspDateTime;
-            var Result = sceRtc.sceRtcGetCurrentClock(out ScePspDateTime, 0);
-            Assert.Equal(0, Result);
-            Assert.Equal(FakedYear, (int) ScePspDateTime.Year);
-            Assert.Equal(FakedMonth, (int) ScePspDateTime.Month);
-            Assert.Equal(FakedDay, (int) ScePspDateTime.Day);
-            Assert.Equal(FakedHour, (int) ScePspDateTime.Hour);
-            Assert.Equal(FakedMinute, (int) ScePspDateTime.Minute);
-            Assert.Equal(FakedSecond, (int) ScePspDateTime.Second);
-            Assert.Equal(FakedMillisecond, (int) ScePspDateTime.Microsecond / 1000);
+            ScePspDateTime scePspDateTime;
+            var result = SceRtc.sceRtcGetCurrentClock(out scePspDateTime, 0);
+            Assert.Equal(0, result);
+            Assert.Equal(_fakedYear, scePspDateTime.Year);
+            Assert.Equal(_fakedMonth, scePspDateTime.Month);
+            Assert.Equal(_fakedDay, scePspDateTime.Day);
+            Assert.Equal(_fakedHour, scePspDateTime.Hour);
+            Assert.Equal(_fakedMinute, scePspDateTime.Minute);
+            Assert.Equal(_fakedSecond, scePspDateTime.Second);
+            Assert.Equal(_fakedMillisecond, (int) scePspDateTime.Microsecond / 1000);
         }
 
         [Fact(Skip = "check. Time not mocked")]
         public void Test_timeIsIncreasing()
         {
-            DateTime PrevDateTime = DateTimeRange.ConvertFromUnixTimestamp(0);
-            ScePspDateTime ScePspDateTime;
+            var prevDateTime = DateTimeRange.ConvertFromUnixTimestamp(0);
             for (int n = 0; n < 40; n++)
             {
                 Console.WriteLine("Iter");
-                FakedMillisecond++;
-                if (FakedMillisecond >= 1000)
+                _fakedMillisecond++;
+                if (_fakedMillisecond >= 1000)
                 {
-                    FakedSecond++;
-                    FakedMillisecond = FakedMillisecond % 1000;
+                    _fakedSecond++;
+                    _fakedMillisecond = _fakedMillisecond % 1000;
                 }
 
-                var Result = sceRtc.sceRtcGetCurrentClock(out ScePspDateTime, 0);
+                ScePspDateTime scePspDateTime;
+                SceRtc.sceRtcGetCurrentClock(out scePspDateTime, 0);
 
-                var CurrentDateTime = ScePspDateTime.ToDateTime();
+                var currentDateTime = scePspDateTime.ToDateTime();
 
-                if (!(CurrentDateTime > PrevDateTime))
+                if (!(currentDateTime > prevDateTime))
                 {
                     Console.WriteLine("N: {0}", n);
-                    Console.WriteLine("P: {0}", PrevDateTime.Ticks);
-                    Console.WriteLine("C: {0}", CurrentDateTime.Ticks);
+                    Console.WriteLine("P: {0}", prevDateTime.Ticks);
+                    Console.WriteLine("C: {0}", currentDateTime.Ticks);
                 }
-                Assert.True(CurrentDateTime.Ticks > PrevDateTime.Ticks);
-                PrevDateTime = CurrentDateTime;
+                Assert.True(currentDateTime.Ticks > prevDateTime.Ticks);
+                prevDateTime = currentDateTime;
             }
         }
     }

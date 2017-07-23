@@ -1,11 +1,10 @@
 ﻿using System;
-
+using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats.Archive;
 using CSPspEmu.Resources;
-using CSharpUtils.Extensions;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
+namespace Tests.CSPspEmu.Hle.Formats.Archive
 {
     
     public class ZipTest
@@ -13,33 +12,33 @@ namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
         [Fact(Skip = "file not found")]
         public void TestUncompressedZip()
         {
-            var Zip = new ZipArchive();
-            Zip.Load("../../../TestInput/UncompressedZip.zip");
-            foreach (var Entry in Zip)
+            var zip = new ZipArchive();
+            zip.Load("../../../TestInput/UncompressedZip.zip");
+            foreach (var entry in zip)
             {
-                Console.Error.WriteLine(Entry);
+                Console.Error.WriteLine(entry);
             }
         }
 
         [Fact(Skip = "file not found")]
         public void TestCompressedZip()
         {
-            var Zip = new ZipArchive();
-            Zip.Load("../../../TestInput/UncompressedZip.zip");
-            var ExpectedString =
+            var zip = new ZipArchive();
+            zip.Load("../../../TestInput/UncompressedZip.zip");
+            var expectedString =
                 "ffmpeg -i test.pmf -vcodec copy -an test.h264\nffmpeg -i test.pmf -acodec copy -vn test.ac3p";
-            var ResultString = Zip["demux.bat"].OpenUncompressedStream().ReadAllContentsAsString(fromStart: false);
-            Assert.Equal(ExpectedString, ResultString);
+            var resultString = zip["demux.bat"].OpenUncompressedStream().ReadAllContentsAsString(fromStart: false);
+            Assert.Equal(expectedString, resultString);
         }
 
         [Fact]
         public void TestZip2()
         {
-            var Zip = new ZipArchive();
-            Zip.Load(ResourceArchive.GetFlash0ZipFileStream());
-            foreach (var Entry in Zip)
+            var zip = new ZipArchive();
+            zip.Load(ResourceArchive.GetFlash0ZipFileStream());
+            foreach (var entry in zip)
             {
-                Console.Error.WriteLine(Entry);
+                Console.Error.WriteLine(entry);
             }
         }
     }

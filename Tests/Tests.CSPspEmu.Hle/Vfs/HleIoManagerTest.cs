@@ -1,9 +1,8 @@
 ﻿using CSPspEmu.Hle.Managers;
-
 using CSPspEmu.Hle.Vfs.Local;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Vfs
 {
     
     public class HleIoManagerTest
@@ -11,17 +10,17 @@ namespace CSPspEmu.Core.Tests
         [Fact]
         public void ParsePathTest()
         {
-            var InjectContext = new InjectContext();
-            var HleIoManager = InjectContext.GetInstance<HleIoManager>();
-            var DriverName = "ms:";
-            var Driver = new HleIoDriverLocalFileSystem("C:/$INVALID$PATH$");
-            HleIoManager.SetDriver(DriverName, Driver);
+            var injectContext = new InjectContext();
+            var hleIoManager = injectContext.GetInstance<HleIoManager>();
+            var driverName = "ms:";
+            var driver = new HleIoDriverLocalFileSystem("C:/$INVALID$PATH$");
+            hleIoManager.SetDriver(driverName, driver);
 
-            var Parts = HleIoManager.ParsePath("ms3:/path/to/file.txt");
+            var parts = hleIoManager.ParsePath("ms3:/path/to/file.txt");
 
-            Assert.Equal(Driver, Parts.HleIoDrvFileArg.HleIoDriver);
-            Assert.Equal(3, Parts.HleIoDrvFileArg.FileSystemNumber);
-            Assert.Equal("/path/to/file.txt", Parts.LocalPath);
+            Assert.Equal(driver, parts.HleIoDrvFileArg.HleIoDriver);
+            Assert.Equal(3, parts.HleIoDrvFileArg.FileSystemNumber);
+            Assert.Equal("/path/to/file.txt", parts.LocalPath);
         }
     }
 }

@@ -5,7 +5,7 @@ using Xunit;
 namespace CSPspEmu.Hle.Modules.Tests
 {
     
-    public unsafe class sceDefltTest : BaseModuleTest
+    public unsafe class SceDefltTest : BaseModuleTest
     {
         [Inject] sceDeflt sceDeflt = null;
 

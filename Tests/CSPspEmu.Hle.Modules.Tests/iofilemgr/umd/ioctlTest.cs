@@ -9,19 +9,19 @@ using Xunit;
 namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 {
     
-    public unsafe class ioctlTest : BaseModuleTest, IInjectInitialize
+    public unsafe class IoctlTest : BaseModuleTest, IInjectInitialize
     {
-        [Inject] IoFileMgrForUser IoFileMgrForUser = null;
+        [Inject] protected IoFileMgrForUser IoFileMgrForUser = null;
 
-        [Inject] HleIoManager HleIoManager = null;
+        [Inject] protected HleIoManager HleIoManager = null;
 
-        SceUID BootBinFileHandle;
+        protected SceUID BootBinFileHandle;
 
         void IInjectInitialize.Initialize()
         {
-            var Iso = IsoLoader.GetIso("../../../pspautotests/input/iotest.iso");
-            var Umd = new HleIoDriverIso(Iso);
-            HleIoManager.SetDriver("disc:", Umd);
+            var iso = IsoLoader.GetIso("../../../pspautotests/input/iotest.iso");
+            var umd = new HleIoDriverIso(iso);
+            HleIoManager.SetDriver("disc:", umd);
             HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
             BootBinFileHandle =
                 IoFileMgrForUser.sceIoOpen("disc0:/PSP_GAME/SYSDIR/BOOT.BIN", HleIoFlags.Read, SceMode.All);
@@ -30,13 +30,13 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
         [Fact(Skip = "file not found")]
         public void GetPrimaryVolumeDescriptorTest()
         {
-            var PrimaryVolumeDescriptor = default(PrimaryVolumeDescriptor);
+            var primaryVolumeDescriptor = default(PrimaryVolumeDescriptor);
             var result = IoFileMgrForUser.sceIoIoctl(
                 FileHandle: BootBinFileHandle,
                 Command: (uint) HleIoDriverIso.UmdCommandEnum.GetPrimaryVolumeDescriptor,
                 InputPointer: null,
                 InputLength: 0,
-                OutputPointer: (byte*) &PrimaryVolumeDescriptor,
+                OutputPointer: (byte*) &primaryVolumeDescriptor,
                 OutputLength: sizeof(PrimaryVolumeDescriptor)
             );
 
@@ -44,29 +44,30 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
             Assert.Equal(0, result);
             Assert.Equal(
                 "CD001",
-                PrimaryVolumeDescriptor.VolumeDescriptorHeader.IdString
+                primaryVolumeDescriptor.VolumeDescriptorHeader.IdString
             );
             Assert.Equal(
                 VolumeDescriptorHeader.TypeEnum.PrimaryVolumeDescriptor,
-                PrimaryVolumeDescriptor.VolumeDescriptorHeader.Type
+                primaryVolumeDescriptor.VolumeDescriptorHeader.Type
             );
         }
 
         [Fact(Skip = "file not found")]
+        //[Fact]
         public void GetSectorSizeTest()
         {
-            uint SectorSize;
+            uint sectorSize;
 
             var result = IoFileMgrForUser.sceIoIoctl(
                 FileHandle: BootBinFileHandle,
                 Command: (uint) HleIoDriverIso.UmdCommandEnum.GetSectorSize,
                 InputPointer: null,
                 InputLength: 0,
-                OutputPointer: (byte*) &SectorSize,
+                OutputPointer: (byte*) &sectorSize,
                 OutputLength: sizeof(uint)
             );
 
-            Assert.Equal(IsoFile.SectorSize, SectorSize);
+            Assert.Equal(IsoFile.SectorSize, sectorSize);
         }
     }
 }

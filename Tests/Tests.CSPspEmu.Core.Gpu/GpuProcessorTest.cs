@@ -1,10 +1,7 @@
-﻿
+﻿using Xunit;
 
-using Xunit;
-
-namespace CSPspEmu.Core.Tests.Gpu
+namespace Tests.CSPspEmu.Core.Gpu
 {
-    
     public class GpuProcessorTest
     {
         //PspMemory Memory;

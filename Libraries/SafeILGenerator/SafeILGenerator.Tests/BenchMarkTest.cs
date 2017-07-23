@@ -13,13 +13,13 @@ namespace SafeILGenerator.Tests
         [Fact]
         public void TestBenchmark()
         {
-            var GeneratorCSharp = new GeneratorCSharp();
-            var AstNode = ast.Ternary(ast.Unary("-", ast.Binary(ast.Binary(10, "+", 11), "*", 2)), 1, 2);
-            for (int n = 0; n < 20000; n++)
+            var generatorCSharp = new GeneratorCSharp();
+            var astNode = ast.Ternary(ast.Unary("-", ast.Binary(ast.Binary(10, "+", 11), "*", 2)), 1, 2);
+            for (var n = 0; n < 20000; n++)
             {
-                GeneratorCSharp.Reset().GenerateRoot(AstNode);
+                generatorCSharp.Reset().GenerateRoot(astNode);
             }
-            Assert.Equal(GeneratorCSharp.ToString(), "((-((10 + 11) * 2)) ? 1 : 2)");
+            Assert.Equal(generatorCSharp.ToString(), "((-((10 + 11) * 2)) ? 1 : 2)");
         }
     }
 }

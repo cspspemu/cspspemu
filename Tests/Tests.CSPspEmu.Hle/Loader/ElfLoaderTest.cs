@@ -1,12 +1,11 @@
-﻿using CSPspEmu.Hle.Loader;
-
-using System.IO;
+﻿using System.IO;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
-using CSharpUtils.Extensions;
+using CSPspEmu.Hle.Loader;
 using Xunit;
 
-namespace CSPspEmu.Core.Tests
+namespace Tests.CSPspEmu.Hle.Loader
 {
     
     public class ElfLoaderTest
@@ -14,23 +13,23 @@ namespace CSPspEmu.Core.Tests
         [Fact(Skip = "file not found")]
         public void ElfLoaderConstructorTest()
         {
-            var InjectContext = new InjectContext();
-            InjectContext.SetInstanceType<PspMemory, LazyPspMemory>();
-            var Memory = InjectContext.GetInstance<PspMemory>();
-            var MemoryStream = new PspMemoryStream(Memory);
-            var MemoryPartition = new MemoryPartition(InjectContext, PspMemory.MainOffset,
+            var injectContext = new InjectContext();
+            injectContext.SetInstanceType<PspMemory, LazyPspMemory>();
+            var memory = injectContext.GetInstance<PspMemory>();
+            var memoryStream = new PspMemoryStream(memory);
+            var memoryPartition = new MemoryPartition(injectContext, PspMemory.MainOffset,
                 PspMemory.MainOffset + PspMemory.MainSize);
 
-            var ElfLoader = new ElfLoader();
+            var elfLoader = new ElfLoader();
 
-            ElfLoader.Load(File.OpenRead("../../../TestInput/minifire.elf"), "minifire.elf");
-            ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition);
-            Assert.Equal(1, ElfLoader.ProgramHeaders.Length);
-            Assert.Equal(3, ElfLoader.SectionHeaders.Length);
+            elfLoader.Load(File.OpenRead("../../../TestInput/minifire.elf"), "minifire.elf");
+            elfLoader.AllocateAndWrite(memoryStream, memoryPartition);
+            Assert.Equal(1, elfLoader.ProgramHeaders.Length);
+            Assert.Equal(3, elfLoader.SectionHeaders.Length);
 
             Assert.Equal(
                 "['','.rodata.sceModuleInfo']".Replace('\'', '"'),
-                ElfLoader.SectionHeadersByName.Keys.ToJson()
+                elfLoader.SectionHeadersByName.Keys.ToJson()
             );
 
             //ElfLoader.LoadAllocateMemory(MemoryPartition);
@@ -38,10 +37,10 @@ namespace CSPspEmu.Core.Tests
 
             //var ModuleInfo = ElfLoader.ModuleInfo;
 
-            var PC = ElfLoader.Header.EntryPoint;
+            var pc = elfLoader.Header.EntryPoint;
             //var GP = ModuleInfo.GP;
 
-            Assert.Equal(0x08900008, (int) PC);
+            Assert.Equal(0x08900008, (int) pc);
             //Assert.Equal(0x00004821, (int)GP);
         }
     }

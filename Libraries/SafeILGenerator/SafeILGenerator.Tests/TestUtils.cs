@@ -5,24 +5,24 @@ namespace SafeILGenerator.Tests
 {
     public class TestUtils
     {
-        public static string CaptureOutput(Action Action, bool Capture = true)
+        public static string CaptureOutput(Action action, bool capture = true)
         {
-            if (Capture)
+            if (capture)
             {
-                var OldOut = Console.Out;
-                var StringWriter = new StringWriter();
+                var oldOut = Console.Out;
+                var stringWriter = new StringWriter();
                 try
                 {
-                    Console.SetOut(StringWriter);
-                    Action();
+                    Console.SetOut(stringWriter);
+                    action();
                 }
                 finally
                 {
-                    Console.SetOut(OldOut);
+                    Console.SetOut(oldOut);
                 }
                 try
                 {
-                    return StringWriter.ToString();
+                    return stringWriter.ToString();
                 }
                 catch
                 {
@@ -31,7 +31,7 @@ namespace SafeILGenerator.Tests
             }
             else
             {
-                Action();
+                action();
                 return "";
             }
         }
