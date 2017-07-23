@@ -30,14 +30,14 @@ namespace CSPspEmu.Hle.Modules.libfont
             {
                 var FontFileStream = HleIoManager.HleIoWrapper.Open("flash0:/font/" + FontRegistry.FontStyle.FileName,
                     Vfs.HleIoFlags.Read, Vfs.SceMode.All);
-                var PGF = new PGF().Load(FontFileStream);
+                var PGF = new Pgf().Load(FontFileStream);
                 var Font = new Font(FontLibrary, PGF);
                 *ErrorCode = 0;
                 return Font;
             }
             catch (FileNotFoundException)
             {
-                var Font = new Font(FontLibrary, new NativeFontIPGF());
+                var Font = new Font(FontLibrary, new NativeFontIpgf());
                 *ErrorCode = 0;
                 return Font;
             }
@@ -58,7 +58,7 @@ namespace CSPspEmu.Hle.Modules.libfont
             uint* ErrorCode)
         {
             var MemoryFont = PointerUtils.PointerToByteArray(MemoryFontAddress, MemoryFontLength);
-            var PGF = new PGF().Load(new MemoryStream(MemoryFont));
+            var PGF = new Pgf().Load(new MemoryStream(MemoryFont));
             var Font = new Font(FontLibrary, PGF);
             *ErrorCode = 0;
             return Font;
@@ -78,7 +78,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         public Font sceFontOpenUserFile(FontLibrary FontLibrary, string FileName, int Mode, uint* ErrorCode)
         {
             var FontFileStream = HleIoManager.HleIoWrapper.Open(FileName, Vfs.HleIoFlags.Read, (Vfs.SceMode) Mode);
-            var PGF = new PGF().Load(FontFileStream);
+            var PGF = new Pgf().Load(FontFileStream);
             var Font = new Font(FontLibrary, PGF);
             *ErrorCode = 0;
             return Font;

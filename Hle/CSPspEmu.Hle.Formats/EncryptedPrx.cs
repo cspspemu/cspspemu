@@ -9,7 +9,7 @@ namespace CSPspEmu.Hle.Formats
 {
     public unsafe partial class EncryptedPrx
     {
-        Kirk Kirk;
+        Kirk _kirk;
 
         /// <summary>
         /// 
@@ -23,17 +23,17 @@ namespace CSPspEmu.Hle.Formats
         {
         }
 
-        private TAG_INFO GetTagInfo(uint CheckTag)
+        private TAG_INFO GetTagInfo(uint checkTag)
         {
-            var Result = g_tagInfo.SingleOrDefault(Tag => Tag.tag == CheckTag);
-            if (Result == null) throw(new InvalidDataException(string.Format("Can't find tag1 0x{0:X}", CheckTag)));
+            var Result = g_tagInfo.SingleOrDefault(Tag => Tag.tag == checkTag);
+            if (Result == null) throw(new InvalidDataException($"Can't find tag1 0x{checkTag:X}"));
             return Result;
         }
 
         private TAG_INFO2 GetTagInfo2(uint CheckTag)
         {
             var Result = g_tagInfo2.SingleOrDefault(Tag => Tag.tag == CheckTag);
-            if (Result == null) throw (new InvalidDataException(string.Format("Can't find tag2 0x{0:X}", CheckTag)));
+            if (Result == null) throw (new InvalidDataException($"Can't find tag2 0x{CheckTag:X}"));
             return Result;
         }
 
@@ -49,7 +49,7 @@ namespace CSPspEmu.Hle.Formats
                 pl2[3] = codeExtra;
                 pl2[4] = 0xA0;
 
-                var ret = Kirk.HleUtilsBufferCopyWithRange(
+                var ret = _kirk.HleUtilsBufferCopyWithRange(
                     buffer2,
                     20 + 0xA0,
                     buffer2,
@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Formats
 
                 if (ret != 0)
                 {
-                    throw (new Exception(string.Format("extra de-mangle returns {0}, ", ret)));
+                    throw (new Exception($"extra de-mangle returns {ret}, "));
                 }
                 // copy result back
                 PointerUtils.Memcpy(buffer1, buffer2, 0xA0);
@@ -118,7 +118,7 @@ namespace CSPspEmu.Hle.Formats
                     pbOut[0x40 + iXOR] = (byte) (pbOut[0x40 + iXOR] ^ pti.key[0x14 + iXOR]);
                 }
 
-                var ret = Kirk.HleUtilsBufferCopyWithRange(
+                var ret = _kirk.HleUtilsBufferCopyWithRange(
                     pbOut + 0x2C,
                     20 + 0x70,
                     pbOut + 0x2C,
@@ -145,7 +145,7 @@ namespace CSPspEmu.Hle.Formats
 
                 // step4: do the actual decryption of code block
                 //  point 0x40 bytes into the buffer to key info
-                ret = Kirk.HleUtilsBufferCopyWithRange(
+                ret = _kirk.HleUtilsBufferCopyWithRange(
                     pbOut,
                     cbTotal,
                     pbOut + 0x40,
@@ -173,7 +173,7 @@ namespace CSPspEmu.Hle.Formats
             buf[3] = (uint) code;
             buf[4] = (uint) size;
 
-            if (Kirk.HleUtilsBufferCopyWithRange((byte*) buf, size + 0x14, (byte*) buf, size + 0x14,
+            if (_kirk.HleUtilsBufferCopyWithRange((byte*) buf, size + 0x14, (byte*) buf, size + 0x14,
                     Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt) !=
                 Core.Components.Crypto.Kirk.ResultEnum.Ok)
             {
@@ -267,7 +267,7 @@ namespace CSPspEmu.Hle.Formats
                 PointerUtils.Memcpy(outbuf + 0x08, tmp2, 0x10);
 
                 /* sha-1 */
-                if (Kirk.HleUtilsBufferCopyWithRange(outbuf, 3000000, outbuf, 3000000,
+                if (_kirk.HleUtilsBufferCopyWithRange(outbuf, 3000000, outbuf, 3000000,
                         Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdSha1Hash) !=
                     Core.Components.Crypto.Kirk.ResultEnum.Ok)
                 {
@@ -303,12 +303,12 @@ namespace CSPspEmu.Hle.Formats
                 PointerUtils.Memset(outbuf + 0xC0, 0, 0x10);
 
                 // the real decryption
-                var ret = Kirk.HleUtilsBufferCopyWithRange(outbuf, size, outbuf + 0x40, size - 0x40,
+                var ret = _kirk.HleUtilsBufferCopyWithRange(outbuf, size, outbuf + 0x40, size - 0x40,
                     Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecryptPrivate);
                 if (ret != 0)
                 {
                     throw (new InvalidDataException(
-                        string.Format("error in sceUtilsBufferCopyWithRange 0x1 (0x{0:X}), ", ret)));
+                        $"error in sceUtilsBufferCopyWithRange 0x1 (0x{ret:X}), "));
                 }
 
                 if (retsize < 0x150)
@@ -341,8 +341,8 @@ namespace CSPspEmu.Hle.Formats
         /// <param name="ShowInfo"></param>
         public byte[] Decrypt(byte[] _pbIn, bool ShowInfo = false)
         {
-            this.Kirk = new Kirk();
-            this.Kirk.kirk_init();
+            this._kirk = new Kirk();
+            this._kirk.kirk_init();
 
             return DecryptPRX(_pbIn, ShowInfo);
         }

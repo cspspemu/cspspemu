@@ -7,23 +7,20 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
-    public interface IPGF
+    public interface IPgf
     {
-        IGlyph GetGlyph(char Character, char AlternativeCharacter = '?');
+        IGlyph GetGlyph(char character, char alternativeCharacter = '?');
         FontInfo GetFontInfo();
-        Size GetAdvance(uint Index);
+        Size GetAdvance(uint index);
     }
 
-    public partial class NativeFontIPGF : IPGF
+    public class NativeFontIpgf : IPgf
     {
-        public IGlyph GetGlyph(char Character, char AlternativeCharacter = '?')
-        {
-            throw(new NotImplementedException());
-        }
+        public IGlyph GetGlyph(char character, char alternativeCharacter = '?') => throw new NotImplementedException();
 
         public FontInfo GetFontInfo()
         {
-            return new FontInfo()
+            return new FontInfo
             {
                 MaxGlyphWidth = 0,
                 MaxGlyphHeight = 0,
@@ -37,19 +34,19 @@ namespace CSPspEmu.Hle.Formats.Font
                 MaxGlyphAdvanceX = 0,
                 MaxGlyphAdvanceY = 0,
 
-                FontStyle = new FontStyle()
+                FontStyle = new FontStyle
                 {
                     Attributes = 0,
                     Country = 0,
                     Expire = 0,
-                    Family = FamilyEnum.FONT_FAMILY_SERIF,
+                    Family = FamilyEnum.FontFamilySerif,
                     FileName = "test.pgf",
                     Name = "Arial",
-                    Language = LanguageEnum.FONT_LANGUAGE_JAPANESE,
+                    Language = LanguageEnum.FontLanguageJapanese,
                     Region = 0,
                     Resolution = new HorizontalVerticalFloat(32, 32),
                     Size = new HorizontalVerticalFloat(32, 32),
-                    StyleStyle = StyleEnum.FONT_STYLE_REGULAR,
+                    StyleStyle = StyleEnum.FontStyleRegular,
                     StyleSub = 0,
                     Weight = 0,
                 },
@@ -57,42 +54,26 @@ namespace CSPspEmu.Hle.Formats.Font
             };
         }
 
-        public Size GetAdvance(uint Index)
-        {
-            return new Size(16, 16);
-        }
+        public Size GetAdvance(uint index) => new Size(16, 16);
     }
 
-    public partial class PGF : IPGF
+    public partial class Pgf : IPgf
     {
         protected IGlyph[] Glyphs;
 
-        protected IGlyph _GetGlyph(int Index)
-        {
-            if (Glyphs[Index] == null)
-            {
-                Glyphs[Index] = new Glyph(this, Index);
-            }
-            return Glyphs[Index];
-        }
+        protected IGlyph _GetGlyph(int index) => Glyphs[index] ?? (Glyphs[index] = new Glyph(this, index));
 
-        public Size GetAdvance(uint Index)
-        {
-            return new Size(AdvanceTable[Index].Src, AdvanceTable[Index].Dst);
-        }
+        public Size GetAdvance(uint index) => new Size(AdvanceTable[index].Src, AdvanceTable[index].Dst);
 
-        public IGlyph GetGlyph(char Character, char AlternativeCharacter = '?')
+        public IGlyph GetGlyph(char character, char alternativeCharacter = '?')
         {
-            if (Character >= 0 && Character < CharMap.Length)
-            {
-                return _GetGlyph(CharMap[Character]);
-            }
-            return _GetGlyph(CharMap[AlternativeCharacter]);
+            if (character >= 0 && character < CharMap.Length) return _GetGlyph(CharMap[character]);
+            return _GetGlyph(CharMap[alternativeCharacter]);
         }
 
         public FontInfo GetFontInfo()
         {
-            return new FontInfo()
+            return new FontInfo
             {
                 MaxGlyphWidth = Header.MaxGlyphWidth,
                 MaxGlyphHeight = Header.MaxGlyphHeight,
@@ -114,7 +95,7 @@ namespace CSPspEmu.Hle.Formats.Font
         public HeaderStruct Header;
         public HeaderRevision3Struct HeaderExtraRevision3;
 
-        public PointFixed26_6[] DimensionTable;
+        public PointFixed266[] DimensionTable;
         public MapInt[] AdvanceTable;
         public MapInt[] XAdjustTable;
         public MapInt[] YAdjustTable;
@@ -135,58 +116,46 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public byte[] CharData;
 
-        public PGF()
-        {
-        }
-
         public int GetGlyphId(char Char)
         {
             if (Char < Header.FirstGlyph) return -1;
             if (Char > Header.LastGlyph) return -1;
-            int glyphPos = (Char - Header.FirstGlyph);
+            int glyphPos = Char - Header.FirstGlyph;
             //Console.WriteLine("Offset: {0}, Size: {1}", glyphPos * header.charMapBpe, header.charMapBpe);
             return (int) BitReader.ReadBitsAt(PackedCharMap, glyphPos * Header.TableCharMapBpe, Header.TableCharMapBpe);
         }
 
-        protected static int BitsToBytesHighAligned(int Bits)
-        {
-            //return MathUtils.NextHigherAligned(Bits, 8) / 8;
-            return ((Bits + 31) & ~31) / 8;
-        }
+        protected static int BitsToBytesHighAligned(int bits) => ((bits + 31) & ~31) / 8;
 
-        public PGF Load(string FileName)
-        {
-            var FileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
-            return Load(FileStream);
-        }
+        public Pgf Load(string fileName) => Load(new FileStream(fileName, FileMode.Open, FileAccess.Read));
 
-        public PGF Load(Stream FileStream)
+        public Pgf Load(Stream fileStream)
         {
-            this.Header = FileStream.ReadStruct<HeaderStruct>();
+            Header = fileStream.ReadStruct<HeaderStruct>();
 
-            if (this.Header.Revision >= 3)
+            if (Header.Revision >= 3)
             {
-                this.HeaderExtraRevision3 = FileStream.ReadStruct<HeaderRevision3Struct>();
+                HeaderExtraRevision3 = fileStream.ReadStruct<HeaderRevision3Struct>();
             }
 
-            FileStream.ReadStructVector(out DimensionTable, Header.TableDimLength);
-            FileStream.ReadStructVector(out XAdjustTable, Header.TableXAdjustLength);
-            FileStream.ReadStructVector(out YAdjustTable, Header.TableYAdjustLength);
-            FileStream.ReadStructVector(out AdvanceTable, Header.TableAdvanceLength);
+            fileStream.ReadStructVector(out DimensionTable, Header.TableDimLength);
+            fileStream.ReadStructVector(out XAdjustTable, Header.TableXAdjustLength);
+            fileStream.ReadStructVector(out YAdjustTable, Header.TableYAdjustLength);
+            fileStream.ReadStructVector(out AdvanceTable, Header.TableAdvanceLength);
 
             PackedShadowCharMap =
-                FileStream.ReadBytes(BitsToBytesHighAligned(Header.TableShadowMapLength * Header.TableShadowMapBpe));
+                fileStream.ReadBytes(BitsToBytesHighAligned(Header.TableShadowMapLength * Header.TableShadowMapBpe));
 
             if (Header.Revision == 3)
             {
-                FileStream.ReadStructVector(out CharmapCompressionTable1, HeaderExtraRevision3.TableCompCharMapLength1);
-                FileStream.ReadStructVector(out CharmapCompressionTable2, HeaderExtraRevision3.TableCompCharMapLength2);
+                fileStream.ReadStructVector(out CharmapCompressionTable1, HeaderExtraRevision3.TableCompCharMapLength1);
+                fileStream.ReadStructVector(out CharmapCompressionTable2, HeaderExtraRevision3.TableCompCharMapLength2);
             }
 
             PackedCharMap =
-                FileStream.ReadBytes(BitsToBytesHighAligned(Header.TableCharMapLength * Header.TableCharMapBpe));
+                fileStream.ReadBytes(BitsToBytesHighAligned(Header.TableCharMapLength * Header.TableCharMapBpe));
             PackedCharPointerTable =
-                FileStream.ReadBytes(
+                fileStream.ReadBytes(
                     BitsToBytesHighAligned(Header.TableCharPointerLength * Header.TableCharPointerBpe));
 
             /*
@@ -195,36 +164,36 @@ namespace CSPspEmu.Hle.Formats.Font
             FileStream.Read(charData, 0, BytesLeft);
             */
 
-            CharData = FileStream.ReadBytes((int) (FileStream.Length - FileStream.Position));
+            CharData = fileStream.ReadBytes((int) (fileStream.Length - fileStream.Position));
 
-            var NumberOfCharacters = Header.TableCharPointerLength;
+            var numberOfCharacters = Header.TableCharPointerLength;
 
             CharMap = new int[Header.FirstGlyph + Header.LastGlyph + 1];
-            CharPointer = new int[NumberOfCharacters];
-            Glyphs = new Glyph[NumberOfCharacters];
+            CharPointer = new int[numberOfCharacters];
+            Glyphs = new IGlyph[numberOfCharacters];
             ReverseCharMap = new Dictionary<int, int>();
             ShadowCharMap = new Dictionary<int, int>();
             ReverseShadowCharMap = new Dictionary<int, int>();
 
-            foreach (var Pair in BitReader.FixedBitReader(PackedShadowCharMap, Header.TableShadowMapBpe))
+            foreach (var pair in BitReader.FixedBitReader(PackedShadowCharMap, Header.TableShadowMapBpe))
             {
-                var UnicodeIndex = (int) Pair.Key + Header.FirstGlyph;
-                var GlyphIndex = (int) Pair.Value;
-                ShadowCharMap[UnicodeIndex] = GlyphIndex;
-                ReverseShadowCharMap[GlyphIndex] = UnicodeIndex;
+                var unicodeIndex = (int) pair.Key + Header.FirstGlyph;
+                var glyphIndex = (int) pair.Value;
+                ShadowCharMap[unicodeIndex] = glyphIndex;
+                ReverseShadowCharMap[glyphIndex] = unicodeIndex;
             }
 
-            foreach (var Pair in BitReader.FixedBitReader(PackedCharMap, Header.TableCharMapBpe))
+            foreach (var pair in BitReader.FixedBitReader(PackedCharMap, Header.TableCharMapBpe))
             {
-                var UnicodeIndex = (int) Pair.Key + Header.FirstGlyph;
-                var GlyphIndex = (int) Pair.Value;
-                CharMap[UnicodeIndex] = GlyphIndex;
-                ReverseCharMap[GlyphIndex] = UnicodeIndex;
+                var unicodeIndex = (int) pair.Key + Header.FirstGlyph;
+                var glyphIndex = (int) pair.Value;
+                CharMap[unicodeIndex] = glyphIndex;
+                ReverseCharMap[glyphIndex] = unicodeIndex;
             }
 
-            foreach (var Pair in BitReader.FixedBitReader(PackedCharPointerTable, Header.TableCharPointerBpe))
+            foreach (var pair in BitReader.FixedBitReader(PackedCharPointerTable, Header.TableCharPointerBpe))
             {
-                CharPointer[Pair.Key] = (int) Pair.Value;
+                CharPointer[pair.Key] = (int) pair.Value;
             }
 
             /*
@@ -234,7 +203,7 @@ namespace CSPspEmu.Hle.Formats.Font
             }
             */
 
-            Console.WriteLine(this.Header.FontName);
+            Console.WriteLine(Header.FontName);
 
             /*
             Console.WriteLine(this.header.fontName);
@@ -247,61 +216,55 @@ namespace CSPspEmu.Hle.Formats.Font
             return this;
         }
 
-        public void Write(string FileName)
+        public void Write(string fileName)
         {
-            var FileStream = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write);
-            FileStream.WriteStruct(this.Header);
+            var fileStream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
+            fileStream.WriteStruct(Header);
 
-            if (this.Header.Revision >= 3)
+            if (Header.Revision >= 3)
             {
-                FileStream.WriteStruct(this.HeaderExtraRevision3);
+                fileStream.WriteStruct(HeaderExtraRevision3);
             }
 
-            FileStream.WriteStructVector(DimensionTable);
-            FileStream.WriteStructVector(XAdjustTable);
-            FileStream.WriteStructVector(YAdjustTable);
-            FileStream.WriteStructVector(AdvanceTable);
-            FileStream.WriteStructVector(PackedShadowCharMap);
+            fileStream.WriteStructVector(DimensionTable);
+            fileStream.WriteStructVector(XAdjustTable);
+            fileStream.WriteStructVector(YAdjustTable);
+            fileStream.WriteStructVector(AdvanceTable);
+            fileStream.WriteStructVector(PackedShadowCharMap);
 
             if (Header.Revision == 3)
             {
-                FileStream.WriteStructVector(CharmapCompressionTable1);
-                FileStream.WriteStructVector(CharmapCompressionTable2);
+                fileStream.WriteStructVector(CharmapCompressionTable1);
+                fileStream.WriteStructVector(CharmapCompressionTable2);
             }
 
-            FileStream.WriteStructVector(PackedCharMap);
-            FileStream.WriteStructVector(PackedCharPointerTable);
+            fileStream.WriteStructVector(PackedCharMap);
+            fileStream.WriteStructVector(PackedCharPointerTable);
 
-            FileStream.WriteBytes(CharData);
+            fileStream.WriteBytes(CharData);
         }
 
-        public FontStyle FontStyle
+        public FontStyle FontStyle => new FontStyle
         {
-            get
-            {
-                return new FontStyle()
-                {
-                    Size = new HorizontalVerticalFloat(Header.Size.X, Header.Size.Y),
-                    Resolution = new HorizontalVerticalFloat(Header.Resolution.X, Header.Resolution.Y),
-                    Weight = 1.0f,
-                    Family = FamilyEnum.FONT_FAMILY_SANS_SERIF,
-                    StyleStyle = StyleEnum.FONT_STYLE_REGULAR,
-                    StyleSub = 0,
-                    Language = LanguageEnum.FONT_LANGUAGE_LATIN,
-                    Region = 0,
-                    Country = 0,
-                    FileName = "dummy.pgf",
-                    Name = Header.FontName,
-                    Attributes = 0,
-                    Expire = 0,
-                };
-            }
-        }
+            Size = new HorizontalVerticalFloat(Header.Size.X, Header.Size.Y),
+            Resolution = new HorizontalVerticalFloat(Header.Resolution.X, Header.Resolution.Y),
+            Weight = 1.0f,
+            Family = FamilyEnum.FontFamilySansSerif,
+            StyleStyle = StyleEnum.FontStyleRegular,
+            StyleSub = 0,
+            Language = LanguageEnum.FontLanguageLatin,
+            Region = 0,
+            Country = 0,
+            FileName = "dummy.pgf",
+            Name = Header.FontName,
+            Attributes = 0,
+            Expire = 0,
+        };
     }
 
     public interface IGlyph
     {
-        IPGF PGF { get; }
+        IPgf Pgf { get; }
         int GlyphIndex { get; }
         GlyphSymbol Face { get; }
         GlyphSymbol Shadow { get; }
@@ -309,27 +272,25 @@ namespace CSPspEmu.Hle.Formats.Font
 
     public class Glyph : IGlyph
     {
-        protected PGF PGF;
+        protected Pgf Pgf;
         protected int GlyphIndex;
-        protected GlyphSymbol _Face;
-        protected GlyphSymbol _Shadow;
+        public GlyphSymbol Pface;
+        public GlyphSymbol Pshadow;
 
-        public Glyph(PGF PGF, int GlyphIndex)
+        public Glyph(Pgf pgf, int glyphIndex)
         {
-            this.PGF = PGF;
-            this.GlyphIndex = GlyphIndex;
+            Pgf = pgf;
+            GlyphIndex = glyphIndex;
         }
 
         public GlyphSymbol Face
         {
             get
             {
-                if (_Face == null)
-                {
-                    _Face = new GlyphSymbol(GlyphSymbol.GlyphFlags.FONT_PGF_CHARGLYPH);
-                    _Face.Read(PGF, GlyphIndex);
-                }
-                return _Face;
+                if (Pface != null) return Pface;
+                Pface = new GlyphSymbol();
+                Pface.Read(Pgf, GlyphIndex);
+                return Pface;
             }
         }
 
@@ -337,50 +298,36 @@ namespace CSPspEmu.Hle.Formats.Font
         {
             get
             {
-                if (_Shadow == null)
-                {
-                    _Shadow = new GlyphSymbol(GlyphSymbol.GlyphFlags.FONT_PGF_SHADOWGLYPH);
-                    _Shadow.Read(PGF, GlyphIndex);
-                }
-                return _Shadow;
+                if (Pshadow != null) return Pshadow;
+                Pshadow = new GlyphSymbol(GlyphSymbol.GlyphFlags.FontPgfShadowglyph);
+                Pshadow.Read(Pgf, GlyphIndex);
+                return Pshadow;
             }
         }
 
 
-        IPGF IGlyph.PGF
-        {
-            get { return PGF; }
-        }
+        IPgf IGlyph.Pgf => Pgf;
 
-        int IGlyph.GlyphIndex
-        {
-            get { return GlyphIndex; }
-        }
+        int IGlyph.GlyphIndex => GlyphIndex;
 
-        GlyphSymbol IGlyph.Face
-        {
-            get { return Face; }
-        }
+        GlyphSymbol IGlyph.Face => Face;
 
-        GlyphSymbol IGlyph.Shadow
-        {
-            get { return Shadow; }
-        }
+        GlyphSymbol IGlyph.Shadow => Shadow;
     }
 
     public class GlyphSymbol
     {
         [Flags]
-        public enum GlyphFlags : int
+        public enum GlyphFlags
         {
-            FONT_PGF_BMP_H_ROWS = 0x01,
-            FONT_PGF_BMP_V_ROWS = 0x02,
-            FONT_PGF_BMP_OVERLAY = 0x03,
-            FONT_PGF_METRIC_FLAG1 = 0x04,
-            FONT_PGF_METRIC_FLAG2 = 0x08,
-            FONT_PGF_METRIC_FLAG3 = 0x10,
-            FONT_PGF_CHARGLYPH = 0x20,
-            FONT_PGF_SHADOWGLYPH = 0x40,
+            FontPgfBmpHRows = 0x01,
+            FontPgfBmpVRows = 0x02,
+            FontPgfBmpOverlay = 0x03,
+            FontPgfMetricFlag1 = 0x04,
+            FontPgfMetricFlag2 = 0x08,
+            FontPgfMetricFlag3 = 0x10,
+            FontPgfCharglyph = 0x20,
+            FontPgfShadowglyph = 0x40,
         }
 
         public char UnicodeChar;
@@ -393,102 +340,101 @@ namespace CSPspEmu.Hle.Formats.Font
         public uint AdvanceIndex;
         public GlyphFlags Flags;
         public byte[] Data;
-        GlyphFlags GlyphType;
+        readonly GlyphFlags _glyphType;
 
-        public GlyphSymbol(GlyphFlags GlyphType = GlyphFlags.FONT_PGF_CHARGLYPH)
-        {
-            this.GlyphType = GlyphType;
-        }
+        public GlyphSymbol(GlyphFlags glyphType = GlyphFlags.FontPgfCharglyph) => _glyphType = glyphType;
 
         public override string ToString()
         {
-            return string.Format(
-                "PGF.Glyph(GlyphIndex={0}, Char='{1}', Width={2}, Height={3}, Left={4}, Top={5}, Flags={6})",
-                GlyphIndex, UnicodeChar, Width, Height, Left, Top, Flags
-            );
+            return
+                $"PGF.Glyph(GlyphIndex={GlyphIndex}, Char='{UnicodeChar}', Width={Width}, Height={Height}, Left={Left}, Top={Top}, Flags={Flags})";
         }
 
-        public GlyphSymbol Read(PGF PGF, int GlyphIndex)
+        public GlyphSymbol Read(Pgf pgf, int glyphIndex)
         {
-            var BitReader = new BitReader(PGF.CharData);
-            BitReader.Position = PGF.CharPointer[GlyphIndex] * 4 * 8;
+            var bitReader = new BitReader(pgf.CharData)
+            {
+                Position = pgf.CharPointer[glyphIndex] * 4 * 8
+            };
 
-            this.GlyphIndex = GlyphIndex;
-            this.UnicodeChar = (char) PGF.ReverseCharMap[GlyphIndex];
+            GlyphIndex = glyphIndex;
+            UnicodeChar = (char) pgf.ReverseCharMap[glyphIndex];
 
             //int NextOffset = br.Position;
 
             //br.Position = NextOffset;
-            int ShadowOffset = (int) BitReader.Position + (int) BitReader.ReadBits(14) * 8;
-            if (GlyphType == GlyphFlags.FONT_PGF_SHADOWGLYPH)
+            var shadowOffset = bitReader.Position + (int) bitReader.ReadBits(14) * 8;
+            if (_glyphType == GlyphFlags.FontPgfShadowglyph)
             {
-                BitReader.Position = ShadowOffset;
-                BitReader.SkipBits(14);
+                bitReader.Position = shadowOffset;
+                bitReader.SkipBits(14);
             }
 
-            this.Width = BitReader.ReadBits(7);
-            this.Height = BitReader.ReadBits(7);
-            this.Left = BitReader.ReadBitsSigned(7);
-            this.Top = BitReader.ReadBitsSigned(7);
-            this.Flags = (GlyphFlags) BitReader.ReadBits(6);
+            Width = bitReader.ReadBits(7);
+            Height = bitReader.ReadBits(7);
+            Left = bitReader.ReadBitsSigned(7);
+            Top = bitReader.ReadBitsSigned(7);
+            Flags = (GlyphFlags) bitReader.ReadBits(6);
 
-            if (Flags.HasFlag(GlyphFlags.FONT_PGF_CHARGLYPH))
+            if (Flags.HasFlag(GlyphFlags.FontPgfCharglyph))
             {
-                BitReader.SkipBits(7);
-                var shadowId = BitReader.ReadBits(9);
-                BitReader.SkipBits(24);
-                if (!Flags.HasFlag(GlyphFlags.FONT_PGF_METRIC_FLAG1)) BitReader.SkipBits(56);
-                if (!Flags.HasFlag(GlyphFlags.FONT_PGF_METRIC_FLAG2)) BitReader.SkipBits(56);
-                if (!Flags.HasFlag(GlyphFlags.FONT_PGF_METRIC_FLAG3)) BitReader.SkipBits(56);
-                this.AdvanceIndex = BitReader.ReadBits(8);
+                bitReader.SkipBits(7);
+                // ReSharper disable once UnusedVariable
+                var shadowId = bitReader.ReadBits(9);
+                bitReader.SkipBits(24);
+                if (!Flags.HasFlag(GlyphFlags.FontPgfMetricFlag1)) bitReader.SkipBits(56);
+                if (!Flags.HasFlag(GlyphFlags.FontPgfMetricFlag2)) bitReader.SkipBits(56);
+                if (!Flags.HasFlag(GlyphFlags.FontPgfMetricFlag3)) bitReader.SkipBits(56);
+                AdvanceIndex = bitReader.ReadBits(8);
             }
 
-            this.DataByteOffset = (uint) (BitReader.Position / 8);
+            DataByteOffset = (uint) (bitReader.Position / 8);
 
-            uint PixelIndex = 0;
-            uint NumberOfPixels = Width * Height;
-            bool BitmapHorizontalRows = (Flags & GlyphFlags.FONT_PGF_BMP_OVERLAY) == GlyphFlags.FONT_PGF_BMP_H_ROWS;
-            this.Data = new byte[NumberOfPixels];
-            int Count;
-            uint Value = 0;
-            uint x, y;
+            uint pixelIndex = 0;
+            var numberOfPixels = Width * Height;
+            var bitmapHorizontalRows = (Flags & GlyphFlags.FontPgfBmpOverlay) == GlyphFlags.FontPgfBmpHRows;
+            Data = new byte[numberOfPixels];
+            uint value = 0;
 
             //Console.WriteLine(br.BitsLeft);
 
-            while (PixelIndex < NumberOfPixels)
+            while (pixelIndex < numberOfPixels)
             {
-                uint Code = BitReader.ReadBits(4);
+                var code = bitReader.ReadBits(4);
 
-                if (Code < 8)
+                int count;
+                if (code < 8)
                 {
-                    Value = BitReader.ReadBits(4);
-                    Count = (int) Code + 1;
+                    value = bitReader.ReadBits(4);
+                    count = (int) code + 1;
                 }
                 else
                 {
-                    Count = 16 - (int) Code;
+                    count = 16 - (int) code;
                 }
 
-                for (int n = 0; (n < Count) && (PixelIndex < NumberOfPixels); n++)
+                for (var n = 0; n < count && pixelIndex < numberOfPixels; n++)
                 {
-                    if (Code >= 8)
+                    if (code >= 8)
                     {
-                        Value = BitReader.ReadBits(4);
+                        value = bitReader.ReadBits(4);
                     }
 
-                    if (BitmapHorizontalRows)
+                    uint x;
+                    uint y;
+                    if (bitmapHorizontalRows)
                     {
-                        x = PixelIndex % Width;
-                        y = PixelIndex / Width;
+                        x = pixelIndex % Width;
+                        y = pixelIndex / Width;
                     }
                     else
                     {
-                        x = PixelIndex / Height;
-                        y = PixelIndex % Height;
+                        x = pixelIndex / Height;
+                        y = pixelIndex % Height;
                     }
 
-                    this.Data[x + y * Width] = (byte) ((Value << 0) | (Value << 4));
-                    PixelIndex++;
+                    Data[x + y * Width] = (byte) ((value << 0) | (value << 4));
+                    pixelIndex++;
                 }
             }
 
@@ -512,33 +458,33 @@ namespace CSPspEmu.Hle.Formats.Font
         public Bitmap GetBitmap()
         {
             if (Width == 0 || Height == 0) return new Bitmap(1, 1);
-            Bitmap Bitmap = new Bitmap((int) Width, (int) Height);
+            var bitmap = new Bitmap((int) Width, (int) Height);
             for (int y = 0, n = 0; y < Height; y++)
             {
-                for (int x = 0; x < Width; x++, n++)
+                for (var x = 0; x < Width; x++, n++)
                 {
-                    byte c = Data[n];
+                    var c = Data[n];
                     //Bitmap.SetPixel(x, y, Color.FromArgb(Data[n], 0xFF, 0xFF, 0xFF));
-                    Bitmap.SetPixel(x, y, Color.FromArgb(0xFF, c, c, c));
+                    bitmap.SetPixel(x, y, Color.FromArgb(0xFF, c, c, c));
                 }
             }
-            return Bitmap;
+            return bitmap;
         }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct FontInfo
     {
-        private Fixed26_6 MaxGlyphWidthI;
-        private Fixed26_6 MaxGlyphHeightI;
-        private Fixed26_6 MaxGlyphAscenderI;
-        private Fixed26_6 MaxGlyphDescenderI;
-        private Fixed26_6 MaxGlyphLeftXI;
-        private Fixed26_6 MaxGlyphBaseYI;
-        private Fixed26_6 MinGlyphCenterXI;
-        private Fixed26_6 MaxGlyphTopYI;
-        private Fixed26_6 MaxGlyphAdvanceXI;
-        private Fixed26_6 MaxGlyphAdvanceYI;
+        private Fixed266 MaxGlyphWidthI;
+        private Fixed266 MaxGlyphHeightI;
+        private Fixed266 MaxGlyphAscenderI;
+        private Fixed266 MaxGlyphDescenderI;
+        private Fixed266 MaxGlyphLeftXI;
+        private Fixed266 MaxGlyphBaseYI;
+        private Fixed266 MinGlyphCenterXI;
+        private Fixed266 MaxGlyphTopYI;
+        private Fixed266 MaxGlyphAdvanceXI;
+        private Fixed266 MaxGlyphAdvanceYI;
 
         private float MaxGlyphWidthF;
         private float MaxGlyphHeightF;
@@ -553,62 +499,62 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public float MaxGlyphAscender
         {
-            set { MaxGlyphAscenderI = MaxGlyphAscenderF = value; }
-            get { return MaxGlyphAscenderF; }
+            set => MaxGlyphAscenderI = MaxGlyphAscenderF = value;
+            get => MaxGlyphAscenderF;
         }
 
         public float MaxGlyphDescender
         {
-            set { MaxGlyphDescenderI = MaxGlyphDescenderF = value; }
-            get { return MaxGlyphDescenderF; }
+            set => MaxGlyphDescenderI = MaxGlyphDescenderF = value;
+            get => MaxGlyphDescenderF;
         }
 
         public float MaxGlyphLeftX
         {
-            set { MaxGlyphLeftXI = MaxGlyphLeftXF = value; }
-            get { return MaxGlyphLeftXF; }
+            set => MaxGlyphLeftXI = MaxGlyphLeftXF = value;
+            get => MaxGlyphLeftXF;
         }
 
         public float MaxGlyphBaseY
         {
-            set { MaxGlyphBaseYI = MaxGlyphBaseYF = value; }
-            get { return MaxGlyphBaseYF; }
+            set => MaxGlyphBaseYI = MaxGlyphBaseYF = value;
+            get => MaxGlyphBaseYF;
         }
 
         public float MinGlyphCenterX
         {
-            set { MinGlyphCenterXI = MinGlyphCenterXF = value; }
-            get { return MinGlyphCenterXF; }
+            set => MinGlyphCenterXI = MinGlyphCenterXF = value;
+            get => MinGlyphCenterXF;
         }
 
         public float MaxGlyphTopY
         {
-            set { MaxGlyphTopYI = MaxGlyphTopYF = value; }
-            get { return MaxGlyphTopYF; }
+            set => MaxGlyphTopYI = MaxGlyphTopYF = value;
+            get => MaxGlyphTopYF;
         }
 
         public float MaxGlyphAdvanceX
         {
-            set { MaxGlyphAdvanceXI = MaxGlyphAdvanceXF = value; }
-            get { return MaxGlyphAdvanceXF; }
+            set => MaxGlyphAdvanceXI = MaxGlyphAdvanceXF = value;
+            get => MaxGlyphAdvanceXF;
         }
 
         public float MaxGlyphAdvanceY
         {
-            set { MaxGlyphAdvanceYI = MaxGlyphAdvanceYF = value; }
-            get { return MaxGlyphAdvanceYF; }
+            set => MaxGlyphAdvanceYI = MaxGlyphAdvanceYF = value;
+            get => MaxGlyphAdvanceYF;
         }
 
         public ushort MaxGlyphWidth
         {
-            set { MaxGlyphWidthI = MaxGlyphWidthF = _MaxGlyphWidth = value; }
-            get { return _MaxGlyphWidth; }
+            set => MaxGlyphWidthI = MaxGlyphWidthF = _MaxGlyphWidth = value;
+            get => _MaxGlyphWidth;
         }
 
         public ushort MaxGlyphHeight
         {
-            set { MaxGlyphHeightI = MaxGlyphHeightF = _MaxGlyphHeight = value; }
-            get { return _MaxGlyphHeight; }
+            set => MaxGlyphHeightI = MaxGlyphHeightF = _MaxGlyphHeight = value;
+            get => _MaxGlyphHeight;
         }
 
         #region Bitmap dimensions.

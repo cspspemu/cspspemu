@@ -22,13 +22,13 @@ namespace CSPspEmu.Hle.Formats
 
         public enum ModuleNids : uint
         {
-            MODULE_INFO = 0xF01D73A7,
-            MODULE_BOOTSTART = 0xD3744BE0,
-            MODULE_REBOOT_BEFORE = 0x2F064FA6,
-            MODULE_START = 0xD632ACDB,
-            MODULE_START_THREAD_PARAMETER = 0x0F7C276C,
-            MODULE_STOP = 0xCEE8593C,
-            MODULE_STOP_THREAD_PARAMETER = 0xCF0CC697,
+            ModuleInfo = 0xF01D73A7,
+            ModuleBootstart = 0xD3744BE0,
+            ModuleRebootBefore = 0x2F064FA6,
+            ModuleStart = 0xD632ACDB,
+            ModuleStartThreadParameter = 0x0F7C276C,
+            ModuleStop = 0xCEE8593C,
+            ModuleStopThreadParameter = 0xCF0CC697,
         }
 
         public struct ModuleExport
@@ -136,7 +136,9 @@ namespace CSPspEmu.Hle.Formats
             /// <summary>
             /// Module Name (0 terminated)
             /// </summary>
-            private fixed byte NameRaw[28];
+#pragma warning disable 649
+            private fixed byte _nameRaw[28];
+#pragma warning restore 649
 
             /// <summary>
             /// 
@@ -145,14 +147,14 @@ namespace CSPspEmu.Hle.Formats
             {
                 get
                 {
-                    fixed (byte* NameRawPtr = NameRaw) return PointerUtils.PtrToStringUtf8(NameRawPtr);
+                    fixed (byte* nameRawPtr = _nameRaw) return PointerUtils.PtrToStringUtf8(nameRawPtr);
                 }
             }
 
             /// <summary>
             /// Initial value for GP (Global Pointer).
             /// </summary>
-            public uint GP;
+            public uint Gp;
 
             /// <summary>
             /// Address of section .lib.ent

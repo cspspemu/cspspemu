@@ -30,7 +30,7 @@ namespace CSPspEmu.Hle.Formats.Archive
             PkwareReserved16 = 16,
             PkwareReserved17 = 17,
             IbmTerse = 18,
-            IbmLz77ZPFS = 19,
+            IbmLz77Zpfs = 19,
             WavPack = 97,
             Ppmd = 98,
         }
@@ -132,10 +132,10 @@ namespace CSPspEmu.Hle.Formats.Archive
                     case CompressionMethods.Deflate:
                         //return new System.IO.Compression.DeflateStream(CompressedStream.SliceWithLength(0), CompressionMode.Decompress);
                         return new MemoryStream(
-                            (new System.IO.Compression.DeflateStream(CompressedStream.SliceWithLength(0),
-                                CompressionMode.Decompress)).ReadAll(fromStart: false));
+                            (new DeflateStream(CompressedStream.SliceWithLength(),
+                                CompressionMode.Decompress)).ReadAll(false));
                     case CompressionMethods.Stored:
-                        return CompressedStream.SliceWithLength(0);
+                        return CompressedStream.SliceWithLength();
                     default:
                         throw (new NotImplementedException("Can't implement method '" +
                                                            LocalFileHeader.CompressionMethod + "'"));
@@ -146,87 +146,67 @@ namespace CSPspEmu.Hle.Formats.Archive
             /// 
             /// </summary>
             /// <returns></returns>
-            public override string ToString()
-            {
-                return string.Format("{0}:{1}", FileName, CompressedStream.Length);
-            }
+            public override string ToString() => $"{FileName}:{CompressedStream.Length}";
         }
 
         protected Dictionary<string, ZipEntry> Entries;
-        private bool CaseInsensitive;
+        private bool _caseInsensitive;
 
         public ZipArchive()
         {
         }
 
-        public ZipArchive(string FileName, bool CaseInsensitive = true)
-        {
-            Load(FileName, CaseInsensitive);
-        }
+        public ZipArchive(string fileName, bool caseInsensitive = true) => Load(fileName, caseInsensitive);
 
-        public ZipArchive(Stream Stream, bool CaseInsensitive = true)
-        {
-            Load(Stream, CaseInsensitive);
-        }
+        public ZipArchive(Stream stream, bool caseInsensitive = true) => Load(stream, caseInsensitive);
 
-        public ZipArchive Load(string FileName, bool CaseInsensitive = true)
-        {
-            return Load(File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), CaseInsensitive);
-        }
+        public ZipArchive Load(string fileName, bool caseInsensitive = true) =>
+            Load(File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), caseInsensitive);
 
-        public string NormalizePath(string FileName)
+        public string NormalizePath(string fileName)
         {
-            var Return = '/' + FileName.Replace('\\', '/').Trim('/');
-            if (CaseInsensitive) Return = Return.ToLower();
+            var Return = '/' + fileName.Replace('\\', '/').Trim('/');
+            if (_caseInsensitive) Return = Return.ToLower();
             return Return;
         }
 
-        public ZipArchive Load(Stream Stream, bool CaseInsensitive = true)
+        public ZipArchive Load(Stream stream, bool caseInsensitive = true)
         {
-            this.CaseInsensitive = CaseInsensitive;
+            _caseInsensitive = caseInsensitive;
             Entries = new Dictionary<string, ZipEntry>();
-            while (!Stream.Eof())
+            while (!stream.Eof())
             {
-                var LocalFileHeader = Stream.ReadStruct<LocalFileHeader>();
-                if (Stream.Eof()) break;
-                if (LocalFileHeader.Magic != LocalFileHeader.ExpectedMagic)
+                var localFileHeader = stream.ReadStruct<LocalFileHeader>();
+                if (stream.Eof()) break;
+                if (localFileHeader.Magic != LocalFileHeader.ExpectedMagic)
                 {
                     //Console.Error.WriteLine("0x{0:X}", LocalFileHeader.Magic);
                     break;
                 }
-                var FileName = Stream.ReadString(LocalFileHeader.FileNameLength);
-                var Extra = Stream.ReadBytes(LocalFileHeader.ExtraLength);
+                var fileName = stream.ReadString(localFileHeader.FileNameLength);
+                stream.ReadBytes(localFileHeader.ExtraLength);
                 //Console.Error.WriteLine(LocalFileHeader.CompressedSize);
-                var CompressedStream = Stream.ReadStream(LocalFileHeader.CompressedSize);
+                var compressedStream = stream.ReadStream(localFileHeader.CompressedSize);
 
-                Entries.Add(NormalizePath(FileName), new ZipEntry()
+                Entries.Add(NormalizePath(fileName), new ZipEntry()
                 {
                     Zip = this,
-                    LocalFileHeader = LocalFileHeader,
-                    FileName = FileName,
-                    CompressedStream = CompressedStream,
+                    LocalFileHeader = localFileHeader,
+                    FileName = fileName,
+                    CompressedStream = compressedStream,
                 });
             }
 
             return this;
         }
 
-        public ZipEntry this[string FileName]
+        public ZipEntry this[string fileName] => Entries[NormalizePath(fileName)];
+
+        public IEnumerator<ZipEntry> GetEnumerator()
         {
-            get { return Entries[NormalizePath(FileName)]; }
+            foreach (var entry in Entries) yield return entry.Value;
         }
 
-        public IEnumerator<ZipArchive.ZipEntry> GetEnumerator()
-        {
-            foreach (var Entry in Entries)
-            {
-                yield return Entry.Value;
-            }
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

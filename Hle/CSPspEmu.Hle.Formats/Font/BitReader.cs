@@ -5,104 +5,97 @@ namespace CSPspEmu.Hle.Formats.Font
 {
     public class BitReader : IDisposable
     {
-        private byte[] Data;
-        private int BitOffset;
-        private int ByteOffset;
+        private byte[] _data;
+        private int _bitOffset;
+        private int _byteOffset;
 
-        public BitReader(byte[] Data)
-        {
-            this.Data = Data;
-        }
+        public BitReader(byte[] data) => _data = data;
 
         public void Reset()
         {
-            this.ByteOffset = 0;
-            this.BitOffset = 0;
+            _byteOffset = 0;
+            _bitOffset = 0;
         }
 
         public int Position
         {
-            get { return this.ByteOffset * 8 + this.BitOffset; }
+            get => _byteOffset * 8 + _bitOffset;
             set
             {
-                this.BitOffset = value % 8;
-                this.ByteOffset = value / 8;
+                _bitOffset = value % 8;
+                _byteOffset = value / 8;
             }
             //Console.WriteLine("bit: {0}, byte: {1}", this.BitOffset, this.ByteOffset);
         }
 
-        public int BitsLeft
-        {
-            get { return ((Data.Length - ByteOffset) - 1) * 8 + (8 - BitOffset); }
-        }
+        public int BitsLeft => ((_data.Length - _byteOffset) - 1) * 8 + (8 - _bitOffset);
 
-        public uint ReadBits(int Count)
+        public uint ReadBits(int count)
         {
-            int Value = 0;
-            int ReadOffset = 0;
+            var value = 0;
+            var readOffset = 0;
 
-            while (Count > 0)
+            while (count > 0)
             {
-                int LeftInByte = 8 - this.BitOffset;
-                int ReadCount = Math.Min(Count, LeftInByte);
+                int leftInByte = 8 - _bitOffset;
+                int readCount = Math.Min(count, leftInByte);
                 //Console.WriteLine("Byte[{0}] = {1}", ByteOffset, Data[ByteOffset]);
-                Value |= ((Data[ByteOffset] >> this.BitOffset) & ((1 << ReadCount) - 1)) << ReadOffset;
+                value |= ((_data[_byteOffset] >> _bitOffset) & ((1 << readCount) - 1)) << readOffset;
 
-                ReadOffset += ReadCount;
-                BitOffset += ReadCount;
-                if (BitOffset == 8)
+                readOffset += readCount;
+                _bitOffset += readCount;
+                if (_bitOffset == 8)
                 {
-                    BitOffset = 0;
-                    ByteOffset++;
+                    _bitOffset = 0;
+                    _byteOffset++;
                 }
-                Count -= ReadCount;
+                count -= readCount;
             }
 
-            return (uint) Value;
+            return (uint) value;
         }
 
-        public void SkipBits(int Count)
+        public void SkipBits(int count)
         {
-            BitOffset += Count % 8;
-            ByteOffset += Count / 8;
+            _bitOffset += count % 8;
+            _byteOffset += count / 8;
         }
 
-        public int ReadBitsSigned(int Count)
+        public int ReadBitsSigned(int count)
         {
-            int Value = (int) ReadBits(Count);
-            if ((Value & (1 << Count)) != 0)
+            int value = (int) ReadBits(count);
+            if ((value & (1 << count)) != 0)
             {
-                Value |= ~((1 << Count) - 1);
+                value |= ~((1 << count) - 1);
             }
-            return Value;
+            return value;
         }
 
 
-        public static uint ReadBitsAt(byte[] Data, int Offset, int Count)
+        public static uint ReadBitsAt(byte[] data, int offset, int count)
         {
-            var BitReader = new BitReader(Data);
-            BitReader.Position = Offset;
-            return BitReader.ReadBits(Count);
+            var bitReader = new BitReader(data) {Position = offset};
+            return bitReader.ReadBits(count);
         }
 
-        public static IEnumerable<KeyValuePair<uint, uint>> FixedBitReader(byte[] Data, int BitCount = 0,
-            int Offset = 0)
+        public static IEnumerable<KeyValuePair<uint, uint>> FixedBitReader(byte[] data, int bitCount = 0,
+            int offset = 0)
         {
-            using (var BitReader = new BitReader(Data))
+            using (var bitReader = new BitReader(data))
             {
-                BitReader.Position = Offset;
+                bitReader.Position = offset;
 
-                uint Index = 0;
-                while (BitReader.BitsLeft >= BitCount)
+                uint index = 0;
+                while (bitReader.BitsLeft >= bitCount)
                 {
-                    yield return new KeyValuePair<uint, uint>(Index++, BitReader.ReadBits(BitCount));
+                    yield return new KeyValuePair<uint, uint>(index++, bitReader.ReadBits(bitCount));
                 }
             }
         }
 
         public void Dispose()
         {
-            Data = null;
+            _data = null;
         }
     }
 }

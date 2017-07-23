@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle.Loader
             if (Header.Magic != Elf.HeaderStruct.MagicEnum.ExpectedValue)
                 throw new InvalidProgramException($"Not an ELF File \'{name}\'");
 
-            if (Header.Machine != Elf.HeaderStruct.MachineEnum.ALLEGREX)
+            if (Header.Machine != Elf.HeaderStruct.MachineEnum.Allegrex)
                 throw new InvalidProgramException("Invalid Elf.Header.Machine");
 
             ProgramHeaders = fileStream.ReadStructVectorAt<Elf.ProgramHeader>(Header.ProgramHeaderOffset,

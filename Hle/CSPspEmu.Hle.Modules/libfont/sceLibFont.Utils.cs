@@ -103,17 +103,17 @@ namespace CSPspEmu.Hle.Modules.libfont
             public int BitmapTop;
 
             // Glyph metrics (in 26.6 signed fixed-point).
-            public Fixed26_6 Width;
+            public Fixed266 Width;
 
-            public Fixed26_6 Height;
-            public Fixed26_6 Ascender;
-            public Fixed26_6 Descender;
-            public Fixed26_6 BearingHX;
-            public Fixed26_6 BearingHY;
-            public Fixed26_6 BearingVX;
-            public Fixed26_6 BearingVY;
-            public Fixed26_6 AdvanceH;
-            public Fixed26_6 AdvanceV;
+            public Fixed266 Height;
+            public Fixed266 Ascender;
+            public Fixed266 Descender;
+            public Fixed266 BearingHX;
+            public Fixed266 BearingHY;
+            public Fixed266 BearingVX;
+            public Fixed266 BearingVY;
+            public Fixed266 AdvanceH;
+            public Fixed266 AdvanceV;
             public int Unknown;
 
             //static assert(this.sizeof == 4 * 15);
@@ -168,7 +168,7 @@ namespace CSPspEmu.Hle.Modules.libfont
             /// <summary>
             /// 
             /// </summary>
-            public PointFixed26_6 Position;
+            public PointFixed266 Position;
 
             /// <summary>
             /// 

@@ -198,7 +198,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
                 SceModulePtr->Attributes = HleModuleGuest.ModuleInfo.ModuleAtributes;
                 SceModulePtr->Version = HleModuleGuest.ModuleInfo.ModuleVersion;
                 SceModulePtr->ModuleName = HleModuleGuest.ModuleInfo.Name;
-                SceModulePtr->GP = HleModuleGuest.ModuleInfo.GP;
+                SceModulePtr->GP = HleModuleGuest.ModuleInfo.Gp;
                 SceModulePtr->ent_top = HleModuleGuest.ModuleInfo.ExportsStart;
                 SceModulePtr->ent_size = HleModuleGuest.ModuleInfo.ExportsEnd - HleModuleGuest.ModuleInfo.ExportsStart;
                 SceModulePtr->stub_top = HleModuleGuest.ModuleInfo.ImportsStart;

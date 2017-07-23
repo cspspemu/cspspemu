@@ -123,7 +123,7 @@ namespace CSPspEmu.Hle.Loader
             HleModuleGuest.InitInfo = new InitInfoStruct()
             {
                 Pc = ElfLoader.Header.EntryPoint + BaseAddress,
-                Gp = HleModuleGuest.ModuleInfo.GP,
+                Gp = HleModuleGuest.ModuleInfo.Gp,
             };
 
             UpdateModuleImports();
@@ -207,7 +207,7 @@ namespace CSPspEmu.Hle.Loader
                                 .ReadStructVectorUntilTheEndOfStream<Elf.Reloc>()
                         );
                         break;
-                    case Elf.SectionHeader.TypeEnum.PrxRelocation_FW5:
+                    case Elf.SectionHeader.TypeEnum.PrxRelocationFw5:
                         throw (new Exception("Not implemented ElfSectionHeader.Type.PrxRelocation_FW5"));
                 }
             }

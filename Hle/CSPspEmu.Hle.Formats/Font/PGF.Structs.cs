@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
-    public unsafe partial class PGF
+    public unsafe partial class Pgf
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
         public struct HeaderStruct
@@ -88,7 +89,7 @@ namespace CSPspEmu.Hle.Formats.Font
             {
                 get
                 {
-                    fixed (byte* Pointer = RawFontName) return PointerUtils.PtrToStringUtf8(Pointer);
+                    fixed (byte* pointer = RawFontName) return PointerUtils.PtrToStringUtf8(pointer);
                 }
             }
 
@@ -104,7 +105,7 @@ namespace CSPspEmu.Hle.Formats.Font
             {
                 get
                 {
-                    fixed (byte* Pointer = RawFontType) return PointerUtils.PtrToStringUtf8(Pointer);
+                    fixed (byte* pointer = RawFontType) return PointerUtils.PtrToStringUtf8(pointer);
                 }
             }
 
@@ -131,32 +132,32 @@ namespace CSPspEmu.Hle.Formats.Font
             /// <summary>
             /// 
             /// </summary>
-            public Fixed26_6 MaxLeftXAdjust;
+            public Fixed266 MaxLeftXAdjust;
 
             /// <summary>
             /// 
             /// </summary>
-            public Fixed26_6 MaxBaseYAdjust;
+            public Fixed266 MaxBaseYAdjust;
 
             /// <summary>
             /// 
             /// </summary>
-            public Fixed26_6 MinCenterXAdjust;
+            public Fixed266 MinCenterXAdjust;
 
             /// <summary>
             /// 
             /// </summary>
-            public Fixed26_6 MaxTopYAdjust;
+            public Fixed266 MaxTopYAdjust;
 
             /// <summary>
             /// 
             /// </summary>
-            public PointFixed26_6 MaxAdvance;
+            public PointFixed266 MaxAdvance;
 
             /// <summary>
             /// 
             /// </summary>
-            public PointFixed26_6 MaxSize;
+            public PointFixed266 MaxSize;
 
             /// <summary>
             /// 
@@ -267,55 +268,40 @@ namespace CSPspEmu.Hle.Formats.Font
         public int X;
         public int Y;
 
-        public override string ToString()
-        {
-            return string.Format("Point32({0}; {1})", X, Y);
-        }
+        public override string ToString() => $"Point32({X}; {Y})";
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1, Size = 8)]
-    public struct PointFixed26_6
+    public struct PointFixed266
     {
-        public Fixed26_6 X;
-        public Fixed26_6 Y;
+        public Fixed266 X;
+        public Fixed266 Y;
 
-        public override string ToString()
-        {
-            return string.Format("Point32({0}; {1})", X, Y);
-        }
+        public override string ToString() => $"Point32({X}; {Y})";
     }
 
     /// <summary>
     /// 26.6 signed fixed-point.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    public struct Fixed26_6
+    public struct Fixed266
     {
         private int RawValue;
 
         public float Value
         {
-            get { return (float) ((double) RawValue / Math.Pow(2, 6)); }
-            set { RawValue = (int) (((double) value) * Math.Pow(2, 6)); }
+            get => (float) (RawValue / Math.Pow(2, 6));
+            set => RawValue = (int) (value * Math.Pow(2, 6));
         }
 
-        public static implicit operator float(Fixed26_6 that)
-        {
-            return that.Value;
-        }
+        public static implicit operator float(Fixed266 that) => that.Value;
 
-        public static implicit operator Fixed26_6(float that)
+        public static implicit operator Fixed266(float that) => new Fixed266()
         {
-            return new Fixed26_6()
-            {
-                Value = that,
-            };
-        }
+            Value = that,
+        };
 
-        public override string ToString()
-        {
-            return Value.ToString();
-        }
+        public override string ToString() => Value.ToString(CultureInfo.InvariantCulture);
     }
 
     public struct MapUshort
@@ -325,7 +311,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return string.Format("MapUshort({0}, {1})", Src, Dst);
+            return $"MapUshort({Src}, {Dst})";
         }
     }
 
@@ -336,7 +322,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return string.Format("MapUint({0}, {1})", Src, Dst);
+            return $"MapUint({Src}, {Dst})";
         }
     }
 
@@ -347,30 +333,30 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public override string ToString()
         {
-            return string.Format("MapUint({0}, {1})", Src, Dst);
+            return $"MapUint({Src}, {Dst})";
         }
     }
 
     public enum FamilyEnum : ushort
     {
-        FONT_FAMILY_SANS_SERIF = 1,
-        FONT_FAMILY_SERIF = 2,
+        FontFamilySansSerif = 1,
+        FontFamilySerif = 2,
     }
 
     public enum StyleEnum : ushort
     {
-        FONT_STYLE_REGULAR = 1,
-        FONT_STYLE_ITALIC = 2,
-        FONT_STYLE_BOLD = 5,
-        FONT_STYLE_BOLD_ITALIC = 6,
-        FONT_STYLE_DB = 103, // Demi-Bold / semi-bold
+        FontStyleRegular = 1,
+        FontStyleItalic = 2,
+        FontStyleBold = 5,
+        FontStyleBoldItalic = 6,
+        FontStyleDb = 103, // Demi-Bold / semi-bold
     }
 
     public enum LanguageEnum : ushort
     {
-        FONT_LANGUAGE_JAPANESE = 1,
-        FONT_LANGUAGE_LATIN = 2,
-        FONT_LANGUAGE_KOREAN = 3,
+        FontLanguageJapanese = 1,
+        FontLanguageLatin = 2,
+        FontLanguageKorean = 3,
     }
 
     public unsafe struct FontStyle
@@ -423,34 +409,38 @@ namespace CSPspEmu.Hle.Formats.Font
         /// <summary>
         /// 
         /// </summary>
-        private fixed byte RawFileName[64];
+#pragma warning disable 649
+        private fixed byte _rawFileName[64];
+#pragma warning restore 649
 
         public string FileName
         {
             get
             {
-                fixed (byte* Pointer = RawFileName) return PointerUtils.PtrToStringUtf8(Pointer);
+                fixed (byte* pointer = _rawFileName) return PointerUtils.PtrToStringUtf8(pointer);
             }
             set
             {
-                fixed (byte* Pointer = RawFileName) PointerUtils.StoreStringOnPtr(value, Encoding.UTF8, Pointer, 64);
+                fixed (byte* pointer = _rawFileName) PointerUtils.StoreStringOnPtr(value, Encoding.UTF8, pointer, 64);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private fixed byte RawName[64];
+#pragma warning disable 649
+        private fixed byte _rawName[64];
+#pragma warning restore 649
 
         public string Name
         {
             get
             {
-                fixed (byte* Pointer = RawName) return PointerUtils.PtrToStringUtf8(Pointer);
+                fixed (byte* pointer = _rawName) return PointerUtils.PtrToStringUtf8(pointer);
             }
             set
             {
-                fixed (byte* Pointer = RawName) PointerUtils.StoreStringOnPtr(value, Encoding.UTF8, Pointer, 64);
+                fixed (byte* pointer = _rawName) PointerUtils.StoreStringOnPtr(value, Encoding.UTF8, pointer, 64);
             }
         }
 
@@ -464,13 +454,13 @@ namespace CSPspEmu.Hle.Formats.Font
         /// </summary>
         public uint Expire;
 
-        public static float GetScoreCompare(FontStyle Left, FontStyle Right)
+        public static float GetScoreCompare(FontStyle left, FontStyle right)
         {
-            float Score = 0.0f;
-            if (Left.Size == Right.Size) Score++;
-            if (Left.Resolution == Right.Resolution) Score++;
+            float score = 0.0f;
+            if (left.Size == right.Size) score++;
+            if (left.Resolution == right.Resolution) score++;
 
-            return Score;
+            return score;
         }
     }
 
@@ -486,38 +476,27 @@ namespace CSPspEmu.Hle.Formats.Font
         /// </summary>
         public float Vertical;
 
-        public HorizontalVerticalFloat(float Horizontal, float Vertical)
+        public HorizontalVerticalFloat(float horizontal, float vertical)
         {
-            this.Horizontal = Horizontal;
-            this.Vertical = Vertical;
+            Horizontal = horizontal;
+            Vertical = vertical;
         }
 
-        public static bool operator ==(HorizontalVerticalFloat Left, HorizontalVerticalFloat Right)
-        {
-            if (Left.Horizontal != Right.Horizontal) return false;
-            if (Left.Vertical != Right.Vertical) return false;
-            return true;
-        }
+        // ReSharper disable CompareOfFloatsByEqualityOperator
+        public static bool operator ==(HorizontalVerticalFloat left, HorizontalVerticalFloat right) => left.Horizontal == right.Horizontal && left.Vertical == right.Vertical;
 
-        public static bool operator !=(HorizontalVerticalFloat Left, HorizontalVerticalFloat Right)
-        {
-            return !(Left == Right);
-        }
+        public static bool operator !=(HorizontalVerticalFloat left, HorizontalVerticalFloat right) => !(left == right);
 
         public override bool Equals(object obj)
         {
+            if (obj == null) return false;
             if (obj.GetType() != typeof(HorizontalVerticalFloat)) return false;
             return (HorizontalVerticalFloat) obj == this;
         }
 
-        public override int GetHashCode()
-        {
-            return Horizontal.GetHashCode() ^ Vertical.GetHashCode();
-        }
+        // ReSharper disable NonReadonlyMemberInGetHashCode
+        public override int GetHashCode() => Horizontal.GetHashCode() ^ Vertical.GetHashCode();
 
-        public override string ToString()
-        {
-            return string.Format("HV({0}, {1})", Horizontal, Vertical);
-        }
+        public override string ToString() => $"HV({Horizontal}, {Vertical})";
     }
 }

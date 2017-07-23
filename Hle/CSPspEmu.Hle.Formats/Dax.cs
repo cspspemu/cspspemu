@@ -8,16 +8,16 @@ namespace CSPspEmu.Hle.Formats
     public unsafe class Dax : ICompressedIso
     {
         // 4 sectors
-        public const uint DAXFILE_SIGNATURE = 0x00584144;
+        public const uint DaxfileSignature = 0x00584144;
 
-        public const int DAX_FRAME_SIZE = 0x800 * 4;
+        public const int DaxFrameSize = 0x800 * 4;
 
-        public const int MAX_NCAREAS = 192;
+        public const int MaxNcareas = 192;
 
         public enum Version : uint
         {
-            DAXFORMAT_VERSION_0 = 0,
-            DAXFORMAT_VERSION_1 = 1,
+            DaxformatVersion0 = 0,
+            DaxformatVersion1 = 1,
         }
 
         public struct HeaderStruct
@@ -41,7 +41,7 @@ namespace CSPspEmu.Hle.Formats
             /// +10 : number of compressed block size
             /// On Version 1 or greater.
             /// </summary>
-            public uint NCAreas;
+            public uint NcAreas;
 
             /// <summary>
             /// 
@@ -51,16 +51,13 @@ namespace CSPspEmu.Hle.Formats
             /// <summary>
             /// 
             /// </summary>
-            public uint TotalBlocks
-            {
-                get { return (OriginalSize + (DAX_FRAME_SIZE - 1)) / DAX_FRAME_SIZE; }
-            }
+            public uint TotalBlocks => (OriginalSize + (DaxFrameSize - 1)) / DaxFrameSize;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public struct NCArea
+        public struct NcArea
         {
             /// <summary>
             /// 
@@ -113,55 +110,52 @@ namespace CSPspEmu.Hle.Formats
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DaxStream"></param>
-        public Dax(Stream DaxStream)
-        {
-            SetStream(DaxStream);
-        }
+        /// <param name="daxStream"></param>
+        public Dax(Stream daxStream) => SetStream(daxStream);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Stream"></param>
-        public void SetStream(Stream Stream)
+        /// <param name="stream"></param>
+        public void SetStream(Stream stream)
         {
-            this.Stream = Stream;
+            Stream = stream;
 
             // Read the header.
-            this.Header = this.Stream.ReadStruct<HeaderStruct>();
-            if (this.Header.Magic != DAXFILE_SIGNATURE)
+            Header = Stream.ReadStruct<HeaderStruct>();
+            if (Header.Magic != DaxfileSignature)
             {
-                throw (new InvalidDataException("Not a DAX File"));
+                throw new InvalidDataException("Not a DAX File");
             }
 
-            var TotalBlocks = Header.TotalBlocks;
+            var totalBlocks = Header.TotalBlocks;
 
             //Header.TotalBlocks
-            var Offsets = this.Stream.ReadStructVector<uint>(TotalBlocks);
-            var Sizes = this.Stream.ReadStructVector<ushort>(TotalBlocks);
-            NCArea[] NCAreas = null;
+            var offsets = Stream.ReadStructVector<uint>(totalBlocks);
+            var sizes = Stream.ReadStructVector<ushort>(totalBlocks);
+            NcArea[] ncAreas = null;
 
-            if (Header.Version >= Version.DAXFORMAT_VERSION_1)
+            if (Header.Version >= Version.DaxformatVersion1)
             {
-                NCAreas = this.Stream.ReadStructVector<NCArea>(Header.NCAreas);
+                ncAreas = Stream.ReadStructVector<NcArea>(Header.NcAreas);
             }
 
-            Blocks = new BlockInfo[TotalBlocks];
-            for (int n = 0; n < TotalBlocks; n++)
+            Blocks = new BlockInfo[totalBlocks];
+            for (var n = 0; n < totalBlocks; n++)
             {
-                Blocks[n].Position = Offsets[n];
-                Blocks[n].Length = Sizes[n];
+                Blocks[n].Position = offsets[n];
+                Blocks[n].Length = sizes[n];
                 Blocks[n].IsCompressed = true;
             }
-            if (Header.Version >= Version.DAXFORMAT_VERSION_1)
+            if (Header.Version < Version.DaxformatVersion1) return;
+            if (ncAreas == null) return;
+
+            foreach (var ncArea in ncAreas)
             {
-                foreach (var NCArea in NCAreas)
+                //Console.WriteLine("{0}-{1}", NCArea.frame, NCArea.size);
+                for (var n = 0; n < ncArea.Size; n++)
                 {
-                    //Console.WriteLine("{0}-{1}", NCArea.frame, NCArea.size);
-                    for (int n = 0; n < NCArea.Size; n++)
-                    {
-                        Blocks[NCArea.Frame + n].IsCompressed = false;
-                    }
+                    Blocks[ncArea.Frame + n].IsCompressed = false;
                 }
             }
         }
@@ -169,82 +163,60 @@ namespace CSPspEmu.Hle.Formats
         /// <summary>
         /// Size of each block.
         /// </summary>
-        public int BlockSize
-        {
-            get { return (int) DAX_FRAME_SIZE; }
-        }
+        public int BlockSize => DaxFrameSize;
 
         /// <summary>
         /// Total number of blocks in the file
         /// </summary>
-        public int NumberOfBlocks
-        {
-            get { return (int) this.Header.TotalBlocks; }
-        }
+        public int NumberOfBlocks => (int) Header.TotalBlocks;
 
         /// <summary>
         /// Uncompressed length of the file.
         /// </summary>
-        public long UncompressedLength
-        {
-            get { return BlockSize * NumberOfBlocks; }
-        }
+        public long UncompressedLength => BlockSize * NumberOfBlocks;
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public byte[] ReadBlockCompressed(uint Block)
+        public byte[] ReadBlockCompressed(uint block)
         {
-            var BlockStart = this.Blocks[Block + 0].Position;
-            var BlockEnd = this.Blocks[Block + 1].Position;
-            var BlockLength = BlockEnd - BlockStart;
+            var blockStart = Blocks[block + 0].Position;
+            var blockEnd = Blocks[block + 1].Position;
+            var blockLength = blockEnd - blockStart;
 
-            Stream.Position = BlockStart;
-            return Stream.ReadBytes((int) BlockLength);
+            Stream.Position = blockStart;
+            return Stream.ReadBytes((int) blockLength);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Block"></param>
+        /// <param name="block"></param>
         /// <returns></returns>
-        public byte[] ReadBlockDecompressed(uint Block)
+        public byte[] ReadBlockDecompressed(uint block)
         {
-            if (Block >= NumberOfBlocks)
-            {
-                return new byte[0];
-            }
-            var In = ReadBlockCompressed(Block);
+            if (block >= NumberOfBlocks) return new byte[0];
+            var In = ReadBlockCompressed(block);
 
             // If block is not compressed, get the contents.
-            if (!Blocks[Block].IsCompressed)
-            {
+            if (!Blocks[block].IsCompressed)
                 return In;
-            }
 
-            return new DeflateStream(new MemoryStream((byte[]) In.Concat(new byte[] {0x00})),
+            return new DeflateStream(new MemoryStream(In.Concat(new byte[] {0x00})),
                 CompressionMode.Decompress).ReadAll();
         }
 
-        long ICompressedIso.UncompressedLength
-        {
-            get { throw new NotImplementedException(); }
-        }
+        long ICompressedIso.UncompressedLength => throw new NotImplementedException();
 
-        int ICompressedIso.BlockSize
-        {
-            get { throw new NotImplementedException(); }
-        }
+        int ICompressedIso.BlockSize => throw new NotImplementedException();
 
-        ArraySegment<byte>[] ICompressedIso.ReadBlocksDecompressed(uint Block, int Count)
+        ArraySegment<byte>[] ICompressedIso.ReadBlocksDecompressed(uint block, int count)
         {
-            var Segments = new ArraySegment<byte>[Count];
-            for (int n = 0; n < Count; n++)
-            {
-                Segments[n] = new ArraySegment<byte>(ReadBlockDecompressed((uint) (Block + n)));
-            }
-            return Segments;
+            var segments = new ArraySegment<byte>[count];
+            for (var n = 0; n < count; n++)
+                segments[n] = new ArraySegment<byte>(ReadBlockDecompressed((uint) (block + n)));
+            return segments;
         }
     }
 }

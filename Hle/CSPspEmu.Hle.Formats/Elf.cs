@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Formats
 
             public enum MachineEnum : ushort
             {
-                ALLEGREX = 8,
+                Allegrex = 8,
             }
 
             // e_ident 16 bytes.
@@ -189,24 +189,24 @@ namespace CSPspEmu.Hle.Formats
             {
                 Null = 0,
                 ProgramBits = 1,
-                SYMTAB = 2,
-                STRTAB = 3,
-                RELA = 4,
-                HASH = 5,
-                DYNAMIC = 6,
-                NOTE = 7,
+                Symtab = 2,
+                Strtab = 3,
+                Rela = 4,
+                Hash = 5,
+                Dynamic = 6,
+                Note = 7,
                 NoBits = 8,
                 Relocation = 9,
-                SHLIB = 10,
-                DYNSYM = 11,
+                Shlib = 10,
+                Dynsym = 11,
 
-                LOPROC = 0x70000000,
-                HIPROC = 0x7FFFFFFF,
-                LOUSER = 0x80000000,
-                HIUSER = 0xFFFFFFFF,
+                Loproc = 0x70000000,
+                Hiproc = 0x7FFFFFFF,
+                Louser = 0x80000000,
+                Hiuser = 0xFFFFFFFF,
 
-                PrxRelocation = (LOPROC | 0xA0),
-                PrxRelocation_FW5 = (LOPROC | 0xA1),
+                PrxRelocation = (Loproc | 0xA0),
+                PrxRelocationFw5 = (Loproc | 0xA1),
             }
 
             public enum FlagsSet : uint
@@ -306,26 +306,17 @@ namespace CSPspEmu.Hle.Formats
             /// <summary>
             /// Program Header Index where is located the referenced data (pointee) (ADDR_BASE)
             /// </summary>
-            public uint PointeeSectionHeaderBase
-            {
-                get { return (Info >> 16) & 0xFF; }
-            }
+            public uint PointeeSectionHeaderBase => (Info >> 16) & 0xFF;
 
             /// <summary>
             /// Program Header Index where is located the data to relocation (pointer) (OFS_BASE)
             /// </summary>
-            public uint PointerSectionHeaderBase
-            {
-                get { return (Info >> 8) & 0xFF; }
-            }
+            public uint PointerSectionHeaderBase => (Info >> 8) & 0xFF;
 
             /// <summary>
             /// Type of relocation (R_TYPE)
             /// </summary>
-            public TypeEnum Type
-            {
-                get { return (TypeEnum) ((Info >> 0) & 0xFF); }
-            }
+            public TypeEnum Type => (TypeEnum) ((Info >> 0) & 0xFF);
 
             public override string ToString()
             {

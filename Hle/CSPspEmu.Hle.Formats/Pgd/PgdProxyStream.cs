@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using CSharpUtils.Streams;
 
-namespace CSPspEmu.Hle.Pgd
+namespace CSPspEmu.Hle.Formats.Pgd
 {
     public class PgdProxyStream : ProxyStream
     {
-        public PgdProxyStream(Stream BaseStream) : base(BaseStream)
+        public PgdProxyStream(Stream baseStream) : base(baseStream)
         {
         }
     }
