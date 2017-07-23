@@ -477,7 +477,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         GuPrimitiveType _primitiveType;
         GLRenderTarget _logicOpsRenderTarget;
 
-        public override void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState,
+        public override void PrimStart(GpuStateStruct* gpuState,
             GuPrimitiveType primitiveType)
         {
             GpuState = gpuState;

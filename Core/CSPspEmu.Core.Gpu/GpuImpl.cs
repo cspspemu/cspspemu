@@ -31,7 +31,7 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState,
+        public virtual void PrimStart(GpuStateStruct* gpuState,
             GuPrimitiveType primitiveType)
         {
         }
@@ -98,7 +98,7 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct,
+        public virtual void DrawCurvedSurface(GpuStateStruct* GpuStateStruct,
             VertexInfo[,] Patch, int UCount, int VCount)
         {
             Console.Error.WriteLine("GpuImpl.DrawCurvedSurface Not Implemented!!");

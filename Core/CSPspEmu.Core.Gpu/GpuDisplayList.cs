@@ -94,11 +94,6 @@ namespace CSPspEmu.Core.Gpu
         /// </summary>
         public GpuStateStruct* GpuStateStructPointer { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private GlobalGpuState GlobalGpuState;
-
         //volatile public uint InstructionAddressCurrent;
 
         /// <summary>

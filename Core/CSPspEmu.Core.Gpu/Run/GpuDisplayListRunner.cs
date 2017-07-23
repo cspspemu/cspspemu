@@ -1,12 +1,12 @@
-﻿using System;
+﻿#define PRIM_BATCH
+
+using System;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using System.Runtime;
 using CSharpPlatform;
 using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Core.Types;
-
-#define PRIM_BATCH
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -16,7 +16,6 @@ namespace CSPspEmu.Core.Gpu.Run
 
         private static readonly Logger Logger = Logger.GetLogger("GpuDisplayListRunner");
 
-        public GlobalGpuState GlobalGpuState;
         public GpuDisplayList GpuDisplayList;
         public GpuOpCodes OpCode;
         public uint Params24;
@@ -27,10 +26,9 @@ namespace CSPspEmu.Core.Gpu.Run
         {
         }
 
-        public GpuDisplayListRunner(GpuDisplayList gpuDisplayList, GlobalGpuState globalGpuState)
+        public GpuDisplayListRunner(GpuDisplayList gpuDisplayList)
         {
             GpuDisplayList = gpuDisplayList;
-            GlobalGpuState = globalGpuState;
         }
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]

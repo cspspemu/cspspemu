@@ -62,11 +62,6 @@ namespace CSPspEmu.Core.Gpu
         /// <summary>
         /// 
         /// </summary>
-        public GlobalGpuState GlobalGpuState = new GlobalGpuState();
-
-        /// <summary>
-        /// 
-        /// </summary>
         internal volatile LinkedList<GpuDisplayList> DisplayListQueue;
 
         /// <summary>
