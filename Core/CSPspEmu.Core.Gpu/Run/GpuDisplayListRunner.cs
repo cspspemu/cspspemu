@@ -1,12 +1,12 @@
-﻿using System;
+﻿#define PRIM_BATCH
+
+using System;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using System.Runtime;
 using CSharpPlatform;
 using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Core.Types;
-
-#define PRIM_BATCH
 
 namespace CSPspEmu.Core.Gpu.Run
 {
