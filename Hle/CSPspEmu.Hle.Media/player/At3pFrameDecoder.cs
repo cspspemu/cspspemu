@@ -1,12 +1,13 @@
 ﻿using CSPspEmu.Hle.Formats.audio.At3;
 using System;
 using System.IO;
+using CSPspEmu.Hle.Media.audio.At3;
 
 namespace cscodec.h264.player
 {
     public sealed unsafe class At3pFrameDecoder : FrameDecoder<short[]>
     {
-        private MaiAT3PlusFrameDecoder MaiAT3PlusFrameDecoder;
+        private MaiAt3PlusFrameDecoder MaiAT3PlusFrameDecoder;
 
         public At3pFrameDecoder(Stream stream)
             : base(stream)
@@ -19,7 +20,7 @@ namespace cscodec.h264.player
 
         protected override void InitProtected()
         {
-            this.MaiAT3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
+            this.MaiAT3PlusFrameDecoder = new MaiAt3PlusFrameDecoder();
         }
 
         protected override short[] DecodeFrameFromPacket(av.AVPacket avpkt, out int len)
@@ -30,7 +31,7 @@ namespace cscodec.h264.player
             {
                 short[] samples;
                 int channels = 0;
-                int ret = this.MaiAT3PlusFrameDecoder.decodeFrame(data, avpkt.size, out channels, out samples);
+                int ret = this.MaiAT3PlusFrameDecoder.DecodeFrame(data, avpkt.size, out channels, out samples);
                 len = ret;
                 Console.WriteLine("{0}, {1}, {2}", channels, ret, samples.Length);
                 return samples;

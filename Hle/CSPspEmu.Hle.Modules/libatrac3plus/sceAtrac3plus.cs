@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 using CSPspEmu.Core.Types;
+using CSPspEmu.Hle.Media.audio.At3;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
@@ -129,7 +130,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
             public SliceStream DataStream;
 
             //public IArray<StereoShortSoundSample> DecodedSamples;
-            protected MaiAT3PlusFrameDecoder MaiAT3PlusFrameDecoder;
+            protected MaiAt3PlusFrameDecoder MaiAT3PlusFrameDecoder;
 
             public MemoryPartition PrimaryBuffer;
             public int PrimaryBufferReaded;
@@ -373,7 +374,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
             public void SetData(byte* Data, int DataLength)
             {
                 ParseAtracData(new UnmanagedMemoryStream(Data, DataLength));
-                MaiAT3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
+                MaiAT3PlusFrameDecoder = new MaiAt3PlusFrameDecoder();
             }
 
             private void ParseAtracData(Stream Stream)
@@ -488,7 +489,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
 
                     fixed (byte* DataPtr = Data)
                     {
-                        if ((rc = this.MaiAT3PlusFrameDecoder.decodeFrame(DataPtr, BlockSize, out channels, out buf)) !=
+                        if ((rc = this.MaiAT3PlusFrameDecoder.DecodeFrame(DataPtr, BlockSize, out channels, out buf)) !=
                             0)
                         {
                             Console.WriteLine("MaiAT3PlusFrameDecoder.decodeFrame: {0}", rc);

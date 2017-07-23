@@ -16,31 +16,24 @@ namespace CSPspEmu.Hle.Formats
         /// </summary>
         public HeaderStruct Header { get; private set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public EncryptedPrx()
+        private TagInfo GetTagInfo(uint checkTag)
         {
+            var result = GTagInfo.SingleOrDefault(tag => tag.Tag == checkTag);
+            if (result == null) throw new InvalidDataException($"Can't find tag1 0x{checkTag:X}");
+            return result;
         }
 
-        private TAG_INFO GetTagInfo(uint checkTag)
+        private TagInfo2 GetTagInfo2(uint checkTag)
         {
-            var Result = g_tagInfo.SingleOrDefault(Tag => Tag.tag == checkTag);
-            if (Result == null) throw(new InvalidDataException($"Can't find tag1 0x{checkTag:X}"));
-            return Result;
-        }
-
-        private TAG_INFO2 GetTagInfo2(uint CheckTag)
-        {
-            var Result = g_tagInfo2.SingleOrDefault(Tag => Tag.tag == CheckTag);
-            if (Result == null) throw (new InvalidDataException($"Can't find tag2 0x{CheckTag:X}"));
-            return Result;
+            var result = GTagInfo2.SingleOrDefault(tag => tag.Tag == checkTag);
+            if (result == null) throw new InvalidDataException($"Can't find tag2 0x{checkTag:X}");
+            return result;
         }
 
         protected void ExtraV2Mangle(byte* buffer1, byte codeExtra)
         {
-            var g_dataTmp = new byte[20 + 0xA0];
-            fixed (byte* buffer2 = g_dataTmp) // aligned
+            var gDataTmp = new byte[20 + 0xA0];
+            fixed (byte* buffer2 = gDataTmp) // aligned
             {
                 PointerUtils.Memcpy(buffer2 + 20, buffer1, 0xA0);
                 var pl2 = (uint*) buffer2;
@@ -54,68 +47,68 @@ namespace CSPspEmu.Hle.Formats
                     20 + 0xA0,
                     buffer2,
                     20 + 0xA0,
-                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt
+                    Kirk.CommandEnum.PspKirkCmdDecrypt
                 );
 
                 if (ret != 0)
                 {
-                    throw (new Exception($"extra de-mangle returns {ret}, "));
+                    throw new Exception($"extra de-mangle returns {ret}, ");
                 }
                 // copy result back
                 PointerUtils.Memcpy(buffer1, buffer2, 0xA0);
             }
         }
 
-        protected byte[] DecryptPRX1(byte[] _pbIn, bool ShowInfo = false)
+        protected byte[] DecryptPrx1(byte[] pbInBytes, bool showInfo = false)
         {
-            int cbTotal = (int) _pbIn.Length;
-            var _pbOut = new byte[cbTotal];
-            _pbIn.CopyTo(_pbOut, 0);
+            var cbTotal = pbInBytes.Length;
+            var pbOutBytes = new byte[cbTotal];
+            pbInBytes.CopyTo(pbOutBytes, 0);
 
-            fixed (byte* pbIn = _pbIn)
-            fixed (byte* pbOut = _pbOut)
+            fixed (byte* pbIn = pbInBytes)
+            fixed (byte* pbOut = pbOutBytes)
             {
-                var HeaderPointer = (HeaderStruct*) pbIn;
-                this.Header = *(HeaderStruct*) pbIn;
-                var pti = GetTagInfo(this.Header.Tag);
+                //var headerPointer = (HeaderStruct*) pbIn;
+                Header = *(HeaderStruct*) pbIn;
+                var pti = GetTagInfo(Header.Tag);
 
-                if (ShowInfo)
+                if (showInfo)
                 {
                     Console.WriteLine("TAG_INFO: {0}", pti);
                 }
 
                 // build conversion into pbOut
-                PointerUtils.Memcpy(pbOut, pbIn, _pbIn.Length);
+                PointerUtils.Memcpy(pbOut, pbIn, pbInBytes.Length);
                 PointerUtils.Memset(pbOut, 0, 0x150);
                 PointerUtils.Memset(pbOut, 0x55, 0x40);
 
                 // step3 demangle in place
-                var h7_header = (Kirk.KirkAes128CbcHeader*) &pbOut[0x2C];
-                h7_header->Mode = Core.Components.Crypto.Kirk.KirkMode.DecryptCbc;
-                h7_header->Unknown4 = 0;
-                h7_header->Unknown8 = 0;
-                h7_header->KeySeed = pti.code; // initial seed for PRX
-                h7_header->Datasize = 0x70; // size
+                var h7Header = (Kirk.KirkAes128CbcHeader*) &pbOut[0x2C];
+                h7Header->Mode = Kirk.KirkMode.DecryptCbc;
+                h7Header->Unknown4 = 0;
+                h7Header->Unknown8 = 0;
+                h7Header->KeySeed = pti.Code; // initial seed for PRX
+                h7Header->Datasize = 0x70; // size
 
                 // redo part of the SIG check (step2)
-                var _buffer1 = new byte[0x150];
-                fixed (byte* buffer1 = _buffer1)
+                var buffer1Bytes = new byte[0x150];
+                fixed (byte* buffer1 = buffer1Bytes)
                 {
                     PointerUtils.Memcpy(buffer1 + 0x00, pbIn + 0xD0, 0x80);
                     PointerUtils.Memcpy(buffer1 + 0x80, pbIn + 0x80, 0x50);
                     PointerUtils.Memcpy(buffer1 + 0xD0, pbIn + 0x00, 0x80);
 
-                    if (pti.codeExtra != 0)
+                    if (pti.CodeExtra != 0)
                     {
-                        ExtraV2Mangle(buffer1 + 0x10, pti.codeExtra);
+                        ExtraV2Mangle(buffer1 + 0x10, pti.CodeExtra);
                     }
 
                     PointerUtils.Memcpy(pbOut + 0x40 /* 0x2C+20 */, buffer1 + 0x40, 0x40);
                 }
 
-                for (int iXOR = 0; iXOR < 0x70; iXOR++)
+                for (var iXor = 0; iXor < 0x70; iXor++)
                 {
-                    pbOut[0x40 + iXOR] = (byte) (pbOut[0x40 + iXOR] ^ pti.key[0x14 + iXOR]);
+                    pbOut[0x40 + iXor] = (byte) (pbOut[0x40 + iXor] ^ pti.Key[0x14 + iXor]);
                 }
 
                 var ret = _kirk.HleUtilsBufferCopyWithRange(
@@ -123,18 +116,14 @@ namespace CSPspEmu.Hle.Formats
                     20 + 0x70,
                     pbOut + 0x2C,
                     20 + 0x70,
-                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt
+                    Kirk.CommandEnum.PspKirkCmdDecrypt
                 );
 
                 if (ret != 0)
-                {
-                    throw (new Exception(CStringFormater.Sprintf("mangle#7 returned 0x%08X, ", ret)));
-                }
+                    throw new Exception(CStringFormater.Sprintf("mangle#7 returned 0x%08X, ", ret));
 
-                for (int iXOR = 0x6F; iXOR >= 0; iXOR--)
-                {
-                    pbOut[0x40 + iXOR] = (byte) (pbOut[0x2C + iXOR] ^ pti.key[0x20 + iXOR]);
-                }
+                for (var iXor = 0x6F; iXor >= 0; iXor--)
+                    pbOut[0x40 + iXor] = (byte) (pbOut[0x2C + iXor] ^ pti.Key[0x20 + iXor]);
 
                 PointerUtils.Memset(pbOut + 0x80, 0, 0x30); // $40 bytes kept, clean up
 
@@ -150,19 +139,17 @@ namespace CSPspEmu.Hle.Formats
                     cbTotal,
                     pbOut + 0x40,
                     cbTotal - 0x40,
-                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecryptPrivate
+                    Kirk.CommandEnum.PspKirkCmdDecryptPrivate
                 );
 
                 if (ret != 0)
-                {
-                    throw (new Exception(CStringFormater.Sprintf("mangle#1 returned 0x%08X", ret)));
-                }
+                    throw new Exception(CStringFormater.Sprintf("mangle#1 returned 0x%08X", ret));
 
                 //File.WriteAllBytes("../../../TestInput/temp.bin", _pbOut);
 
-                var OutputSize = *(int*) &pbIn[0xB0];
+                var outputSize = *(int*) &pbIn[0xB0];
 
-                return _pbOut.Slice(0, OutputSize).ToArray();
+                return pbOutBytes.Slice(0, outputSize).ToArray();
             }
         }
 
@@ -174,8 +161,8 @@ namespace CSPspEmu.Hle.Formats
             buf[4] = (uint) size;
 
             if (_kirk.HleUtilsBufferCopyWithRange((byte*) buf, size + 0x14, (byte*) buf, size + 0x14,
-                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecrypt) !=
-                Core.Components.Crypto.Kirk.ResultEnum.Ok)
+                    Kirk.CommandEnum.PspKirkCmdDecrypt) !=
+                Kirk.ResultEnum.Ok)
             {
                 return -1;
             }
@@ -183,43 +170,43 @@ namespace CSPspEmu.Hle.Formats
             return 0;
         }
 
-        protected byte[] DecryptPRX2(byte[] _pbIn, bool ShowInfo = false)
+        protected byte[] DecryptPrx2(byte[] pbIn, bool showInfo = false)
         {
-            int size = (int) _pbIn.Length;
-            var _pbOut = new byte[size];
-            _pbIn.CopyTo(_pbOut, 0);
+            var size = pbIn.Length;
+            var pbOut = new byte[size];
+            pbIn.CopyTo(pbOut, 0);
 
-            var _tmp1 = new byte[0x150];
-            var _tmp2 = new byte[0x90 + 0x14];
-            var _tmp3 = new byte[0x60 + 0x14];
+            var tmp1Bytes = new byte[0x150];
+            var tmp2Bytes = new byte[0x90 + 0x14];
+            var tmp3Bytes = new byte[0x60 + 0x14];
 
-            fixed (byte* inbuf = _pbIn)
-            fixed (byte* outbuf = _pbOut)
-            fixed (byte* tmp1 = _tmp1)
-            fixed (byte* tmp2 = _tmp2)
-            fixed (byte* tmp3 = _tmp3)
+            fixed (byte* inbuf = pbIn)
+            fixed (byte* outbuf = pbOut)
+            fixed (byte* tmp1 = tmp1Bytes)
+            fixed (byte* tmp2 = tmp2Bytes)
+            fixed (byte* tmp3 = tmp3Bytes)
             {
-                var HeaderPointer = (HeaderStruct*) inbuf;
-                this.Header = *(HeaderStruct*) inbuf;
-                var pti = GetTagInfo2(this.Header.Tag);
+                //var headerPointer = (HeaderStruct*) inbuf;
+                Header = *(HeaderStruct*) inbuf;
+                var pti = GetTagInfo2(Header.Tag);
                 Console.WriteLine("{0}", pti);
 
-                int retsize = *(int*) &inbuf[0xB0];
+                var retsize = *(int*) &inbuf[0xB0];
 
-                PointerUtils.Memset(_tmp1, 0, 0x150);
-                PointerUtils.Memset(_tmp2, 0, 0x90 + 0x14);
-                PointerUtils.Memset(_tmp3, 0, 0x60 + 0x14);
+                PointerUtils.Memset(tmp1Bytes, 0, 0x150);
+                PointerUtils.Memset(tmp2Bytes, 0, 0x90 + 0x14);
+                PointerUtils.Memset(tmp3Bytes, 0, 0x60 + 0x14);
 
                 PointerUtils.Memcpy(outbuf, inbuf, size);
 
                 if (size < 0x160)
                 {
-                    throw (new InvalidDataException("buffer not big enough, "));
+                    throw new InvalidDataException("buffer not big enough, ");
                 }
 
-                if ((size - 0x150) < retsize)
+                if (size - 0x150 < retsize)
                 {
-                    throw (new InvalidDataException("not enough data, "));
+                    throw new InvalidDataException("not enough data, ");
                 }
 
                 PointerUtils.Memcpy(tmp1, outbuf, 0x150);
@@ -231,15 +218,15 @@ namespace CSPspEmu.Hle.Formats
                 {
                     for (j = 0; j < 0x10; j++)
                     {
-                        _tmp2[0x14 + (i << 4) + j] = pti.key[j];
+                        tmp2Bytes[0x14 + (i << 4) + j] = pti.Key[j];
                     }
 
-                    _tmp2[0x14 + (i << 4)] = (byte) i;
+                    tmp2Bytes[0x14 + (i << 4)] = (byte) i;
                 }
 
-                if (Scramble((uint*) tmp2, 0x90, pti.code) < 0)
+                if (Scramble((uint*) tmp2, 0x90, pti.Code) < 0)
                 {
-                    throw (new InvalidDataException("error in Scramble#1, "));
+                    throw new InvalidDataException("error in Scramble#1, ");
                 }
 
                 PointerUtils.Memcpy(outbuf, tmp1 + 0xD0, 0x5C);
@@ -252,9 +239,9 @@ namespace CSPspEmu.Hle.Formats
 
                 PointerUtils.Memcpy(tmp3 + 0x14, outbuf + 0x5C, 0x60);
 
-                if (Scramble((uint*) tmp3, 0x60, pti.code) < 0)
+                if (Scramble((uint*) tmp3, 0x60, pti.Code) < 0)
                 {
-                    throw (new InvalidDataException("error in Scramble#2, "));
+                    throw new InvalidDataException("error in Scramble#2, ");
                 }
 
                 PointerUtils.Memcpy(outbuf + 0x5C, tmp3, 0x60);
@@ -268,32 +255,32 @@ namespace CSPspEmu.Hle.Formats
 
                 /* sha-1 */
                 if (_kirk.HleUtilsBufferCopyWithRange(outbuf, 3000000, outbuf, 3000000,
-                        Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdSha1Hash) !=
-                    Core.Components.Crypto.Kirk.ResultEnum.Ok)
+                        Kirk.CommandEnum.PspKirkCmdSha1Hash) !=
+                    Kirk.ResultEnum.Ok)
                 {
-                    throw (new InvalidDataException("error in sceUtilsBufferCopyWithRange 0xB, "));
+                    throw new InvalidDataException("error in sceUtilsBufferCopyWithRange 0xB, ");
                 }
 
                 if (PointerUtils.Memcmp(outbuf, tmp3, 0x14) != 0)
                 {
-                    throw (new InvalidDataException("WARNING (SHA-1 incorrect), "));
+                    throw new InvalidDataException("WARNING (SHA-1 incorrect), ");
                 }
 
-                int iXOR;
+                int iXor;
 
-                for (iXOR = 0; iXOR < 0x40; iXOR++)
+                for (iXor = 0; iXor < 0x40; iXor++)
                 {
-                    tmp3[iXOR + 0x14] = (byte) (outbuf[iXOR + 0x80] ^ _tmp2[iXOR + 0x10]);
+                    tmp3[iXor + 0x14] = (byte) (outbuf[iXor + 0x80] ^ tmp2Bytes[iXor + 0x10]);
                 }
 
-                if (Scramble((uint*) tmp3, 0x40, pti.code) != 0)
+                if (Scramble((uint*) tmp3, 0x40, pti.Code) != 0)
                 {
-                    throw (new InvalidDataException("error in Scramble#3, "));
+                    throw new InvalidDataException("error in Scramble#3, ");
                 }
 
-                for (iXOR = 0x3F; iXOR >= 0; iXOR--)
+                for (iXor = 0x3F; iXor >= 0; iXor--)
                 {
-                    outbuf[iXOR + 0x40] = (byte) (_tmp3[iXOR] ^ _tmp2[iXOR + 0x50]); // uns 8
+                    outbuf[iXor + 0x40] = (byte) (tmp3Bytes[iXor] ^ tmp2Bytes[iXor + 0x50]); // uns 8
                 }
 
                 PointerUtils.Memset(outbuf + 0x80, 0, 0x30);
@@ -304,11 +291,11 @@ namespace CSPspEmu.Hle.Formats
 
                 // the real decryption
                 var ret = _kirk.HleUtilsBufferCopyWithRange(outbuf, size, outbuf + 0x40, size - 0x40,
-                    Core.Components.Crypto.Kirk.CommandEnum.PspKirkCmdDecryptPrivate);
+                    Kirk.CommandEnum.PspKirkCmdDecryptPrivate);
                 if (ret != 0)
                 {
-                    throw (new InvalidDataException(
-                        $"error in sceUtilsBufferCopyWithRange 0x1 (0x{ret:X}), "));
+                    throw new InvalidDataException(
+                        $"error in sceUtilsBufferCopyWithRange 0x1 (0x{ret:X}), ");
                 }
 
                 if (retsize < 0x150)
@@ -317,34 +304,34 @@ namespace CSPspEmu.Hle.Formats
                     PointerUtils.Memset(outbuf + retsize, 0, 0x150 - retsize);
                 }
 
-                return _pbOut.Slice(0, retsize).ToArray();
+                return pbOut.Slice(0, retsize).ToArray();
             }
         }
 
 
-        public byte[] DecryptPRX(byte[] _pbIn, bool ShowInfo = false)
+        public byte[] DecryptPrx(byte[] pbIn, bool showInfo = false)
         {
             try
             {
-                return DecryptPRX1(_pbIn, ShowInfo);
+                return DecryptPrx1(pbIn, showInfo);
             }
             catch (InvalidDataException)
             {
-                return DecryptPRX2(_pbIn, ShowInfo);
+                return DecryptPrx2(pbIn, showInfo);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="_pbIn"></param>
-        /// <param name="ShowInfo"></param>
-        public byte[] Decrypt(byte[] _pbIn, bool ShowInfo = false)
+        /// <param name="pbIn"></param>
+        /// <param name="showInfo"></param>
+        public byte[] Decrypt(byte[] pbIn, bool showInfo = false)
         {
-            this._kirk = new Kirk();
-            this._kirk.kirk_init();
+            _kirk = new Kirk();
+            _kirk.kirk_init();
 
-            return DecryptPRX(_pbIn, ShowInfo);
+            return DecryptPrx(pbIn, showInfo);
         }
     }
 }

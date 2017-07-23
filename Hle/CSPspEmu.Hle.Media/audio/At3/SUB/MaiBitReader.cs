@@ -3,7 +3,7 @@
 
 using System;
 
-namespace CSPspEmu.Hle.Formats.audio.At3.SUB
+namespace CSPspEmu.Hle.Media.audio.At3.SUB
 {
     public sealed unsafe class MaiBitReader : IDisposable
     {
@@ -11,15 +11,15 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
         public const int MaiBitReaderTypeLow = 1;
 
         MaiQueue0 quene_in;
-        int buffer;
-        int bits_num;
+        int _buffer;
+        int _bitsNum;
         int type;
 
-        public MaiBitReader(int byte_buf_size, int type = MaiBitReaderTypeHigh)
+        public MaiBitReader(int byteBufSize, int type = MaiBitReaderTypeHigh)
         {
-            quene_in = new MaiQueue0(byte_buf_size);
-            buffer = 0;
-            bits_num = 0;
+            quene_in = new MaiQueue0(byteBufSize);
+            _buffer = 0;
+            _bitsNum = 0;
             this.type = type;
         }
 
@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
             }
         }
 
-        public bool moreByte()
+        public bool MoreByte()
         {
             if (quene_in.GetLength() != 0)
             {
@@ -41,13 +41,13 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
                 quene_in.Out(temp, 1);
                 if (type == MaiBitReaderTypeHigh)
                 {
-                    buffer = (buffer << 8) | (temp[0] & 0xFF);
+                    _buffer = (_buffer << 8) | (temp[0] & 0xFF);
                 }
                 else if (type == MaiBitReaderTypeLow)
                 {
-                    buffer |= (temp[0] & 0xFF) << bits_num;
+                    _buffer |= (temp[0] & 0xFF) << _bitsNum;
                 }
-                bits_num += 8;
+                _bitsNum += 8;
                 return false;
             }
             else
@@ -56,43 +56,43 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
             }
         }
 
-        public int addData(byte* src, int len_s)
+        public int AddData(byte* src, int lenS)
         {
-            int ret = _addData(src, len_s);
+            int ret = _addData(src, lenS);
 #if DEBUG_BIT_READER
 			Console.WriteLine("addData({0}) : {1}", len_s, BitConverter.ToString(src.GetArray(len_s)));
 #endif
             return ret;
         }
 
-        private int _addData(byte* src, int len_s)
+        private int _addData(byte* src, int lenS)
         {
 #if BIT_READER_THREAD_SAFE
 			lock (this)
 #endif
             {
-                quene_in.In(src, len_s);
+                quene_in.In(src, lenS);
             }
 
             return 0;
         }
 
-        public int getRemainingBitsNum()
+        public int GetRemainingBitsNum()
         {
 #if BIT_READER_THREAD_SAFE
 			lock (this)
 #endif
             {
-                int bits_remain = (quene_in.GetLength() << 3) + bits_num;
+                int bitsRemain = (quene_in.GetLength() << 3) + _bitsNum;
 
-                return bits_remain;
+                return bitsRemain;
             }
         }
 
         ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int getWithI32Buffer(int bnum, bool get_then_del_in_buf = true)
+        public int GetWithI32Buffer(int bnum, bool getThenDelInBuf = true)
         {
-            var value = _getWithI32Buffer(bnum, get_then_del_in_buf);
+            var value = _getWithI32Buffer(bnum, getThenDelInBuf);
 #if DEBUG_BIT_READER
 			Console.WriteLine("MaiBitReader.getWithI32Buffer({0}) : {1}", bnum, value);
 #endif
@@ -100,45 +100,45 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
         }
 
         ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int _getWithI32Buffer(int bnum, bool get_then_del_in_buf = true)
+        private int _getWithI32Buffer(int bnum, bool getThenDelInBuf = true)
         {
 #if BIT_READER_THREAD_SAFE
 			lock (this)
 #endif
             {
-                while (bnum > bits_num)
+                while (bnum > _bitsNum)
                 {
-                    if (moreByte()) break;
+                    if (MoreByte()) break;
                 }
 
-                if (bnum <= bits_num)
+                if (bnum <= _bitsNum)
                 {
-                    int to_out = 0;
+                    int toOut = 0;
 
                     if (type == MaiBitReaderTypeHigh)
                     {
-                        to_out = (buffer >> (bits_num - bnum)) & ((1 << bnum) - 1);
+                        toOut = (_buffer >> (_bitsNum - bnum)) & ((1 << bnum) - 1);
                     }
                     else if (type == MaiBitReaderTypeLow)
                     {
-                        to_out = buffer & ((1 << bnum) - 1);
+                        toOut = _buffer & ((1 << bnum) - 1);
                     }
 
-                    if (get_then_del_in_buf)
+                    if (getThenDelInBuf)
                     {
-                        bits_num -= bnum;
+                        _bitsNum -= bnum;
 
                         if (type == MaiBitReaderTypeHigh)
                         {
-                            buffer = buffer & ((1 << bits_num) - 1);
+                            _buffer = _buffer & ((1 << _bitsNum) - 1);
                         }
                         else if (type == MaiBitReaderTypeLow)
                         {
-                            buffer = (buffer >> bnum) & ((1 << bits_num) - 1);
+                            _buffer = (_buffer >> bnum) & ((1 << _bitsNum) - 1);
                         }
                     }
 
-                    return to_out;
+                    return toOut;
                 }
                 else
                 {

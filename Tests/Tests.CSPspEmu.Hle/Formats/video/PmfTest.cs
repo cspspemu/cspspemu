@@ -5,6 +5,7 @@ using CSharpUtils.Endian;
 using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats.audio.At3;
 using CSPspEmu.Hle.Formats.video;
+using CSPspEmu.Hle.Media.audio.At3;
 using Xunit;
 
 namespace Tests.CSPspEmu.Hle.Formats.video
@@ -76,7 +77,7 @@ namespace Tests.CSPspEmu.Hle.Formats.video
                 var at3Ptr = at3DataPtr;
                 // ReSharper disable once UnusedVariable
                 var at3End = &at3DataPtr[at3Data.Length];
-                var maiAt3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
+                var maiAt3PlusFrameDecoder = new MaiAt3PlusFrameDecoder();
                 var frame = 0;
 
                 for (int n = 0; n < 1000; n++, frame++)
@@ -91,7 +92,7 @@ namespace Tests.CSPspEmu.Hle.Formats.video
                         new MemoryStream().WriteBytes(PointerUtils.PointerToByteArray(at3Ptr, frameSize)).ToArray());
                     Console.WriteLine("{0}, {1}, {2}", 0, channels, frameSize);
                     // ReSharper disable once UnusedVariable
-                    var Out = maiAt3PlusFrameDecoder.decodeFrame(at3Ptr, frameSize, out channels, out samplesData);
+                    var Out = maiAt3PlusFrameDecoder.DecodeFrame(at3Ptr, frameSize, out channels, out samplesData);
                     //Console.WriteLine("{0}, {1}, {2}", Out, channels, FrameSize);
                     File.WriteAllBytes(@"c:\isos\psp\out\samples" + frame + ".out",
                         new MemoryStream().WriteStructVector(samplesData).ToArray());

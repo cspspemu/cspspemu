@@ -31,27 +31,27 @@ namespace CSPspEmu.Hle.Formats
             Unknown,
         }
 
-        public SubType DetectSubType(Stream Stream)
+        public SubType DetectSubType(Stream stream)
         {
-            var StartMagic = Stream.SliceWithLength(0, 4).ReadAllContentsAsString(Encoding.ASCII);
+            var startMagic = stream.SliceWithLength(0, 4).ReadAllContentsAsString(Encoding.ASCII);
 
             //Console.WriteLine(StartMagic);
 
-            if (StartMagic == '\0' + "PBP") return SubType.Pbp;
-            if (StartMagic == '\0' + "PSF") return SubType.Psf;
-            if (StartMagic == '\x7F' + "ELF") return SubType.Elf;
-            if (StartMagic == "~PSP") return SubType.EncryptedElf;
-            if (StartMagic == "CISO") return SubType.Cso;
-            if (StartMagic == "DAX" + '\0') return SubType.Dax;
+            if (startMagic == '\0' + "PBP") return SubType.Pbp;
+            if (startMagic == '\0' + "PSF") return SubType.Psf;
+            if (startMagic == '\x7F' + "ELF") return SubType.Elf;
+            if (startMagic == "~PSP") return SubType.EncryptedElf;
+            if (startMagic == "CISO") return SubType.Cso;
+            if (startMagic == "DAX" + '\0') return SubType.Dax;
 
-            if (Stream.SliceWithLength(0x8000, 6).ReadAllContentsAsString() == '\x01' + "CD001") return SubType.Iso;
+            if (stream.SliceWithLength(0x8000, 6).ReadAllContentsAsString() == '\x01' + "CD001") return SubType.Iso;
 
             return SubType.Unknown;
         }
 
-        public Type DetectType(Stream Stream)
+        public Type DetectType(Stream stream)
         {
-            switch (DetectSubType(Stream))
+            switch (DetectSubType(stream))
             {
                 case SubType.Cso:
                 case SubType.Dax:
@@ -67,9 +67,6 @@ namespace CSPspEmu.Hle.Formats
             }
         }
 
-        public string DetectString(Stream Stream)
-        {
-            return Enum.GetName(typeof(SubType), DetectSubType(Stream));
-        }
+        public string DetectString(Stream stream) => Enum.GetName(typeof(SubType), DetectSubType(stream));
     }
 }

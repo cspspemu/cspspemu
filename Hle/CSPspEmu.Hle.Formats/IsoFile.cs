@@ -18,39 +18,38 @@ namespace CSPspEmu.Hle.Formats
         public PrimaryVolumeDescriptor PrimaryVolumeDescriptor;
         public string IsoPath;
 
-        protected void ProcessDirectoryRecord(IsoNode ParentIsoNode)
+        protected void ProcessDirectoryRecord(IsoNode parentIsoNode)
         {
-            var DirectoryStart = ParentIsoNode.DirectoryRecord.Extent * SectorSize;
-            var DirectoryLength = ParentIsoNode.DirectoryRecord.Size;
-            var DirectoryStream = this.Stream.SliceWithLength(DirectoryStart, DirectoryLength);
+            var directoryStart = parentIsoNode.DirectoryRecord.Extent * SectorSize;
+            var directoryLength = parentIsoNode.DirectoryRecord.Size;
+            var directoryStream = Stream.SliceWithLength(directoryStart, directoryLength);
 
-            while (!DirectoryStream.Eof())
+            while (!directoryStream.Eof())
             {
                 //writefln("%08X : %08X : %08X", directoryStream.position, directoryStart, directoryLength);
-                byte DirectoryRecordSize;
-                DirectoryRecordSize = (byte) DirectoryStream.ReadByte();
+                var directoryRecordSize = (byte) directoryStream.ReadByte();
 
                 // Even if a directory spans multiple sectors, the directory entries are not permitted to cross the sector boundary (unlike the path table).
                 // Where there is not enough space to record an entire directory entry at the end of a sector, that sector is zero-padded and the next
                 // consecutive sector is used.
-                if (DirectoryRecordSize == 0)
+                if (directoryRecordSize == 0)
                 {
-                    DirectoryStream.Position = MathUtils.NextAligned(DirectoryStream.Position, SectorSize);
+                    directoryStream.Position = MathUtils.NextAligned(directoryStream.Position, SectorSize);
                     //Console.WriteLine("AlignedTo: {0:X}", DirectoryStream.Position);
                     continue;
                 }
 
-                DirectoryStream.Position = DirectoryStream.Position - 1;
+                directoryStream.Position = directoryStream.Position - 1;
 
                 //Console.WriteLine("[{0}:{1:X}-{2:X}]", DirectoryRecordSize, DirectoryStream.Position, DirectoryStream.Position + DirectoryRecordSize);
 
-                byte[] DirectoryRecordBytes = new byte[DirectoryRecordSize];
-                DirectoryStream.Read(DirectoryRecordBytes, 0, DirectoryRecordSize);
-                var DirectoryRecord = StructUtils.BytesToStruct<DirectoryRecord>(DirectoryRecordBytes);
+                var directoryRecordBytes = new byte[directoryRecordSize];
+                directoryStream.Read(directoryRecordBytes, 0, directoryRecordSize);
+                var directoryRecord = StructUtils.BytesToStruct<DirectoryRecord>(directoryRecordBytes);
 
-                string name =
-                    Encoding.UTF8.GetString(DirectoryRecordBytes.Slice(sizeof(DirectoryRecord),
-                        DirectoryRecord.NameLength));
+                var name =
+                    Encoding.UTF8.GetString(directoryRecordBytes.Slice(sizeof(DirectoryRecord),
+                        directoryRecord.NameLength));
 
                 //Console.WriteLine("{0}", name); Console.ReadKey();
 
@@ -58,13 +57,13 @@ namespace CSPspEmu.Hle.Formats
 
                 //writefln("   %s", name);
 
-                var childIsoNode = new IsoNode(this, DirectoryRecord, name, ParentIsoNode);
-                ParentIsoNode._Childs.Add(childIsoNode);
-                ParentIsoNode._childsByName[childIsoNode.Name] = childIsoNode;
-                ParentIsoNode._childsByNameUpperCase[childIsoNode.Name.ToUpper()] = childIsoNode;
+                var childIsoNode = new IsoNode(this, directoryRecord, name, parentIsoNode);
+                parentIsoNode.Childs2.Add(childIsoNode);
+                parentIsoNode.ChildsByName[childIsoNode.Name] = childIsoNode;
+                parentIsoNode.ChildsByNameUpperCase[childIsoNode.Name.ToUpper()] = childIsoNode;
             }
 
-            foreach (var child in ParentIsoNode._Childs)
+            foreach (var child in parentIsoNode.Childs2)
             {
                 if (child.IsDirectory) ProcessDirectoryRecord(child);
             }
@@ -74,40 +73,28 @@ namespace CSPspEmu.Hle.Formats
         {
         }
 
-        public IsoFile(Stream Stream)
-        {
-            SetStream(Stream);
-        }
+        public IsoFile(Stream stream) => SetStream(stream);
 
-        public IsoFile(string path)
-        {
-            SetStream(File.OpenRead(path), path);
-        }
+        public IsoFile(string path) => SetStream(File.OpenRead(path), path);
 
-        public IsoFile(Stream stream, string path = "<unknown>")
-        {
-            SetStream(stream, path);
-        }
+        public IsoFile(Stream stream, string path = "<unknown>") => SetStream(stream, path);
 
-        public void SetStream(Stream Stream, string Path = "<unknown>")
+        public void SetStream(Stream stream, string path = "<unknown>")
         {
-            this.Stream = Stream;
-            this.IsoPath = Path;
+            Stream = stream;
+            IsoPath = path;
             LoadRootIsoNode();
         }
 
         protected void LoadRootIsoNode()
         {
-            this.Stream.Position = SectorSize * 0x10;
-            this.PrimaryVolumeDescriptor = this.Stream.ReadStruct<PrimaryVolumeDescriptor>();
-            this.Root = new IsoNode(this, PrimaryVolumeDescriptor.DirectoryRecord);
-            ProcessDirectoryRecord(this.Root);
+            Stream.Position = SectorSize * 0x10;
+            PrimaryVolumeDescriptor = Stream.ReadStruct<PrimaryVolumeDescriptor>();
+            Root = new IsoNode(this, PrimaryVolumeDescriptor.DirectoryRecord);
+            ProcessDirectoryRecord(Root);
         }
 
-        public void Dispose()
-        {
-            this.Stream.Dispose();
-        }
+        public void Dispose() => Stream.Dispose();
     }
 
     /// <summary>
@@ -122,12 +109,12 @@ namespace CSPspEmu.Hle.Formats
         fixed byte SystemId_[0x20];
         fixed byte VolumeId_[0x20];
         public ulong Pad2;
-        public u32b VolumeSpaceSize;
+        public U32B VolumeSpaceSize;
         fixed ulong Pad3[4];
         public uint VolumeSetSize;
         public uint VolumeSequenceNumber;
-        public u16b LogicalBlockSize;
-        public u32b PathTableSize;
+        public U16B LogicalBlockSize;
+        public U32B PathTableSize;
         public uint TypeLPathTable;
         public uint OptType1PathTable;
         public uint TypeMPathTable;
@@ -136,13 +123,13 @@ namespace CSPspEmu.Hle.Formats
         public DirectoryRecord DirectoryRecord;
 
         public byte Pad4;
-        fixed byte VolumeSetId_[0x80];
-        fixed byte PublisherId_[0x80];
-        fixed byte PreparerId_[0x80];
-        fixed byte ApplicationId_[0x80];
-        fixed byte CopyrightFileId_[37];
-        fixed byte AbstractFileId_[37];
-        fixed byte BibliographicFileId_[37];
+        private fixed byte VolumeSetId_[0x80];
+        private fixed byte PublisherId_[0x80];
+        private fixed byte PreparerId_[0x80];
+        private fixed byte ApplicationId_[0x80];
+        private fixed byte CopyrightFileId_[37];
+        private fixed byte AbstractFileId_[37];
+        private fixed byte BibliographicFileId_[37];
 
         public IsoDate CreationDate;
         public IsoDate ModificationDate;
@@ -150,22 +137,22 @@ namespace CSPspEmu.Hle.Formats
         public IsoDate EffectiveDate;
         public byte FileStructureVersion;
         public byte Pad5;
-        fixed byte ApplicationData_[0x200];
-        fixed byte Pad6_[653];
+        private fixed byte ApplicationData_[0x200];
+        private fixed byte Pad6_[653];
     }
 
     /// <summary>
     /// Both Byte Order Types
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct u16b
+    public struct U16B
     {
-        ushort LittleEndianValue;
-        ushort BigEndianValue;
+        private ushort LittleEndianValue;
+        private ushort BigEndianValue;
 
         public ushort Value
         {
-            get { return LittleEndianValue; }
+            get => LittleEndianValue;
             set
             {
                 LittleEndianValue = value;
@@ -173,24 +160,21 @@ namespace CSPspEmu.Hle.Formats
             }
         }
 
-        public static implicit operator ushort(u16b Item)
-        {
-            return Item.Value;
-        }
+        public static implicit operator ushort(U16B item) => item.Value;
     }
 
     /// <summary>
     /// Both Byte Order Types
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct u32b
+    public struct U32B
     {
-        UintLe LittleEndianValue;
-        UintBe BigEndianValue;
+        private UintLe LittleEndianValue;
+        private UintBe BigEndianValue;
 
         public uint Value
         {
-            get { return LittleEndianValue; }
+            get => LittleEndianValue;
             set
             {
                 LittleEndianValue = value;
@@ -198,9 +182,9 @@ namespace CSPspEmu.Hle.Formats
             }
         }
 
-        public static implicit operator uint(u32b Item)
+        public static implicit operator uint(U32B item)
         {
-            return Item.Value;
+            return item.Value;
         }
     }
 
@@ -212,78 +196,78 @@ namespace CSPspEmu.Hle.Formats
     {
         fixed byte Data[17];
 
-        private int MapGet(int Offset, int Size)
+        private int MapGet(int offset, int size)
         {
-            int Value = 0;
-            fixed (byte* DataPtr = Data)
+            var value = 0;
+            fixed (byte* dataPtr = Data)
             {
-                for (int n = 0; n < Size; n++)
+                for (var n = 0; n < size; n++)
                 {
-                    Value *= 10;
-                    Value += ((char) DataPtr[Offset + n]) - '0';
+                    value *= 10;
+                    value += ((char) dataPtr[offset + n]) - '0';
                 }
             }
-            return 0;
+            return value;
         }
 
-        private void MapSet(int Offset, int Size, int Value)
+        private void MapSet(int offset, int size, int value)
         {
-            fixed (byte* DataPtr = Data)
+            fixed (byte* dataPtr = Data)
             {
-                for (int n = Size - 1; n >= 0; n--)
+                for (int n = size - 1; n >= 0; n--)
                 {
-                    DataPtr[Offset + n] = (byte) ((char) (Value % 10) + '0');
-                    Value /= 10;
+                    dataPtr[offset + n] = (byte) ((char) (value % 10) + '0');
+                    value /= 10;
                 }
             }
         }
 
         public int Year
         {
-            get { return MapGet(0, 4); }
-            set { MapSet(0, 4, value); }
+            get => MapGet(0, 4);
+            set => MapSet(0, 4, value);
         }
 
         public int Month
         {
-            get { return MapGet(4, 2); }
-            set { MapSet(4, 2, value); }
+            get => MapGet(4, 2);
+            set => MapSet(4, 2, value);
         }
 
         public int Day
         {
-            get { return MapGet(6, 2); }
-            set { MapSet(6, 2, value); }
+            get => MapGet(6, 2);
+            set => MapSet(6, 2, value);
         }
 
         public int Hour
         {
-            get { return MapGet(8, 2); }
-            set { MapSet(8, 2, value); }
+            get => MapGet(8, 2);
+            set => MapSet(8, 2, value);
         }
 
         public int Minute
         {
-            get { return MapGet(10, 2); }
-            set { MapSet(10, 2, value); }
+            get => MapGet(10, 2);
+            set => MapSet(10, 2, value);
         }
 
         public int Second
         {
-            get { return MapGet(12, 2); }
-            set { MapSet(12, 2, value); }
+            get => MapGet(12, 2);
+            set => MapSet(12, 2, value);
         }
 
         public int HSecond
         {
-            get { return MapGet(14, 2); }
-            set { MapSet(14, 2, value); }
+            get => MapGet(14, 2);
+            set => MapSet(14, 2, value);
         }
 
         public int Offset
         {
-            get { return MapGet(16, 1); }
-            set { MapSet(16, 1, value); }
+            get => MapGet(16, 1);
+            set => MapSet(16, 1, value);
         }
 
         public DateTime DateTime
@@ -301,10 +285,7 @@ namespace CSPspEmu.Hle.Formats
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("Iso.Date({0})", DateTime);
-        }
+        public override string ToString() => $"Iso.Date({DateTime})";
     }
 
     /// <summary>
@@ -324,9 +305,9 @@ namespace CSPspEmu.Hle.Formats
             public byte Second;
             public byte Offset;
 
-            public static implicit operator DateTime(DateStruct Date)
+            public static implicit operator DateTime(DateStruct date)
             {
-                return new DateTime(Date.Year, Date.Month, Date.Day, Date.Hour, Date.Minute, Date.Second);
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
             }
         }
 
@@ -354,12 +335,12 @@ namespace CSPspEmu.Hle.Formats
         /// <summary>
         /// Sector of the file in the disc.
         /// </summary>
-        public u32b Extent;
+        public U32B Extent;
 
         /// <summary>
         /// Size of the file.
         /// </summary>
-        public u32b Size;
+        public U32B Size;
 
         /// <summary>
         /// 9.1.5 Recording Date and Time (BP 19 to 25)
@@ -384,7 +365,7 @@ namespace CSPspEmu.Hle.Formats
         /// <summary>
         /// 
         /// </summary>
-        public u16b VolumeSequenceNumber;
+        public U16B VolumeSequenceNumber;
 
         /// <summary>
         /// 
@@ -394,15 +375,9 @@ namespace CSPspEmu.Hle.Formats
         /// <summary>
         /// 
         /// </summary>
-        public ulong Offset
-        {
-            get { return Extent * IsoFile.SectorSize; }
-        }
+        public ulong Offset => Extent * IsoFile.SectorSize;
 
-        public override string ToString()
-        {
-            return string.Format("DirectoryRecord(Length={0})", Length);
-        }
+        public override string ToString() => $"DirectoryRecord(Length={Length})";
     }
 
     /// <summary>
@@ -447,7 +422,7 @@ namespace CSPspEmu.Hle.Formats
         {
             get
             {
-                fixed (byte* IdPtr = Id) return PointerUtils.PtrToString(IdPtr, 5, Encoding.UTF8);
+                fixed (byte* idPtr = Id) return PointerUtils.PtrToString(idPtr, 5, Encoding.UTF8);
             }
         }
     }
@@ -456,77 +431,67 @@ namespace CSPspEmu.Hle.Formats
     {
         public IsoFile Iso;
         public DirectoryRecord DirectoryRecord { get; protected set; }
-        internal List<IsoNode> _Childs = new List<IsoNode>();
-        internal Dictionary<string, IsoNode> _childsByName = new Dictionary<string, IsoNode>();
-        internal Dictionary<string, IsoNode> _childsByNameUpperCase = new Dictionary<string, IsoNode>();
-        private IsoNode _Parent;
+        public List<IsoNode> Childs2 = new List<IsoNode>();
+        internal Dictionary<string, IsoNode> ChildsByName = new Dictionary<string, IsoNode>();
+        internal Dictionary<string, IsoNode> ChildsByNameUpperCase = new Dictionary<string, IsoNode>();
         public string FullPath;
         public string Name;
 
-        internal IsoNode(IsoFile Iso, DirectoryRecord directoryRecord, string name = "", IsoNode parent = null)
+        internal IsoNode(IsoFile iso, DirectoryRecord directoryRecord, string name = "", IsoNode parent = null)
         {
-            this.Iso = Iso;
-            this._Parent = parent;
-            this.DirectoryRecord = directoryRecord;
+            Iso = iso;
+            Parent = parent;
+            DirectoryRecord = directoryRecord;
             if (parent != null)
             {
-                this.FullPath = parent.FullPath + "/" + name;
+                FullPath = parent.FullPath + "/" + name;
             }
             else
             {
-                this.FullPath = name;
+                FullPath = name;
             }
-            this.Name = name;
+            Name = name;
 
             //writefln("%s", this.fullPath);
         }
 
-        public bool IsDirectory
-        {
-            get { return (DirectoryRecord.Flags & DirectoryRecord.FlagsEnum.Directory) != 0; }
-        }
+        public bool IsDirectory => (DirectoryRecord.Flags & DirectoryRecord.FlagsEnum.Directory) != 0;
 
-        public IEnumerable<IsoNode> Childs
-        {
-            get { return _Childs; }
-        }
+        public IEnumerable<IsoNode> Childs => Childs2;
 
-        public IsoNode Parent
-        {
-            get { return _Parent; }
-        }
+        public IsoNode Parent { get; }
 
         public IEnumerable<IsoNode> Descendency()
         {
-            foreach (var Child in Childs)
+            foreach (var child in Childs)
             {
-                yield return Child;
-                if (Child.IsDirectory)
+                yield return child;
+                if (child.IsDirectory)
                 {
-                    foreach (var Descendant in Child.Descendency())
+                    foreach (var descendant in child.Descendency())
                     {
-                        yield return Descendant;
+                        yield return descendant;
                     }
                 }
             }
         }
 
-        protected IsoNode AccessChild(string ChildName)
+        protected IsoNode AccessChild(string childName)
         {
-            if (ChildName == "" || ChildName == ".") return this;
-            if (ChildName == "..") return Parent ?? this;
-            ChildName = ChildName.ToUpper();
+            if (childName == "" || childName == ".") return this;
+            if (childName == "..") return Parent ?? this;
+            childName = childName.ToUpper();
 
-            if (!_childsByNameUpperCase.ContainsKey(ChildName))
+            if (!ChildsByNameUpperCase.ContainsKey(childName))
             {
-                throw (new FileNotFoundException(string.Format("Can't find '{0}' on '{1}'", ChildName, this)));
+                throw new FileNotFoundException($"Can't find '{childName}' on '{this}'");
             }
-            return _childsByNameUpperCase[ChildName];
+            return ChildsByNameUpperCase[childName];
         }
 
         public IsoNode Locate(string path)
         {
-            int index = path.IndexOf('/');
+            var index = path.IndexOf('/');
             string childName, descendencyPath;
             if (index < 0)
             {
@@ -538,15 +503,12 @@ namespace CSPspEmu.Hle.Formats
                 childName = path.Substring(0, index);
                 descendencyPath = path.Substring(index + 1);
             }
-            IsoNode childIsoNode = AccessChild(childName);
+            var childIsoNode = AccessChild(childName);
             if (descendencyPath != "") childIsoNode = childIsoNode.Locate(descendencyPath);
             return childIsoNode;
         }
 
-        public Stream Open()
-        {
-            return Iso.Stream.SliceWithLength((long) DirectoryRecord.Offset, (long) DirectoryRecord.Size);
-        }
+        public Stream Open() => Iso.Stream.SliceWithLength((long) DirectoryRecord.Offset, DirectoryRecord.Size);
 
         /*
         void saveTo(string outFileName = null)
@@ -582,7 +544,7 @@ namespace CSPspEmu.Hle.Formats
 
         public override string ToString()
         {
-            return string.Format("IsoNode('{0}', {1})", FullPath, DirectoryRecord);
+            return $"IsoNode('{FullPath}', {DirectoryRecord})";
         }
 
         public void Dispose()

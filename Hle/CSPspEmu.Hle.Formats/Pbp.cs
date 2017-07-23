@@ -21,8 +21,10 @@ namespace CSPspEmu.Hle.Formats
             PsarData,
         }
 
-        public static readonly string[] Names = new[]
-            {"param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data"};
+        public static readonly string[] Names =
+        {
+            "param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data"
+        };
 
         public struct HeaderStruct
         {
@@ -41,45 +43,33 @@ namespace CSPspEmu.Hle.Formats
         protected HeaderStruct Header;
         protected Dictionary<string, Stream> Files;
 
-        public Pbp Load(Stream Stream)
+        public Pbp Load(Stream stream)
         {
-            this.Stream = Stream;
-            this.Header = Stream.ReadStruct<HeaderStruct>();
-            this.Files = new Dictionary<string, Stream>();
+            Stream = stream;
+            Header = stream.ReadStruct<HeaderStruct>();
+            Files = new Dictionary<string, Stream>();
 
             if (Header.Magic != HeaderStruct.MagicEnum.ExpectedValue)
             {
                 throw(new Exception("Not a PBP file"));
             }
 
-            var Offsets = Header.Offsets.Concat(new[] {(uint) Stream.Length}).ToArray();
+            var offsets = Header.Offsets.Concat(new[] {(uint) stream.Length}).ToArray();
 
             for (int n = 0; n < 8; n++)
             {
-                Files[Names[n]] = Stream.SliceWithBounds(Offsets[n + 0], Offsets[n + 1]);
+                Files[Names[n]] = stream.SliceWithBounds(offsets[n + 0], offsets[n + 1]);
             }
 
             return this;
         }
 
-        public bool ContainsKey(Types Type)
-        {
-            return Files.ContainsKey(Names[(int) Type]);
-        }
+        public bool ContainsKey(Types type) => Files.ContainsKey(Names[(int) type]);
 
-        public bool ContainsKey(string Key)
-        {
-            return Files.ContainsKey(Key);
-        }
+        public bool ContainsKey(string key) => Files.ContainsKey(key);
 
-        public Stream this[Types Type]
-        {
-            get { return Files[Names[(int) Type]]; }
-        }
+        public Stream this[Types type] => Files[Names[(int) type]];
 
-        public Stream this[string Key]
-        {
-            get { return Files[Key]; }
-        }
+        public Stream this[string key] => Files[key];
     }
 }

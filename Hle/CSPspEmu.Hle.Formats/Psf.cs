@@ -44,33 +44,32 @@ namespace CSPspEmu.Hle.Formats
         {
         }
 
-        public Psf(Stream Stream)
+        public Psf(Stream stream)
         {
-            this.Load(Stream);
+            Load(stream);
         }
 
-        public Psf Load(Stream Stream)
+        public Psf Load(Stream stream)
         {
             EntryDictionary = new Dictionary<string, object>();
-            Header = Stream.ReadStruct<HeaderStruct>();
-            Entries = Stream.ReadStructVector<EntryStruct>(Header.NumberOfPairs);
-            KeysStream = Stream.SliceWithLength(Header.KeyTable);
-            ValuesStream = Stream.SliceWithLength(Header.ValueTable);
-            foreach (var Entry in Entries)
+            Header = stream.ReadStruct<HeaderStruct>();
+            Entries = stream.ReadStructVector<EntryStruct>(Header.NumberOfPairs);
+            KeysStream = stream.SliceWithLength(Header.KeyTable);
+            ValuesStream = stream.SliceWithLength(Header.ValueTable);
+            foreach (var entry in Entries)
             {
-                var Key = KeysStream.ReadStringzAt(Entry.KeyOffset);
-                var ValueStream = ValuesStream.SliceWithLength(Entry.ValueOffset, Entry.ValueSize);
-                ;
-                switch (Entry.DataType)
+                var key = KeysStream.ReadStringzAt(entry.KeyOffset);
+                var valueStream = ValuesStream.SliceWithLength(entry.ValueOffset, entry.ValueSize);
+                switch (entry.DataType)
                 {
                     case DataType.Binary:
-                        EntryDictionary[Key] = ValueStream.ReadAll();
+                        EntryDictionary[key] = valueStream.ReadAll();
                         break;
                     case DataType.Int:
-                        EntryDictionary[Key] = ValueStream.ReadStruct<int>();
+                        EntryDictionary[key] = valueStream.ReadStruct<int>();
                         break;
                     case DataType.Text:
-                        EntryDictionary[Key] = ValueStream.ReadStringz(-1, Encoding.UTF8);
+                        EntryDictionary[key] = valueStream.ReadStringz(-1, Encoding.UTF8);
                         break;
                     default: throw(new NotImplementedException());
                 }

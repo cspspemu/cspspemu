@@ -2,54 +2,52 @@
 {
     public partial class EncryptedPrx
     {
-        public TAG_INFO[] g_tagInfo = new TAG_INFO[]
-        {
+        public TagInfo[] GTagInfo = {
             // 1.x PRXs
-            new TAG_INFO() {tag = 0x00000000, ikey = g_key0, code = 0x42},
-            new TAG_INFO() {tag = 0x02000000, ikey = g_key2, code = 0x45},
-            new TAG_INFO() {tag = 0x03000000, ikey = g_key3, code = 0x46},
+            new TagInfo {Tag = 0x00000000, Ikey = GKey0, Code = 0x42},
+            new TagInfo {Tag = 0x02000000, Ikey = GKey2, Code = 0x45},
+            new TagInfo {Tag = 0x03000000, Ikey = GKey3, Code = 0x46},
 
             // 2.0 PRXs
-            new TAG_INFO() {tag = 0x4467415d, ikey = g_key44, code = 0x59, codeExtra = 0x59},
-            new TAG_INFO() {tag = 0x207bbf2f, ikey = g_key20, code = 0x5A, codeExtra = 0x5A},
-            new TAG_INFO() {tag = 0x3ace4dce, ikey = g_key3A, code = 0x5B, codeExtra = 0x5B},
+            new TagInfo {Tag = 0x4467415d, Ikey = GKey44, Code = 0x59, CodeExtra = 0x59},
+            new TagInfo {Tag = 0x207bbf2f, Ikey = GKey20, Code = 0x5A, CodeExtra = 0x5A},
+            new TagInfo {Tag = 0x3ace4dce, Ikey = GKey3A, Code = 0x5B, CodeExtra = 0x5B},
 
             // misc
-            new TAG_INFO() {tag = 0x07000000, ikey = g_key_INDEXDAT1xx, code = 0x4A}, // 1.xx index.dat
-            new TAG_INFO() {tag = 0x08000000, ikey = g_keyEBOOT1xx, code = 0x4B}, // 1.xx game eboot.bin
-            new TAG_INFO()
+            new TagInfo {Tag = 0x07000000, Ikey = GKeyIndexdat1Xx, Code = 0x4A}, // 1.xx index.dat
+            new TagInfo {Tag = 0x08000000, Ikey = GKeyEboot1Xx, Code = 0x4B}, // 1.xx game eboot.bin
+            new TagInfo
             {
-                tag = 0xC0CB167C,
-                ikey = g_keyEBOOT2xx,
-                code = 0x5D,
-                codeExtra = 0x5D
+                Tag = 0xC0CB167C,
+                Ikey = GKeyEboot2Xx,
+                Code = 0x5D,
+                CodeExtra = 0x5D
             }, // 2.xx+ game eboot.bin
 
-            new TAG_INFO() {tag = 0x0B000000, ikey = g_keyUPDATER, code = 0x4E}, // updater data.psp
-            new TAG_INFO() {tag = 0x0C000000, ikey = g_keyDEMOS27X, code = 0x4F}, // 2.7x demos
-            new TAG_INFO() {tag = 0x0F000000, ikey = g_keyMEIMG250, code = 0x52}, // 2.50 meimg and me_sdimg
-            new TAG_INFO()
+            new TagInfo {Tag = 0x0B000000, Ikey = GKeyUpdater, Code = 0x4E}, // updater data.psp
+            new TagInfo {Tag = 0x0C000000, Ikey = GKeyDemos27X, Code = 0x4F}, // 2.7x demos
+            new TagInfo {Tag = 0x0F000000, Ikey = GKeyMeimg250, Code = 0x52}, // 2.50 meimg and me_sdimg
+            new TagInfo
             {
-                tag = 0x862648D1,
-                ikey = g_keyMEIMG260,
-                code = 0x52,
-                codeExtra = 0x52
+                Tag = 0x862648D1,
+                Ikey = GKeyMeimg260,
+                Code = 0x52,
+                CodeExtra = 0x52
             }, // 2.60+ meimg and me_sdimg
 
-            new TAG_INFO() {tag = 0x207BBF2F, ikey = g_keyUNK1, code = 0x5A, codeExtra = 0x5A}, // unknown
+            new TagInfo {Tag = 0x207BBF2F, Ikey = GKeyUnk1, Code = 0x5A, CodeExtra = 0x5A}, // unknown
 
-            new TAG_INFO() {tag = 0x09000000, ikey = g_key_GAMESHARE1xx, code = 0x4C}, // gameshare 1.xx
-            new TAG_INFO()
+            new TagInfo {Tag = 0x09000000, Ikey = GKeyGameshare1Xx, Code = 0x4C}, // gameshare 1.xx
+            new TagInfo
             {
-                tag = 0xBB67C59F,
-                ikey = g_key_GAMESHARE2xx,
-                code = 0x5E,
-                codeExtra = 0x5E
+                Tag = 0xBB67C59F,
+                Ikey = GKeyGameshare2Xx,
+                Code = 0x5E,
+                CodeExtra = 0x5E
             }, // gameshare 2.xx (old)
         };
 
-        public static readonly uint[] g_key0 = new uint[36]
-        {
+        public static readonly uint[] GKey0 = {
             0x7b21f3be, 0x299c5e1d, 0x1c9c5e71, 0x96cb4645, 0x3c9b1be0, 0xeb85de3d,
             0x4a7f2022, 0xc2206eaa, 0xd50b3265, 0x55770567, 0x3c080840, 0x981d55f2,
             0x5fd8f6f3, 0xee8eb0c5, 0x944d8152, 0xf8278651, 0x2705bafa, 0x8420e533,
@@ -58,8 +56,7 @@
             0x6f4e7102, 0xdca946ce, 0x8416881b, 0xbab097a5, 0x249125c6, 0xb34c0872,
         };
 
-        public static readonly uint[] g_key2 = new uint[36]
-        {
+        public static readonly uint[] GKey2 = {
             0xccfda932, 0x51c06f76, 0x046dcccf, 0x49e1821e, 0x7d3b024c, 0x9dda5865,
             0xcc8c9825, 0xd1e97db5, 0x6874d8cb, 0x3471c987, 0x72edb3fc, 0x81c8365d,
             0xe161e33a, 0xfc92db59, 0x2009b1ec, 0xb1a94ce4, 0x2f03696b, 0x87e236d8,
@@ -68,8 +65,7 @@
             0x52aba66a, 0x85bf7b80, 0x45e8ce63, 0x4dd716d3, 0xf5e30d2d, 0xaf3ae456,
         };
 
-        public static readonly uint[] g_key3 = new uint[36]
-        {
+        public static readonly uint[] GKey3 = {
             0xa6c8f5ca, 0x6d67c080, 0x924f4d3a, 0x047ca06a, 0x08640297, 0x4fd4a758,
             0xbd685a87, 0x9b2701c2, 0x83b62a35, 0x726b533c, 0xe522fa0c, 0xc24b06b4,
             0x459d1cac, 0xa8c5417b, 0x4fea62a2, 0x0615d742, 0x30628d09, 0xc44fab14,
@@ -78,8 +74,7 @@
             0xc0538cad, 0x70f72c7f, 0x49e8c3d0, 0xeda97ec5, 0xf492b0a4, 0xe05eb02a,
         };
 
-        public static readonly uint[] g_key44 = new uint[36]
-        {
+        public static readonly uint[] GKey44 = {
             0xef80e005, 0x3a54689f, 0x43c99ccd, 0x1b7727be, 0x5cb80038, 0xdd2efe62,
             0xf369f92c, 0x160f94c5, 0x29560019, 0xbf3c10c5, 0xf2ce5566, 0xcea2c626,
             0xb601816f, 0x64e7481e, 0x0c34debd, 0x98f29cb0, 0x3fc504d7, 0xc8fb39f0,
@@ -88,8 +83,7 @@
             0x12328457, 0xd2bc97d2, 0x646425d8, 0x328380a5, 0x43da8ab1, 0x4b122ac9,
         };
 
-        public static readonly uint[] g_key20 = new uint[36]
-        {
+        public static readonly uint[] GKey20 = {
             0x33b50800, 0xf32f5fcd, 0x3c14881f, 0x6e8a2a95, 0x29feefd5, 0x1394eae3,
             0xbd6bd443, 0x0821c083, 0xfab379d3, 0xe613e165, 0xf5a754d3, 0x108b2952,
             0x0a4b1e15, 0x61eadeba, 0x557565df, 0x3b465301, 0xae54ecc3, 0x61423309,
@@ -98,8 +92,7 @@
             0x656f2187, 0x37d12e9c, 0x2f539eb4, 0xa492998e, 0xed3958f7, 0x39e96523,
         };
 
-        public static readonly uint[] g_key3A = new uint[36]
-        {
+        public static readonly uint[] GKey3A = {
             0x67877069, 0x3abd5617, 0xc23ab1dc, 0xab57507d, 0x066a7f40, 0x24def9b9,
             0x06f759e4, 0xdcf524b1, 0x13793e5e, 0x0359022d, 0xaae7e1a2, 0x76b9b2fa,
             0x9a160340, 0x87822fba, 0x19e28fbb, 0x9e338a02, 0xd8007e9a, 0xea317af1,
@@ -109,8 +102,7 @@
         };
 
         // KEYS FROM MESG_LED.PRX (3.52)
-        public static readonly uint[] g_keyEBOOT1xx = new uint[36]
-        {
+        public static readonly uint[] GKeyEboot1Xx = {
             0x18CB69EF, 0x158E8912, 0xDEF90EBB, 0x4CB0FB23, 0x3687EE18, 0x868D4A6E,
             0x19B5C756, 0xEE16551D, 0xE7CB2D6C, 0x9747C660, 0xCE95143F, 0x2956F477,
             0x03824ADE, 0x210C9DF1, 0x5029EB24, 0x81DFE69F, 0x39C89B00, 0xB00C8B91,
@@ -119,8 +111,7 @@
             0x6E7919B5, 0xCE5E29C7, 0xAAACDB94, 0x45F70CDD, 0x62A73725, 0xCCE6563D,
         };
 
-        public static readonly uint[] g_keyEBOOT2xx = new uint[36]
-        {
+        public static readonly uint[] GKeyEboot2Xx = {
             0xDA8E36FA, 0x5DD97447, 0x76C19874, 0x97E57EAF, 0x1CAB09BD, 0x9835BAC6,
             0x03D39281, 0x03B205CF, 0x2882E734, 0xE714F663, 0xB96E2775, 0xBD8AAFC7,
             0x1DD3EC29, 0xECA4A16C, 0x5F69EC87, 0x85981E92, 0x7CFCAE21, 0xBAE9DD16,
@@ -129,8 +120,7 @@
             0xE10DD3CB, 0x98D0B2A8, 0x5FD61847, 0xF0DC2357, 0x7701166A, 0x0F5C3B68,
         };
 
-        public static readonly uint[] g_keyUPDATER = new uint[36]
-        {
+        public static readonly uint[] GKeyUpdater = {
             0xA5603CBF, 0xD7482441, 0xF65764CC, 0x1F90060B, 0x4EA73E45, 0xE551D192,
             0xE7B75D8A, 0x465A506E, 0x40FB1022, 0x2C273350, 0x8096DA44, 0x9947198E,
             0x278DEE77, 0x745D062E, 0xC148FA45, 0x832582AF, 0x5FDB86DA, 0xCB15C4CE,
@@ -139,8 +129,7 @@
             0x5720F390, 0x17F96341, 0x60A4A68F, 0x1327DD28, 0x05944C64, 0x0C2C4C12,
         };
 
-        public static readonly uint[] g_keyMEIMG250 = new uint[36]
-        {
+        public static readonly uint[] GKeyMeimg250 = {
             0xA381FEBC, 0x99B9D5C9, 0x6C560A8D, 0x30309F95, 0x792646CC, 0x82B64E5E,
             0x1A3951AD, 0x0A182EC4, 0xC46131B4, 0x77C50C8A, 0x325F16C6, 0x02D1942E,
             0x0AA38AC4, 0x2A940AC6, 0x67034726, 0xE52DB133, 0xD2EF2107, 0x85C81E90,
@@ -149,8 +138,7 @@
             0x2BEBBC4B, 0xFC261FF4, 0x92B8E705, 0xDCEE6952, 0x5E0442E5, 0x8BEB7F21,
         };
 
-        public static readonly uint[] g_keyMEIMG260 = new uint[36]
-        {
+        public static readonly uint[] GKeyMeimg260 = {
             0x11BFD698, 0xD7F9B324, 0xDD524927, 0x16215B86, 0x504AC36D, 0x5843B217,
             0xE5A0DA47, 0xBB73A1E7, 0x2915DB35, 0x375CFD3A, 0xBB70A905, 0x272BEFCA,
             0x2E960791, 0xEA0799BB, 0xB85AE6C8, 0xC9CAF773, 0x250EE641, 0x06E74A9E,
@@ -159,8 +147,7 @@
             0x505096C4, 0xFDA50B3B, 0x4635AE3D, 0xEB489C8A, 0x422D762D, 0x5A8B3231,
         };
 
-        public static readonly uint[] g_keyDEMOS27X = new uint[36]
-        {
+        public static readonly uint[] GKeyDemos27X = {
             0x1ABF102F, 0xD596D071, 0x6FC552B2, 0xD4F2531F, 0xF025CDD9, 0xAF9AAF03,
             0xE0CF57CF, 0x255494C4, 0x7003675E, 0x907BC884, 0x002D4EE4, 0x0B687A0D,
             0x9E3AA44F, 0xF58FDA81, 0xEC26AC8C, 0x3AC9B49D, 0x3471C037, 0xB0F3834D,
@@ -169,8 +156,7 @@
             0x695516D5, 0x2245BE9F, 0x4F6DD705, 0xC4B8B8A1, 0xBC13A600, 0x77B7FC3B,
         };
 
-        public static readonly uint[] g_keyUNK1 = new uint[36]
-        {
+        public static readonly uint[] GKeyUnk1 = {
             0x33B50800, 0xF32F5FCD, 0x3C14881F, 0x6E8A2A95, 0x29FEEFD5, 0x1394EAE3,
             0xBD6BD443, 0x0821C083, 0xFAB379D3, 0xE613E165, 0xF5A754D3, 0x108B2952,
             0x0A4B1E15, 0x61EADEBA, 0x557565DF, 0x3B465301, 0xAE54ECC3, 0x61423309,
@@ -179,8 +165,7 @@
             0x656F2187, 0x37D12E9C, 0x2F539EB4, 0xA492998E, 0xED3958F7, 0x39E96523,
         };
 
-        public static readonly uint[] g_key_GAMESHARE1xx = new uint[36]
-        {
+        public static readonly uint[] GKeyGameshare1Xx = {
             0x721B53E8, 0xFC3E31C6, 0xF85BA2A2, 0x3CF0AC72, 0x54EEA7AB, 0x5959BFCB,
             0x54B8836B, 0xBC431313, 0x989EF2CF, 0xF0CE36B2, 0x98BA4CF8, 0xE971C931,
             0xA0375DC8, 0x08E52FA0, 0xAC0DD426, 0x57E4D601, 0xC56E61C7, 0xEF1AB98A,
@@ -189,8 +174,7 @@
             0xDC59C87B, 0x7FDC5792, 0xDB3F5DA6, 0xFC23B787, 0x22698ED3, 0xB680E812,
         };
 
-        public static readonly uint[] g_key_GAMESHARE2xx = new uint[36]
-        {
+        public static readonly uint[] GKeyGameshare2Xx = {
             0x94A757C7, 0x9FD39833, 0xF8508371, 0x328B0B29, 0x2CBCB9DA, 0x2918B9C6,
             0x944C50BA, 0xF1DCE7D0, 0x640C3966, 0xC90B3D08, 0xF4AD17BA, 0x6CA0F84B,
             0xF7767C67, 0xA4D3A55A, 0x4A085C6A, 0x6BB27071, 0xFA8B38FB, 0x3FDB31B8,
@@ -199,8 +183,7 @@
             0x7A2B3ADD, 0xFE835B6D, 0x508F184D, 0xEB4C4F13, 0x0E1993D3, 0xBA96DFD2,
         };
 
-        public static readonly uint[] g_key_INDEXDAT1xx = new uint[36]
-        {
+        public static readonly uint[] GKeyIndexdat1Xx = {
             0x76CB00AF, 0x111CE62F, 0xB7B27E36, 0x6D8DE8F9, 0xD54BF16A, 0xD9E90373,
             0x7599D982, 0x51F82B0E, 0x636103AD, 0x8E40BC35, 0x2F332C94, 0xF513AAE9,
             0xD22AFEE9, 0x04343987, 0xFC5BB80C, 0x12349D89, 0x14A481BB, 0x25ED3AE8,
