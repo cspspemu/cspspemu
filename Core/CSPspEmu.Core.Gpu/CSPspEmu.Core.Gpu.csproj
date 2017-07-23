@@ -74,6 +74,7 @@
     <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />
     <Compile Include="GpuProcessor.cs" />
     <Compile Include="GpuProcessorEnums.cs" />
+    <Compile Include="GpuStats.cs" />
     <Compile Include="IGpuConnector.cs" />
     <Compile Include="Impl\Null\GpuImplNull.cs" />
     <Compile Include="Impl\Opengl\Modules\OpenglGpuImplClear.cs" />

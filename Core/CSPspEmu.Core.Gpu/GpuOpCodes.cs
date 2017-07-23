@@ -1280,7 +1280,7 @@
         /// <summary>
         /// 0xFF - 
         /// </summary>
-        Dummy,
+        DUMMY,
 
         UNKNOWN = unchecked((byte) -1),
     }

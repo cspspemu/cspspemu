@@ -10,7 +10,7 @@ using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-    public sealed unsafe partial class GpuDisplayListRunner
+    public sealed unsafe class GpuDisplayListRunner
     {
         public static readonly GpuDisplayListRunner Methods = new GpuDisplayListRunner();
 
@@ -78,7 +78,7 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         ClutStateStruct* ClutState => &GpuState->TextureMappingState.ClutState;
-
+ 
         [GpuInstructionAttribute(GpuOpCodes.CBP)]
         public void OP_CBP() => ClutState->Address = (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
 
@@ -1457,7 +1457,7 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
 
-        [GpuInstructionAttribute(GpuOpCodes.Dummy)]
+        [GpuInstructionAttribute(GpuOpCodes.DUMMY)]
         public void OP_Dummy()
         {
         }

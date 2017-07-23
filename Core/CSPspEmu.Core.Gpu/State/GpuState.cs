@@ -775,6 +775,7 @@ namespace CSPspEmu.Core.Gpu.State
         TriangleFan = 5,
         Sprites = 6,
         ContinuePreviousPrim = 7,
+        Invalid = (byte) 8,
     }
 
     public enum TextureColorComponent : byte
