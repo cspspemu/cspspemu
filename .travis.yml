@@ -4,14 +4,3 @@ dist: trusty
 install:
   - nuget restore CSPspEmu-2012.sln
   - nuget install xunit.runner.console -Version 2.2.0 -OutputDirectory testrunner
-script:
-  - msbuild /p:Configuration=Release CSPspEmu-2012.sln
-  - mono ./testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe
-    ./Libraries/CSharpUtils/CSharpUtils/CSharpUtilsTests/bin/Release/CSharpUtilsTests.dll
-    ./Libraries/CSharpUtils/CSharpUtils/Tests.CSharpUtils.Drawing/bin/Release/Tests.CSharpUtils.Drawing.dll
-    ./Libraries/CSharpUtils/CSharpUtils/Tests.CSharpUtils.Ext/bin/Release/Tests.CSharpUtils.Ext.dll
-    ./Tests/Tests.All/bin/Release/Tests.CSPspEmu.Core.Components.dll
-    ./Tests/Tests.All/bin/Release/Tests.CSPspEmu.Core.Cpu.dll
-    ./Tests/Tests.All/bin/Release/Tests.CSPspEmu.Core.Gpu.dll
-    ./Tests/Tests.All/bin/Release/Tests.CSPspEmu.Hle.dll
-    ./Tests/Tests.All/bin/Release/Tests.CSPspEmu.Inject.dll
