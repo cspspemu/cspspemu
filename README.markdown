@@ -1,6 +1,6 @@
 # CSharp Psp Emulator
 
-[![Build Status](https://travis-ci.org/soywiz/cspspemu.svg?branch=master)](https://travis-ci.org/soywiz/cspspemu)
+[![Build Status](https://travis-ci.org/cspspemu/cspspemu.svg?branch=master)](https://travis-ci.org/cspspemu/cspspemu)
 [![Build status](https://ci.appveyor.com/api/projects/status/ue7rqun3o6h8xsd4/branch/master?svg=true)](https://ci.appveyor.com/project/UncleFirefox/cspspemu/branch/master)
 [![gitter](https://img.shields.io/gitter/room/cspspemu/Lobby.svg)](https://gitter.im/cspspemu/Lobby)
 
