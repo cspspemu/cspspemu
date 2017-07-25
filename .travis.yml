@@ -2,6 +2,7 @@ language: csharp
 solution: CSPspEmu.sln
 dist: trusty
 install:
+  - nuget restore CSPspEmu.sln
   - nuget install xunit.runner.console -Version 2.2.0 -OutputDirectory testrunner
 script:
   - msbuild /p:Configuration=Release CSPspEmu.sln
