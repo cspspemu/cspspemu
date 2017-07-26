@@ -202,8 +202,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            internal set { item = value; }
+            get => item;
+            internal set => item = value;
         }
 
         private OLVListItem item;
@@ -213,8 +213,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListSubItem SubItem
         {
-            get { return subItem; }
-            internal set { subItem = value; }
+            get => subItem;
+            internal set => subItem = value;
         }
 
         private OLVListSubItem subItem;
@@ -224,8 +224,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ListViewHitTestLocations Location
         {
-            get { return location; }
-            internal set { location = value; }
+            get => location;
+            internal set => location = value;
         }
 
         private ListViewHitTestLocations location;
@@ -233,26 +233,17 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the ObjectListView that was tested
         /// </summary>
-        public ObjectListView ListView
-        {
-            get { return this.Item == null ? null : (ObjectListView) this.Item.ListView; }
-        }
+        public ObjectListView ListView => this.Item == null ? null : (ObjectListView) this.Item.ListView;
 
         /// <summary>
         /// Gets the model object that was hit
         /// </summary>
-        public object RowObject
-        {
-            get { return this.Item == null ? null : this.Item.RowObject; }
-        }
+        public object RowObject => this.Item == null ? null : this.Item.RowObject;
 
         /// <summary>
         /// Gets the index of the row under the hit point or -1
         /// </summary>
-        public int RowIndex
-        {
-            get { return this.Item == null ? -1 : this.Item.Index; }
-        }
+        public int RowIndex => this.Item == null ? -1 : this.Item.Index;
 
         /// <summary>
         /// Gets the index of the column under the hit point

@@ -69,8 +69,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ObjectListView ListView
         {
-            get { return this.listView; }
-            set { this.listView = value; }
+            get => this.listView;
+            set => this.listView = value;
         }
 
         private ObjectListView listView;
@@ -80,8 +80,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVColumn GroupByColumn
         {
-            get { return this.groupByColumn; }
-            set { this.groupByColumn = value; }
+            get => this.groupByColumn;
+            set => this.groupByColumn = value;
         }
 
         private OLVColumn groupByColumn;
@@ -91,8 +91,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public SortOrder GroupByOrder
         {
-            get { return this.groupByOrder; }
-            set { this.groupByOrder = value; }
+            get => this.groupByOrder;
+            set => this.groupByOrder = value;
         }
 
         private SortOrder groupByOrder;
@@ -102,8 +102,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public IComparer<OLVGroup> GroupComparer
         {
-            get { return this.groupComparer; }
-            set { this.groupComparer = value; }
+            get => this.groupComparer;
+            set => this.groupComparer = value;
         }
 
         private IComparer<OLVGroup> groupComparer;
@@ -113,8 +113,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public IComparer<OLVListItem> ItemComparer
         {
-            get { return this.itemComparer; }
-            set { this.itemComparer = value; }
+            get => this.itemComparer;
+            set => this.itemComparer = value;
         }
 
         private IComparer<OLVListItem> itemComparer;
@@ -124,8 +124,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVColumn PrimarySort
         {
-            get { return this.primarySort; }
-            set { this.primarySort = value; }
+            get => this.primarySort;
+            set => this.primarySort = value;
         }
 
         private OLVColumn primarySort;
@@ -135,8 +135,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public SortOrder PrimarySortOrder
         {
-            get { return this.primarySortOrder; }
-            set { this.primarySortOrder = value; }
+            get => this.primarySortOrder;
+            set => this.primarySortOrder = value;
         }
 
         private SortOrder primarySortOrder;
@@ -146,8 +146,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVColumn SecondarySort
         {
-            get { return this.secondarySort; }
-            set { this.secondarySort = value; }
+            get => this.secondarySort;
+            set => this.secondarySort = value;
         }
 
         private OLVColumn secondarySort;
@@ -157,8 +157,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public SortOrder SecondarySortOrder
         {
-            get { return this.secondarySortOrder; }
-            set { this.secondarySortOrder = value; }
+            get => this.secondarySortOrder;
+            set => this.secondarySortOrder = value;
         }
 
         private SortOrder secondarySortOrder;
@@ -168,8 +168,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string TitleFormat
         {
-            get { return this.titleFormat; }
-            set { this.titleFormat = value; }
+            get => this.titleFormat;
+            set => this.titleFormat = value;
         }
 
         private string titleFormat;
@@ -179,8 +179,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string TitleSingularFormat
         {
-            get { return this.titleSingularFormat; }
-            set { this.titleSingularFormat = value; }
+            get => this.titleSingularFormat;
+            set => this.titleSingularFormat = value;
         }
 
         private string titleSingularFormat;
@@ -190,8 +190,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool SortItemsByPrimaryColumn
         {
-            get { return this.sortItemsByPrimaryColumn; }
-            set { this.sortItemsByPrimaryColumn = value; }
+            get => this.sortItemsByPrimaryColumn;
+            set => this.sortItemsByPrimaryColumn = value;
         }
 
         private bool sortItemsByPrimaryColumn;

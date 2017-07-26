@@ -68,8 +68,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem ListItem
         {
-            get { return listItem; }
-            set { listItem = value; }
+            get => listItem;
+            set => listItem = value;
         }
 
         private OLVListItem listItem;
@@ -79,8 +79,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListSubItem SubItem
         {
-            get { return subItem; }
-            set { subItem = value; }
+            get => subItem;
+            set => subItem = value;
         }
 
         private OLVListSubItem subItem;
@@ -171,8 +171,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVColumn ColumnToTint
         {
-            get { return this.columnToTint; }
-            set { this.columnToTint = value; }
+            get => this.columnToTint;
+            set => this.columnToTint = value;
         }
 
         private OLVColumn columnToTint;
@@ -182,7 +182,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public Color Tint
         {
-            get { return this.tint; }
+            get => this.tint;
             set
             {
                 if (this.tint == value)
@@ -295,8 +295,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public Pen BorderPen
         {
-            get { return this.borderPen; }
-            set { this.borderPen = value; }
+            get => this.borderPen;
+            set => this.borderPen = value;
         }
 
         private Pen borderPen;
@@ -307,8 +307,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public Size BoundsPadding
         {
-            get { return this.boundsPadding; }
-            set { this.boundsPadding = value; }
+            get => this.boundsPadding;
+            set => this.boundsPadding = value;
         }
 
         private Size boundsPadding = new Size(-1, 2);
@@ -319,8 +319,8 @@ namespace BrightIdeasSoftware
         /// <remarks>If this value is too large, the edges of the border will appear odd.</remarks>
         public float CornerRounding
         {
-            get { return this.cornerRounding; }
-            set { this.cornerRounding = value; }
+            get => this.cornerRounding;
+            set => this.cornerRounding = value;
         }
 
         private float cornerRounding = 16.0f;
@@ -331,8 +331,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This value is ignored when using gradient brush</remarks>
         public Brush FillBrush
         {
-            get { return this.fillBrush; }
-            set { this.fillBrush = value; }
+            get => this.fillBrush;
+            set => this.fillBrush = value;
         }
 
         private Brush fillBrush = new SolidBrush(Color.FromArgb(64, Color.Blue));
@@ -343,8 +343,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This and FillGradientTo must be given value to show a gradient</remarks>
         public Color? FillGradientFrom
         {
-            get { return this.fillGradientFrom; }
-            set { this.fillGradientFrom = value; }
+            get => this.fillGradientFrom;
+            set => this.fillGradientFrom = value;
         }
 
         private Color? fillGradientFrom;
@@ -355,8 +355,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This and FillGradientFrom must be given value to show a gradient</remarks>
         public Color? FillGradientTo
         {
-            get { return this.fillGradientTo; }
-            set { this.fillGradientTo = value; }
+            get => this.fillGradientTo;
+            set => this.fillGradientTo = value;
         }
 
         private Color? fillGradientTo;
@@ -366,8 +366,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public LinearGradientMode FillGradientMode
         {
-            get { return this.fillGradientMode; }
-            set { this.fillGradientMode = value; }
+            get => this.fillGradientMode;
+            set => this.fillGradientMode = value;
         }
 
         private LinearGradientMode fillGradientMode = LinearGradientMode.Vertical;
@@ -471,8 +471,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int LeftColumn
         {
-            get { return leftColumn; }
-            set { leftColumn = value; }
+            get => leftColumn;
+            set => leftColumn = value;
         }
 
         private int leftColumn = -1;
@@ -482,8 +482,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int RightColumn
         {
-            get { return rightColumn; }
-            set { rightColumn = value; }
+            get => rightColumn;
+            set => rightColumn = value;
         }
 
         private int rightColumn = -1;
@@ -576,7 +576,7 @@ namespace BrightIdeasSoftware
         /// the control.</remarks>
         public bool UseLightbox
         {
-            get { return this.useLightbox; }
+            get => this.useLightbox;
             set
             {
                 if (this.useLightbox == value)
@@ -760,8 +760,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem ListItem
         {
-            get { return listItem; }
-            set { listItem = value; }
+            get => listItem;
+            set => listItem = value;
         }
 
         private OLVListItem listItem;
@@ -771,8 +771,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListSubItem SubItem
         {
-            get { return subItem; }
-            set { subItem = value; }
+            get => subItem;
+            set => subItem = value;
         }
 
         private OLVListSubItem subItem;
@@ -867,8 +867,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem ListItem
         {
-            get { return listItem; }
-            set { listItem = value; }
+            get => listItem;
+            set => listItem = value;
         }
 
         private OLVListItem listItem;
@@ -878,8 +878,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListSubItem SubItem
         {
-            get { return subItem; }
-            set { subItem = value; }
+            get => subItem;
+            set => subItem = value;
         }
 
         private OLVListSubItem subItem;

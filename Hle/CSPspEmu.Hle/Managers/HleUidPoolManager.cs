@@ -62,10 +62,7 @@ namespace CSPspEmu.Hle.Managers
                 }
             }
 
-            public bool ReuseIds
-            {
-                get { return (this.Info != null) ? this.Info.ReuseIds : false; }
-            }
+            public bool ReuseIds => (this.Info != null) ? this.Info.ReuseIds : false;
 
             [MethodImpl(MethodImplOptions.Synchronized)]
             public int Alloc(IHleUidPoolClass Item)
@@ -155,10 +152,7 @@ namespace CSPspEmu.Hle.Managers
                 return RevItems[Item];
             }
 
-            public int Count
-            {
-                get { return Items.Count; }
-            }
+            public int Count => Items.Count;
 
             public IEnumerable<IHleUidPoolClass> List()
             {

@@ -81,8 +81,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string AspectToStringFormat
         {
-            get { return aspectToStringFormat; }
-            set { aspectToStringFormat = value; }
+            get => aspectToStringFormat;
+            set => aspectToStringFormat = value;
         }
 
         private string aspectToStringFormat;
@@ -92,7 +92,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool CheckBoxes
         {
-            get { return checkBoxes; }
+            get => checkBoxes;
             set
             {
                 checkBoxes = value;
@@ -108,8 +108,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int DisplayIndex
         {
-            get { return displayIndex; }
-            set { displayIndex = value; }
+            get => displayIndex;
+            set => displayIndex = value;
         }
 
         private int displayIndex = -1;
@@ -119,8 +119,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool FillsFreeSpace
         {
-            get { return fillsFreeSpace; }
-            set { fillsFreeSpace = value; }
+            get => fillsFreeSpace;
+            set => fillsFreeSpace = value;
         }
 
         private bool fillsFreeSpace;
@@ -130,7 +130,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int FreeSpaceProportion
         {
-            get { return freeSpaceProportion; }
+            get => freeSpaceProportion;
             set
             {
                 freeSpaceProportion = value;
@@ -147,8 +147,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object[] GroupCutoffs
         {
-            get { return groupCutoffs; }
-            set { groupCutoffs = value; }
+            get => groupCutoffs;
+            set => groupCutoffs = value;
         }
 
         private object[] groupCutoffs;
@@ -158,8 +158,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string[] GroupDescriptions
         {
-            get { return groupDescriptions; }
-            set { groupDescriptions = value; }
+            get => groupDescriptions;
+            set => groupDescriptions = value;
         }
 
         private string[] groupDescriptions;
@@ -169,8 +169,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string GroupWithItemCountFormat
         {
-            get { return groupWithItemCountFormat; }
-            set { groupWithItemCountFormat = value; }
+            get => groupWithItemCountFormat;
+            set => groupWithItemCountFormat = value;
         }
 
         private string groupWithItemCountFormat;
@@ -180,8 +180,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string GroupWithItemCountSingularFormat
         {
-            get { return groupWithItemCountSingularFormat; }
-            set { groupWithItemCountSingularFormat = value; }
+            get => groupWithItemCountSingularFormat;
+            set => groupWithItemCountSingularFormat = value;
         }
 
         private string groupWithItemCountSingularFormat;
@@ -191,8 +191,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Hyperlink
         {
-            get { return hyperlink; }
-            set { hyperlink = value; }
+            get => hyperlink;
+            set => hyperlink = value;
         }
 
         private bool hyperlink;
@@ -202,8 +202,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string ImageAspectName
         {
-            get { return imageAspectName; }
-            set { imageAspectName = value; }
+            get => imageAspectName;
+            set => imageAspectName = value;
         }
 
         private string imageAspectName;
@@ -213,7 +213,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool IsEditable
         {
-            get { return isEditable; }
+            get => isEditable;
             set
             {
                 isEditable = value;
@@ -229,8 +229,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool IsVisible
         {
-            get { return isVisible; }
-            set { isVisible = value; }
+            get => isVisible;
+            set => isVisible = value;
         }
 
         private bool isVisible = true;
@@ -240,8 +240,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool IsTileViewColumn
         {
-            get { return isTileViewColumn; }
-            set { isTileViewColumn = value; }
+            get => isTileViewColumn;
+            set => isTileViewColumn = value;
         }
 
         private bool isTileViewColumn;
@@ -251,8 +251,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int MaximumWidth
         {
-            get { return maximumWidth; }
-            set { maximumWidth = value; }
+            get => maximumWidth;
+            set => maximumWidth = value;
         }
 
         private int maximumWidth = -1;
@@ -262,8 +262,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int MinimumWidth
         {
-            get { return minimumWidth; }
-            set { minimumWidth = value; }
+            get => minimumWidth;
+            set => minimumWidth = value;
         }
 
         private int minimumWidth = -1;
@@ -273,8 +273,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Name
         {
-            get { return name; }
-            set { name = value; }
+            get => name;
+            set => name = value;
         }
 
         private string name;
@@ -284,7 +284,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public HorizontalAlignment TextAlign
         {
-            get { return this.textAlign; }
+            get => this.textAlign;
             set
             {
                 this.textAlign = value;
@@ -300,8 +300,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Tag
         {
-            get { return tag; }
-            set { tag = value; }
+            get => tag;
+            set => tag = value;
         }
 
         private string tag;
@@ -311,8 +311,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Title
         {
-            get { return title; }
-            set { title = value; }
+            get => title;
+            set => title = value;
         }
 
         private string title;
@@ -322,8 +322,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string ToolTipText
         {
-            get { return toolTipText; }
-            set { toolTipText = value; }
+            get => toolTipText;
+            set => toolTipText = value;
         }
 
         private string toolTipText;
@@ -333,7 +333,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool TriStateCheckBoxes
         {
-            get { return triStateCheckBoxes; }
+            get => triStateCheckBoxes;
             set
             {
                 triStateCheckBoxes = value;
@@ -349,8 +349,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool UseInitialLetterForGroup
         {
-            get { return useInitialLetterForGroup; }
-            set { useInitialLetterForGroup = value; }
+            get => useInitialLetterForGroup;
+            set => useInitialLetterForGroup = value;
         }
 
         private bool useInitialLetterForGroup;
@@ -360,8 +360,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int Width
         {
-            get { return width; }
-            set { width = value; }
+            get => width;
+            set => width = value;
         }
 
         private int width = 150;

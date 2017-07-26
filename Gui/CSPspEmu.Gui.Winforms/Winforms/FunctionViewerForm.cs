@@ -32,10 +32,7 @@ namespace CSPspEmu.Gui.Winforms
             public uint PC;
             public MethodCacheInfo Entry;
 
-            public MethodCacheInfo MethodCacheInfo
-            {
-                get { return MethodCache.GetForPc(PC); }
-            }
+            public MethodCacheInfo MethodCacheInfo => MethodCache.GetForPc(PC);
 
             public Color ItemColor
             {
@@ -52,10 +49,7 @@ namespace CSPspEmu.Gui.Winforms
                 }
             }
 
-            public string Message
-            {
-                get { return Entry.Name; }
-            }
+            public string Message => Entry.Name;
 
             public override string ToString()
             {

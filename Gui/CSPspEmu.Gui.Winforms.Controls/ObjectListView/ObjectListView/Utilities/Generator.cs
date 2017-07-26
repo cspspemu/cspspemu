@@ -99,8 +99,8 @@ namespace BrightIdeasSoftware
         /// you should install an instance of your subclass/implementation here.</remarks>
         public static IGenerator Instance
         {
-            get { return Generator.instance ?? (Generator.instance = new Generator()); }
-            set { Generator.instance = value; }
+            get => Generator.instance ?? (Generator.instance = new Generator());
+            set => Generator.instance = value;
         }
 
         private static IGenerator instance;

@@ -6,10 +6,7 @@ namespace CSPspEmu.Core
 {
     public static class ApplicationPaths
     {
-        public static string ExecutablePath
-        {
-            get { return Assembly.GetEntryAssembly().Location; }
-        }
+        public static string ExecutablePath => Assembly.GetEntryAssembly().Location;
 
         private static string _MemoryStickRootFolder;
 

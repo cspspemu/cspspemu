@@ -75,14 +75,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override IEnumerable FilteredObjects
-        {
-            get
-            {
-                // This is much faster than the base method
-                return ((FastObjectListDataSource) this.VirtualListDataSource).FilteredObjectList;
-            }
-        }
+        public override IEnumerable FilteredObjects => ((FastObjectListDataSource) this.VirtualListDataSource).FilteredObjectList;
 
         /// <summary>
         /// Get/set the collection of objects that this list will show
@@ -100,12 +93,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override IEnumerable Objects
         {
-            get
-            {
-                // This is much faster than the base method
-                return ((FastObjectListDataSource) this.VirtualListDataSource).ObjectList;
-            }
-            set { base.Objects = value; }
+            get => ((FastObjectListDataSource) this.VirtualListDataSource).ObjectList;
+            set => base.Objects = value;
         }
 
         /// <summary>
@@ -316,18 +305,12 @@ namespace BrightIdeasSoftware
         /// Gets the full list of objects being used for this fast list. 
         /// This list is unfiltered.
         /// </summary>
-        public ArrayList ObjectList
-        {
-            get { return fullObjectList; }
-        }
+        public ArrayList ObjectList => fullObjectList;
 
         /// <summary>
         /// Gets the list of objects from ObjectList which survive any installed filters.
         /// </summary>
-        public ArrayList FilteredObjectList
-        {
-            get { return filteredObjectList; }
-        }
+        public ArrayList FilteredObjectList => filteredObjectList;
 
         /// <summary>
         /// Rebuild the map that remembers which model object is displayed at which line

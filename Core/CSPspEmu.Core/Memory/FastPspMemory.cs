@@ -5,15 +5,9 @@ namespace CSPspEmu.Core.Memory
 {
     public sealed unsafe class FastPspMemory : PspMemory
     {
-        public override bool HasFixedGlobalAddress
-        {
-            get { return true; }
-        }
+        public override bool HasFixedGlobalAddress => true;
 
-        public override IntPtr FixedGlobalAddress
-        {
-            get { return new IntPtr(_Base); }
-        }
+        public override IntPtr FixedGlobalAddress => new IntPtr(_Base);
 
         //public const uint FastMemorySize = 0x0A000000;
         //public const uint FastMemoryMask = 0x1FFFFFFF;

@@ -126,8 +126,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public static bool IgnoreMissingAspects
         {
-            get { return ignoreMissingAspects; }
-            set { ignoreMissingAspects = value; }
+            get => ignoreMissingAspects;
+            set => ignoreMissingAspects = value;
         }
 
         private static bool ignoreMissingAspects
@@ -156,7 +156,7 @@ namespace BrightIdeasSoftware
         /// <example>"Owner.HomeAddress.Postcode"</example>
         public string AspectName
         {
-            get { return aspectName; }
+            get => aspectName;
             set
             {
                 aspectName = value;
@@ -371,10 +371,7 @@ namespace BrightIdeasSoftware
         /// It cannot be a dotted name.
         /// </para>
         /// </remarks>
-        public string AspectName
-        {
-            get { return aspectName; }
-        }
+        public string AspectName => aspectName;
 
         private readonly string aspectName;
 
@@ -565,20 +562,14 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Get the munger that raised the exception
         /// </summary>
-        public SimpleMunger Munger
-        {
-            get { return munger; }
-        }
+        public SimpleMunger Munger => munger;
 
         private readonly SimpleMunger munger;
 
         /// <summary>
         /// Gets the target that threw the exception
         /// </summary>
-        public object Target
-        {
-            get { return target; }
-        }
+        public object Target => target;
 
         private readonly object target;
     }

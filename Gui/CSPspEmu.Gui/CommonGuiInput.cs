@@ -28,15 +28,9 @@ namespace CSPspEmu.Gui
 
         IGuiExternalInterface IGuiExternalInterface;
 
-        PspStoredConfig StoredConfig
-        {
-            get { return IGuiExternalInterface.InjectContext.GetInstance<PspStoredConfig>(); }
-        }
+        PspStoredConfig StoredConfig => IGuiExternalInterface.InjectContext.GetInstance<PspStoredConfig>();
 
-        PspController PspController
-        {
-            get { return IGuiExternalInterface.InjectContext.GetInstance<PspController>(); }
-        }
+        PspController PspController => IGuiExternalInterface.InjectContext.GetInstance<PspController>();
 
         public CommonGuiInput(IGuiExternalInterface IGuiExternalInterface)
         {

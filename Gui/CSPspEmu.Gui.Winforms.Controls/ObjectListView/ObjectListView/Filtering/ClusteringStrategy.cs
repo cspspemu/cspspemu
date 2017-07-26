@@ -57,8 +57,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public static string DefaultDisplayLabelFormatSingular
         {
-            get { return defaultDisplayLabelFormatSingular; }
-            set { defaultDisplayLabelFormatSingular = value; }
+            get => defaultDisplayLabelFormatSingular;
+            set => defaultDisplayLabelFormatSingular = value;
         }
 
         private static string defaultDisplayLabelFormatSingular = "{0} ({1} item)";
@@ -71,8 +71,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public static string DefaultDisplayLabelFormatPlural
         {
-            get { return defaultDisplayLabelFormatPural; }
-            set { defaultDisplayLabelFormatPural = value; }
+            get => defaultDisplayLabelFormatPural;
+            set => defaultDisplayLabelFormatPural = value;
         }
 
         private static string defaultDisplayLabelFormatPural = "{0} ({1} items)";
@@ -99,8 +99,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVColumn Column
         {
-            get { return column; }
-            set { column = value; }
+            get => column;
+            set => column = value;
         }
 
         private OLVColumn column;
@@ -115,8 +115,8 @@ namespace BrightIdeasSoftware
         /// ClusteringStrategy.DefaultDisplayLabelFormatSingular will be used</remarks>
         public string DisplayLabelFormatSingular
         {
-            get { return displayLabelFormatSingular; }
-            set { displayLabelFormatSingular = value; }
+            get => displayLabelFormatSingular;
+            set => displayLabelFormatSingular = value;
         }
 
         private string displayLabelFormatSingular;
@@ -131,8 +131,8 @@ namespace BrightIdeasSoftware
         /// ClusteringStrategy.DefaultDisplayLabelFormatPlural will be used</remarks>
         public string DisplayLabelFormatPlural
         {
-            get { return displayLabelFormatPural; }
-            set { displayLabelFormatPural = value; }
+            get => displayLabelFormatPural;
+            set => displayLabelFormatPural = value;
         }
 
         private string displayLabelFormatPural;

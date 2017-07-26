@@ -40,7 +40,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public virtual string KeyAspectName
         {
-            get { return keyAspectName; }
+            get => keyAspectName;
             set
             {
                 if (keyAspectName == value)
@@ -70,7 +70,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public virtual string ParentKeyAspectName
         {
-            get { return parentKeyAspectName; }
+            get => parentKeyAspectName;
             set
             {
                 if (parentKeyAspectName == value)
@@ -100,7 +100,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public virtual object RootKeyValue
         {
-            get { return rootKeyValue; }
+            get => rootKeyValue;
             set
             {
                 if (Equals(rootKeyValue, value))
@@ -120,8 +120,8 @@ namespace BrightIdeasSoftware
         /// afterwards.</remarks>
         public virtual bool ShowKeyColumns
         {
-            get { return showKeyColumns; }
-            set { showKeyColumns = value; }
+            get => showKeyColumns;
+            set => showKeyColumns = value;
         }
 
         private bool showKeyColumns = true;
@@ -133,10 +133,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the DataTreeListView that is being managed 
         /// </summary>
-        protected DataTreeListView TreeListView
-        {
-            get { return treeListView; }
-        }
+        protected DataTreeListView TreeListView => treeListView;
 
         private readonly DataTreeListView treeListView;
 

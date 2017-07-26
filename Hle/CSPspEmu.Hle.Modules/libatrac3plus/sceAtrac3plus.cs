@@ -101,10 +101,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
                 }
             }
 
-            public int BlockSize
-            {
-                get { return this.Format.BlockSize; }
-            }
+            public int BlockSize => this.Format.BlockSize;
 
             public CodecType CodecType;
             public int NumberOfLoops;
@@ -112,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
             public int DecodingOffset
             {
-                get { return _DecodingOffset; }
+                get => _DecodingOffset;
                 set
                 {
                     _DecodingOffset = value & ~0x7FF;
@@ -279,10 +276,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                 /// <summary>
                 /// 
                 /// </summary>
-                public int BlockSize
-                {
-                    get { return (_BlockSize & 0x3FF) * 8 + 8; }
-                }
+                public int BlockSize => (_BlockSize & 0x3FF) * 8 + 8;
             }
 
             public struct FactStruct
@@ -413,19 +407,9 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                 Console.WriteLine("Atrac3+ Dispose");
             }
 
-            public int EndSample
-            {
-                get { return Fact.EndSample; }
-            }
+            public int EndSample => Fact.EndSample;
 
-            public bool DecodingReachedEnd
-            {
-                get
-                {
-                    return RemainingFrames <= 0;
-                    //return DecodingOffset >= EndSample;
-                }
-            }
+            public bool DecodingReachedEnd => RemainingFrames <= 0;
 
             /*
             public bool DecodeSample()

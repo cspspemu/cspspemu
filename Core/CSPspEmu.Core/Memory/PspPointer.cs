@@ -10,12 +10,12 @@ namespace CSPspEmu.Core.Memory
 
         public uint Low24
         {
-            set { Address = (Address & 0xFF000000) | (value & 0x00FFFFFF); }
+            set => Address = (Address & 0xFF000000) | (value & 0x00FFFFFF);
         }
 
         public uint High8
         {
-            set { Address = (Address & 0x00FFFFFF) | (value & 0xFF000000); }
+            set => Address = (Address & 0x00FFFFFF) | (value & 0xFF000000);
         }
 
         public PspPointer(uint Address)
@@ -41,10 +41,7 @@ namespace CSPspEmu.Core.Memory
             return string.Format("PspPointer(0x{0:X})", Address);
         }
 
-        public bool IsNull
-        {
-            get { return Address == 0; }
-        }
+        public bool IsNull => Address == 0;
 
         public unsafe void* GetPointer(PspMemory pspMemory)
         {
@@ -77,12 +74,12 @@ namespace CSPspEmu.Core.Memory
 
         public uint Low24
         {
-            set { Address = (Address & 0xFF000000) | (value & 0x00FFFFFF); }
+            set => Address = (Address & 0xFF000000) | (value & 0x00FFFFFF);
         }
 
         public uint High8
         {
-            set { Address = (Address & 0x00FFFFFF) | (value & 0xFF000000); }
+            set => Address = (Address & 0x00FFFFFF) | (value & 0xFF000000);
         }
 
         public PspPointer(uint Address)
@@ -108,10 +105,7 @@ namespace CSPspEmu.Core.Memory
             return string.Format("PspPointer(0x{0:X})", Address);
         }
 
-        public bool IsNull
-        {
-            get { return Address == 0; }
-        }
+        public bool IsNull => Address == 0;
 
         public unsafe void* GetPointer(PspMemory PspMemory, int Size)
         {

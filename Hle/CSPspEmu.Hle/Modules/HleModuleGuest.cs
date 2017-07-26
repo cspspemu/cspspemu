@@ -38,10 +38,7 @@ namespace CSPspEmu.Hle
     {
         public int ID;
 
-        public string Name
-        {
-            get { return ModuleInfo.Name; }
-        }
+        public string Name => ModuleInfo.Name;
 
         public bool Loaded;
         public ElfPsp.ModuleInfo ModuleInfo;

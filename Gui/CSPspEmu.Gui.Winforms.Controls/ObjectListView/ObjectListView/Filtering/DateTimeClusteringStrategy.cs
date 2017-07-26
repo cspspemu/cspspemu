@@ -115,8 +115,8 @@ namespace BrightIdeasSoftware
         /// <example>"MMMM, yyyy" - "January, 1999"</example>
         public string Format
         {
-            get { return format; }
-            set { format = value; }
+            get => format;
+            set => format = value;
         }
 
         private string format;
@@ -127,8 +127,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public DateTimePortion Portions
         {
-            get { return portions; }
-            set { portions = value; }
+            get => portions;
+            set => portions = value;
         }
 
         private DateTimePortion portions = DateTimePortion.Year | DateTimePortion.Month;

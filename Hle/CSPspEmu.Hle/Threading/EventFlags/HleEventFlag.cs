@@ -12,10 +12,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
         public EventFlagInfo Info = new EventFlagInfo(0);
         protected List<WaitThread> _WaitingThreads = new List<WaitThread>();
 
-        public IEnumerable<WaitThread> WaitingThreads
-        {
-            get { return _WaitingThreads; }
-        }
+        public IEnumerable<WaitThread> WaitingThreads => _WaitingThreads;
 
         public class WaitThread
         {
@@ -37,8 +34,8 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 
         public string Name
         {
-            get { return Info.Name; }
-            set { Info.Name = value; }
+            get => Info.Name;
+            set => Info.Name = value;
         }
 
         public void AddWaitingThread(WaitThread WaitThread)

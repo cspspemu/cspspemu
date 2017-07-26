@@ -11,10 +11,7 @@ namespace CSPspEmu
     /// <seealso cref="http://www.codemasters-project.net/guides/showentry.php?e=846"/>
     public struct CWCheatEntry
     {
-        byte OpCode
-        {
-            get { return (byte) ((this.Code & 0xF0000000) >> 28); }
-        }
+        byte OpCode => (byte) ((this.Code & 0xF0000000) >> 28);
 
         public uint Code;
         public uint[] Values;

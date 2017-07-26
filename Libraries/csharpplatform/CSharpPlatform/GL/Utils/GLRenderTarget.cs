@@ -24,15 +24,9 @@ namespace CSharpPlatform.GL.Utils
         private int _Height;
         public RenderTargetLayers RenderTargetLayers { get; private set; }
 
-        public virtual int Width
-        {
-            get { return _Width; }
-        }
+        public virtual int Width => _Width;
 
-        public virtual int Height
-        {
-            get { return _Height; }
-        }
+        public virtual int Height => _Height;
 
         protected GLRenderTarget()
         {
@@ -199,10 +193,7 @@ namespace CSharpPlatform.GL.Utils
         {
             public readonly int Width, Height;
 
-            public uint Index
-            {
-                get { return _Index; }
-            }
+            public uint Index => _Index;
 
             private uint _Index;
 
@@ -230,20 +221,11 @@ namespace CSharpPlatform.GL.Utils
 
     public class GLRenderTargetScreen : GLRenderTarget
     {
-        public static GLRenderTargetScreen Default
-        {
-            get { return new GLRenderTargetScreen(); }
-        }
+        public static GLRenderTargetScreen Default => new GLRenderTargetScreen();
 
-        public override int Width
-        {
-            get { return 64; }
-        }
+        public override int Width => 64;
 
-        public override int Height
-        {
-            get { return 64; }
-        }
+        public override int Height => 64;
 
         protected GLRenderTargetScreen()
         {

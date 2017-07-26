@@ -168,10 +168,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
             }
         }
 
-        public bool HasData
-        {
-            get { return true; }
-        }
+        public bool HasData => true;
 
         public SceMpegAu GetAtracAu(StreamId StreamId)
         {
@@ -387,14 +384,14 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
         public ulong PresentationTimestamp
         {
-            get { return StructUtils.GetULongFrom2UInt(PresentationTimestampLow, PresentationTimestampHigh); }
-            set { StructUtils.ConvertULongTo2UInt(value, out PresentationTimestampLow, out PresentationTimestampHigh); }
+            get => StructUtils.GetULongFrom2UInt(PresentationTimestampLow, PresentationTimestampHigh);
+            set => StructUtils.ConvertULongTo2UInt(value, out PresentationTimestampLow, out PresentationTimestampHigh);
         }
 
         public ulong DecodeTimestamp
         {
-            get { return StructUtils.GetULongFrom2UInt(DecodeTimestampLow, DecodeTimestampHigh); }
-            set { StructUtils.ConvertULongTo2UInt(value, out DecodeTimestampLow, out DecodeTimestampHigh); }
+            get => StructUtils.GetULongFrom2UInt(DecodeTimestampLow, DecodeTimestampHigh);
+            set => StructUtils.ConvertULongTo2UInt(value, out DecodeTimestampLow, out DecodeTimestampHigh);
         }
 
         /// <summary>

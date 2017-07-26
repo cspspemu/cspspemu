@@ -24,8 +24,8 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 
         public int CurrentCount
         {
-            get { return SceKernelSemaInfo.CurrentCount; }
-            protected set { SceKernelSemaInfo.CurrentCount = value; }
+            get => SceKernelSemaInfo.CurrentCount;
+            protected set => SceKernelSemaInfo.CurrentCount = value;
         }
 
         public HleSemaphore()

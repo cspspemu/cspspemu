@@ -170,10 +170,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
             public int InitCount;
             public int MsgDelay;
 
-            public string ConnectionName
-            {
-                get { return sceNetAdhocctl.ConnectionName; }
-            }
+            public string ConnectionName => sceNetAdhocctl.ConnectionName;
 
             /// <summary>
             /// typedef void (*pspAdhocMatchingCallback)(int matchingid, Event event, unsigned char *mac, int optlen, void *optdata);

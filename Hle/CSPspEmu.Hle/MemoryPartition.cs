@@ -41,18 +41,12 @@ namespace CSPspEmu.Hle
         public uint Low { get; protected set; }
         public uint High { get; protected set; }
 
-        public int Size
-        {
-            get { return (int) (High - Low); }
-        }
+        public int Size => (int) (High - Low);
 
         public MemoryPartition ParentPartition { get; private set; }
         private SortedSet<MemoryPartition> _ChildPartitions;
 
-        public void* LowPointer
-        {
-            get { return PspMemory.PspPointerToPointerSafe(Low, Size); }
-        }
+        public void* LowPointer => PspMemory.PspPointerToPointerSafe(Low, Size);
 
         public uint GetAnchoredAddress(Anchor Anchor)
         {
@@ -64,10 +58,7 @@ namespace CSPspEmu.Hle
             throw (new InvalidOperationException("Invalid Anchor Value : " + Anchor));
         }
 
-        public MemoryPartition Root
-        {
-            get { return (ParentPartition != null) ? ParentPartition.Root : this; }
-        }
+        public MemoryPartition Root => (ParentPartition != null) ? ParentPartition.Root : this;
 
         public int MaxFreeSize
         {
@@ -93,10 +84,7 @@ namespace CSPspEmu.Hle
             }
         }
 
-        public IEnumerable<MemoryPartition> ChildPartitions
-        {
-            get { return _ChildPartitions; }
-        }
+        public IEnumerable<MemoryPartition> ChildPartitions => _ChildPartitions;
 
         public MemoryPartition(InjectContext InjectContext, uint Low, uint High, bool Allocated = true,
             string Name = "<Unknown>", MemoryPartition ParentPartition = null)

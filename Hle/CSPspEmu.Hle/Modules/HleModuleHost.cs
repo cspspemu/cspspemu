@@ -36,10 +36,7 @@ namespace CSPspEmu.Hle
             }
         }
 
-        public string Name
-        {
-            get { return this.GetType().Name; }
-        }
+        public string Name => this.GetType().Name;
 
         [Inject] protected PspMemory Memory;
 

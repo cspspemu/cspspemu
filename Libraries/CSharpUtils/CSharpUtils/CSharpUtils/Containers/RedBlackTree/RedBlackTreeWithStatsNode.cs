@@ -519,20 +519,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
 
             // Tail recursion.
-            internal Node LeftMostNode
-            {
-                get
-                {
-                    /*
-                    var result = this;
-                    while (result._LeftNode != null) result = result._LeftNode;
-                    return result;
-                    */
-                    //if (_LeftNode == null) return this;
-                    //return _LeftNode.LeftMostNode;
-                    return (LeftNode == null) ? this : LeftNode.LeftMostNode;
-                }
-            }
+            internal Node LeftMostNode => (LeftNode == null) ? this : LeftNode.LeftMostNode;
 
             internal Node RightMostNode => RightNode == null ? this : RightNode.RightMostNode;
 

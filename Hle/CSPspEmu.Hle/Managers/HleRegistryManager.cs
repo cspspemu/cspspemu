@@ -86,7 +86,7 @@ namespace CSPspEmu.Hle.Managers
                     throw(new NotImplementedException("Unknown type '" + value.GetType() + "'"));
                 }
             }
-            get { return _Value; }
+            get => _Value;
         }
 
         public uint Size

@@ -41,8 +41,8 @@ namespace CSPspEmu.Core.Audio
         /// </summary>
         public bool IsReserved
         {
-            get { return !Available; }
-            set { Available = !value; }
+            get => !Available;
+            set => Available = !value;
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace CSPspEmu.Core.Audio
 
         public int SampleCount
         {
-            get { return _SampleCount; }
-            set { _SampleCount = Math.Max(0, value); }
+            get => _SampleCount;
+            set => _SampleCount = Math.Max(0, value);
         }
 
         /// <summary>
@@ -65,10 +65,7 @@ namespace CSPspEmu.Core.Audio
         /// <summary>
         /// 
         /// </summary>
-        public TimeSpan BufferTimeLength
-        {
-            get { return TimeSpan.FromSeconds((double) SampleCount / (double) Frequency); }
-        }
+        public TimeSpan BufferTimeLength => TimeSpan.FromSeconds((double) SampleCount / (double) Frequency);
 
         private ProduceConsumeBuffer<short> Buffer = new ProduceConsumeBuffer<short>();
         private List<Tuple<long, Action>> BufferEvents = new List<Tuple<long, Action>>();
@@ -263,10 +260,7 @@ namespace CSPspEmu.Core.Audio
         /// <summary>
         /// Available channels that can be read.
         /// </summary>
-        public int AvailableChannelsForRead
-        {
-            get { return Buffer.ConsumeRemaining; }
-        }
+        public int AvailableChannelsForRead => Buffer.ConsumeRemaining;
 
         public override string ToString()
         {

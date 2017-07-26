@@ -38,15 +38,9 @@ namespace CSPspEmu.Hle.Formats.video
         public TimeSpan PspVideoTimeSpanStep = TimeSpan.FromSeconds(1.0 / 29.970);
         public TimeSpan PspAudioTimeSpanStep = TimeSpan.FromSeconds(2048.0 / 44100.0);
 
-        public string Name
-        {
-            get { return "mpeg"; }
-        }
+        public string Name => "mpeg";
 
-        public string LongName
-        {
-            get { return "MPEG-PS format"; }
-        }
+        public string LongName => "MPEG-PS format";
 
         //public struct PTS_PresentationTimeStamp
         //public struct DTS_DecodeTimeStamp
@@ -83,10 +77,7 @@ namespace CSPspEmu.Hle.Formats.video
                 }
             }
 
-            public TimeSpan PresentationTimeSpan
-            {
-                get { return TimeSpan.FromSeconds(((double) Value) / (double) MpegTimestampPerSecond); }
-            }
+            public TimeSpan PresentationTimeSpan => TimeSpan.FromSeconds(((double) Value) / (double) MpegTimestampPerSecond);
 
             public override string ToString()
             {
@@ -138,10 +129,7 @@ namespace CSPspEmu.Hle.Formats.video
             }
         }
 
-        public bool HasMorePackets
-        {
-            get { return !Stream.Eof(); }
-        }
+        public bool HasMorePackets => !Stream.Eof();
 
         /// <summary>
         /// 

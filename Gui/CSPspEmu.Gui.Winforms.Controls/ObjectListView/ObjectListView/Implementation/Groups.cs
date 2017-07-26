@@ -264,8 +264,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public string BottomDescription
         {
-            get { return this.bottomDescription; }
-            set { this.bottomDescription = value; }
+            get => this.bottomDescription;
+            set => this.bottomDescription = value;
         }
 
         private string bottomDescription;
@@ -275,8 +275,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Collapsed
         {
-            get { return this.GetOneState(GroupState.LVGS_COLLAPSED); }
-            set { this.SetOneState(value, GroupState.LVGS_COLLAPSED); }
+            get => this.GetOneState(GroupState.LVGS_COLLAPSED);
+            set => this.SetOneState(value, GroupState.LVGS_COLLAPSED);
         }
 
         /// <summary>
@@ -284,8 +284,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Collapsible
         {
-            get { return this.GetOneState(GroupState.LVGS_COLLAPSIBLE); }
-            set { this.SetOneState(value, GroupState.LVGS_COLLAPSIBLE); }
+            get => this.GetOneState(GroupState.LVGS_COLLAPSIBLE);
+            set => this.SetOneState(value, GroupState.LVGS_COLLAPSIBLE);
         }
 
         /// <summary>
@@ -294,8 +294,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is user defined (like Tag)</remarks>
         public IList Contents
         {
-            get { return this.contents; }
-            set { this.contents = value; }
+            get => this.contents;
+            set => this.contents = value;
         }
 
         private IList contents;
@@ -303,18 +303,15 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets whether this group has been created.
         /// </summary>
-        public bool Created
-        {
-            get { return this.ListView != null; }
-        }
+        public bool Created => this.ListView != null;
 
         /// <summary>
         /// Gets or sets the int or string that will select the extended image to be shown against the title
         /// </summary>
         public object ExtendedImage
         {
-            get { return this.extendedImage; }
-            set { this.extendedImage = value; }
+            get => this.extendedImage;
+            set => this.extendedImage = value;
         }
 
         private object extendedImage;
@@ -324,8 +321,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Footer
         {
-            get { return this.footer; }
-            set { this.footer = value; }
+            get => this.footer;
+            set => this.footer = value;
         }
 
         private string footer;
@@ -360,8 +357,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Header
         {
-            get { return this.header; }
-            set { this.header = value; }
+            get => this.header;
+            set => this.header = value;
         }
 
         private string header;
@@ -371,8 +368,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public HorizontalAlignment HeaderAlignment
         {
-            get { return this.headerAlignment; }
-            set { this.headerAlignment = value; }
+            get => this.headerAlignment;
+            set => this.headerAlignment = value;
         }
 
         private HorizontalAlignment headerAlignment;
@@ -382,8 +379,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int Id
         {
-            get { return this.id; }
-            set { this.id = value; }
+            get => this.id;
+            set => this.id = value;
         }
 
         private int id;
@@ -395,8 +392,8 @@ namespace BrightIdeasSoftware
         /// It is only used on non-virtual lists.</remarks>
         public IList<OLVListItem> Items
         {
-            get { return this.items; }
-            set { this.items = value; }
+            get => this.items;
+            set => this.items = value;
         }
 
         private IList<OLVListItem> items = new List<OLVListItem>();
@@ -407,8 +404,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is user defined (like Tag)</remarks>
         public object Key
         {
-            get { return this.key; }
-            set { this.key = value; }
+            get => this.key;
+            set => this.key = value;
         }
 
         private object key;
@@ -419,8 +416,8 @@ namespace BrightIdeasSoftware
         /// <remarks>If this is null, the group has not yet been created.</remarks>
         public ObjectListView ListView
         {
-            get { return this.listView; }
-            protected set { this.listView = value; }
+            get => this.listView;
+            protected set => this.listView = value;
         }
 
         private ObjectListView listView;
@@ -431,8 +428,8 @@ namespace BrightIdeasSoftware
         /// <remarks>As of 2009-09-01, this property is not used.</remarks>
         public string Name
         {
-            get { return this.name; }
-            set { this.name = value; }
+            get => this.name;
+            set => this.name = value;
         }
 
         private string name;
@@ -442,8 +439,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Focused
         {
-            get { return this.GetOneState(GroupState.LVGS_FOCUSED); }
-            set { this.SetOneState(value, GroupState.LVGS_FOCUSED); }
+            get => this.GetOneState(GroupState.LVGS_FOCUSED);
+            set => this.SetOneState(value, GroupState.LVGS_FOCUSED);
         }
 
         /// <summary>
@@ -451,8 +448,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Selected
         {
-            get { return this.GetOneState(GroupState.LVGS_SELECTED); }
-            set { this.SetOneState(value, GroupState.LVGS_SELECTED); }
+            get => this.GetOneState(GroupState.LVGS_SELECTED);
+            set => this.SetOneState(value, GroupState.LVGS_SELECTED);
         }
 
         /// <summary>
@@ -464,8 +461,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public string SubsetTitle
         {
-            get { return this.subsetTitle; }
-            set { this.subsetTitle = value; }
+            get => this.subsetTitle;
+            set => this.subsetTitle = value;
         }
 
         private string subsetTitle;
@@ -475,8 +472,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Subtitle
         {
-            get { return this.subtitle; }
-            set { this.subtitle = value; }
+            get => this.subtitle;
+            set => this.subtitle = value;
         }
 
         private string subtitle;
@@ -486,8 +483,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public IComparable SortValue
         {
-            get { return this.sortValue; }
-            set { this.sortValue = value; }
+            get => this.sortValue;
+            set => this.sortValue = value;
         }
 
         private IComparable sortValue;
@@ -497,8 +494,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public GroupState State
         {
-            get { return this.state; }
-            set { this.state = value; }
+            get => this.state;
+            set => this.state = value;
         }
 
         private GroupState state;
@@ -508,8 +505,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public GroupState StateMask
         {
-            get { return this.stateMask; }
-            set { this.stateMask = value; }
+            get => this.stateMask;
+            set => this.stateMask = value;
         }
 
         private GroupState stateMask;
@@ -522,8 +519,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public bool Subseted
         {
-            get { return this.GetOneState(GroupState.LVGS_SUBSETED); }
-            set { this.SetOneState(value, GroupState.LVGS_SUBSETED); }
+            get => this.GetOneState(GroupState.LVGS_SUBSETED);
+            set => this.SetOneState(value, GroupState.LVGS_SUBSETED);
         }
 
         /// <summary>
@@ -531,8 +528,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object Tag
         {
-            get { return this.tag; }
-            set { this.tag = value; }
+            get => this.tag;
+            set => this.tag = value;
         }
 
         private object tag;
@@ -544,8 +541,8 @@ namespace BrightIdeasSoftware
         /// of the group header.</remarks>
         public string Task
         {
-            get { return this.task; }
-            set { this.task = value; }
+            get => this.task;
+            set => this.task = value;
         }
 
         private string task;
@@ -555,8 +552,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object TitleImage
         {
-            get { return this.titleImage; }
-            set { this.titleImage = value; }
+            get => this.titleImage;
+            set => this.titleImage = value;
         }
 
         private object titleImage;
@@ -569,8 +566,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public string TopDescription
         {
-            get { return this.topDescription; }
-            set { this.topDescription = value; }
+            get => this.topDescription;
+            set => this.topDescription = value;
         }
 
         private string topDescription;
@@ -581,8 +578,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This should only be used for virtual groups.</remarks>
         public int VirtualItemCount
         {
-            get { return this.virtualItemCount; }
-            set { this.virtualItemCount = value; }
+            get => this.virtualItemCount;
+            set => this.virtualItemCount = value;
         }
 
         private int virtualItemCount;
@@ -597,8 +594,8 @@ namespace BrightIdeasSoftware
         /// <remarks>For virtual groups, this will always be null.</remarks>
         protected ListViewGroup ListViewGroup
         {
-            get { return this.listViewGroup; }
-            set { this.listViewGroup = value; }
+            get => this.listViewGroup;
+            set => this.listViewGroup = value;
         }
 
         private ListViewGroup listViewGroup;

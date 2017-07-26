@@ -45,26 +45,17 @@ namespace CSharpUtils.Getopt
             /// <summary>
             /// 
             /// </summary>
-            public MethodInfo MethodInfo
-            {
-                get { return MemberInfo as MethodInfo; }
-            }
+            public MethodInfo MethodInfo => MemberInfo as MethodInfo;
 
             /// <summary>
             /// 
             /// </summary>
-            public PropertyInfo PropertyInfo
-            {
-                get { return MemberInfo as PropertyInfo; }
-            }
+            public PropertyInfo PropertyInfo => MemberInfo as PropertyInfo;
 
             /// <summary>
             /// 
             /// </summary>
-            public FieldInfo FieldInfo
-            {
-                get { return MemberInfo as FieldInfo; }
-            }
+            public FieldInfo FieldInfo => MemberInfo as FieldInfo;
         }
 
         /// <summary>

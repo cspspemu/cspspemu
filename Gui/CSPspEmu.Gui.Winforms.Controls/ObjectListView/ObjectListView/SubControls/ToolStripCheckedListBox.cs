@@ -50,35 +50,26 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the control embedded in the menu
         /// </summary>
-        public CheckedListBox CheckedListBoxControl
-        {
-            get { return Control as CheckedListBox; }
-        }
+        public CheckedListBox CheckedListBoxControl => Control as CheckedListBox;
 
         /// <summary>
         /// Gets the items shown in the checkedlistbox
         /// </summary>
-        public CheckedListBox.ObjectCollection Items
-        {
-            get { return this.CheckedListBoxControl.Items; }
-        }
+        public CheckedListBox.ObjectCollection Items => this.CheckedListBoxControl.Items;
 
         /// <summary>
         /// Gets or sets whether an item should be checked when it is clicked
         /// </summary>
         public bool CheckedOnClick
         {
-            get { return this.CheckedListBoxControl.CheckOnClick; }
-            set { this.CheckedListBoxControl.CheckOnClick = value; }
+            get => this.CheckedListBoxControl.CheckOnClick;
+            set => this.CheckedListBoxControl.CheckOnClick = value;
         }
 
         /// <summary>
         /// Gets a collection of the checked items
         /// </summary>
-        public CheckedListBox.CheckedItemCollection CheckedItems
-        {
-            get { return this.CheckedListBoxControl.CheckedItems; }
-        }
+        public CheckedListBox.CheckedItemCollection CheckedItems => this.CheckedListBoxControl.CheckedItems;
 
         /// <summary>
         /// Add a possibly checked item to the control

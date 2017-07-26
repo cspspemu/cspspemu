@@ -53,27 +53,15 @@ namespace CSPspEmu.Gui.Winforms.Winforms
             this.ResumeLayout(false);
         }
 
-        bool IGuiWindowInfo.EnableRefreshing
-        {
-            get
-            {
-                return (PspDisplayForm.Singleton.WindowState != FormWindowState.Minimized) &&
-                       PspDisplayForm.Singleton.EnableRefreshing;
-            }
-        }
+        bool IGuiWindowInfo.EnableRefreshing => (PspDisplayForm.Singleton.WindowState != FormWindowState.Minimized) &&
+                                                PspDisplayForm.Singleton.EnableRefreshing;
 
         void IGuiWindowInfo.SwapBuffers()
         {
             this.Context.SwapBuffers();
         }
 
-        GuiRectangle IGuiWindowInfo.ClientRectangle
-        {
-            get
-            {
-                return new GuiRectangle(this.ClientRectangle.X, this.ClientRectangle.Y, this.ClientRectangle.Width,
-                    this.ClientRectangle.Height);
-            }
-        }
+        GuiRectangle IGuiWindowInfo.ClientRectangle => new GuiRectangle(this.ClientRectangle.X, this.ClientRectangle.Y, this.ClientRectangle.Width,
+            this.ClientRectangle.Height);
     }
 }

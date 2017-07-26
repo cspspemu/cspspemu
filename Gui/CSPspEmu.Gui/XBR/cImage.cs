@@ -83,19 +83,13 @@ namespace Imager
         /// Gets the width of the image.
         /// </summary>
         /// <value>The width.</value>
-        public int Width
-        {
-            get { return (this._width); }
-        }
+        public int Width => (this._width);
 
         /// <summary>
         /// Gets the height of the image.
         /// </summary>
         /// <value>The height.</value>
-        public int Height
-        {
-            get { return (this._height); }
-        }
+        public int Height => (this._height);
 
         /// <summary>
         /// Gets the a new instance containing a greyscale image of the red values only.
@@ -321,7 +315,7 @@ namespace Imager
         /// </value>
         public OutOfBoundsMode HorizontalOutOfBoundsMode
         {
-            get { return this._horizontalOutOfBoundsMode; }
+            get => this._horizontalOutOfBoundsMode;
             set
             {
                 this._horizontalOutOfBoundsMode = value;
@@ -338,7 +332,7 @@ namespace Imager
         /// </value>
         public OutOfBoundsMode VerticalOutOfBoundsMode
         {
-            get { return this._verticalOutOfBoundsMode; }
+            get => this._verticalOutOfBoundsMode;
             set
             {
                 this._verticalOutOfBoundsMode = value;

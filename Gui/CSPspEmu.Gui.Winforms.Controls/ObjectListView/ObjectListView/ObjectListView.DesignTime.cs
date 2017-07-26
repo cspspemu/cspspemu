@@ -398,20 +398,20 @@ namespace BrightIdeasSoftware.Design
 
             public ImageList LargeImageList
             {
-                get { return ((ListView) base.Component).LargeImageList; }
-                set { SetValue(base.Component, "LargeImageList", value); }
+                get => ((ListView) base.Component).LargeImageList;
+                set => SetValue(base.Component, "LargeImageList", value);
             }
 
             public ImageList SmallImageList
             {
-                get { return ((ListView) base.Component).SmallImageList; }
-                set { SetValue(base.Component, "SmallImageList", value); }
+                get => ((ListView) base.Component).SmallImageList;
+                set => SetValue(base.Component, "SmallImageList", value);
             }
 
             public View View
             {
-                get { return ((ListView) base.Component).View; }
-                set { SetValue(base.Component, "View", value); }
+                get => ((ListView) base.Component).View;
+                set => SetValue(base.Component, "View", value);
             }
 
             ObjectListViewDesigner designer;

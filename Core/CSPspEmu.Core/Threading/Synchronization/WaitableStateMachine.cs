@@ -22,10 +22,7 @@ namespace CSPspEmu.Core.Threading.Synchronization
             this.Debug = Debug;
         }
 
-        public TEnum Value
-        {
-            get { return _Value; }
-        }
+        public TEnum Value => _Value;
 
         public void SetValue(TEnum value)
         {

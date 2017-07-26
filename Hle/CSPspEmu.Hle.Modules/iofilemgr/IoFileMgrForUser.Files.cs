@@ -23,10 +23,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             protected PspIoDrvArg* PspIoDrvArg;
             protected PspIoDrv* PspIoDrv;
 
-            protected PspIoDrvFuncs* PspIoDrvFuncs
-            {
-                get { return (PspIoDrvFuncs*) PspIoDrv->funcs.GetPointer<PspIoDrvFuncs>(PspMemory); }
-            }
+            protected PspIoDrvFuncs* PspIoDrvFuncs => (PspIoDrvFuncs*) PspIoDrv->funcs.GetPointer<PspIoDrvFuncs>(PspMemory);
 
             protected MemoryPartition PspIoDrvArgPartition;
 

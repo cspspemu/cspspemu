@@ -25,27 +25,15 @@ namespace CSPspEmu.Core
     {
         static Logger Logger = Logger.GetLogger("Platform");
 
-        public static bool IsWindows
-        {
-            get { return OS == OS.Windows; }
-        }
+        public static bool IsWindows => OS == OS.Windows;
 
-        public static bool IsPosix
-        {
-            get { return !IsWindows; }
-        }
+        public static bool IsPosix => !IsWindows;
 
         public static OS OS;
 
-        public static bool Is64Bit
-        {
-            get { return Environment.Is64BitProcess; }
-        }
+        public static bool Is64Bit => Environment.Is64BitProcess;
 
-        public static bool Is32Bit
-        {
-            get { return !Environment.Is64BitProcess; }
-        }
+        public static bool Is32Bit => !Environment.Is64BitProcess;
 
         private static string _Architecture;
 
@@ -114,10 +102,7 @@ namespace CSPspEmu.Core
             public long sec;
             public long usec;
 
-            public long total_usec
-            {
-                get { return (long) usec + (long) sec * 1000 * 1000; }
-            }
+            public long total_usec => (long) usec + (long) sec * 1000 * 1000;
         }
 
         private class InternalUnix
@@ -372,10 +357,7 @@ namespace CSPspEmu.Core
 
         public static DateTime UnixStart;
 
-        public static long CurrentUnixMicroseconds
-        {
-            get { return (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000); }
-        }
+        public static long CurrentUnixMicroseconds => (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000);
 
         private const int SW_HIDE = 0;
 

@@ -27,10 +27,7 @@ namespace CSPspEmu.Hle.Formats.audio
         private Decoder SamplesDecoder;
         public bool SamplesDecoderEnd = false;
 
-        bool ISoundDecoder.HasMore
-        {
-            get { return SamplesDecoder.HasMore; }
-        }
+        bool ISoundDecoder.HasMore => SamplesDecoder.HasMore;
 
         void ISoundDecoder.Reset()
         {
@@ -164,10 +161,7 @@ namespace CSPspEmu.Hle.Formats.audio
                 }
             }
 
-            public bool HasMore
-            {
-                get { return !ReachedEnd; }
-            }
+            public bool HasMore => !ReachedEnd;
 
             public Decoder(Block* BlockPointer, int BlockTotalCount)
             {

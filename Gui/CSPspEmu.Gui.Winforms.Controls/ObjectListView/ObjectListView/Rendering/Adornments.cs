@@ -56,8 +56,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public System.Drawing.ContentAlignment AdornmentCorner
         {
-            get { return this.adornmentCorner; }
-            set { this.adornmentCorner = value; }
+            get => this.adornmentCorner;
+            set => this.adornmentCorner = value;
         }
 
         private System.Drawing.ContentAlignment adornmentCorner = System.Drawing.ContentAlignment.MiddleCenter;
@@ -72,7 +72,7 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public System.Drawing.ContentAlignment Alignment
         {
-            get { return this.alignment; }
+            get => this.alignment;
             set
             {
                 this.alignment = value;
@@ -91,8 +91,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Size), "0,0")]
         public Size Offset
         {
-            get { return this.offset; }
-            set { this.offset = value; }
+            get => this.offset;
+            set => this.offset = value;
         }
 
         private Size offset = new Size();
@@ -104,8 +104,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public System.Drawing.ContentAlignment ReferenceCorner
         {
-            get { return this.referenceCorner; }
-            set { this.referenceCorner = value; }
+            get => this.referenceCorner;
+            set => this.referenceCorner = value;
         }
 
         private System.Drawing.ContentAlignment referenceCorner = System.Drawing.ContentAlignment.MiddleCenter;
@@ -120,8 +120,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public int Rotation
         {
-            get { return this.rotation; }
-            set { this.rotation = value; }
+            get => this.rotation;
+            set => this.rotation = value;
         }
 
         private int rotation;
@@ -135,8 +135,8 @@ namespace BrightIdeasSoftware
          DefaultValue(128)]
         public int Transparency
         {
-            get { return this.transparency; }
-            set { this.transparency = Math.Min(255, Math.Max(0, value)); }
+            get => this.transparency;
+            set => this.transparency = Math.Min(255, Math.Max(0, value));
         }
 
         private int transparency = 128;
@@ -325,8 +325,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public Image Image
         {
-            get { return this.image; }
-            set { this.image = value; }
+            get => this.image;
+            set => this.image = value;
         }
 
         private Image image;
@@ -339,8 +339,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool ShrinkToWidth
         {
-            get { return this.shrinkToWidth; }
-            set { this.shrinkToWidth = value; }
+            get => this.shrinkToWidth;
+            set => this.shrinkToWidth = value;
         }
 
         private bool shrinkToWidth;
@@ -478,8 +478,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public Color BackColor
         {
-            get { return this.backColor; }
-            set { this.backColor = value; }
+            get => this.backColor;
+            set => this.backColor = value;
         }
 
         private Color backColor = Color.Empty;
@@ -488,10 +488,7 @@ namespace BrightIdeasSoftware
         /// Gets the brush that will be used to paint the text
         /// </summary>
         [Browsable(false)]
-        public Brush BackgroundBrush
-        {
-            get { return new SolidBrush(Color.FromArgb(this.workingTransparency, this.BackColor)); }
-        }
+        public Brush BackgroundBrush => new SolidBrush(Color.FromArgb(this.workingTransparency, this.BackColor));
 
         /// <summary>
         /// Gets or sets the color of the border around the billboard.
@@ -502,8 +499,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public Color BorderColor
         {
-            get { return this.borderColor; }
-            set { this.borderColor = value; }
+            get => this.borderColor;
+            set => this.borderColor = value;
         }
 
         private Color borderColor = Color.Empty;
@@ -512,10 +509,7 @@ namespace BrightIdeasSoftware
         /// Gets the brush that will be used to paint the text
         /// </summary>
         [Browsable(false)]
-        public Pen BorderPen
-        {
-            get { return new Pen(Color.FromArgb(this.workingTransparency, this.BorderColor), this.BorderWidth); }
-        }
+        public Pen BorderPen => new Pen(Color.FromArgb(this.workingTransparency, this.BorderColor), this.BorderWidth);
 
         /// <summary>
         /// Gets or sets the width of the border around the text
@@ -525,8 +519,8 @@ namespace BrightIdeasSoftware
          DefaultValue(0.0f)]
         public float BorderWidth
         {
-            get { return this.borderWidth; }
-            set { this.borderWidth = value; }
+            get => this.borderWidth;
+            set => this.borderWidth = value;
         }
 
         private float borderWidth;
@@ -541,8 +535,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public float CornerRounding
         {
-            get { return this.cornerRounding; }
-            set { this.cornerRounding = value; }
+            get => this.cornerRounding;
+            set => this.cornerRounding = value;
         }
 
         private float cornerRounding = 16.0f;
@@ -556,8 +550,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public Font Font
         {
-            get { return this.font; }
-            set { this.font = value; }
+            get => this.font;
+            set => this.font = value;
         }
 
         private Font font;
@@ -566,28 +560,19 @@ namespace BrightIdeasSoftware
         /// Gets the font that will be used to draw the text or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public Font FontOrDefault
-        {
-            get { return this.Font ?? new Font("Tahoma", 16); }
-        }
+        public Font FontOrDefault => this.Font ?? new Font("Tahoma", 16);
 
         /// <summary>
         /// Does this text have a background?
         /// </summary>
         [Browsable(false)]
-        public bool HasBackground
-        {
-            get { return this.BackColor != Color.Empty; }
-        }
+        public bool HasBackground => this.BackColor != Color.Empty;
 
         /// <summary>
         /// Does this overlay have a border?
         /// </summary>
         [Browsable(false)]
-        public bool HasBorder
-        {
-            get { return this.BorderColor != Color.Empty && this.BorderWidth > 0; }
-        }
+        public bool HasBorder => this.BorderColor != Color.Empty && this.BorderWidth > 0;
 
         /// <summary>
         /// Gets or sets the maximum width of the text. Text longer than this will wrap.
@@ -598,8 +583,8 @@ namespace BrightIdeasSoftware
          DefaultValue(0)]
         public int MaximumTextWidth
         {
-            get { return this.maximumTextWidth; }
-            set { this.maximumTextWidth = value; }
+            get => this.maximumTextWidth;
+            set => this.maximumTextWidth = value;
         }
 
         private int maximumTextWidth;
@@ -624,7 +609,7 @@ namespace BrightIdeasSoftware
                 }
                 return this.stringFormat;
             }
-            set { this.stringFormat = value; }
+            set => this.stringFormat = value;
         }
 
         private StringFormat stringFormat;
@@ -639,8 +624,8 @@ namespace BrightIdeasSoftware
          Localizable(true)]
         public string Text
         {
-            get { return this.text; }
-            set { this.text = value; }
+            get => this.text;
+            set => this.text = value;
         }
 
         private string text;
@@ -649,10 +634,7 @@ namespace BrightIdeasSoftware
         /// Gets the brush that will be used to paint the text
         /// </summary>
         [Browsable(false)]
-        public Brush TextBrush
-        {
-            get { return new SolidBrush(Color.FromArgb(this.workingTransparency, this.TextColor)); }
-        }
+        public Brush TextBrush => new SolidBrush(Color.FromArgb(this.workingTransparency, this.TextColor));
 
         /// <summary>
         /// Gets or sets the color of the text
@@ -663,8 +645,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public Color TextColor
         {
-            get { return this.textColor; }
-            set { this.textColor = value; }
+            get => this.textColor;
+            set => this.textColor = value;
         }
 
         private Color textColor = Color.DarkBlue;
@@ -677,8 +659,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool Wrap
         {
-            get { return this.wrap; }
-            set { this.wrap = value; }
+            get => this.wrap;
+            set => this.wrap = value;
         }
 
         private bool wrap = true;

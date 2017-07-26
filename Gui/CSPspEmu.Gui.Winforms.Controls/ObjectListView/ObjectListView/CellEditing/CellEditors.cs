@@ -63,10 +63,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// 
         /// </summary>
-        public object Key
-        {
-            get { return key; }
-        }
+        public object Key => key;
 
         private readonly object key;
 
@@ -161,8 +158,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public new int Value
         {
-            get { return decimal.ToInt32(base.Value); }
-            set { base.Value = new decimal(value); }
+            get => decimal.ToInt32(base.Value);
+            set => base.Value = new decimal(value);
         }
     }
 
@@ -184,8 +181,8 @@ namespace BrightIdeasSoftware
 
         public new uint Value
         {
-            get { return decimal.ToUInt32(base.Value); }
-            set { base.Value = new decimal(value); }
+            get => decimal.ToUInt32(base.Value);
+            set => base.Value = new decimal(value);
         }
     }
 
@@ -298,8 +295,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public new double Value
         {
-            get { return Convert.ToDouble(base.Value); }
-            set { base.Value = Convert.ToDecimal(value); }
+            get => Convert.ToDouble(base.Value);
+            set => base.Value = Convert.ToDecimal(value);
         }
     }
 }

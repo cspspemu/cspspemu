@@ -126,14 +126,7 @@ namespace BrightIdeasSoftware
         /// Gets whether or not this listview is capabale of showing groups
         /// </summary>
         [Browsable(false)]
-        public override bool CanShowGroups
-        {
-            get
-            {
-                // Virtual lists need Vista and a grouping strategy to show groups
-                return (ObjectListView.IsVistaOrLater && this.GroupingStrategy != null);
-            }
-        }
+        public override bool CanShowGroups => (ObjectListView.IsVistaOrLater && this.GroupingStrategy != null);
 
         /// <summary>
         /// Gets or sets whether this ObjectListView will show checkboxes in the primary column
@@ -146,7 +139,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public new bool CheckBoxes
         {
-            get { return base.CheckBoxes; }
+            get => base.CheckBoxes;
             set
             {
                 try
@@ -267,8 +260,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IVirtualGroups GroupingStrategy
         {
-            get { return this.groupingStrategy; }
-            set { this.groupingStrategy = value; }
+            get => this.groupingStrategy;
+            set => this.groupingStrategy = value;
         }
 
         private IVirtualGroups groupingStrategy;
@@ -279,10 +272,7 @@ namespace BrightIdeasSoftware
         /// <remarks>
         /// This is only possible if our underlying data source supports filtering.
         /// </remarks>
-        public override bool IsFiltering
-        {
-            get { return base.IsFiltering && (this.VirtualListDataSource is IFilterableDataSource); }
-        }
+        public override bool IsFiltering => base.IsFiltering && (this.VirtualListDataSource is IFilterableDataSource);
 
         /// <summary>
         /// Get/set the collection of objects that this list will show
@@ -319,7 +309,7 @@ namespace BrightIdeasSoftware
                             this.ListFilter);
                 }
             }
-            set { base.Objects = value; }
+            set => base.Objects = value;
         }
 
         /// <summary>
@@ -330,8 +320,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual RowGetterDelegate RowGetter
         {
-            get { return ((VirtualListVersion1DataSource) this.virtualListDataSource).RowGetter; }
-            set { ((VirtualListVersion1DataSource) this.virtualListDataSource).RowGetter = value; }
+            get => ((VirtualListVersion1DataSource) this.virtualListDataSource).RowGetter;
+            set => ((VirtualListVersion1DataSource) this.virtualListDataSource).RowGetter = value;
         }
 
         /// <summary>
@@ -342,11 +332,7 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public override bool ShowGroups
         {
-            get
-            {
-                // Pre-Vista, virtual lists cannot show groups
-                return ObjectListView.IsVistaOrLater && this.showGroups;
-            }
+            get => ObjectListView.IsVistaOrLater && this.showGroups;
             set
             {
                 this.showGroups = value;
@@ -366,7 +352,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IVirtualListDataSource VirtualListDataSource
         {
-            get { return this.virtualListDataSource; }
+            get => this.virtualListDataSource;
             set
             {
                 this.virtualListDataSource = value;
@@ -395,7 +381,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         protected new virtual int VirtualListSize
         {
-            get { return base.VirtualListSize; }
+            get => base.VirtualListSize;
             set
             {
                 if (value == this.VirtualListSize || value < 0)

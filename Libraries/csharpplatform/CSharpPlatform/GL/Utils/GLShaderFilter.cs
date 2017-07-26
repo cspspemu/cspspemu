@@ -9,15 +9,9 @@ namespace CSharpPlatform.GL.Utils
         private GLBuffer TexcoordsBuffer;
         private GLShader Shader;
 
-        public int Width
-        {
-            get { return (RenderTarget != null) ? RenderTarget.Width : 0; }
-        }
+        public int Width => (RenderTarget != null) ? RenderTarget.Width : 0;
 
-        public int Height
-        {
-            get { return (RenderTarget != null) ? RenderTarget.Height : 0; }
-        }
+        public int Height => (RenderTarget != null) ? RenderTarget.Height : 0;
 
         public static string DefaultVertexShader = @"
 			attribute vec4 a_position;

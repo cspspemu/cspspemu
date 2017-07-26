@@ -14,8 +14,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 
             public byte[] AddressAsBytes
             {
-                set { Address = BitConverter.ToUInt32(value, 0); }
-                get { return BitConverter.GetBytes(Address); }
+                set => Address = BitConverter.ToUInt32(value, 0);
+                get => BitConverter.GetBytes(Address);
             }
 
             public override string ToString()

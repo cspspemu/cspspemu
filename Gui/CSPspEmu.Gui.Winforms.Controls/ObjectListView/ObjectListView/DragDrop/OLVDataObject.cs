@@ -76,10 +76,7 @@ namespace BrightIdeasSoftware
         /// and HTML representation. If this is false, only visible columns will
         /// be included.
         /// </summary>
-        public bool IncludeHiddenColumns
-        {
-            get { return includeHiddenColumns; }
-        }
+        public bool IncludeHiddenColumns => includeHiddenColumns;
 
         private readonly bool includeHiddenColumns;
 
@@ -87,30 +84,21 @@ namespace BrightIdeasSoftware
         /// Gets or sets whether column headers will also be included in the text
         /// and HTML representation.
         /// </summary>
-        public bool IncludeColumnHeaders
-        {
-            get { return includeColumnHeaders; }
-        }
+        public bool IncludeColumnHeaders => includeColumnHeaders;
 
         private readonly bool includeColumnHeaders;
 
         /// <summary>
         /// Gets the ObjectListView that is being used as the source of the data
         /// </summary>
-        public ObjectListView ListView
-        {
-            get { return objectListView; }
-        }
+        public ObjectListView ListView => objectListView;
 
         private readonly ObjectListView objectListView;
 
         /// <summary>
         /// Gets the model objects that are to be placed in the data object
         /// </summary>
-        public IList ModelObjects
-        {
-            get { return modelObjects; }
-        }
+        public IList ModelObjects => modelObjects;
 
         private readonly IList modelObjects;
 

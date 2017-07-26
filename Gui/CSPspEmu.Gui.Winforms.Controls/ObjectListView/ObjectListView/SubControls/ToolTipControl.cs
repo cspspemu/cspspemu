@@ -168,8 +168,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         internal int WindowStyle
         {
-            get { return (int) NativeMethods.GetWindowLong(this.Handle, GWL_STYLE); }
-            set { NativeMethods.SetWindowLong(this.Handle, GWL_STYLE, value); }
+            get => (int) NativeMethods.GetWindowLong(this.Handle, GWL_STYLE);
+            set => NativeMethods.SetWindowLong(this.Handle, GWL_STYLE, value);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool IsBalloon
         {
-            get { return (this.WindowStyle & TTS_BALLOON) == TTS_BALLOON; }
+            get => (this.WindowStyle & TTS_BALLOON) == TTS_BALLOON;
             set
             {
                 if (this.IsBalloon == value)
@@ -211,7 +211,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool HasBorder
         {
-            get { return this.hasBorder; }
+            get => this.hasBorder;
             set
             {
                 if (this.hasBorder == value)
@@ -280,7 +280,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Title
         {
-            get { return this.title; }
+            get => this.title;
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -300,7 +300,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public StandardIcons StandardIcon
         {
-            get { return this.standardIcon; }
+            get => this.standardIcon;
             set
             {
                 this.standardIcon = value;
@@ -345,8 +345,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int AutoPopDelay
         {
-            get { return this.GetDelayTime(TTDT_AUTOPOP); }
-            set { this.SetDelayTime(TTDT_AUTOPOP, value); }
+            get => this.GetDelayTime(TTDT_AUTOPOP);
+            set => this.SetDelayTime(TTDT_AUTOPOP, value);
         }
 
         /// <summary>
@@ -354,8 +354,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int InitialDelay
         {
-            get { return this.GetDelayTime(TTDT_INITIAL); }
-            set { this.SetDelayTime(TTDT_INITIAL, value); }
+            get => this.GetDelayTime(TTDT_INITIAL);
+            set => this.SetDelayTime(TTDT_INITIAL, value);
         }
 
         /// <summary>
@@ -363,8 +363,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int ReshowDelay
         {
-            get { return this.GetDelayTime(TTDT_RESHOW); }
-            set { this.SetDelayTime(TTDT_RESHOW, value); }
+            get => this.GetDelayTime(TTDT_RESHOW);
+            set => this.SetDelayTime(TTDT_RESHOW, value);
         }
 
         private int GetDelayTime(int which)

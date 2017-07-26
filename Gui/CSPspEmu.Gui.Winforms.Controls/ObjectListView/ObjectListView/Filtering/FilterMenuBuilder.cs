@@ -101,8 +101,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool TreatNullAsDataValue
         {
-            get { return treatNullAsDataValue; }
-            set { treatNullAsDataValue = value; }
+            get => treatNullAsDataValue;
+            set => treatNullAsDataValue = value;
         }
 
         private bool treatNullAsDataValue = true;
@@ -116,8 +116,8 @@ namespace BrightIdeasSoftware
         /// acceptable for almost all lists.</remarks>
         public int MaxObjectsToConsider
         {
-            get { return maxObjectsToConsider; }
-            set { maxObjectsToConsider = value; }
+            get => maxObjectsToConsider;
+            set => maxObjectsToConsider = value;
         }
 
         private int maxObjectsToConsider = 10000;

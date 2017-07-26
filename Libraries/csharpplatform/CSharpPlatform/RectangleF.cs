@@ -7,25 +7,13 @@
         public readonly float Width;
         public readonly float Height;
 
-        public float Left
-        {
-            get { return X; }
-        }
+        public float Left => X;
 
-        public float Right
-        {
-            get { return X + Width; }
-        }
+        public float Right => X + Width;
 
-        public float Top
-        {
-            get { return Y; }
-        }
+        public float Top => Y;
 
-        public float Bottom
-        {
-            get { return Y + Height; }
-        }
+        public float Bottom => Y + Height;
 
         public RectangleF(float X, float Y, float Width, float Height)
         {

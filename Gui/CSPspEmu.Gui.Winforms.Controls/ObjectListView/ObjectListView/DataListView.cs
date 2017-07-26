@@ -81,8 +81,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool AutoGenerateColumns
         {
-            get { return this.Adapter.AutoGenerateColumns; }
-            set { this.Adapter.AutoGenerateColumns = value; }
+            get => this.Adapter.AutoGenerateColumns;
+            set => this.Adapter.AutoGenerateColumns = value;
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace BrightIdeasSoftware
          TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
         public virtual object DataSource
         {
-            get { return this.Adapter.DataSource; }
-            set { this.Adapter.DataSource = value; }
+            get => this.Adapter.DataSource;
+            set => this.Adapter.DataSource = value;
         }
 
         /// <summary>
@@ -127,8 +127,8 @@ namespace BrightIdeasSoftware
          DefaultValue("")]
         public virtual string DataMember
         {
-            get { return this.Adapter.DataMember; }
-            set { this.Adapter.DataMember = value; }
+            get => this.Adapter.DataMember;
+            set => this.Adapter.DataMember = value;
         }
 
         #endregion
@@ -146,7 +146,7 @@ namespace BrightIdeasSoftware
                 Debug.Assert(adapter != null, "Data adapter should not be null");
                 return adapter;
             }
-            set { adapter = value; }
+            set => adapter = value;
         }
 
         private DataSourceAdapter adapter;

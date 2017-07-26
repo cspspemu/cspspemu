@@ -164,18 +164,15 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual CanExpandGetterDelegate CanExpandGetter
         {
-            get { return this.TreeModel.CanExpandGetter; }
-            set { this.TreeModel.CanExpandGetter = value; }
+            get => this.TreeModel.CanExpandGetter;
+            set => this.TreeModel.CanExpandGetter = value;
         }
 
         /// <summary>
         /// Gets whether or not this listview is capabale of showing groups
         /// </summary>
         [Browsable(false)]
-        public override bool CanShowGroups
-        {
-            get { return false; }
-        }
+        public override bool CanShowGroups => false;
 
         /// <summary>
         /// This is the delegate that will be used to fetch the children of a model object
@@ -186,8 +183,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual ChildrenGetterDelegate ChildrenGetter
         {
-            get { return this.TreeModel.ChildrenGetter; }
-            set { this.TreeModel.ChildrenGetter = value; }
+            get => this.TreeModel.ChildrenGetter;
+            set => this.TreeModel.ChildrenGetter = value;
         }
 
         /// <summary>
@@ -204,7 +201,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable ExpandedObjects
         {
-            get { return this.TreeModel.mapObjectToExpanded.Keys; }
+            get => this.TreeModel.mapObjectToExpanded.Keys;
             set
             {
                 this.TreeModel.mapObjectToExpanded.Clear();
@@ -224,8 +221,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override IListFilter ListFilter
         {
-            get { return null; }
-            set { System.Diagnostics.Debug.Assert(value == null, "TreeListView do not support ListFilters"); }
+            get => null;
+            set => System.Diagnostics.Debug.Assert(value == null, "TreeListView do not support ListFilters");
         }
 
         /// <summary>
@@ -235,8 +232,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override IEnumerable Objects
         {
-            get { return this.Roots; }
-            set { this.Roots = value; }
+            get => this.Roots;
+            set => this.Roots = value;
         }
 
         [Browsable(false),
@@ -259,8 +256,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool RevealAfterExpand
         {
-            get { return revealAfterExpand; }
-            set { revealAfterExpand = value; }
+            get => revealAfterExpand;
+            set => revealAfterExpand = value;
         }
 
         private bool revealAfterExpand = true;
@@ -274,7 +271,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IEnumerable Roots
         {
-            get { return this.TreeModel.RootObjects; }
+            get => this.TreeModel.RootObjects;
             set
             {
                 this.TreeColumnRenderer = this.TreeColumnRenderer;
@@ -318,7 +315,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual TreeRenderer TreeColumnRenderer
         {
-            get { return treeRenderer ?? (treeRenderer = new TreeRenderer()); }
+            get => treeRenderer ?? (treeRenderer = new TreeRenderer());
             set
             {
                 treeRenderer = value ?? new TreeRenderer();
@@ -339,8 +336,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool UseWaitCursorWhenExpanding
         {
-            get { return useWaitCursorWhenExpanding; }
-            set { useWaitCursorWhenExpanding = value; }
+            get => useWaitCursorWhenExpanding;
+            set => useWaitCursorWhenExpanding = value;
         }
 
         private bool useWaitCursorWhenExpanding = true;
@@ -350,8 +347,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         protected Tree TreeModel
         {
-            get { return this.treeModel; }
-            set { this.treeModel = value; }
+            get => this.treeModel;
+            set => this.treeModel = value;
         }
 
         private Tree treeModel;
@@ -819,8 +816,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             public CanExpandGetterDelegate CanExpandGetter
             {
-                get { return canExpandGetter; }
-                set { canExpandGetter = value; }
+                get => canExpandGetter;
+                set => canExpandGetter = value;
             }
 
             private CanExpandGetterDelegate canExpandGetter;
@@ -832,8 +829,8 @@ namespace BrightIdeasSoftware
             /// returned true for the model object.</remarks>
             public ChildrenGetterDelegate ChildrenGetter
             {
-                get { return childrenGetter; }
-                set { childrenGetter = value; }
+                get => childrenGetter;
+                set => childrenGetter = value;
             }
 
             private ChildrenGetterDelegate childrenGetter;
@@ -843,7 +840,7 @@ namespace BrightIdeasSoftware
             /// </summary>
             public IEnumerable RootObjects
             {
-                get { return this.trunk.Children; }
+                get => this.trunk.Children;
                 set
                 {
                     this.trunk.Children = value;
@@ -856,10 +853,7 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// What tree view is this Tree the model for?
             /// </summary>
-            public TreeListView TreeView
-            {
-                get { return this.treeView; }
-            }
+            public TreeListView TreeView => this.treeView;
 
             //------------------------------------------------------------------------------------------
             // Commands
@@ -1249,10 +1243,7 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Is this list currently being filtered?
             /// </summary>
-            internal bool IsFiltering
-            {
-                get { return this.treeView.UseFiltering && (this.modelFilter != null || this.listFilter != null); }
-            }
+            internal bool IsFiltering => this.treeView.UseFiltering && (this.modelFilter != null || this.listFilter != null);
 
             /// <summary>
             /// Should the given model be included in this control?
@@ -1387,8 +1378,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             public List<Branch> ChildBranches
             {
-                get { return this.childBranches; }
-                set { this.childBranches = value; }
+                get => this.childBranches;
+                set => this.childBranches = value;
             }
 
             private List<Branch> childBranches = new List<Branch>();
@@ -1457,8 +1448,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             public bool IsExpanded
             {
-                get { return this.Tree.IsModelExpanded(this.Model); }
-                set { this.Tree.SetModelExpanded(this.Model, value); }
+                get => this.Tree.IsModelExpanded(this.Model);
+                set => this.Tree.SetModelExpanded(this.Model, value);
             }
 
             /// <summary>
@@ -1466,7 +1457,7 @@ namespace BrightIdeasSoftware
             /// </summary>
             public virtual bool IsFirstBranch
             {
-                get { return ((this.flags & Branch.BranchFlags.FirstBranch) != 0); }
+                get => ((this.flags & Branch.BranchFlags.FirstBranch) != 0);
                 set
                 {
                     if (value)
@@ -1481,7 +1472,7 @@ namespace BrightIdeasSoftware
             /// </summary>
             public virtual bool IsLastChild
             {
-                get { return ((this.flags & Branch.BranchFlags.LastChild) != 0); }
+                get => ((this.flags & Branch.BranchFlags.LastChild) != 0);
                 set
                 {
                     if (value)
@@ -1496,7 +1487,7 @@ namespace BrightIdeasSoftware
             /// </summary>
             public virtual bool IsOnlyBranch
             {
-                get { return ((this.flags & Branch.BranchFlags.OnlyBranch) != 0); }
+                get => ((this.flags & Branch.BranchFlags.OnlyBranch) != 0);
                 set
                 {
                     if (value)
@@ -1525,8 +1516,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             public object Model
             {
-                get { return model; }
-                set { model = value; }
+                get => model;
+                set => model = value;
             }
 
             private object model;
@@ -1555,8 +1546,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             public Branch ParentBranch
             {
-                get { return parentBranch; }
-                set { parentBranch = value; }
+                get => parentBranch;
+                set => parentBranch = value;
             }
 
             private Branch parentBranch;
@@ -1566,8 +1557,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             public Tree Tree
             {
-                get { return tree; }
-                set { tree = value; }
+                get => tree;
+                set => tree = value;
             }
 
             private Tree tree;

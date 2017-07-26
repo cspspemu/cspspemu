@@ -68,8 +68,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int Count
         {
-            get { return count; }
-            set { count = value; }
+            get => count;
+            set => count = value;
         }
 
         private int count;
@@ -80,8 +80,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string DisplayLabel
         {
-            get { return displayLabel; }
-            set { displayLabel = value; }
+            get => displayLabel;
+            set => displayLabel = value;
         }
 
         private string displayLabel;
@@ -92,8 +92,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object ClusterKey
         {
-            get { return clusterKey; }
-            set { clusterKey = value; }
+            get => clusterKey;
+            set => clusterKey = value;
         }
 
         private object clusterKey;

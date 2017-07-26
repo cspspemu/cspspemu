@@ -170,10 +170,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
         /// <summary>
         /// Voice has ended.
         /// </summary>
-        public bool Ended
-        {
-            get { return !Playing; }
-        }
+        public bool Ended => !Playing;
 
         /// <summary>
         /// 
@@ -210,10 +207,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
             this.Index = Index;
         }
 
-        public bool OnAndPlaying
-        {
-            get { return On && Playing; }
-        }
+        public bool OnAndPlaying => On && Playing;
     }
 
     public class SasCore

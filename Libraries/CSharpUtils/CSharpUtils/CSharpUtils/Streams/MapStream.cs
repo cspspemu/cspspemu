@@ -40,10 +40,7 @@ namespace CSharpUtils.Streams
             /// <summary>
             /// 
             /// </summary>
-            public long Length
-            {
-                get { return Stream.Length; }
-            }
+            public long Length => Stream.Length;
 
             /// <summary>
             /// 

@@ -67,8 +67,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This setting only takes effect when the control is owner drawn.</remarks>
         public Rectangle? CellPadding
         {
-            get { return this.cellPadding; }
-            set { this.cellPadding = value; }
+            get => this.cellPadding;
+            set => this.cellPadding = value;
         }
 
         private Rectangle? cellPadding;
@@ -79,8 +79,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This setting only takes effect when the control is owner drawn.</remarks>
         public StringAlignment? CellVerticalAlignment
         {
-            get { return this.cellVerticalAlignment; }
-            set { this.cellVerticalAlignment = value; }
+            get => this.cellVerticalAlignment;
+            set => this.cellVerticalAlignment = value;
         }
 
         private StringAlignment? cellVerticalAlignment;
@@ -90,8 +90,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object ModelValue
         {
-            get { return modelValue; }
-            private set { modelValue = value; }
+            get => modelValue;
+            private set => modelValue = value;
         }
 
         private object modelValue;
@@ -99,10 +99,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets if this subitem has any decorations set for it.
         /// </summary>
-        public bool HasDecoration
-        {
-            get { return this.decorations != null && this.decorations.Count > 0; }
-        }
+        public bool HasDecoration => this.decorations != null && this.decorations.Count > 0;
 
         /// <summary>
         /// Gets or sets the decoration that will be drawn over this item
@@ -110,7 +107,7 @@ namespace BrightIdeasSoftware
         /// <remarks>Setting this replaces all other decorations</remarks>
         public IDecoration Decoration
         {
-            get { return this.HasDecoration ? this.Decorations[0] : null; }
+            get => this.HasDecoration ? this.Decorations[0] : null;
             set
             {
                 this.Decorations.Clear();
@@ -141,8 +138,8 @@ namespace BrightIdeasSoftware
         /// be used as an index into the small image list.</para></remarks>
         public object ImageSelector
         {
-            get { return imageSelector; }
-            set { imageSelector = value; }
+            get => imageSelector;
+            set => imageSelector = value;
         }
 
         private object imageSelector;
@@ -152,8 +149,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Url
         {
-            get { return this.url; }
-            set { this.url = value; }
+            get => this.url;
+            set => this.url = value;
         }
 
         private string url;

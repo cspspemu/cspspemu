@@ -24,10 +24,7 @@ namespace CSPspEmu.Hle
         /// <summary>
         /// Lower priority value is a higher priority, so we negate the priorityvalue.
         /// </summary>
-        int IPreemptiveItem.Priority
-        {
-            get { return -PriorityValue; }
-        }
+        int IPreemptiveItem.Priority => -PriorityValue;
 
         bool IPreemptiveItem.Ready
         {
@@ -47,7 +44,7 @@ namespace CSPspEmu.Hle
         /// </summary>
         public int PriorityValue
         {
-            get { return _PriorityValue; }
+            get => _PriorityValue;
             set
             {
                 if (_PriorityValue != value)
@@ -133,14 +130,11 @@ namespace CSPspEmu.Hle
         /// </summary>
         protected int YieldCount = 0;
 
-        public bool IsWaitingAndHandlingCallbacks
-        {
-            get { return HasAllStatus(Status.Waiting) && HandleCallbacks; }
-        }
+        public bool IsWaitingAndHandlingCallbacks => HasAllStatus(Status.Waiting) && HandleCallbacks;
 
         public uint GP
         {
-            get { return Info.GP; }
+            get => Info.GP;
             set
             {
                 Info.GP = value;

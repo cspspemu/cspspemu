@@ -102,10 +102,7 @@ namespace BrightIdeasSoftware
         /// doesn't work. So we override the Handle property so value is always
         /// current.
         /// </remarks>
-        public new IntPtr Handle
-        {
-            get { return NativeMethods.GetHeaderControl(this.ListView); }
-        }
+        public new IntPtr Handle => NativeMethods.GetHeaderControl(this.ListView);
         //TODO: The Handle property may no longer be necessary. CHECK! 2008/11/28
 
         /// <summary>
@@ -146,8 +143,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         protected ObjectListView ListView
         {
-            get { return this.listView; }
-            set { this.listView = value; }
+            get => this.listView;
+            set => this.listView = value;
         }
 
         private ObjectListView listView;
@@ -155,10 +152,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the maximum height of the header. -1 means no maximum.
         /// </summary>
-        public int MaximumHeight
-        {
-            get { return this.ListView.HeaderMaximumHeight; }
-        }
+        public int MaximumHeight => this.ListView.HeaderMaximumHeight;
 
         /// <summary>
         /// Get or set the ToolTip that shows tips for the header
@@ -173,7 +167,7 @@ namespace BrightIdeasSoftware
                 }
                 return this.toolTip;
             }
-            protected set { this.toolTip = value; }
+            protected set => this.toolTip = value;
         }
 
         private ToolTipControl toolTip;
@@ -184,8 +178,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool WordWrap
         {
-            get { return this.wordWrap; }
-            set { this.wordWrap = value; }
+            get => this.wordWrap;
+            set => this.wordWrap = value;
         }
 
         private bool wordWrap;

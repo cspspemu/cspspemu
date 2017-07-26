@@ -6,20 +6,11 @@ namespace CSPspEmu.Hle.Types
     {
         private Version Version;
 
-        public int Major
-        {
-            get { return Version.Major; }
-        }
+        public int Major => Version.Major;
 
-        public int Minor
-        {
-            get { return Version.Minor; }
-        }
+        public int Minor => Version.Minor;
 
-        public int Revision
-        {
-            get { return Version.Revision; }
-        }
+        public int Revision => Version.Revision;
 
         public PspVersion(string VersionString)
         {

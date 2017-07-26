@@ -160,33 +160,21 @@ namespace Imager
         /// Gets the minimum value of Red, Green and Blue.
         /// </summary>
         /// <value>The minimum.</value>
-        public byte Minimum
-        {
-            get
-            {
-                return ((this.Red < this.Green) && (this.Red < this.Blue)
-                    ? this.Red
-                    : this.Green < this.Blue
-                        ? this.Green
-                        : this.Blue);
-            }
-        }
+        public byte Minimum => ((this.Red < this.Green) && (this.Red < this.Blue)
+            ? this.Red
+            : this.Green < this.Blue
+                ? this.Green
+                : this.Blue);
 
         /// <summary>
         /// Gets the maximum value of Red, Green and Blue.
         /// </summary>
         /// <value>The maximum.</value>
-        public byte Maximum
-        {
-            get
-            {
-                return ((this.Red > this.Green) && (this.Red > this.Blue)
-                    ? this.Red
-                    : this.Green > this.Blue
-                        ? this.Green
-                        : this.Blue);
-            }
-        }
+        public byte Maximum => ((this.Red > this.Green) && (this.Red > this.Blue)
+            ? this.Red
+            : this.Green > this.Blue
+                ? this.Green
+                : this.Blue);
 
         /// <summary>
         /// Factor that is used to avoid noise in color extraction.
@@ -364,10 +352,7 @@ namespace Imager
         /// Gets an instance of type Color or sets the actual pixel to that color.
         /// </summary>
         /// <value>The color.</value>
-        public Color Color
-        {
-            get { return (Color.FromArgb(this.Alpha, this.Red, this.Green, this.Blue)); }
-        }
+        public Color Color => (Color.FromArgb(this.Alpha, this.Red, this.Green, this.Blue));
 
         #region byte values
 
@@ -375,81 +360,45 @@ namespace Imager
         /// Gets or sets the alpha component.
         /// </summary>
         /// <value>The alpha-value.</value>
-        public byte Alpha
-        {
-            get { return (_GetAlpha(this._rgbBytes)); }
-        }
+        public byte Alpha => (_GetAlpha(this._rgbBytes));
 
         /// <summary>
         /// Gets or sets the red component.
         /// </summary>
         /// <value>The red-value.</value>
-        public byte Red
-        {
-            get { return (_GetRed(this._rgbBytes)); }
-        }
+        public byte Red => (_GetRed(this._rgbBytes));
 
         /// <summary>
         /// Gets or sets the green component.
         /// </summary>
         /// <value>The green-value.</value>
-        public byte Green
-        {
-            get { return (_GetGreen(this._rgbBytes)); }
-        }
+        public byte Green => (_GetGreen(this._rgbBytes));
 
         /// <summary>
         /// Gets or sets the blue component.
         /// </summary>
         /// <value>The blue-value.</value>
-        public byte Blue
-        {
-            get { return (_GetBlue(this._rgbBytes)); }
-        }
+        public byte Blue => (_GetBlue(this._rgbBytes));
 
         #endregion
 
         #region float values
 
-        public double DoubleRed
-        {
-            get { return (_Byte2Double(this.Red)); }
-        }
+        public double DoubleRed => (_Byte2Double(this.Red));
 
-        public float SingleRed
-        {
-            get { return (_Byte2Single(this.Red)); }
-        }
+        public float SingleRed => (_Byte2Single(this.Red));
 
-        public double DoubleGreen
-        {
-            get { return (_Byte2Double(this.Green)); }
-        }
+        public double DoubleGreen => (_Byte2Double(this.Green));
 
-        public float SingleGreen
-        {
-            get { return (_Byte2Single(this.Green)); }
-        }
+        public float SingleGreen => (_Byte2Single(this.Green));
 
-        public double DoubleBlue
-        {
-            get { return (_Byte2Double(this.Blue)); }
-        }
+        public double DoubleBlue => (_Byte2Double(this.Blue));
 
-        public float SingleBlue
-        {
-            get { return (_Byte2Single(this.Blue)); }
-        }
+        public float SingleBlue => (_Byte2Single(this.Blue));
 
-        public double DoubleAlpha
-        {
-            get { return (_Byte2Double(this.Alpha)); }
-        }
+        public double DoubleAlpha => (_Byte2Double(this.Alpha));
 
-        public float SingleAlpha
-        {
-            get { return (_Byte2Single(this.Alpha)); }
-        }
+        public float SingleAlpha => (_Byte2Single(this.Alpha));
 
         #endregion
 

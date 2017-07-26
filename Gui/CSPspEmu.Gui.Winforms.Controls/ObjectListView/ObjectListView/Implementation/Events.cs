@@ -917,30 +917,21 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// The column of the cell that is going to be or has been edited.
         /// </summary>
-        public OLVColumn Column
-        {
-            get { return this.column; }
-        }
+        public OLVColumn Column => this.column;
 
         private OLVColumn column;
 
         /// <summary>
         /// The model object of the row of the cell that is going to be or has been edited.
         /// </summary>
-        public object RowObject
-        {
-            get { return this.rowObject; }
-        }
+        public object RowObject => this.rowObject;
 
         private object rowObject;
 
         /// <summary>
         /// The listview item of the cell that is going to be or has been edited.
         /// </summary>
-        public OLVListItem ListViewItem
-        {
-            get { return this.listViewItem; }
-        }
+        public OLVListItem ListViewItem => this.listViewItem;
 
         private OLVListItem listViewItem;
 
@@ -950,8 +941,8 @@ namespace BrightIdeasSoftware
         /// <remarks>Only validate during Validating and Finishing events.</remarks>
         public object NewValue
         {
-            get { return this.newValue; }
-            set { this.newValue = value; }
+            get => this.newValue;
+            set => this.newValue = value;
         }
 
         private object newValue;
@@ -959,30 +950,21 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// The index of the cell that is going to be or has been edited.
         /// </summary>
-        public int SubItemIndex
-        {
-            get { return this.subItemIndex; }
-        }
+        public int SubItemIndex => this.subItemIndex;
 
         private int subItemIndex;
 
         /// <summary>
         /// The data value of the cell before the edit operation began.
         /// </summary>
-        public object Value
-        {
-            get { return this.value; }
-        }
+        public object Value => this.value;
 
         private object value;
 
         /// <summary>
         /// The bounds of the cell that is going to be or has been edited.
         /// </summary>
-        public Rectangle CellBounds
-        {
-            get { return this.cellBounds; }
-        }
+        public Rectangle CellBounds => this.cellBounds;
 
         private Rectangle cellBounds;
     }
@@ -1118,60 +1100,42 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// What column was used for grouping?
         /// </summary>
-        public OLVColumn ColumnToGroupBy
-        {
-            get { return columnToGroupBy; }
-        }
+        public OLVColumn ColumnToGroupBy => columnToGroupBy;
 
         private OLVColumn columnToGroupBy;
 
         /// <summary>
         /// What ordering was used for grouping?
         /// </summary>
-        public SortOrder GroupByOrder
-        {
-            get { return groupByOrder; }
-        }
+        public SortOrder GroupByOrder => groupByOrder;
 
         private SortOrder groupByOrder;
 
         /// <summary>
         /// What column was used for sorting?
         /// </summary>
-        public OLVColumn ColumnToSort
-        {
-            get { return columnToSort; }
-        }
+        public OLVColumn ColumnToSort => columnToSort;
 
         private OLVColumn columnToSort;
 
         /// <summary>
         /// What ordering was used for sorting?
         /// </summary>
-        public SortOrder SortOrder
-        {
-            get { return sortOrder; }
-        }
+        public SortOrder SortOrder => sortOrder;
 
         private SortOrder sortOrder;
 
         /// <summary>
         /// What column was used for secondary sorting?
         /// </summary>
-        public OLVColumn SecondaryColumnToSort
-        {
-            get { return secondaryColumnToSort; }
-        }
+        public OLVColumn SecondaryColumnToSort => secondaryColumnToSort;
 
         private OLVColumn secondaryColumnToSort;
 
         /// <summary>
         /// What order was used for secondary sorting?
         /// </summary>
-        public SortOrder SecondarySortOrder
-        {
-            get { return secondarySortOrder; }
-        }
+        public SortOrder SecondarySortOrder => secondarySortOrder;
 
         private SortOrder secondarySortOrder;
     }
@@ -1229,20 +1193,14 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets how many items were in the list before it changed
         /// </summary>
-        public int OldObjectCount
-        {
-            get { return oldObjectCount; }
-        }
+        public int OldObjectCount => oldObjectCount;
 
         private int oldObjectCount;
 
         /// <summary>
         /// Gets how many objects are in the list after the change.
         /// </summary>
-        public int NewObjectCount
-        {
-            get { return newObjectCount; }
-        }
+        public int NewObjectCount => newObjectCount;
 
         private int newObjectCount;
     }
@@ -1290,10 +1248,7 @@ namespace BrightIdeasSoftware
         /// Gets the objects that were in the list before it change.
         /// For virtual lists, this will always be null.
         /// </summary>
-        public IEnumerable OldObjects
-        {
-            get { return oldObjects; }
-        }
+        public IEnumerable OldObjects => oldObjects;
 
         private IEnumerable oldObjects;
 
@@ -1342,10 +1297,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the string that was actually searched for
         /// </summary>
-        public string StringToFind
-        {
-            get { return this.stringToFind; }
-        }
+        public string StringToFind => this.stringToFind;
 
         private string stringToFind;
 
@@ -1358,10 +1310,7 @@ namespace BrightIdeasSoftware
         /// Gets the index of the row that was selected by the search.
         /// -1 means that no row was matched
         /// </summary>
-        public int IndexSelected
-        {
-            get { return this.indexSelected; }
-        }
+        public int IndexSelected => this.indexSelected;
 
         private int indexSelected;
     }
@@ -1406,8 +1355,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ObjectListView ListView
         {
-            get { return this.listView; }
-            internal set { this.listView = value; }
+            get => this.listView;
+            internal set => this.listView = value;
         }
 
         private ObjectListView listView;
@@ -1418,8 +1367,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is null for events triggered by the header.</remarks>
         public object Model
         {
-            get { return this.model; }
-            internal set { this.model = value; }
+            get => this.model;
+            internal set => this.model = value;
         }
 
         private object model;
@@ -1430,8 +1379,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is -1 for events triggered by the header.</remarks>
         public int RowIndex
         {
-            get { return this.rowIndex; }
-            internal set { this.rowIndex = value; }
+            get => this.rowIndex;
+            internal set => this.rowIndex = value;
         }
 
         private int rowIndex = -1;
@@ -1442,8 +1391,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is -1 when the view is not in details view.</remarks>
         public int ColumnIndex
         {
-            get { return this.columnIndex; }
-            internal set { this.columnIndex = value; }
+            get => this.columnIndex;
+            internal set => this.columnIndex = value;
         }
 
         private int columnIndex = -1;
@@ -1454,8 +1403,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is null when the view is not in details view.</remarks>
         public OLVColumn Column
         {
-            get { return this.column; }
-            internal set { this.column = value; }
+            get => this.column;
+            internal set => this.column = value;
         }
 
         private OLVColumn column;
@@ -1465,8 +1414,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public Point Location
         {
-            get { return this.location; }
-            internal set { this.location = value; }
+            get => this.location;
+            internal set => this.location = value;
         }
 
         private Point location;
@@ -1476,8 +1425,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public Keys ModifierKeys
         {
-            get { return this.modifierKeys; }
-            internal set { this.modifierKeys = value; }
+            get => this.modifierKeys;
+            internal set => this.modifierKeys = value;
         }
 
         private Keys modifierKeys;
@@ -1487,8 +1436,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            internal set { this.item = value; }
+            get => item;
+            internal set => this.item = value;
         }
 
         private OLVListItem item;
@@ -1500,8 +1449,8 @@ namespace BrightIdeasSoftware
         /// for event triggered by the header</remarks>
         public OLVListSubItem SubItem
         {
-            get { return subItem; }
-            internal set { this.subItem = value; }
+            get => subItem;
+            internal set => this.subItem = value;
         }
 
         private OLVListSubItem subItem;
@@ -1511,8 +1460,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OlvListViewHitTestInfo HitTest
         {
-            get { return hitTest; }
-            internal set { hitTest = value; }
+            get => hitTest;
+            internal set => hitTest = value;
         }
 
         private OlvListViewHitTestInfo hitTest;
@@ -1534,8 +1483,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int ClickCount
         {
-            get { return this.clickCount; }
-            set { this.clickCount = value; }
+            get => this.clickCount;
+            set => this.clickCount = value;
         }
 
         private int clickCount;
@@ -1581,8 +1530,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int FreezeLevel
         {
-            get { return this.freezeLevel; }
-            set { this.freezeLevel = value; }
+            get => this.freezeLevel;
+            set => this.freezeLevel = value;
         }
 
         private int freezeLevel;
@@ -1598,8 +1547,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ToolTipControl ToolTipControl
         {
-            get { return this.toolTipControl; }
-            internal set { this.toolTipControl = value; }
+            get => this.toolTipControl;
+            internal set => this.toolTipControl = value;
         }
 
         private ToolTipControl toolTipControl;
@@ -1667,8 +1616,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ObjectListView ListView
         {
-            get { return this.listView; }
-            internal set { this.listView = value; }
+            get => this.listView;
+            internal set => this.listView = value;
         }
 
         private ObjectListView listView;
@@ -1678,8 +1627,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object Model
         {
-            get { return this.model; }
-            internal set { this.model = value; }
+            get => this.model;
+            internal set => this.model = value;
         }
 
         private object model;
@@ -1689,8 +1638,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int RowIndex
         {
-            get { return this.rowIndex; }
-            internal set { this.rowIndex = value; }
+            get => this.rowIndex;
+            internal set => this.rowIndex = value;
         }
 
         private int rowIndex = -1;
@@ -1701,8 +1650,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is -1 when the view is not in details view.</remarks>
         public int ColumnIndex
         {
-            get { return this.columnIndex; }
-            internal set { this.columnIndex = value; }
+            get => this.columnIndex;
+            internal set => this.columnIndex = value;
         }
 
         private int columnIndex = -1;
@@ -1713,8 +1662,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is null when the view is not in details view.</remarks>
         public OLVColumn Column
         {
-            get { return this.column; }
-            internal set { this.column = value; }
+            get => this.column;
+            internal set => this.column = value;
         }
 
         private OLVColumn column;
@@ -1724,8 +1673,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            internal set { this.item = value; }
+            get => item;
+            internal set => this.item = value;
         }
 
         private OLVListItem item;
@@ -1736,8 +1685,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is null when the view is not in details view</remarks>
         public OLVListSubItem SubItem
         {
-            get { return subItem; }
-            internal set { this.subItem = value; }
+            get => subItem;
+            internal set => this.subItem = value;
         }
 
         private OLVListSubItem subItem;
@@ -1747,8 +1696,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Url
         {
-            get { return this.url; }
-            internal set { this.url = value; }
+            get => this.url;
+            internal set => this.url = value;
         }
 
         private string url;
@@ -1759,8 +1708,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Handled
         {
-            get { return handled; }
-            set { handled = value; }
+            get => handled;
+            set => handled = value;
         }
 
         private bool handled;
@@ -1776,8 +1725,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ObjectListView ListView
         {
-            get { return this.listView; }
-            internal set { this.listView = value; }
+            get => this.listView;
+            internal set => this.listView = value;
         }
 
         private ObjectListView listView;
@@ -1787,8 +1736,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object Model
         {
-            get { return this.model; }
-            internal set { this.model = value; }
+            get => this.model;
+            internal set => this.model = value;
         }
 
         private object model;
@@ -1799,8 +1748,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is null when the view is not in details view.</remarks>
         public OLVColumn Column
         {
-            get { return this.column; }
-            internal set { this.column = value; }
+            get => this.column;
+            internal set => this.column = value;
         }
 
         private OLVColumn column;
@@ -1810,8 +1759,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Text
         {
-            get { return this.text; }
-            internal set { this.text = value; }
+            get => this.text;
+            internal set => this.text = value;
         }
 
         private string text;
@@ -1834,8 +1783,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ObjectListView ListView
         {
-            get { return this.listView; }
-            internal set { this.listView = value; }
+            get => this.listView;
+            internal set => this.listView = value;
         }
 
         private ObjectListView listView;
@@ -1845,8 +1794,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            internal set { this.item = value; }
+            get => item;
+            internal set => this.item = value;
         }
 
         private OLVListItem item;
@@ -1854,18 +1803,15 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the model object under the cell
         /// </summary>
-        public object Model
-        {
-            get { return this.Item.RowObject; }
-        }
+        public object Model => this.Item.RowObject;
 
         /// <summary>
         /// Gets the row index of the cell
         /// </summary>
         public int RowIndex
         {
-            get { return this.rowIndex; }
-            internal set { this.rowIndex = value; }
+            get => this.rowIndex;
+            internal set => this.rowIndex = value;
         }
 
         private int rowIndex = -1;
@@ -1875,8 +1821,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int DisplayIndex
         {
-            get { return this.displayIndex; }
-            internal set { this.displayIndex = value; }
+            get => this.displayIndex;
+            internal set => this.displayIndex = value;
         }
 
         private int displayIndex = -1;
@@ -1886,8 +1832,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool UseCellFormatEvents
         {
-            get { return useCellFormatEvents; }
-            set { useCellFormatEvents = value; }
+            get => useCellFormatEvents;
+            set => useCellFormatEvents = value;
         }
 
         private bool useCellFormatEvents;
@@ -1904,8 +1850,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is -1 when the view is not in details view.</remarks>
         public int ColumnIndex
         {
-            get { return this.columnIndex; }
-            internal set { this.columnIndex = value; }
+            get => this.columnIndex;
+            internal set => this.columnIndex = value;
         }
 
         private int columnIndex = -1;
@@ -1916,8 +1862,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is null when the view is not in details view.</remarks>
         public OLVColumn Column
         {
-            get { return this.column; }
-            internal set { this.column = value; }
+            get => this.column;
+            internal set => this.column = value;
         }
 
         private OLVColumn column;
@@ -1928,8 +1874,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is null when the view is not in details view</remarks>
         public OLVListSubItem SubItem
         {
-            get { return subItem; }
-            internal set { this.subItem = value; }
+            get => subItem;
+            internal set => this.subItem = value;
         }
 
         private OLVListSubItem subItem;
@@ -1938,10 +1884,7 @@ namespace BrightIdeasSoftware
         /// Gets the model value that is being displayed by the cell.
         /// </summary>
         /// <remarks>This is null when the view is not in details view</remarks>
-        public object CellValue
-        {
-            get { return this.SubItem == null ? null : this.SubItem.ModelValue; }
-        }
+        public object CellValue => this.SubItem == null ? null : this.SubItem.ModelValue;
     }
 
     /// <summary>
@@ -1954,8 +1897,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public string Url
         {
-            get { return url; }
-            set { url = value; }
+            get => url;
+            set => url = value;
         }
 
         private string url;
@@ -1973,8 +1916,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Handled
         {
-            get { return handled; }
-            set { handled = value; }
+            get => handled;
+            set => handled = value;
         }
 
         private bool handled;
@@ -1984,8 +1927,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public HitTestLocation HotCellHitLocation
         {
-            get { return newHotCellHitLocation; }
-            internal set { newHotCellHitLocation = value; }
+            get => newHotCellHitLocation;
+            internal set => newHotCellHitLocation = value;
         }
 
         private HitTestLocation newHotCellHitLocation;
@@ -1995,8 +1938,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual HitTestLocationEx HotCellHitLocationEx
         {
-            get { return this.hotCellHitLocationEx; }
-            internal set { this.hotCellHitLocationEx = value; }
+            get => this.hotCellHitLocationEx;
+            internal set => this.hotCellHitLocationEx = value;
         }
 
         private HitTestLocationEx hotCellHitLocationEx;
@@ -2007,8 +1950,8 @@ namespace BrightIdeasSoftware
         /// <remarks>In non-details view, this will always be 0.</remarks>
         public int HotColumnIndex
         {
-            get { return newHotColumnIndex; }
-            internal set { newHotColumnIndex = value; }
+            get => newHotColumnIndex;
+            internal set => newHotColumnIndex = value;
         }
 
         private int newHotColumnIndex;
@@ -2018,8 +1961,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int HotRowIndex
         {
-            get { return newHotRowIndex; }
-            internal set { newHotRowIndex = value; }
+            get => newHotRowIndex;
+            internal set => newHotRowIndex = value;
         }
 
         private int newHotRowIndex;
@@ -2029,8 +1972,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVGroup HotGroup
         {
-            get { return hotGroup; }
-            internal set { hotGroup = value; }
+            get => hotGroup;
+            internal set => hotGroup = value;
         }
 
         private OLVGroup hotGroup;
@@ -2040,8 +1983,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public HitTestLocation OldHotCellHitLocation
         {
-            get { return oldHotCellHitLocation; }
-            internal set { oldHotCellHitLocation = value; }
+            get => oldHotCellHitLocation;
+            internal set => oldHotCellHitLocation = value;
         }
 
         private HitTestLocation oldHotCellHitLocation;
@@ -2051,8 +1994,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual HitTestLocationEx OldHotCellHitLocationEx
         {
-            get { return this.oldHotCellHitLocationEx; }
-            internal set { this.oldHotCellHitLocationEx = value; }
+            get => this.oldHotCellHitLocationEx;
+            internal set => this.oldHotCellHitLocationEx = value;
         }
 
         private HitTestLocationEx oldHotCellHitLocationEx;
@@ -2062,8 +2005,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int OldHotColumnIndex
         {
-            get { return oldHotColumnIndex; }
-            internal set { oldHotColumnIndex = value; }
+            get => oldHotColumnIndex;
+            internal set => oldHotColumnIndex = value;
         }
 
         private int oldHotColumnIndex;
@@ -2073,8 +2016,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int OldHotRowIndex
         {
-            get { return oldHotRowIndex; }
-            internal set { oldHotRowIndex = value; }
+            get => oldHotRowIndex;
+            internal set => oldHotRowIndex = value;
         }
 
         private int oldHotRowIndex;
@@ -2084,8 +2027,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVGroup OldHotGroup
         {
-            get { return oldHotGroup; }
-            internal set { oldHotGroup = value; }
+            get => oldHotGroup;
+            internal set => oldHotGroup = value;
         }
 
         private OLVGroup oldHotGroup;
@@ -2125,38 +2068,26 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// The column of the cell that is having its checkbox changed.
         /// </summary>
-        public OLVColumn Column
-        {
-            get { return this.column; }
-        }
+        public OLVColumn Column => this.column;
 
         private OLVColumn column;
 
         /// <summary>
         /// The model object of the row of the cell that is having its checkbox changed.
         /// </summary>
-        public object RowObject
-        {
-            get { return this.listViewItem.RowObject; }
-        }
+        public object RowObject => this.listViewItem.RowObject;
 
         /// <summary>
         /// The listview item of the cell that is having its checkbox changed.
         /// </summary>
-        public OLVListItem ListViewItem
-        {
-            get { return this.listViewItem; }
-        }
+        public OLVListItem ListViewItem => this.listViewItem;
 
         private OLVListItem listViewItem;
 
         /// <summary>
         /// The current check state of the cell.
         /// </summary>
-        public CheckState CurrentValue
-        {
-            get { return this.currentValue; }
-        }
+        public CheckState CurrentValue => this.currentValue;
 
         private CheckState currentValue;
 
@@ -2165,8 +2096,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public CheckState NewValue
         {
-            get { return this.newValue; }
-            set { this.newValue = value; }
+            get => this.newValue;
+            set => this.newValue = value;
         }
 
         private CheckState newValue;
@@ -2174,10 +2105,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// The index of the cell that is going to be or has been edited.
         /// </summary>
-        public int SubItemIndex
-        {
-            get { return this.subItemIndex; }
-        }
+        public int SubItemIndex => this.subItemIndex;
 
         private int subItemIndex;
     }
@@ -2199,10 +2127,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the settings that control the creation of groups
         /// </summary>
-        public GroupingParameters Parameters
-        {
-            get { return this.parameters; }
-        }
+        public GroupingParameters Parameters => this.parameters;
 
         private GroupingParameters parameters;
 
@@ -2211,8 +2136,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public IList<OLVGroup> Groups
         {
-            get { return this.groups; }
-            set { this.groups = value; }
+            get => this.groups;
+            set => this.groups = value;
         }
 
         private IList<OLVGroup> groups;
@@ -2222,8 +2147,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool Canceled
         {
-            get { return canceled; }
-            set { canceled = value; }
+            get => canceled;
+            set => canceled = value;
         }
 
         private bool canceled;
@@ -2246,10 +2171,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets which group was clicked
         /// </summary>
-        public OLVGroup Group
-        {
-            get { return this.group; }
-        }
+        public OLVGroup Group => this.group;
 
         private readonly OLVGroup group;
     }
@@ -2272,10 +2194,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets which group is expanding/collapsing
         /// </summary>
-        public OLVGroup Group
-        {
-            get { return this.olvGroup; }
-        }
+        public OLVGroup Group => this.olvGroup;
 
         private readonly OLVGroup olvGroup;
 
@@ -2283,10 +2202,7 @@ namespace BrightIdeasSoftware
         /// Gets whether this event is going to expand the group.
         /// If this is false, the group must be collapsing.
         /// </summary>
-        public bool IsExpanding
-        {
-            get { return this.Group.Collapsed; }
-        }
+        public bool IsExpanding => this.Group.Collapsed;
     }
 
     /// <summary>
@@ -2310,92 +2226,50 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets whether the group was collapsed by this event
         /// </summary>
-        public bool Collapsed
-        {
-            get
-            {
-                return ((oldState & GroupState.LVGS_COLLAPSED) != GroupState.LVGS_COLLAPSED) &&
-                       ((newState & GroupState.LVGS_COLLAPSED) == GroupState.LVGS_COLLAPSED);
-            }
-        }
+        public bool Collapsed => ((oldState & GroupState.LVGS_COLLAPSED) != GroupState.LVGS_COLLAPSED) &&
+                                 ((newState & GroupState.LVGS_COLLAPSED) == GroupState.LVGS_COLLAPSED);
 
         /// <summary>
         /// Gets whether the group was focused by this event
         /// </summary>
-        public bool Focused
-        {
-            get
-            {
-                return ((oldState & GroupState.LVGS_FOCUSED) != GroupState.LVGS_FOCUSED) &&
-                       ((newState & GroupState.LVGS_FOCUSED) == GroupState.LVGS_FOCUSED);
-            }
-        }
+        public bool Focused => ((oldState & GroupState.LVGS_FOCUSED) != GroupState.LVGS_FOCUSED) &&
+                               ((newState & GroupState.LVGS_FOCUSED) == GroupState.LVGS_FOCUSED);
 
         /// <summary>
         /// Gets whether the group was selected by this event
         /// </summary>
-        public bool Selected
-        {
-            get
-            {
-                return ((oldState & GroupState.LVGS_SELECTED) != GroupState.LVGS_SELECTED) &&
-                       ((newState & GroupState.LVGS_SELECTED) == GroupState.LVGS_SELECTED);
-            }
-        }
+        public bool Selected => ((oldState & GroupState.LVGS_SELECTED) != GroupState.LVGS_SELECTED) &&
+                                ((newState & GroupState.LVGS_SELECTED) == GroupState.LVGS_SELECTED);
 
         /// <summary>
         /// Gets whether the group was uncollapsed by this event
         /// </summary>
-        public bool Uncollapsed
-        {
-            get
-            {
-                return ((oldState & GroupState.LVGS_COLLAPSED) == GroupState.LVGS_COLLAPSED) &&
-                       ((newState & GroupState.LVGS_COLLAPSED) != GroupState.LVGS_COLLAPSED);
-            }
-        }
+        public bool Uncollapsed => ((oldState & GroupState.LVGS_COLLAPSED) == GroupState.LVGS_COLLAPSED) &&
+                                   ((newState & GroupState.LVGS_COLLAPSED) != GroupState.LVGS_COLLAPSED);
 
         /// <summary>
         /// Gets whether the group was unfocused by this event
         /// </summary>
-        public bool Unfocused
-        {
-            get
-            {
-                return ((oldState & GroupState.LVGS_FOCUSED) == GroupState.LVGS_FOCUSED) &&
-                       ((newState & GroupState.LVGS_FOCUSED) != GroupState.LVGS_FOCUSED);
-            }
-        }
+        public bool Unfocused => ((oldState & GroupState.LVGS_FOCUSED) == GroupState.LVGS_FOCUSED) &&
+                                 ((newState & GroupState.LVGS_FOCUSED) != GroupState.LVGS_FOCUSED);
 
         /// <summary>
         /// Gets whether the group was unselected by this event
         /// </summary>
-        public bool Unselected
-        {
-            get
-            {
-                return ((oldState & GroupState.LVGS_SELECTED) == GroupState.LVGS_SELECTED) &&
-                       ((newState & GroupState.LVGS_SELECTED) != GroupState.LVGS_SELECTED);
-            }
-        }
+        public bool Unselected => ((oldState & GroupState.LVGS_SELECTED) == GroupState.LVGS_SELECTED) &&
+                                  ((newState & GroupState.LVGS_SELECTED) != GroupState.LVGS_SELECTED);
 
         /// <summary>
         /// Gets which group had its state changed
         /// </summary>
-        public OLVGroup Group
-        {
-            get { return this.group; }
-        }
+        public OLVGroup Group => this.group;
 
         private readonly OLVGroup group;
 
         /// <summary>
         /// Gets the previous state of the group
         /// </summary>
-        public GroupState OldState
-        {
-            get { return this.oldState; }
-        }
+        public GroupState OldState => this.oldState;
 
         private readonly GroupState oldState;
 
@@ -2403,10 +2277,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the new state of the group
         /// </summary>
-        public GroupState NewState
-        {
-            get { return this.newState; }
-        }
+        public GroupState NewState => this.newState;
 
         private readonly GroupState newState;
     }
@@ -2432,8 +2303,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object Model
         {
-            get { return model; }
-            private set { model = value; }
+            get => model;
+            private set => model = value;
         }
 
         private object model;
@@ -2443,8 +2314,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            private set { item = value; }
+            get => item;
+            private set => item = value;
         }
 
         private OLVListItem item;
@@ -2471,8 +2342,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object Model
         {
-            get { return model; }
-            private set { model = value; }
+            get => model;
+            private set => model = value;
         }
 
         private object model;
@@ -2482,8 +2353,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            private set { item = value; }
+            get => item;
+            private set => item = value;
         }
 
         private OLVListItem item;
@@ -2510,8 +2381,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object Model
         {
-            get { return model; }
-            private set { model = value; }
+            get => model;
+            private set => model = value;
         }
 
         private object model;
@@ -2521,8 +2392,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            private set { item = value; }
+            get => item;
+            private set => item = value;
         }
 
         private OLVListItem item;
@@ -2550,8 +2421,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object Model
         {
-            get { return model; }
-            private set { model = value; }
+            get => model;
+            private set => model = value;
         }
 
         private object model;
@@ -2561,8 +2432,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVListItem Item
         {
-            get { return item; }
-            private set { item = value; }
+            get => item;
+            private set => item = value;
         }
 
         private OLVListItem item;
