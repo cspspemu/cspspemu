@@ -9853,11 +9853,9 @@ namespace cscodec.h264.decoder
                     s.time_base.den = param[1];
                 }
                 s.pix_fmt = MpegEncContext.get_format(
-                    s.codec.pix_fmts != null
-                        ? s.codec.pix_fmts
-                        : s.color_range == MpegEncContext.AVCOL_RANGE_JPEG
+                    s.codec.pix_fmts ?? (s.color_range == MpegEncContext.AVCOL_RANGE_JPEG
                             ? hwaccel_pixfmt_list_h264_jpeg_420
-                            : MpegEncContext.ff_hwaccel_pixfmt_list_420);
+                            : MpegEncContext.ff_hwaccel_pixfmt_list_420));
                 s.hwaccel =
                     0; // No H/W Accel!! // ff_find_hwaccel(s.avctx.codec.id, s.avctx.pix_fmt);
 
