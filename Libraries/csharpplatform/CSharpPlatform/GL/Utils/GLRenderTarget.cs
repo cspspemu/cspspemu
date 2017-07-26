@@ -44,22 +44,16 @@ namespace CSharpPlatform.GL.Utils
 
             From.BindUnbind(() =>
             {
-                if (To.TextureColor != null)
+                To.TextureColor?.BindUnbind(() =>
                 {
-                    To.TextureColor.BindUnbind(() =>
-                    {
-                        GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA4, 0, 0, From.Width, From.Height, 0);
-                    });
-                }
+                    GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA4, 0, 0, From.Width, From.Height, 0);
+                });
 
-                if (To.TextureDepth != null)
+                To.TextureDepth?.BindUnbind(() =>
                 {
-                    To.TextureDepth.BindUnbind(() =>
-                    {
-                        GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, 0, 0, From.Width,
-                            From.Height, 0);
-                    });
-                }
+                    GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, 0, 0, From.Width,
+                        From.Height, 0);
+                });
             });
         }
 
@@ -162,9 +156,9 @@ namespace CSharpPlatform.GL.Utils
 
         public GLRenderTarget Bind()
         {
-            if (Current != this && Current != null)
+            if (Current != this)
             {
-                Current.Unbind();
+                Current?.Unbind();
             }
             Current = this;
             GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, FrameBufferId);

@@ -725,8 +725,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnShowing(ToolTipShowingEventArgs e)
         {
-            if (this.Showing != null)
-                this.Showing(this, e);
+            Showing?.Invoke(this, e);
         }
 
         /// <summary>
@@ -735,8 +734,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnPop(EventArgs e)
         {
-            if (this.Pop != null)
-                this.Pop(this, e);
+            Pop?.Invoke(this, e);
         }
 
         #endregion

@@ -92,8 +92,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (m_Stream != null)
-                m_Stream.Close();
+            m_Stream?.Close();
             GC.SuppressFinalize(this);
         }
 

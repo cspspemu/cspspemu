@@ -28,7 +28,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             StaticField.Value = dynarecFunction.Delegate;
         }
 
-        public bool HasSpecialName => (DynarecFunction != null) && !string.IsNullOrEmpty(DynarecFunction.Name);
+        public bool HasSpecialName => !string.IsNullOrEmpty(DynarecFunction?.Name);
 
         /// <summary>
         /// 

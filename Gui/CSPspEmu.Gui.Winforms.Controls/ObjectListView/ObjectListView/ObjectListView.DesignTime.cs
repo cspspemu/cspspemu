@@ -111,12 +111,9 @@ namespace BrightIdeasSoftware.Design
             // Debug.WriteLine("ObjectListViewDesigner.Dispose");
             if (disposing)
             {
-                if (this.listViewDesigner != null)
-                {
-                    this.listViewDesigner.Dispose();
-                    // Normally we would now null out the designer, but this designer
-                    // still has methods called AFTER it is disposed.
-                }
+                listViewDesigner?.Dispose();
+                // Normally we would now null out the designer, but this designer
+                // still has methods called AFTER it is disposed.
             }
 
             base.Dispose(disposing);
@@ -144,10 +141,7 @@ namespace BrightIdeasSoftware.Design
                 if (dockingAction != null)
                 {
                     DesignerActionService service = (DesignerActionService) GetService(typeof(DesignerActionService));
-                    if (service != null)
-                    {
-                        service.Remove(this.Control, dockingAction);
-                    }
+                    service?.Remove(this.Control, dockingAction);
                 }
             }
         }

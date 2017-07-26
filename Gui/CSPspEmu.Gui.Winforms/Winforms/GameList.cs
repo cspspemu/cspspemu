@@ -75,7 +75,7 @@ namespace CSPspEmu.Gui.Winforms
                     try
                     {
                         //Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
-                        if (Progress != null) Progress(IsoFile, Current, Total);
+                        Progress?.Invoke(IsoFile, Current, Total);
 
                         //Serializer.Serialize(Console.Out, Entry);
 

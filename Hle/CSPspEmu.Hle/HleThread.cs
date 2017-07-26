@@ -398,16 +398,13 @@ namespace CSPspEmu.Hle
 
         public void Terminate()
         {
-            if (OnTerminate != null)
-            {
-                OnTerminate();
-            }
+            OnTerminate?.Invoke();
         }
 
         public void Dispose()
         {
-            if (Coroutine != null) Coroutine.Dispose();
-            if (GreenThread != null) GreenThread.Dispose();
+            Coroutine?.Dispose();
+            GreenThread?.Dispose();
         }
 
         public void DumpStack(TextWriter TextWriter)

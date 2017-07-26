@@ -78,10 +78,7 @@ namespace CSPspEmu.Hle.Vfs
         /// </summary>
         public void Dispose()
         {
-            if (FileArgument != null)
-            {
-                FileArgument.Dispose();
-            }
+            FileArgument?.Dispose();
         }
     }
 

@@ -181,10 +181,7 @@ namespace CSPspEmu.Hle.Managers
         /// </summary>
         public void Yield()
         {
-            if (Current != null)
-            {
-                Current.CpuThreadState.Yield();
-            }
+            Current?.CpuThreadState.Yield();
         }
 
         public void UpdatedThread(HleThread HleThread)
@@ -232,7 +229,7 @@ namespace CSPspEmu.Hle.Managers
                     while (ChangeStatusActions.Count > 0)
                     {
                         var Action = ChangeStatusActions.Dequeue();
-                        if (Action != null) Action();
+                        Action?.Invoke();
                     }
 
                     NextThread = CalculateNext();
@@ -277,7 +274,7 @@ namespace CSPspEmu.Hle.Managers
                         });
                     }
 
-                    if (DoBeforeSelectingNext != null) DoBeforeSelectingNext();
+                    DoBeforeSelectingNext?.Invoke();
 
                     ExecuteCurrent(CurrentCurrent);
                 }

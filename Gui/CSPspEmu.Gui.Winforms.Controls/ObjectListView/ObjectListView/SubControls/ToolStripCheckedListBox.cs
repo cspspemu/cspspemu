@@ -171,10 +171,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         private void OnItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (ItemCheck != null)
-            {
-                ItemCheck(this, e);
-            }
+            ItemCheck?.Invoke(this, e);
         }
 
         #endregion

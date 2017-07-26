@@ -71,7 +71,7 @@ namespace CSPspEmu.Hle.Modules.threadman
                     {
                         *PointerToMessage = Messages.Last.Value;
                         Messages.RemoveLast();
-                        if (WakeUp != null) WakeUp();
+                        WakeUp?.Invoke();
                     };
                     ExtractQueue.Enqueue(Extract);
                     CheckQueue();

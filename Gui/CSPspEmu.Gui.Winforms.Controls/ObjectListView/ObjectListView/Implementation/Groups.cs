@@ -262,13 +262,7 @@ namespace BrightIdeasSoftware
         /// <remarks>
         /// Descriptions only appear when group is centered and there is a title image
         /// </remarks>
-        public string BottomDescription
-        {
-            get => this.bottomDescription;
-            set => this.bottomDescription = value;
-        }
-
-        private string bottomDescription;
+        public string BottomDescription { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not this group is collapsed
@@ -292,13 +286,7 @@ namespace BrightIdeasSoftware
         /// Gets or sets some representation of the contents of this group
         /// </summary>
         /// <remarks>This is user defined (like Tag)</remarks>
-        public IList Contents
-        {
-            get => this.contents;
-            set => this.contents = value;
-        }
-
-        private IList contents;
+        public IList Contents { get; set; }
 
         /// <summary>
         /// Gets whether this group has been created.
@@ -308,13 +296,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets or sets the int or string that will select the extended image to be shown against the title
         /// </summary>
-        public object ExtendedImage
-        {
-            get => this.extendedImage;
-            set => this.extendedImage = value;
-        }
-
-        private object extendedImage;
+        public object ExtendedImage { get; set; }
 
         /// <summary>
         /// Gets or sets the footer of the group

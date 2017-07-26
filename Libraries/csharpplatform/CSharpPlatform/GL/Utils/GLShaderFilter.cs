@@ -9,9 +9,9 @@ namespace CSharpPlatform.GL.Utils
         private GLBuffer TexcoordsBuffer;
         private GLShader Shader;
 
-        public int Width => (RenderTarget != null) ? RenderTarget.Width : 0;
+        public int Width => RenderTarget?.Width ?? 0;
 
-        public int Height => (RenderTarget != null) ? RenderTarget.Height : 0;
+        public int Height => RenderTarget?.Height ?? 0;
 
         public static string DefaultVertexShader = @"
 			attribute vec4 a_position;
@@ -71,7 +71,7 @@ namespace CSharpPlatform.GL.Utils
             if (Width != this.Width || Height != this.Height)
             {
                 //Console.WriteLine("{0}x{1}", Width, Height);
-                if (RenderTarget != null) RenderTarget.Dispose();
+                RenderTarget?.Dispose();
                 RenderTarget = GLRenderTarget.Create(Width, Height, RenderTargetLayers.Color);
                 //this.RenderTarget = GLRenderTarget.Create(Width, Height);
             }

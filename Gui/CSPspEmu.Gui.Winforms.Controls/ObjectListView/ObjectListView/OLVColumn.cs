@@ -700,9 +700,7 @@ namespace BrightIdeasSoftware
         /// Gets whether or not this column has an image in the header
         /// </summary>
         [Browsable(false)]
-        public bool HasHeaderImage => (this.ListView != null &&
-                                       this.ListView.SmallImageList != null &&
-                                       this.ListView.SmallImageList.Images.ContainsKey(this.HeaderImageKey));
+        public bool HasHeaderImage => (ListView?.SmallImageList != null && this.ListView.SmallImageList.Images.ContainsKey(this.HeaderImageKey));
 
         /// <summary>
         /// Gets or sets whether this column can be hidden by the user.

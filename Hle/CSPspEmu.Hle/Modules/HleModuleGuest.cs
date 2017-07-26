@@ -172,9 +172,7 @@ namespace CSPspEmu.Hle
                         Module = null,
                         ModuleName = ModuleImports.Name,
                     };
-                    var FunctionEntry = (HleModuleHost != null)
-                        ? HleModuleHost.EntriesByNID.GetOrDefault(NID, DefaultEntry)
-                        : DefaultEntry;
+                    var FunctionEntry = HleModuleHost?.EntriesByNID.GetOrDefault(NID, DefaultEntry) ?? DefaultEntry;
                     FunctionEntry.NID = NID;
                     //var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
 

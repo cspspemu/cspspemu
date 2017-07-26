@@ -70,7 +70,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
             public void ExploreNewPcCallback(uint pc)
             {
-                if (_exploreNewPcCallback != null) _exploreNewPcCallback(pc);
+                _exploreNewPcCallback?.Invoke(pc);
             }
 
             internal InternalFunctionCompiler(InjectContext injectContext, MipsMethodEmitter mipsMethodEmitter,

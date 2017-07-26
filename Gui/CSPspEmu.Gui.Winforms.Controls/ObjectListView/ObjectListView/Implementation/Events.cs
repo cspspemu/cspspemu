@@ -390,8 +390,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnAboutToCreateGroups(CreateGroupsEventArgs e)
         {
-            if (this.AboutToCreateGroups != null)
-                this.AboutToCreateGroups(this, e);
+            this.AboutToCreateGroups?.Invoke(this, e);
         }
 
         /// <summary>
@@ -400,8 +399,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnBeforeCreatingGroups(CreateGroupsEventArgs e)
         {
-            if (this.BeforeCreatingGroups != null)
-                this.BeforeCreatingGroups(this, e);
+            this.BeforeCreatingGroups?.Invoke(this, e);
         }
 
         /// <summary>
@@ -410,8 +408,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnAfterCreatingGroups(CreateGroupsEventArgs e)
         {
-            if (this.AfterCreatingGroups != null)
-                this.AfterCreatingGroups(this, e);
+            this.AfterCreatingGroups?.Invoke(this, e);
         }
 
         /// <summary>
@@ -420,8 +417,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnAfterSearching(AfterSearchingEventArgs e)
         {
-            if (this.AfterSearching != null)
-                this.AfterSearching(this, e);
+            this.AfterSearching?.Invoke(this, e);
         }
 
         /// <summary>
@@ -430,8 +426,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnAfterSorting(AfterSortingEventArgs e)
         {
-            if (this.AfterSorting != null)
-                this.AfterSorting(this, e);
+            this.AfterSorting?.Invoke(this, e);
         }
 
         /// <summary>
@@ -440,8 +435,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnBeforeSearching(BeforeSearchingEventArgs e)
         {
-            if (this.BeforeSearching != null)
-                this.BeforeSearching(this, e);
+            this.BeforeSearching?.Invoke(this, e);
         }
 
         /// <summary>
@@ -450,8 +444,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnBeforeSorting(BeforeSortingEventArgs e)
         {
-            if (this.BeforeSorting != null)
-                this.BeforeSorting(this, e);
+            this.BeforeSorting?.Invoke(this, e);
         }
 
         /// <summary>
@@ -460,8 +453,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnCanDrop(OlvDropEventArgs args)
         {
-            if (this.CanDrop != null)
-                this.CanDrop(this, args);
+            this.CanDrop?.Invoke(this, args);
         }
 
         /// <summary>
@@ -470,8 +462,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnCellClick(CellClickEventArgs args)
         {
-            if (this.CellClick != null)
-                this.CellClick(this, args);
+            this.CellClick?.Invoke(this, args);
         }
 
         /// <summary>
@@ -480,8 +471,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnCellOver(CellOverEventArgs args)
         {
-            if (this.CellOver != null)
-                this.CellOver(this, args);
+            this.CellOver?.Invoke(this, args);
         }
 
         /// <summary>
@@ -490,8 +480,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnCellRightClick(CellRightClickEventArgs args)
         {
-            if (this.CellRightClick != null)
-                this.CellRightClick(this, args);
+            this.CellRightClick?.Invoke(this, args);
         }
 
         /// <summary>
@@ -500,8 +489,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnCellToolTip(ToolTipShowingEventArgs args)
         {
-            if (this.CellToolTipShowing != null)
-                this.CellToolTipShowing(this, args);
+            this.CellToolTipShowing?.Invoke(this, args);
         }
 
         /// <summary>
@@ -510,8 +498,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnSubItemChecking(SubItemCheckingEventArgs args)
         {
-            if (this.SubItemChecking != null)
-                this.SubItemChecking(this, args);
+            this.SubItemChecking?.Invoke(this, args);
         }
 
         /// <summary>
@@ -520,8 +507,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnColumnRightClick(ColumnClickEventArgs e)
         {
-            if (this.ColumnRightClick != null)
-                this.ColumnRightClick(this, e);
+            this.ColumnRightClick?.Invoke(this, e);
         }
 
         /// <summary>
@@ -530,8 +516,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnDropped(OlvDropEventArgs args)
         {
-            if (this.Dropped != null)
-                this.Dropped(this, args);
+            this.Dropped?.Invoke(this, args);
         }
 
         /// <summary>
@@ -540,8 +525,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnFilter(FilterEventArgs e)
         {
-            if (this.Filter != null)
-                this.Filter(this, e);
+            this.Filter?.Invoke(this, e);
         }
 
         /// <summary>
@@ -550,8 +534,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnFormatCell(FormatCellEventArgs args)
         {
-            if (this.FormatCell != null)
-                this.FormatCell(this, args);
+            this.FormatCell?.Invoke(this, args);
         }
 
         /// <summary>
@@ -560,8 +543,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnFormatRow(FormatRowEventArgs args)
         {
-            if (this.FormatRow != null)
-                this.FormatRow(this, args);
+            FormatRow?.Invoke(this, args);
         }
 
         /// <summary>
@@ -570,8 +552,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnFreezing(FreezeEventArgs args)
         {
-            if (this.Freezing != null)
-                this.Freezing(this, args);
+            Freezing?.Invoke(this, args);
         }
 
         /// <summary>
@@ -580,8 +561,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnGroupExpandingCollapsing(GroupExpandingCollapsingEventArgs args)
         {
-            if (this.GroupExpandingCollapsing != null)
-                this.GroupExpandingCollapsing(this, args);
+            GroupExpandingCollapsing?.Invoke(this, args);
         }
 
         /// <summary>
@@ -590,8 +570,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnGroupStateChanged(GroupStateChangedEventArgs args)
         {
-            if (this.GroupStateChanged != null)
-                this.GroupStateChanged(this, args);
+            GroupStateChanged?.Invoke(this, args);
         }
 
         /// <summary>
@@ -600,8 +579,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnHeaderToolTip(ToolTipShowingEventArgs args)
         {
-            if (this.HeaderToolTipShowing != null)
-                this.HeaderToolTipShowing(this, args);
+            HeaderToolTipShowing?.Invoke(this, args);
         }
 
         /// <summary>
@@ -610,8 +588,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnHotItemChanged(HotItemChangedEventArgs e)
         {
-            if (this.HotItemChanged != null)
-                this.HotItemChanged(this, e);
+            HotItemChanged?.Invoke(this, e);
         }
 
         /// <summary>
@@ -620,8 +597,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnHyperlinkClicked(HyperlinkClickedEventArgs e)
         {
-            if (this.HyperlinkClicked != null)
-                this.HyperlinkClicked(this, e);
+            HyperlinkClicked?.Invoke(this, e);
         }
 
         /// <summary>
@@ -630,8 +606,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnGroupTaskClicked(GroupTaskClickedEventArgs e)
         {
-            if (this.GroupTaskClicked != null)
-                this.GroupTaskClicked(this, e);
+            GroupTaskClicked?.Invoke(this, e);
         }
 
         /// <summary>
@@ -640,8 +615,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnIsHyperlink(IsHyperlinkEventArgs e)
         {
-            if (this.IsHyperlink != null)
-                this.IsHyperlink(this, e);
+            IsHyperlink?.Invoke(this, e);
         }
 
         /// <summary>
@@ -650,8 +624,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnItemsAdding(ItemsAddingEventArgs e)
         {
-            if (this.ItemsAdding != null)
-                this.ItemsAdding(this, e);
+            ItemsAdding?.Invoke(this, e);
         }
 
         /// <summary>
@@ -660,8 +633,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnItemsChanged(ItemsChangedEventArgs e)
         {
-            if (this.ItemsChanged != null)
-                this.ItemsChanged(this, e);
+            ItemsChanged?.Invoke(this, e);
         }
 
         /// <summary>
@@ -670,8 +642,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnItemsChanging(ItemsChangingEventArgs e)
         {
-            if (this.ItemsChanging != null)
-                this.ItemsChanging(this, e);
+            ItemsChanging?.Invoke(this, e);
         }
 
         /// <summary>
@@ -680,8 +651,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnItemsRemoving(ItemsRemovingEventArgs e)
         {
-            if (this.ItemsRemoving != null)
-                this.ItemsRemoving(this, e);
+            ItemsRemoving?.Invoke(this, e);
         }
 
         /// <summary>
@@ -690,8 +660,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnModelCanDrop(ModelDropEventArgs args)
         {
-            if (this.ModelCanDrop != null)
-                this.ModelCanDrop(this, args);
+            ModelCanDrop?.Invoke(this, args);
         }
 
         /// <summary>
@@ -700,8 +669,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnModelDropped(ModelDropEventArgs args)
         {
-            if (this.ModelDropped != null)
-                this.ModelDropped(this, args);
+            ModelDropped?.Invoke(this, args);
         }
 
         /// <summary>
@@ -710,8 +678,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnSelectionChanged(EventArgs e)
         {
-            if (this.SelectionChanged != null)
-                this.SelectionChanged(this, e);
+            SelectionChanged?.Invoke(this, e);
         }
 
         /// <summary>
@@ -720,8 +687,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnScroll(ScrollEventArgs e)
         {
-            if (this.Scroll != null)
-                this.Scroll(this, e);
+            Scroll?.Invoke(this, e);
         }
 
 
@@ -730,8 +696,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         protected virtual void OnCellEditStarting(CellEditEventArgs e)
         {
-            if (this.CellEditStarting != null)
-                this.CellEditStarting(this, e);
+            CellEditStarting?.Invoke(this, e);
         }
 
         /// <summary>
@@ -766,8 +731,7 @@ namespace BrightIdeasSoftware
             else
             {
                 lastValidatingEvent = Environment.TickCount;
-                if (this.CellEditValidating != null)
-                    this.CellEditValidating(this, e);
+                CellEditValidating?.Invoke(this, e);
             }
             lastValidatingEvent = Environment.TickCount;
         }
@@ -779,8 +743,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         protected virtual void OnCellEditFinishing(CellEditEventArgs e)
         {
-            if (this.CellEditFinishing != null)
-                this.CellEditFinishing(this, e);
+            CellEditFinishing?.Invoke(this, e);
         }
 
         #endregion
@@ -828,8 +791,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnExpanding(TreeBranchExpandingEventArgs e)
         {
-            if (this.Expanding != null)
-                this.Expanding(this, e);
+            Expanding?.Invoke(this, e);
         }
 
         /// <summary>
@@ -838,8 +800,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnCollapsing(TreeBranchCollapsingEventArgs e)
         {
-            if (this.Collapsing != null)
-                this.Collapsing(this, e);
+            Collapsing?.Invoke(this, e);
         }
 
         /// <summary>
@@ -848,8 +809,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnExpanded(TreeBranchExpandedEventArgs e)
         {
-            if (this.Expanded != null)
-                this.Expanded(this, e);
+            Expanded?.Invoke(this, e);
         }
 
         /// <summary>
@@ -858,8 +818,7 @@ namespace BrightIdeasSoftware
         /// <param name="e"></param>
         protected virtual void OnCollapsed(TreeBranchCollapsedEventArgs e)
         {
-            if (this.Collapsed != null)
-                this.Collapsed(this, e);
+            Collapsed?.Invoke(this, e);
         }
 
         #endregion

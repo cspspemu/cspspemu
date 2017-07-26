@@ -548,11 +548,13 @@ namespace CSharpUtils.Containers.RedBlackTree
 
             internal Node Clone()
             {
-                var that = new Node();
-                that.Value = Value;
-                that.Color = Color;
-                that.ChildCountLeft = ChildCountLeft;
-                that.ChildCountRight = ChildCountRight;
+                var that = new Node
+                {
+                    Value = Value,
+                    Color = Color,
+                    ChildCountLeft = ChildCountLeft,
+                    ChildCountRight = ChildCountRight
+                };
                 if (_LeftNode != null) that.LeftNode = _LeftNode.Clone();
                 if (_RightNode != null) that.RightNode = _RightNode.Clone();
                 return that;

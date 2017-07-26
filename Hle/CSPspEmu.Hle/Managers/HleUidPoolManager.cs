@@ -62,7 +62,7 @@ namespace CSPspEmu.Hle.Managers
                 }
             }
 
-            public bool ReuseIds => (this.Info != null) ? this.Info.ReuseIds : false;
+            public bool ReuseIds => (this.Info != null) && this.Info.ReuseIds;
 
             [MethodImpl(MethodImplOptions.Synchronized)]
             public int Alloc(IHleUidPoolClass Item)

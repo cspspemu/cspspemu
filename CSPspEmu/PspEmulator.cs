@@ -148,10 +148,7 @@ namespace CSPspEmu
                 // Creates a new context.
                 CreateNewContextAndRemoveOldOne();
 
-                if (CallbackOnInit != null)
-                {
-                    CallbackOnInit();
-                }
+                CallbackOnInit?.Invoke();
                 // GUI Thread.
                 Thread.CurrentThread.Name = "GuiThread";
 

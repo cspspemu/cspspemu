@@ -2413,7 +2413,7 @@ namespace cscodec.h264.decoder
             //????????????????????????????????
             MpegEncContext s = this; //(MpegEncContext)this.priv_data;
 
-            if (s == null || s.picture == null)
+            if (s?.picture == null)
                 return;
 
             for (i = 0; i < MAX_PICTURE_COUNT; i++)
@@ -2834,8 +2834,7 @@ namespace cscodec.h264.decoder
 
         public int avcodec_close()
         {
-            if (this.codec != null)
-                this.codec.close(this);
+            codec?.close(this);
             avcodec_default_free_buffers();
             this.coded_frame = null;
             this.priv_data = null;

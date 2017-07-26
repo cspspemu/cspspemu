@@ -632,10 +632,7 @@ namespace BrightIdeasSoftware
                     break;
             }
 
-            if (this.Billboard != null)
-            {
-                this.Billboard.Draw(this.ListView, g, bounds);
-            }
+            Billboard?.Draw(this.ListView, g, bounds);
         }
 
         /// <summary>
@@ -737,8 +734,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnCanDrop(OlvDropEventArgs args)
         {
-            if (this.CanDrop != null)
-                this.CanDrop(this, args);
+            this.CanDrop?.Invoke(this, args);
         }
 
         /// <summary>
@@ -747,8 +743,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnDropped(OlvDropEventArgs args)
         {
-            if (this.Dropped != null)
-                this.Dropped(this, args);
+            this.Dropped?.Invoke(this, args);
         }
 
         /// <summary>
@@ -766,8 +761,7 @@ namespace BrightIdeasSoftware
                 return;
             }
 
-            if (this.ModelCanDrop != null)
-                this.ModelCanDrop(this, args);
+            this.ModelCanDrop?.Invoke(this, args);
         }
 
         /// <summary>
@@ -776,8 +770,7 @@ namespace BrightIdeasSoftware
         /// <param name="args"></param>
         protected virtual void OnModelDropped(ModelDropEventArgs args)
         {
-            if (this.ModelDropped != null)
-                this.ModelDropped(this, args);
+            ModelDropped?.Invoke(this, args);
         }
 
         #endregion

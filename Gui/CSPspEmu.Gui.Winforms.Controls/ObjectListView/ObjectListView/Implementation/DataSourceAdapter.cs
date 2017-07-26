@@ -219,7 +219,7 @@ namespace BrightIdeasSoftware
         protected virtual void RebindDataSource(bool forceDataInitialization)
         {
             CurrencyManager tempCurrencyManager = null;
-            if (this.ListView != null && this.ListView.BindingContext != null && this.DataSource != null)
+            if (ListView?.BindingContext != null && this.DataSource != null)
             {
                 tempCurrencyManager = this.ListView.BindingContext[this.DataSource, this.DataMember] as CurrencyManager;
             }

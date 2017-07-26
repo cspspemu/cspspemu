@@ -20,8 +20,8 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
             public void Dispose()
             {
-                if (IsoNode != null) IsoNode.Dispose();
-                if (Stream != null) Stream.Dispose();
+                IsoNode?.Dispose();
+                Stream?.Dispose();
             }
         }
 

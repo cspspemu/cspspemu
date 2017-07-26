@@ -60,7 +60,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
         {
             GL.glClearColor(0, 0, 0, 1);
             GL.glClear(GL.GL_COLOR_BUFFER_BIT);
-            if (RenderFrame != null) RenderFrame();
+            RenderFrame?.Invoke();
             Context.SwapBuffers();
         }
 

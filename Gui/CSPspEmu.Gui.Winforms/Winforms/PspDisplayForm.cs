@@ -173,12 +173,9 @@ namespace CSPspEmu.Gui.Winforms
                             UpdateTitle();
                             if (GLControl == null || !GLControl.Visible) return;
                             CommonGuiInput.SendControllerFrame();
-                            if (GLControl != null)
-                            {
-                                // @TODO: Causes flickering and slowness in mono
-                                //GLControl.Refresh();
-                                GLControl.ReDraw();
-                            }
+                            // @TODO: Causes flickering and slowness in mono
+                            //GLControl.Refresh();
+                            GLControl?.ReDraw();
                             //Refresh();
                         }));
                     }
@@ -874,7 +871,7 @@ namespace CSPspEmu.Gui.Winforms
             this.GameListComponent.Visible = !Enable;
             if (Enable)
             {
-                if (GLControl != null) this.GLControl.Focus();
+                GLControl?.Focus();
             }
             else
             {
@@ -886,8 +883,7 @@ namespace CSPspEmu.Gui.Winforms
         {
             ThreadPool.QueueUserWorkItem((state) =>
             {
-                if (GameListComponent != null)
-                    GameListComponent.Init(StoredConfig.IsosPath, ApplicationPaths.MemoryStickRootFolder);
+                GameListComponent?.Init(StoredConfig.IsosPath, ApplicationPaths.MemoryStickRootFolder);
             });
         }
 
