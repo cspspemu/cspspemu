@@ -199,7 +199,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
 #endif
                                 break;
                             default:
-                                throw (new NotImplementedException(string.Format("Can't handle chunk '{0}'", ChunkType))
+                                throw (new NotImplementedException($"Can't handle chunk '{ChunkType}'")
                                 );
                         }
                     };
@@ -396,7 +396,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                             this.DataStream = ChunkStream;
                             break;
                         default:
-                            throw (new NotImplementedException(string.Format("Can't handle chunk '{0}'", ChunkType)));
+                            throw (new NotImplementedException($"Can't handle chunk '{ChunkType}'"));
                     }
                 };
                 RiffWaveReader.Parse(Stream);

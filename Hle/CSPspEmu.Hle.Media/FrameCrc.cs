@@ -22,10 +22,7 @@ namespace cscodec
             //av_strlcatf(buf, sizeof(buf), "\n");
             //avio_write(s->pb, buf, strlen(buf));
             //avio_flush(s->pb);
-            return string.Format(
-                "{0}, {1}, {2}, {3}, {4}, 0x{5:X8}",
-                pkt.stream_index, pkt.dts, pkt.pts, pkt.duration, pkt.size, crc
-            );
+            return $"{pkt.stream_index}, {pkt.dts}, {pkt.pts}, {pkt.duration}, {pkt.size}, 0x{crc:X8}";
         }
     }
 }

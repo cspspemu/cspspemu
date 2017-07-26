@@ -195,7 +195,7 @@ namespace BrightIdeasSoftware
             }
             catch (FormatException)
             {
-                return string.Format("Bad format string '{0}' for value '{1}'", this.Format, dateTime);
+                return $"Bad format string '{this.Format}' for value '{dateTime}'";
             }
         }
 

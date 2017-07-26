@@ -306,9 +306,8 @@ namespace CSPspEmu.Core
                     {
                         if ((void*) Pointer != (void*) Address)
                         {
-                            throw (new Exception(string.Format(
-                                "Not allocated the desired address! Expected {0:X}, Allocated: {1:X}",
-                                new IntPtr(Address), new IntPtr(Pointer))));
+                            throw (new Exception(
+                                $"Not allocated the desired address! Expected {new IntPtr(Address):X}, Allocated: {new IntPtr(Pointer):X}"));
                         }
                         PointerUtils.Memset(Pointer, 0, (int) Size);
                     }

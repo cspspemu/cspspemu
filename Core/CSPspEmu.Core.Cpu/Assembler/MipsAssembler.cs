@@ -199,7 +199,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                     setIndex = 3;
                     vfpuPrefix.SourceAbsolute(index, false);
                     break;
-                default: throw new NotImplementedException(string.Format("Invalid RegisterName {0}", registerName));
+                default: throw new NotImplementedException($"Invalid RegisterName {registerName}");
             }
 
             vfpuPrefix.SourceConstant(index, isConstant);

@@ -67,7 +67,7 @@ namespace CSharpPlatform.GL.Impl
                 case EGL_BAD_PARAMETER: return "EGL_BAD_PARAMETER";
                 case EGL_BAD_SURFACE: return "EGL_BAD_SURFACE";
                 case EGL_CONTEXT_LOST: return "EGL_CONTEXT_LOST";
-                default: return string.Format("EGL_UNKNOWN_{0:X4}", error);
+                default: return $"EGL_UNKNOWN_{error:X4}";
             }
         }
 

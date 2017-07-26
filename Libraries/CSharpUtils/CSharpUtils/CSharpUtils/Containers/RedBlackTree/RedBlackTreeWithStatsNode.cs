@@ -114,13 +114,8 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// <returns></returns>
             public override string ToString()
             {
-                return string.Format(
-                    "RedBlackTreeWithStats.Node(Value={0}, Color={1}, ChildCountLeft={2}, ChildCountRight={3})",
-                    Value,
-                    Enum.GetName(typeof(Color), Color),
-                    ChildCountLeft,
-                    ChildCountRight
-                );
+                return
+                    $"RedBlackTreeWithStats.Node(Value={Value}, Color={Enum.GetName(typeof(Color), Color)}, ChildCountLeft={ChildCountLeft}, ChildCountRight={ChildCountRight})";
             }
 
             internal void PrintTree(Node markNode = null, int level = 0, string label = "L")

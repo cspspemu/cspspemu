@@ -193,8 +193,8 @@ namespace BrightIdeasSoftware
                 if (Munger.IgnoreMissingAspects)
                     return null;
 
-                return string.Format("'{0}' is not a parameter-less method, property or field of type '{1}'",
-                    ex.Munger.AspectName, ex.Target.GetType());
+                return
+                    $"'{ex.Munger.AspectName}' is not a parameter-less method, property or field of type '{ex.Target.GetType()}'";
             }
         }
 
@@ -326,10 +326,9 @@ namespace BrightIdeasSoftware
         {
             //TODO: How should we report this error?
             System.Diagnostics.Debug.WriteLine("PutValue failed");
-            System.Diagnostics.Debug.WriteLine(string.Format("- Culprit aspect: {0}", ex.Munger.AspectName));
-            System.Diagnostics.Debug.WriteLine(string.Format("- Target: {0} of type {1}", ex.Target,
-                ex.Target.GetType()));
-            System.Diagnostics.Debug.WriteLine(string.Format("- Inner exception: {0}", ex.InnerException));
+            System.Diagnostics.Debug.WriteLine($"- Culprit aspect: {ex.Munger.AspectName}");
+            System.Diagnostics.Debug.WriteLine($"- Target: {ex.Target} of type {ex.Target.GetType()}");
+            System.Diagnostics.Debug.WriteLine($"- Inner exception: {ex.InnerException}");
         }
 
         #endregion

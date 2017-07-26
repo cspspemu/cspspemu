@@ -249,7 +249,7 @@ namespace CSPspEmu
                     {
                         using (var encryptedStream = File.OpenRead(encryptedFile))
                         {
-                            var decryptedFile = string.Format("{0}.decrypted", encryptedFile);
+                            var decryptedFile = $"{encryptedFile}.decrypted";
                             Console.Write("'{0}' -> '{1}'...", encryptedFile, decryptedFile);
 
                             var encryptedData = encryptedStream.ReadAll();

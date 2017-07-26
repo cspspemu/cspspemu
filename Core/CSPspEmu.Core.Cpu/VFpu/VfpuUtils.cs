@@ -84,8 +84,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
                 case VfpuRegisterType.Vector: return GetIndicesVector(registerInfo);
                 case VfpuRegisterType.Matrix: return GetIndicesMatrix(registerInfo).Compact();
                 default:
-                    throw (new NotImplementedException(string.Format("Invalid vfpu registry name {0}('{1}')",
-                        registerInfo.RegisterIndex, registerInfo.Name)));
+                    throw (new NotImplementedException(
+                        $"Invalid vfpu registry name {registerInfo.RegisterIndex}('{registerInfo.Name}')"));
             }
         }
 

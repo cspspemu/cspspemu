@@ -123,9 +123,9 @@ namespace CSPspEmu.Gui.Winforms
 
             UpdateCheckboxes();
 
-            Debug.WriteLine(string.Format("Now: {0}", DateTime.UtcNow));
-            Debug.WriteLine(string.Format("LastCheckedTime: {0}", StoredConfig.LastCheckedTime));
-            Debug.WriteLine(string.Format("Elapsed: {0}", (DateTime.UtcNow - StoredConfig.LastCheckedTime)));
+            Debug.WriteLine($"Now: {DateTime.UtcNow}");
+            Debug.WriteLine($"LastCheckedTime: {StoredConfig.LastCheckedTime}");
+            Debug.WriteLine($"Elapsed: {(DateTime.UtcNow - StoredConfig.LastCheckedTime)}");
             if ((DateTime.UtcNow - StoredConfig.LastCheckedTime).TotalDays > 3)
             {
                 CheckForUpdates(NotifyIfNotFound: false);
@@ -339,8 +339,8 @@ namespace CSPspEmu.Gui.Winforms
                 {
                     var SaveFileDialog = new SaveFileDialog();
                     SaveFileDialog.Filter = "PNG|*.png|All Files|*.*";
-                    SaveFileDialog.FileName = string.Format("{0} - screenshot - {1:yyyy-MM-dd-H-mm-ss}.png",
-                        ElfConfig.GameTitle, DateTime.Now);
+                    SaveFileDialog.FileName =
+                        $"{ElfConfig.GameTitle} - screenshot - {DateTime.Now:yyyy-MM-dd-H-mm-ss}.png";
                     SaveFileDialog.AddExtension = true;
                     SaveFileDialog.DefaultExt = "png";
                     if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -403,8 +403,7 @@ namespace CSPspEmu.Gui.Winforms
             {
                 var SaveFileDialog = new SaveFileDialog();
                 SaveFileDialog.Filter = "DUMP|*.dump|All Files|*.*";
-                SaveFileDialog.FileName = string.Format("memory-{0}.dump",
-                    (long) (DateTime.UtcNow - new DateTime(0)).TotalMilliseconds);
+                SaveFileDialog.FileName = $"memory-{(long) (DateTime.UtcNow - new DateTime(0)).TotalMilliseconds}.dump";
                 SaveFileDialog.AddExtension = true;
                 SaveFileDialog.DefaultExt = "dump";
                 if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -730,8 +729,8 @@ namespace CSPspEmu.Gui.Winforms
                         if (MessageBox.Show(
                                 string.Format("There is a new version of the emulator.\n") +
                                 string.Format("\n") +
-                                string.Format("Current Version: {0}\n", CurrentVersion) +
-                                string.Format("Last Version: {0}\n", LastVersion) +
+                                $"Current Version: {CurrentVersion}\n" +
+                                $"Last Version: {LastVersion}\n" +
                                 string.Format("\n") +
                                 string.Format("Download the new version?") +
                                 "",

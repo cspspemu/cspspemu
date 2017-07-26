@@ -117,8 +117,7 @@ namespace CSharpUtils.Streams
             get
             {
                 if (index < 0 || index >= Length)
-                    throw(new IndexOutOfRangeException(string.Format("Invalid Index {0}. Must be in range {1}-{2}",
-                        index, 00, Length)));
+                    throw(new IndexOutOfRangeException($"Invalid Index {index}. Must be in range {00}-{Length}"));
                 SecureUpToItem(index, _numberOfItemsToBuffer);
                 return _cachedValues[index];
             }

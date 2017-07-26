@@ -114,7 +114,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                 var nodes = GenerateCode();
 
                 nodes = _ast.Statements(
-                    _ast.Comment(string.Format("Function {0:X8}-{1:X8}. Entry: {2:X8}", _minPc, _maxPc, _entryPc)),
+                    _ast.Comment($"Function {_minPc:X8}-{_maxPc:X8}. Entry: {_entryPc:X8}"),
                     //ast.DebugWrite(String.Format("Dynarec:PC:{0:X8}", EntryPC)),
                     //ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
                     _ast.If(
@@ -219,8 +219,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                         if (_analyzedPc.Count > MaxNumberOfInstructions)
                         {
-                            throw (new InvalidDataException(string.Format("Code sequence too long: >= {0} at 0x{1:X8}",
-                                MaxNumberOfInstructions, _entryPc)));
+                            throw (new InvalidDataException(
+                                $"Code sequence too long: >= {MaxNumberOfInstructions} at 0x{_entryPc:X8}"));
                         }
 
                         UpdateMinMax(_pc);
@@ -262,7 +262,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                                         {
                                             //Console.WriteLine("JumpAddress: {0:X8}", JumpAddress);
                                             _labelsJump[jumpAddress] =
-                                                AstLabel.CreateLabel(string.Format("Jump_0x{0:X8}", jumpAddress));
+                                                AstLabel.CreateLabel($"Jump_0x{jumpAddress:X8}");
                                             branchesToAnalyze.Enqueue(jumpAddress);
                                         }
                                     }
@@ -280,7 +280,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                                 //Console.WriteLine("BranchAddress: {0:X8}", BranchAddress);
                                 UpdateMinMax(branchAddress);
                                 _labels[branchAddress] =
-                                    AstLabel.CreateLabel(string.Format("Label_0x{0:X8}", branchAddress));
+                                    AstLabel.CreateLabel($"Label_0x{branchAddress:X8}");
                                 branchesToAnalyze.Enqueue(branchAddress);
                             }
                         }

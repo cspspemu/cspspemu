@@ -66,10 +66,7 @@ namespace CSPspEmu.Core.Gpu
 
         public override string ToString()
         {
-            return string.Format(
-                "VertexInfo(Position={0}, Normal={1}, UV={2}, COLOR={3})",
-                Position, Normal, Texture, Color
-            );
+            return $"VertexInfo(Position={Position}, Normal={Normal}, UV={Texture}, COLOR={Color})";
         }
     }
 }

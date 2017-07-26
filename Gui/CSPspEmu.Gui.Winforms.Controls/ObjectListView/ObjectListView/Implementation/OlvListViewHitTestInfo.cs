@@ -275,9 +275,8 @@ namespace BrightIdeasSoftware
 
         public override string ToString()
         {
-            return string.Format(
-                "HitTestLocation: {0}, HitTestLocationEx: {1}, Item: {2}, SubItem: {3}, Location: {4}, Group: {5}",
-                this.HitTestLocation, this.HitTestLocationEx, this.item, this.subItem, this.location, this.Group);
+            return
+                $"HitTestLocation: {this.HitTestLocation}, HitTestLocationEx: {this.HitTestLocationEx}, Item: {this.item}, SubItem: {this.subItem}, Location: {this.location}, Group: {this.Group}";
         }
     }
 }

@@ -14,8 +14,7 @@ namespace CSPspEmu.Hle
 
         public override string ToString()
         {
-            return string.Format("FunctionEntry(NID=0x{0:X}, Name='{1}', Description='{2}', Module='{3}')", NID, Name,
-                Description, Module);
+            return $"FunctionEntry(NID=0x{NID:X}, Name='{Name}', Description='{Description}', Module='{Module}')";
         }
     }
 }

@@ -78,7 +78,7 @@ namespace CSharpPlatform
 
         public override string ToString()
         {
-            return string.Format("Vector4({0}, {1}, {2}, {3})", X, Y, Z, W);
+            return $"Vector4({X}, {Y}, {Z}, {W})";
         }
     }
 }

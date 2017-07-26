@@ -103,9 +103,8 @@ namespace CSharpUtils.Streams
             if ((SliceHigh < SliceLow) || (SliceLow < 0) || (SliceHigh < 0) || !allowSliceOutsideHigh &&
                 ((SliceLow > baseStream.Length) || (SliceHigh > baseStream.Length)))
             {
-                throw (new InvalidOperationException(string.Format(
-                    "Trying to SliceStream Parent(Length={0}) Slice({1}-{2})", baseStream.Length, thisStart,
-                    thisLength)));
+                throw (new InvalidOperationException(
+                    $"Trying to SliceStream Parent(Length={baseStream.Length}) Slice({thisStart}-{thisLength})"));
             }
         }
 
@@ -204,9 +203,8 @@ namespace CSharpUtils.Streams
                 if (Position + count > Length)
                 {
                     //count = (int)(Length - Position);
-                    throw (new IOException(string.Format(
-                        "Can't write outside the SliceStream. Trying to Write {0} bytes but only {1} available.", count,
-                        (Length - Position))));
+                    throw (new IOException(
+                        $"Can't write outside the SliceStream. Trying to Write {count} bytes but only {(Length - Position)} available."));
                 }
                 try
                 {

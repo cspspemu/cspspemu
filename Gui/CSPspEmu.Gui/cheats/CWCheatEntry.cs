@@ -161,7 +161,7 @@ namespace CSPspEmu
             }
             catch (Exception Exception)
             {
-                throw (new Exception(string.Format("At Address: 0x{0:X}", Address), Exception));
+                throw (new Exception($"At Address: 0x{Address:X}", Exception));
             }
         }
     }

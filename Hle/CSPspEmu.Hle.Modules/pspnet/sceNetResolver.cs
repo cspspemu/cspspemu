@@ -21,8 +21,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
             public override string ToString()
             {
                 var AddressAsBytes = this.AddressAsBytes;
-                return string.Format("{0}.{1}.{2}.{3}", AddressAsBytes[0], AddressAsBytes[1], AddressAsBytes[2],
-                    AddressAsBytes[3]);
+                return $"{AddressAsBytes[0]}.{AddressAsBytes[1]}.{AddressAsBytes[2]}.{AddressAsBytes[3]}";
             }
         }
 

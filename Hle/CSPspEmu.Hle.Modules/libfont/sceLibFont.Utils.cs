@@ -120,12 +120,8 @@ namespace CSPspEmu.Hle.Modules.libfont
 
             public override string ToString()
             {
-                return string.Format(
-                    "FontCharInfo[Bitmap(W={0},H={1},L={2},T={3}), " +
-                    "Metrics(W={4}, H={5}, Ascender={6}, Descender={7}, BearingH={8}x{9}, BearingV={10}x{11}, Advance={12}x{13})",
-                    BitmapWidth, BitmapHeight, BitmapLeft, BitmapTop,
-                    Width, Height, Ascender, Descender, BearingHX, BearingHY, BearingVX, BearingVY, AdvanceH, AdvanceV
-                );
+                return $"FontCharInfo[Bitmap(W={BitmapWidth},H={BitmapHeight},L={BitmapLeft},T={BitmapTop}), " +
+                       $"Metrics(W={Width}, H={Height}, Ascender={Ascender}, Descender={Descender}, BearingH={BearingHX}x{BearingHY}, BearingV={BearingVX}x{BearingVY}, Advance={AdvanceH}x{AdvanceV})";
             }
         }
 

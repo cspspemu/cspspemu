@@ -130,11 +130,7 @@ namespace CSPspEmu.Hle.Managers
             if (!EntriesByName.ContainsKey(FunctionName))
             {
                 throw (new KeyNotFoundException(
-                    string.Format(
-                        "Can't find method '{0}' on module '{1}'",
-                        FunctionName,
-                        Module.GetType().Name
-                    )
+                    $"Can't find method '{FunctionName}' on module '{Module.GetType().Name}'"
                 ));
             }
             return EntriesByName[FunctionName].Delegate;

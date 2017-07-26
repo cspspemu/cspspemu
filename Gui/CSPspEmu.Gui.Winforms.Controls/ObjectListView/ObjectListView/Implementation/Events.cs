@@ -2035,10 +2035,8 @@ namespace BrightIdeasSoftware
 
         public override string ToString()
         {
-            return string.Format(
-                "NewHotCellHitLocation: {0}, HotCellHitLocationEx: {1}, NewHotColumnIndex: {2}, NewHotRowIndex: {3}, HotGroup: {4}",
-                this.newHotCellHitLocation, this.hotCellHitLocationEx, this.newHotColumnIndex, this.newHotRowIndex,
-                this.hotGroup);
+            return
+                $"NewHotCellHitLocation: {this.newHotCellHitLocation}, HotCellHitLocationEx: {this.hotCellHitLocationEx}, NewHotColumnIndex: {this.newHotColumnIndex}, NewHotRowIndex: {this.newHotRowIndex}, HotGroup: {this.hotGroup}";
         }
     }
 

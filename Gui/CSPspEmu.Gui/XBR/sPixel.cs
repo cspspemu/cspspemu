@@ -531,14 +531,7 @@ namespace Imager
         public override string ToString()
         {
             return (
-                string.Format(
-                    "({0:X8}) Red:{1}, Green:{2}, Blue:{3}, Alpha:{4}",
-                    this._rgbBytes,
-                    this.Red,
-                    this.Green,
-                    this.Blue,
-                    this.Alpha
-                )
+                $"({this._rgbBytes:X8}) Red:{this.Red}, Green:{this.Green}, Blue:{this.Blue}, Alpha:{this.Alpha}"
             );
         }
 

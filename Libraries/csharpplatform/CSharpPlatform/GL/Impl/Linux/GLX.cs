@@ -96,8 +96,7 @@ namespace CSharpPlatform.GL.Impl.Linux
 
         public override string ToString()
         {
-            return string.Format("id ({0}), screen ({1}), depth ({2}), class ({3})",
-                VisualID, Screen, Depth, Class);
+            return $"id ({VisualID}), screen ({Screen}), depth ({Depth}), class ({Class})";
         }
     }
 

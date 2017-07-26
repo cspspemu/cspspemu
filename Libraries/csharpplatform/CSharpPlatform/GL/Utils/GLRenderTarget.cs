@@ -66,7 +66,7 @@ namespace CSharpPlatform.GL.Utils
         protected GLRenderTarget(int Width, int Height, RenderTargetLayers RenderTargetLayers)
         {
             if (Width == 0 || Height == 0)
-                throw(new Exception(string.Format("Invalid GLRenderTarget size: {0}x{1}", Width, Height)));
+                throw(new Exception($"Invalid GLRenderTarget size: {Width}x{Height}"));
             _Width = Width;
             _Height = Height;
             this.RenderTargetLayers = RenderTargetLayers;
@@ -151,8 +151,8 @@ namespace CSharpPlatform.GL.Utils
             int Status = GL.glCheckFramebufferStatus(GL.GL_FRAMEBUFFER);
             if (Status != GL.GL_FRAMEBUFFER_COMPLETE)
             {
-                throw (new Exception(string.Format("Failed to bind FrameBuffer 0x{0:X4} : {1}, {2}, {3}x{4}", Status,
-                    GL.GetConstantString(Status), RenderTargetLayers, Width, Height)));
+                throw (new Exception(
+                    $"Failed to bind FrameBuffer 0x{Status:X4} : {GL.GetConstantString(Status)}, {RenderTargetLayers}, {Width}x{Height}"));
             }
             GL.glViewport(0, 0, Width, Height);
             GL.glClearColor(0, 0, 0, 0);
@@ -186,7 +186,7 @@ namespace CSharpPlatform.GL.Utils
 
         public override string ToString()
         {
-            return string.Format("GLRenderTarget({0}, Size({1}x{2}))", FrameBufferId, Width, Height);
+            return $"GLRenderTarget({FrameBufferId}, Size({Width}x{Height}))";
         }
 
         public class GLRenderBuffer : IDisposable

@@ -81,8 +81,8 @@ namespace CSPspEmu.Hle.Formats.video
 
             public override string ToString()
             {
-                return string.Format("TimeStamp(Bytes={0}, Value={1}, TimeSpan={2})",
-                    BitConverter.ToString(ManagedBytes), Value, PresentationTimeSpan);
+                return
+                    $"TimeStamp(Bytes={BitConverter.ToString(ManagedBytes)}, Value={Value}, TimeSpan={PresentationTimeSpan})";
             }
         }
 
@@ -197,8 +197,7 @@ namespace CSPspEmu.Hle.Formats.video
 
             public override string ToString()
             {
-                return string.Format("PacketizedStream(dts={0}, pts={1}, length={2})", dts.Value, pts.Value,
-                    Stream.Length);
+                return $"PacketizedStream(dts={dts.Value}, pts={pts.Value}, length={Stream.Length})";
             }
         }
 

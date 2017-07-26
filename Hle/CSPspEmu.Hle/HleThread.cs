@@ -377,27 +377,19 @@ namespace CSPspEmu.Hle
 
         public override string ToString()
         {
-            return string.Format(
-                "HleThread(Id={0}, Priority={1}, Name='{2}', Status={3}, WaitDescription='{4}', YieldCount={5})",
-                Id, PriorityValue, Name, CurrentStatus, WaitDescription, YieldCount
-            );
+            return
+                $"HleThread(Id={Id}, Priority={PriorityValue}, Name='{Name}', Status={CurrentStatus}, WaitDescription='{WaitDescription}', YieldCount={YieldCount})";
         }
 
         public string ToExtendedString()
         {
-            var Ret = string.Format(
-                "HleThread(Id={0}, Priority={1}, PC=0x{2:X}, LastValidPC=0x{3:X}, SP=0x{4:X}, Name='{5}', Status={6}, YieldCount={7}",
-                Id, PriorityValue,
-                CpuThreadState.Pc, CpuThreadState.LastValidPc, CpuThreadState.Sp,
-                Name, CurrentStatus, YieldCount
-            );
+            var Ret =
+                $"HleThread(Id={Id}, Priority={PriorityValue}, PC=0x{CpuThreadState.Pc:X}, LastValidPC=0x{CpuThreadState.LastValidPc:X}, SP=0x{CpuThreadState.Sp:X}, Name='{Name}', Status={CurrentStatus}, YieldCount={YieldCount}";
             switch (CurrentStatus)
             {
                 case Status.Waiting:
-                    Ret += string.Format(
-                        ", CurrentWaitType={0}, WaitDescription={1}, WaitObject={2}, HandleCallbacks={3}",
-                        CurrentWaitType, WaitDescription, WaitObject, HandleCallbacks
-                    );
+                    Ret +=
+                        $", CurrentWaitType={CurrentWaitType}, WaitDescription={WaitDescription}, WaitObject={WaitObject}, HandleCallbacks={HandleCallbacks}";
                     break;
             }
             //Ret += String.Format(", LastCalledHleFunction={0}", LastCalledHleFunction);

@@ -46,7 +46,7 @@
 
         public override string ToString()
         {
-            return string.Format("RectangleF({0}, {1}, {2}, {3})", Left, Top, Width, Height);
+            return $"RectangleF({Left}, {Top}, {Width}, {Height})";
         }
     }
 }

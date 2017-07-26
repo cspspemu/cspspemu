@@ -264,8 +264,8 @@ namespace CSPspEmu.Core.Audio
 
         public override string ToString()
         {
-            return string.Format("AudioChannel(Index={0},Frequency={1},Format={2},Channels={3},SampleCount={4})", Index,
-                Frequency, Format, NumberOfChannels, SampleCount);
+            return
+                $"AudioChannel(Index={Index},Frequency={Frequency},Format={Format},Channels={NumberOfChannels},SampleCount={SampleCount})";
         }
     }
 

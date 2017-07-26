@@ -516,7 +516,7 @@ namespace BrightIdeasSoftware.Design
             if (col == null || string.IsNullOrEmpty(col.AspectName))
                 return base.GetDisplayText(value);
 
-            return string.Format("{0} ({1})", base.GetDisplayText(value), col.AspectName);
+            return $"{base.GetDisplayText(value)} ({col.AspectName})";
         }
     }
 

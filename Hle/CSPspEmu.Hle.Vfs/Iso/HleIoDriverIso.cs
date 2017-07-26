@@ -289,8 +289,8 @@ namespace CSPspEmu.Hle.Vfs.Iso
                     return 0;
                 }
                 default:
-                    throw new NotImplementedException(string.Format("Not implemented command 0x{0:X} : {1}", Command,
-                        (UmdCommandEnum) Command));
+                    throw new NotImplementedException(
+                        $"Not implemented command 0x{Command:X} : {(UmdCommandEnum) Command}");
             }
         }
 

@@ -552,8 +552,7 @@ namespace BrightIdeasSoftware
                     il.Emit(OpCodes.Ldnull);
                 else
                     il.Emit(OpCodes.Ldstr,
-                        string.Format("'{0}' is not a parameter-less method, property or field of type '{1}'", pathPart,
-                            type.FullName));
+                        $"'{pathPart}' is not a parameter-less method, property or field of type '{type.FullName}'");
                 return null;
             }
 

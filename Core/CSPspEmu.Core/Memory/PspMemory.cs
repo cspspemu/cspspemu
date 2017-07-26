@@ -47,12 +47,12 @@ namespace CSPspEmu.Core.Memory
             {
             }
 
-            public InvalidAddressException(ulong Address) : base(string.Format("Invalid Address : 0x{0:X8}", Address))
+            public InvalidAddressException(ulong Address) : base($"Invalid Address : 0x{Address:X8}")
             {
             }
 
             public InvalidAddressException(ulong Address, Exception innerException) : base(
-                string.Format("Invalid Address : 0x{0:X8}", Address), innerException)
+                $"Invalid Address : 0x{Address:X8}", innerException)
             {
             }
         }
@@ -155,9 +155,8 @@ namespace CSPspEmu.Core.Memory
                 return (uint) (MainOffset + (Pointer - MainPtr));
             if ((Pointer >= VectorsPtr) && (Pointer < VectorsPtr + VectorsSize))
                 return (uint) (VectorsOffset + (Pointer - VectorsPtr));
-            throw (new InvalidAddressException(string.Format(
-                "Pointer 0x{0:X} doesn't belong to PSP Memory. Main: 0x{1:X}-0x{2:X}", (ulong) Pointer, (ulong) MainPtr,
-                (ulong) MainSize)));
+            throw (new InvalidAddressException(
+                $"Pointer 0x{(ulong) Pointer:X} doesn't belong to PSP Memory. Main: 0x{(ulong) MainPtr:X}-0x{(ulong) MainSize:X}"));
         }
 
         public virtual void SetPCWriteAddress(uint Address, uint PC)

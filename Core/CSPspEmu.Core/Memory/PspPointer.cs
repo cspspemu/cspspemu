@@ -38,7 +38,7 @@ namespace CSPspEmu.Core.Memory
 
         public override string ToString()
         {
-            return string.Format("PspPointer(0x{0:X})", Address);
+            return $"PspPointer(0x{Address:X})";
         }
 
         public bool IsNull => Address == 0;
@@ -52,7 +52,7 @@ namespace CSPspEmu.Core.Memory
         {
             var Pointer = this.GetPointer(pspMemory);
             if (Pointer == null)
-                throw (new NullReferenceException(string.Format("Pointer for {0} can't be null", typeof(TType))));
+                throw (new NullReferenceException($"Pointer for {typeof(TType)} can't be null"));
             return Pointer;
         }
 
@@ -102,7 +102,7 @@ namespace CSPspEmu.Core.Memory
 
         public override string ToString()
         {
-            return string.Format("PspPointer(0x{0:X})", Address);
+            return $"PspPointer(0x{Address:X})";
         }
 
         public bool IsNull => Address == 0;
@@ -121,7 +121,7 @@ namespace CSPspEmu.Core.Memory
         {
             var Pointer = this.GetPointer<TType>(PspMemory);
             if (Pointer == null)
-                throw(new NullReferenceException(string.Format("Pointer for {0} can't be null", typeof(TType))));
+                throw(new NullReferenceException($"Pointer for {typeof(TType)} can't be null"));
             return Pointer;
         }
 

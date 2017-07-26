@@ -213,7 +213,7 @@ namespace CSPspEmu.Hle
                         );
                     }
                     throw (new NotImplementedException("Not Implemented '" +
-                                                       string.Format("{0}:{1}", ModuleImportName, NIDName) + "'"));
+                                                       $"{ModuleImportName}:{NIDName}" + "'"));
                 }
                 else
                 {

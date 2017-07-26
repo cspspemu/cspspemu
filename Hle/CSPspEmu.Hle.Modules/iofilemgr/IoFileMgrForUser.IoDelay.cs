@@ -58,8 +58,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
             public override string ToString()
             {
-                return string.Format("IoDelayType(Name={0}, BaseDelay={1}, DelayPerUnit={2}, UnitSize={3})", Name,
-                    BaseDelay, DelayPerUnit, UnitSize);
+                return
+                    $"IoDelayType(Name={Name}, BaseDelay={BaseDelay}, DelayPerUnit={DelayPerUnit}, UnitSize={UnitSize})";
             }
         }
 

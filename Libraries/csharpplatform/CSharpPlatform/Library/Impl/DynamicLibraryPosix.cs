@@ -14,8 +14,7 @@ namespace CSharpPlatform.Library
             this.LibraryHandle = dlopen(LibraryName, RTLD_NOW);
             if (this.LibraryHandle == IntPtr.Zero)
             {
-                throw(new InvalidOperationException(string.Format("Can't find library '{0}' : {1}", LibraryName,
-                    dlerror())));
+                throw(new InvalidOperationException($"Can't find library '{LibraryName}' : {dlerror()}"));
             }
             //Console.WriteLine(this.LibraryHandle);
         }
