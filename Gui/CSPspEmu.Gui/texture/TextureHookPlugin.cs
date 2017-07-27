@@ -52,7 +52,7 @@ namespace CSPspEmu.Gui.texture
             var Lines = new List<string>();
             foreach (var Part in TexMap)
             {
-                Lines.Add(string.Format("{0:X16} {1}", Part.Key, Part.Value));
+                Lines.Add($"{Part.Key:X16} {Part.Value}");
             }
             File.WriteAllLines(LinkedTextureMapFile, Lines.ToArray());
         }

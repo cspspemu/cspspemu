@@ -99,8 +99,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         protected Predicate<object> Predicate
         {
-            get { return predicate; }
-            set { predicate = value; }
+            get => predicate;
+            set => predicate = value;
         }
 
         private Predicate<object> predicate;
@@ -147,8 +147,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public IList<IModelFilter> Filters
         {
-            get { return filters; }
-            set { filters = value; }
+            get => filters;
+            set => filters = value;
         }
 
         private IList<IModelFilter> filters = new List<IModelFilter>();
@@ -275,8 +275,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual AspectGetterDelegate ValueGetter
         {
-            get { return valueGetter; }
-            set { valueGetter = value; }
+            get => valueGetter;
+            set => valueGetter = value;
         }
 
         private AspectGetterDelegate valueGetter;
@@ -287,8 +287,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual IList PossibleValues
         {
-            get { return possibleValues; }
-            set { possibleValues = value; }
+            get => possibleValues;
+            set => possibleValues = value;
         }
 
         private IList possibleValues;
@@ -353,7 +353,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public override IList PossibleValues
         {
-            get { return base.PossibleValues; }
+            get => base.PossibleValues;
             set
             {
                 base.PossibleValues = value;
@@ -441,8 +441,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ListFilterDelegate Function
         {
-            get { return function; }
-            set { function = value; }
+            get => function;
+            set => function = value;
         }
 
         private ListFilterDelegate function;
@@ -488,8 +488,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public int Count
         {
-            get { return count; }
-            set { count = value; }
+            get => count;
+            set => count = value;
         }
 
         private int count;

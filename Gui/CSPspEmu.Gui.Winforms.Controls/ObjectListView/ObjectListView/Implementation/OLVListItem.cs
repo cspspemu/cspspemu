@@ -87,8 +87,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This setting only takes effect when the control is owner drawn.</remarks>
         public Rectangle? CellPadding
         {
-            get { return this.cellPadding; }
-            set { this.cellPadding = value; }
+            get => this.cellPadding;
+            set => this.cellPadding = value;
         }
 
         private Rectangle? cellPadding;
@@ -99,8 +99,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This setting only takes effect when the control is owner drawn.</remarks>
         public StringAlignment? CellVerticalAlignment
         {
-            get { return this.cellVerticalAlignment; }
-            set { this.cellVerticalAlignment = value; }
+            get => this.cellVerticalAlignment;
+            set => this.cellVerticalAlignment = value;
         }
 
         private StringAlignment? cellVerticalAlignment;
@@ -116,7 +116,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public new bool Checked
         {
-            get { return base.Checked; }
+            get => base.Checked;
             set
             {
                 if (this.Checked != value)
@@ -181,10 +181,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets if this item has any decorations set for it.
         /// </summary>
-        public bool HasDecoration
-        {
-            get { return this.decorations != null && this.decorations.Count > 0; }
-        }
+        public bool HasDecoration => this.decorations != null && this.decorations.Count > 0;
 
         /// <summary>
         /// Gets or sets the decoration that will be drawn over this item
@@ -229,7 +226,7 @@ namespace BrightIdeasSoftware
         /// be used as an index into the small image list.</para></remarks>
         public object ImageSelector
         {
-            get { return imageSelector; }
+            get => imageSelector;
             set
             {
                 imageSelector = value;
@@ -249,8 +246,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public object RowObject
         {
-            get { return rowObject; }
-            set { rowObject = value; }
+            get => rowObject;
+            set => rowObject = value;
         }
 
         private object rowObject;

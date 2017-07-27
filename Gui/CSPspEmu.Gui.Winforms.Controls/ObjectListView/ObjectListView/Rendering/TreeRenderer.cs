@@ -25,18 +25,15 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Return the branch that the renderer is currently drawing.
             /// </summary>
-            private Branch Branch
-            {
-                get { return this.TreeListView.TreeModel.GetBranch(this.RowObject); }
-            }
+            private Branch Branch => this.TreeListView.TreeModel.GetBranch(this.RowObject);
 
             /// <summary>
             /// Return the pen that will be used to draw the lines between branches
             /// </summary>
             public Pen LinePen
             {
-                get { return linePen; }
-                set { linePen = value; }
+                get => linePen;
+                set => linePen = value;
             }
 
             private Pen linePen;
@@ -44,18 +41,15 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Return the TreeListView for which the renderer is being used.
             /// </summary>
-            public TreeListView TreeListView
-            {
-                get { return (TreeListView) this.ListView; }
-            }
+            public TreeListView TreeListView => (TreeListView) this.ListView;
 
             /// <summary>
             /// Should the renderer draw lines connecting siblings?
             /// </summary>
             public bool IsShowLines
             {
-                get { return isShowLines; }
-                set { isShowLines = value; }
+                get => isShowLines;
+                set => isShowLines = value;
             }
 
             private bool isShowLines = true;
@@ -119,10 +113,7 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets whether or not we should render using styles
             /// </summary>
-            protected virtual bool UseStyles
-            {
-                get { return !this.IsPrinting && Application.RenderWithVisualStyles; }
-            }
+            protected virtual bool UseStyles => !this.IsPrinting && Application.RenderWithVisualStyles;
 
             /// <summary>
             /// Draw the expansion indicator using styles

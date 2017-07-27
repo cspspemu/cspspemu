@@ -107,8 +107,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool IncludeHiddenColumns
         {
-            get { return includeHiddenColumns; }
-            set { includeHiddenColumns = value; }
+            get => includeHiddenColumns;
+            set => includeHiddenColumns = value;
         }
 
         private bool includeHiddenColumns;
@@ -119,8 +119,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool IncludeColumnHeaders
         {
-            get { return includeColumnHeaders; }
-            set { includeColumnHeaders = value; }
+            get => includeColumnHeaders;
+            set => includeColumnHeaders = value;
         }
 
         private bool includeColumnHeaders = true;
@@ -131,8 +131,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ObjectListView ListView
         {
-            get { return objectListView; }
-            set { objectListView = value; }
+            get => objectListView;
+            set => objectListView = value;
         }
 
         private ObjectListView objectListView;
@@ -142,8 +142,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public IList ModelObjects
         {
-            get { return modelObjects; }
-            set { modelObjects = value; }
+            get => modelObjects;
+            set => modelObjects = value;
         }
 
         private IList modelObjects = new ArrayList();

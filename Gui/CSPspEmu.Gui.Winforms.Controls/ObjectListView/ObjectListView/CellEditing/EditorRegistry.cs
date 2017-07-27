@@ -176,7 +176,7 @@ namespace BrightIdeasSoftware
             }
 
             // Try to find a creator based on the type of the value (or the column)
-            Type type = value == null ? column.DataType : value.GetType();
+            Type type = value?.GetType() ?? column.DataType;
             if (type != null && this.creatorMap.ContainsKey(type))
             {
                 editor = this.creatorMap[type](model, column, value);
@@ -189,10 +189,7 @@ namespace BrightIdeasSoftware
                 return this.CreateEnumEditor(value.GetType());
 
             // Give any default creator a final chance
-            if (this.defaultCreator != null)
-                return this.defaultCreator(model, column, value);
-
-            return null;
+            return defaultCreator?.Invoke(model, column, value);
         }
 
         /// <summary>

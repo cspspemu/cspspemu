@@ -32,7 +32,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
             public override string ToString()
             {
-                return string.Format("{0:X16}", this.TextureOpengl.TextureHash);
+                return $"{this.TextureOpengl.TextureHash:X16}";
             }
         }
 
@@ -80,25 +80,25 @@ namespace CSPspEmu.Gui.Winforms.Winforms
             TextureView.Size = new System.Drawing.Size(Texture.Width, Texture.Height);
 
             var InfoLines = new List<string>();
-            InfoLines.Add(string.Format("Hash: 0x{0:X16}", TextureOpengl.TextureHash));
-            InfoLines.Add(string.Format("Size: {0}x{1}", TextureOpengl.Width, TextureOpengl.Height));
-            InfoLines.Add(string.Format("Swizzled: {0}", TextureOpengl.TextureCacheKey.Swizzled));
+            InfoLines.Add($"Hash: 0x{TextureOpengl.TextureHash:X16}");
+            InfoLines.Add($"Size: {TextureOpengl.Width}x{TextureOpengl.Height}");
+            InfoLines.Add($"Swizzled: {TextureOpengl.TextureCacheKey.Swizzled}");
             InfoLines.Add(string.Format("--"));
-            InfoLines.Add(string.Format("ColorTestEnabled: {0}", TextureOpengl.TextureCacheKey.ColorTestEnabled));
-            InfoLines.Add(string.Format("ColorTestMask: {0}", TextureOpengl.TextureCacheKey.ColorTestMask));
-            InfoLines.Add(string.Format("ColorTestFunction: {0}", TextureOpengl.TextureCacheKey.ColorTestFunction));
-            InfoLines.Add(string.Format("ColorTestRef: {0}", TextureOpengl.TextureCacheKey.ColorTestRef));
+            InfoLines.Add($"ColorTestEnabled: {TextureOpengl.TextureCacheKey.ColorTestEnabled}");
+            InfoLines.Add($"ColorTestMask: {TextureOpengl.TextureCacheKey.ColorTestMask}");
+            InfoLines.Add($"ColorTestFunction: {TextureOpengl.TextureCacheKey.ColorTestFunction}");
+            InfoLines.Add($"ColorTestRef: {TextureOpengl.TextureCacheKey.ColorTestRef}");
             InfoLines.Add(string.Format("--"));
-            InfoLines.Add(string.Format("ClutHash: 0x{0:X16}", TextureOpengl.TextureCacheKey.ClutHash));
-            InfoLines.Add(string.Format("ClutAddress: 0x{0:X8}", TextureOpengl.TextureCacheKey.ClutAddress));
-            InfoLines.Add(string.Format("ClutFormat: {0}", TextureOpengl.TextureCacheKey.ClutFormat));
-            InfoLines.Add(string.Format("ClutMask: {0}", TextureOpengl.TextureCacheKey.ClutMask));
-            InfoLines.Add(string.Format("ClutShift: {0}", TextureOpengl.TextureCacheKey.ClutShift));
-            InfoLines.Add(string.Format("ClutStart: {0}", TextureOpengl.TextureCacheKey.ClutStart));
+            InfoLines.Add($"ClutHash: 0x{TextureOpengl.TextureCacheKey.ClutHash:X16}");
+            InfoLines.Add($"ClutAddress: 0x{TextureOpengl.TextureCacheKey.ClutAddress:X8}");
+            InfoLines.Add($"ClutFormat: {TextureOpengl.TextureCacheKey.ClutFormat}");
+            InfoLines.Add($"ClutMask: {TextureOpengl.TextureCacheKey.ClutMask}");
+            InfoLines.Add($"ClutShift: {TextureOpengl.TextureCacheKey.ClutShift}");
+            InfoLines.Add($"ClutStart: {TextureOpengl.TextureCacheKey.ClutStart}");
             InfoLines.Add(string.Format("--"));
-            InfoLines.Add(string.Format("TextureHash: 0x{0:X16}", TextureOpengl.TextureCacheKey.TextureHash));
-            InfoLines.Add(string.Format("TextureAddress: 0x{0:X8}", TextureOpengl.TextureCacheKey.TextureAddress));
-            InfoLines.Add(string.Format("TextureFormat: {0}", TextureOpengl.TextureCacheKey.TextureFormat));
+            InfoLines.Add($"TextureHash: 0x{TextureOpengl.TextureCacheKey.TextureHash:X16}");
+            InfoLines.Add($"TextureAddress: 0x{TextureOpengl.TextureCacheKey.TextureAddress:X8}");
+            InfoLines.Add($"TextureFormat: {TextureOpengl.TextureCacheKey.TextureFormat}");
 
             TextureInfo.Text = string.Join("\r\n", InfoLines);
         }

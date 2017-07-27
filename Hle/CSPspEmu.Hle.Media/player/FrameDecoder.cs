@@ -68,10 +68,7 @@ namespace cscodec.h264.player
             //hasMoreNAL = true;
         }
 
-        public bool HasMorePackets
-        {
-            get { return hasMoreNAL; }
-        }
+        public bool HasMorePackets => hasMoreNAL;
 
         bool hasMoreNAL = true;
 

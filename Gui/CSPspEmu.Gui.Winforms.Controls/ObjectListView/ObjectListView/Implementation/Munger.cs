@@ -126,8 +126,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public static bool IgnoreMissingAspects
         {
-            get { return ignoreMissingAspects; }
-            set { ignoreMissingAspects = value; }
+            get => ignoreMissingAspects;
+            set => ignoreMissingAspects = value;
         }
 
         private static bool ignoreMissingAspects
@@ -156,7 +156,7 @@ namespace BrightIdeasSoftware
         /// <example>"Owner.HomeAddress.Postcode"</example>
         public string AspectName
         {
-            get { return aspectName; }
+            get => aspectName;
             set
             {
                 aspectName = value;
@@ -193,8 +193,8 @@ namespace BrightIdeasSoftware
                 if (Munger.IgnoreMissingAspects)
                     return null;
 
-                return string.Format("'{0}' is not a parameter-less method, property or field of type '{1}'",
-                    ex.Munger.AspectName, ex.Target.GetType());
+                return
+                    $"'{ex.Munger.AspectName}' is not a parameter-less method, property or field of type '{ex.Target.GetType()}'";
             }
         }
 
@@ -326,10 +326,9 @@ namespace BrightIdeasSoftware
         {
             //TODO: How should we report this error?
             System.Diagnostics.Debug.WriteLine("PutValue failed");
-            System.Diagnostics.Debug.WriteLine(string.Format("- Culprit aspect: {0}", ex.Munger.AspectName));
-            System.Diagnostics.Debug.WriteLine(string.Format("- Target: {0} of type {1}", ex.Target,
-                ex.Target.GetType()));
-            System.Diagnostics.Debug.WriteLine(string.Format("- Inner exception: {0}", ex.InnerException));
+            System.Diagnostics.Debug.WriteLine($"- Culprit aspect: {ex.Munger.AspectName}");
+            System.Diagnostics.Debug.WriteLine($"- Target: {ex.Target} of type {ex.Target.GetType()}");
+            System.Diagnostics.Debug.WriteLine($"- Inner exception: {ex.InnerException}");
         }
 
         #endregion
@@ -371,10 +370,7 @@ namespace BrightIdeasSoftware
         /// It cannot be a dotted name.
         /// </para>
         /// </remarks>
-        public string AspectName
-        {
-            get { return aspectName; }
-        }
+        public string AspectName => aspectName;
 
         private readonly string aspectName;
 
@@ -565,20 +561,14 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Get the munger that raised the exception
         /// </summary>
-        public SimpleMunger Munger
-        {
-            get { return munger; }
-        }
+        public SimpleMunger Munger => munger;
 
         private readonly SimpleMunger munger;
 
         /// <summary>
         /// Gets the target that threw the exception
         /// </summary>
-        public object Target
-        {
-            get { return target; }
-        }
+        public object Target => target;
 
         private readonly object target;
     }

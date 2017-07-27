@@ -11,10 +11,7 @@ namespace CSPspEmu
     /// <seealso cref="http://www.codemasters-project.net/guides/showentry.php?e=846"/>
     public struct CWCheatEntry
     {
-        byte OpCode
-        {
-            get { return (byte) ((this.Code & 0xF0000000) >> 28); }
-        }
+        byte OpCode => (byte) ((this.Code & 0xF0000000) >> 28);
 
         public uint Code;
         public uint[] Values;
@@ -164,7 +161,7 @@ namespace CSPspEmu
             }
             catch (Exception Exception)
             {
-                throw (new Exception(string.Format("At Address: 0x{0:X}", Address), Exception));
+                throw (new Exception($"At Address: 0x{Address:X}", Exception));
             }
         }
     }

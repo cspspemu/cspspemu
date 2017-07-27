@@ -67,8 +67,7 @@ namespace CSharpUtils
             {
                 if (!type.IsLayoutSequential && !type.IsExplicitLayout)
                 {
-                    throw new InvalidOperationException(string.Format("{0} does not define a StructLayout attribute",
-                        type));
+                    throw new InvalidOperationException($"{type} does not define a StructLayout attribute");
                 }
 
                 //var sourcePtr = new IntPtr(source);

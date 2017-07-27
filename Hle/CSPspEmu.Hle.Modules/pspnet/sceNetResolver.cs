@@ -14,15 +14,14 @@ namespace CSPspEmu.Hle.Modules.pspnet
 
             public byte[] AddressAsBytes
             {
-                set { Address = BitConverter.ToUInt32(value, 0); }
-                get { return BitConverter.GetBytes(Address); }
+                set => Address = BitConverter.ToUInt32(value, 0);
+                get => BitConverter.GetBytes(Address);
             }
 
             public override string ToString()
             {
                 var AddressAsBytes = this.AddressAsBytes;
-                return string.Format("{0}.{1}.{2}.{3}", AddressAsBytes[0], AddressAsBytes[1], AddressAsBytes[2],
-                    AddressAsBytes[3]);
+                return $"{AddressAsBytes[0]}.{AddressAsBytes[1]}.{AddressAsBytes[2]}.{AddressAsBytes[3]}";
             }
         }
 

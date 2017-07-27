@@ -21,7 +21,7 @@ namespace CSharpUtilsTests
 
             public override string ToString()
             {
-                return string.Format("TestStruct(Index:{0}, Title:'{1}')", Index, Title);
+                return $"TestStruct(Index:{Index}, Title:'{Title}')";
             }
         }
 

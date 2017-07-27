@@ -206,8 +206,8 @@ namespace CSPspEmu.AutoTests
             var hadAnError = false;
             for (var n = 0; n < 10; n++)
             {
-                var imageReferenceFile = string.Format("{0}.reference.{1}.png", fileNameBase, n);
-                var imageOutputFile = string.Format("{0}.lastoutput.{1}.png", fileNameBase, n);
+                var imageReferenceFile = $"{fileNameBase}.reference.{n}.png";
+                var imageOutputFile = $"{fileNameBase}.lastoutput.{n}.png";
                 if (File.Exists(imageReferenceFile))
                 {
                     if (File.Exists(imageOutputFile))

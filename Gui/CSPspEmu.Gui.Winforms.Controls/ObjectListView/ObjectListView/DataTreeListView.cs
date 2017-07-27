@@ -88,8 +88,8 @@ namespace BrightIdeasSoftware
          TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
         public virtual object DataSource
         {
-            get { return this.Adapter.DataSource; }
-            set { this.Adapter.DataSource = value; }
+            get => this.Adapter.DataSource;
+            set => this.Adapter.DataSource = value;
         }
 
         /// <summary>
@@ -101,8 +101,8 @@ namespace BrightIdeasSoftware
          DefaultValue("")]
         public virtual string DataMember
         {
-            get { return this.Adapter.DataMember; }
-            set { this.Adapter.DataMember = value; }
+            get => this.Adapter.DataMember;
+            set => this.Adapter.DataMember = value;
         }
 
         /// <summary>
@@ -121,8 +121,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public virtual string KeyAspectName
         {
-            get { return this.Adapter.KeyAspectName; }
-            set { this.Adapter.KeyAspectName = value; }
+            get => this.Adapter.KeyAspectName;
+            set => this.Adapter.KeyAspectName = value;
         }
 
         /// <summary>
@@ -145,8 +145,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public virtual string ParentKeyAspectName
         {
-            get { return this.Adapter.ParentKeyAspectName; }
-            set { this.Adapter.ParentKeyAspectName = value; }
+            get => this.Adapter.ParentKeyAspectName;
+            set => this.Adapter.ParentKeyAspectName = value;
         }
 
         /// <summary>
@@ -171,8 +171,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual object RootKeyValue
         {
-            get { return this.Adapter.RootKeyValue; }
-            set { this.Adapter.RootKeyValue = value; }
+            get => this.Adapter.RootKeyValue;
+            set => this.Adapter.RootKeyValue = value;
         }
 
         /// <summary>
@@ -190,8 +190,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public virtual string RootKeyValueString
         {
-            get { return Convert.ToString(this.Adapter.RootKeyValue); }
-            set { this.Adapter.RootKeyValue = value; }
+            get => Convert.ToString(this.Adapter.RootKeyValue);
+            set => this.Adapter.RootKeyValue = value;
         }
 
         /// <summary>
@@ -205,8 +205,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool ShowKeyColumns
         {
-            get { return this.Adapter.ShowKeyColumns; }
-            set { this.Adapter.ShowKeyColumns = value; }
+            get => this.Adapter.ShowKeyColumns;
+            set => this.Adapter.ShowKeyColumns = value;
         }
 
         #endregion
@@ -225,7 +225,7 @@ namespace BrightIdeasSoftware
                     this.adapter = new TreeDataSourceAdapter(this);
                 return adapter;
             }
-            set { adapter = value; }
+            set => adapter = value;
         }
 
         private TreeDataSourceAdapter adapter;

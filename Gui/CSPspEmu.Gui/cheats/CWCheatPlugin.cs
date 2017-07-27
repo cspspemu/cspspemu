@@ -37,7 +37,7 @@ namespace CSPspEmu.cheats
 
         public string Cheats
         {
-            get { return _Cheats; }
+            get => _Cheats;
             set
             {
                 _Cheats = value.Trim();

@@ -111,12 +111,9 @@ namespace BrightIdeasSoftware.Design
             // Debug.WriteLine("ObjectListViewDesigner.Dispose");
             if (disposing)
             {
-                if (this.listViewDesigner != null)
-                {
-                    this.listViewDesigner.Dispose();
-                    // Normally we would now null out the designer, but this designer
-                    // still has methods called AFTER it is disposed.
-                }
+                listViewDesigner?.Dispose();
+                // Normally we would now null out the designer, but this designer
+                // still has methods called AFTER it is disposed.
             }
 
             base.Dispose(disposing);
@@ -144,10 +141,7 @@ namespace BrightIdeasSoftware.Design
                 if (dockingAction != null)
                 {
                     DesignerActionService service = (DesignerActionService) GetService(typeof(DesignerActionService));
-                    if (service != null)
-                    {
-                        service.Remove(this.Control, dockingAction);
-                    }
+                    service?.Remove(this.Control, dockingAction);
                 }
             }
         }
@@ -398,20 +392,20 @@ namespace BrightIdeasSoftware.Design
 
             public ImageList LargeImageList
             {
-                get { return ((ListView) base.Component).LargeImageList; }
-                set { SetValue(base.Component, "LargeImageList", value); }
+                get => ((ListView) base.Component).LargeImageList;
+                set => SetValue(base.Component, "LargeImageList", value);
             }
 
             public ImageList SmallImageList
             {
-                get { return ((ListView) base.Component).SmallImageList; }
-                set { SetValue(base.Component, "SmallImageList", value); }
+                get => ((ListView) base.Component).SmallImageList;
+                set => SetValue(base.Component, "SmallImageList", value);
             }
 
             public View View
             {
-                get { return ((ListView) base.Component).View; }
-                set { SetValue(base.Component, "View", value); }
+                get => ((ListView) base.Component).View;
+                set => SetValue(base.Component, "View", value);
             }
 
             ObjectListViewDesigner designer;
@@ -516,7 +510,7 @@ namespace BrightIdeasSoftware.Design
             if (col == null || string.IsNullOrEmpty(col.AspectName))
                 return base.GetDisplayText(value);
 
-            return string.Format("{0} ({1})", base.GetDisplayText(value), col.AspectName);
+            return $"{base.GetDisplayText(value)} ({col.AspectName})";
         }
     }
 

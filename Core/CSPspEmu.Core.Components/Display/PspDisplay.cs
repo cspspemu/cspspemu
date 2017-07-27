@@ -96,9 +96,9 @@ namespace CSPspEmu.Core.Components.Display
 
         public void TriggerVBlankStart()
         {
-            if (VBlankCallback != null) VBlankCallback();
+            VBlankCallback?.Invoke();
             VBlankEvent.Signal();
-            if (VBlankEventCall != null) VBlankEventCall();
+            VBlankEventCall?.Invoke();
             VblankCount++;
             IsVblank = true;
         }

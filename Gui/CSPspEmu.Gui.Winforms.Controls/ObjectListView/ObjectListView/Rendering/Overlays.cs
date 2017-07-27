@@ -101,8 +101,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public int Transparency
         {
-            get { return this.transparency; }
-            set { this.transparency = Math.Min(255, Math.Max(0, value)); }
+            get => this.transparency;
+            set => this.transparency = Math.Min(255, Math.Max(0, value));
         }
 
         private int transparency = 128;
@@ -135,8 +135,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public int InsetX
         {
-            get { return this.insetX; }
-            set { this.insetX = Math.Max(0, value); }
+            get => this.insetX;
+            set => this.insetX = Math.Max(0, value);
         }
 
         private int insetX = 20;
@@ -150,8 +150,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public int InsetY
         {
-            get { return this.insetY; }
-            set { this.insetY = Math.Max(0, value); }
+            get => this.insetY;
+            set => this.insetY = Math.Max(0, value);
         }
 
         private int insetY = 20;
@@ -203,8 +203,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public int InsetX
         {
-            get { return this.insetX; }
-            set { this.insetX = Math.Max(0, value); }
+            get => this.insetX;
+            set => this.insetX = Math.Max(0, value);
         }
 
         private int insetX = 20;
@@ -218,8 +218,8 @@ namespace BrightIdeasSoftware
          NotifyParentProperty(true)]
         public int InsetY
         {
-            get { return this.insetY; }
-            set { this.insetY = Math.Max(0, value); }
+            get => this.insetY;
+            set => this.insetY = Math.Max(0, value);
         }
 
         private int insetY = 20;
@@ -232,7 +232,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool RoundCorneredBorder
         {
-            get { return this.CornerRounding > 0; }
+            get => this.CornerRounding > 0;
             set
             {
                 if (value)
@@ -288,8 +288,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public Point Location
         {
-            get { return this.location; }
-            set { this.location = value; }
+            get => this.location;
+            set => this.location = value;
         }
 
         private Point location;

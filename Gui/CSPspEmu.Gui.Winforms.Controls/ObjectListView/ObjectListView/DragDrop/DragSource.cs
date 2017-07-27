@@ -153,8 +153,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool RefreshAfterDrop
         {
-            get { return refreshAfterDrop; }
-            set { refreshAfterDrop = value; }
+            get => refreshAfterDrop;
+            set => refreshAfterDrop = value;
         }
 
         private bool refreshAfterDrop;

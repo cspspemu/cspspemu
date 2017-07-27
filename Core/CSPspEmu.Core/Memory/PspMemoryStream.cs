@@ -13,34 +13,22 @@ namespace CSPspEmu.Core.Memory
             this.Memory = Memory;
         }
 
-        public override bool CanRead
-        {
-            get { return true; }
-        }
+        public override bool CanRead => true;
 
-        public override bool CanSeek
-        {
-            get { return true; }
-        }
+        public override bool CanSeek => true;
 
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        public override bool CanWrite => true;
 
         public override void Flush()
         {
         }
 
-        public override long Length
-        {
-            get { return unchecked(0xFFFFFFF0); }
-        }
+        public override long Length => unchecked(0xFFFFFFF0);
 
         public override long Position
         {
-            get { return _Position; }
-            set { _Position = (uint) value; }
+            get => _Position;
+            set => _Position = (uint) value;
         }
 
         public override long Seek(long offset, SeekOrigin origin)

@@ -69,9 +69,9 @@ namespace CSPspEmu.Gui.SMAA
         {
             this.Width = Width;
             this.Height = Height;
-            if (edge_shader != null) edge_shader.SetSize(Width, Height);
-            if (blend_shader != null) blend_shader.SetSize(Width, Height);
-            if (neighborhood_shader != null) neighborhood_shader.SetSize(Width, Height);
+            edge_shader?.SetSize(Width, Height);
+            blend_shader?.SetSize(Width, Height);
+            neighborhood_shader?.SetSize(Width, Height);
             return this;
         }
 

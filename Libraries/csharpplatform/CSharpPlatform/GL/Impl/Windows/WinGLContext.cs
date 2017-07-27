@@ -90,8 +90,7 @@ namespace CSharpPlatform.GL.Impl.Windows
                 ushort atom = RegisterClassEx(ref wc);
 
                 if (atom == 0)
-                    throw new Exception(string.Format("Failed to register window class. Error: {0}",
-                        Marshal.GetLastWin32Error()));
+                    throw new Exception($"Failed to register window class. Error: {Marshal.GetLastWin32Error()}");
 
                 _classRegistered = true;
             }

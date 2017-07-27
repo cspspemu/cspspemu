@@ -153,7 +153,7 @@ namespace CSharpUtils.Getopt
             }
             catch (Exception)
             {
-                throw (new Exception(string.Format("Argument {0} requires a {1}", name, typeof(TType))));
+                throw (new Exception($"Argument {name} requires a {typeof(TType)}"));
             }
         }
 
@@ -180,7 +180,7 @@ namespace CSharpUtils.Getopt
             {
                 formalAction = (current, arg) =>
                 {
-                    var argument = CheckArgument(current, () => int.Parse(arg != null ? arg : DequeueNext()));
+                    var argument = CheckArgument(current, () => int.Parse(arg ?? DequeueNext()));
                     // ReSharper disable once PossibleNullReferenceException
                     (action as Action<int>)(argument);
                 };
@@ -189,7 +189,7 @@ namespace CSharpUtils.Getopt
             {
                 formalAction = (current, arg) =>
                 {
-                    var argument = CheckArgument(current, () => float.Parse(arg != null ? arg : DequeueNext()));
+                    var argument = CheckArgument(current, () => float.Parse(arg ?? DequeueNext()));
                     // ReSharper disable once PossibleNullReferenceException
                     (action as Action<float>)(argument);
                 };
@@ -198,7 +198,7 @@ namespace CSharpUtils.Getopt
             {
                 formalAction = (current, arg) =>
                 {
-                    var argument = CheckArgument(current, () => double.Parse(arg != null ? arg : DequeueNext()));
+                    var argument = CheckArgument(current, () => double.Parse(arg ?? DequeueNext()));
                     // ReSharper disable once PossibleNullReferenceException
                     (action as Action<double>)(argument);
                 };
@@ -207,7 +207,7 @@ namespace CSharpUtils.Getopt
             {
                 formalAction = (current, arg) =>
                 {
-                    var argument = CheckArgument(current, () => arg != null ? arg : DequeueNext());
+                    var argument = CheckArgument(current, () => arg ?? DequeueNext());
                     // ReSharper disable once PossibleNullReferenceException
                     (action as Action<string>)(argument);
                 };

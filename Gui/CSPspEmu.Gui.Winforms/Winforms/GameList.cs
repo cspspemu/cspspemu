@@ -75,7 +75,7 @@ namespace CSPspEmu.Gui.Winforms
                     try
                     {
                         //Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
-                        if (Progress != null) Progress(IsoFile, Current, Total);
+                        Progress?.Invoke(IsoFile, Current, Total);
 
                         //Serializer.Serialize(Console.Out, Entry);
 
@@ -186,7 +186,7 @@ namespace CSPspEmu.Gui.Winforms
 
                             if (!FileSystem.FileExists("/PSP_GAME/PARAM.SFO"))
                             {
-                                throw (new Exception(string.Format("Not a PSP ISO '{0}'", IsoFile)));
+                                throw (new Exception($"Not a PSP ISO '{IsoFile}'"));
                             }
 
                             ParamSfo = new Psf(new MemoryStream(FileSystem.OpenRead("/PSP_GAME/PARAM.SFO").ReadAll()));

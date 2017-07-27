@@ -301,8 +301,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public RowGetterDelegate RowGetter
         {
-            get { return rowGetter; }
-            set { rowGetter = value; }
+            get => rowGetter;
+            set => rowGetter = value;
         }
 
         private RowGetterDelegate rowGetter;

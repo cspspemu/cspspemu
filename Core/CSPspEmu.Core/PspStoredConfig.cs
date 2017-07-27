@@ -94,10 +94,7 @@ namespace CSPspEmu.Core
         {
         }
 
-        private static string ConfigFilePath
-        {
-            get { return ApplicationPaths.MemoryStickRootFolder + "/EmulatorConfig.xml"; }
-        }
+        private static string ConfigFilePath => ApplicationPaths.MemoryStickRootFolder + "/EmulatorConfig.xml";
 
         private static object Lock = new object();
 

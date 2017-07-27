@@ -18,10 +18,7 @@ namespace CSPspEmu.Hle.Vfs
             return (GetLeft() > 0);
         }
 
-        public TType Current
-        {
-            get { return List[Index]; }
-        }
+        public TType Current => List[Index];
 
         public int GetLeft()
         {

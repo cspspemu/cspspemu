@@ -88,8 +88,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
             ThreadManager.Current.SetWaitAndPrepareWakeUp(
                 HleThread.WaitType.Semaphore,
-                string.Format("_sceKernelWaitEventFlagCB(EventId={0}, Bits={1:X}, Wait={2})",
-                    EventFlag.GetUidIndex(InjectContext), Bits, Wait),
+                $"_sceKernelWaitEventFlagCB(EventId={EventFlag.GetUidIndex(InjectContext)}, Bits={Bits:X}, Wait={Wait})",
                 EventFlag,
                 WakeUpCallback =>
                 {

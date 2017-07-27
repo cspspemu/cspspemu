@@ -9,18 +9,12 @@ namespace CSharpUtilsTests
     {
         class A
         {
-            public virtual string Value
-            {
-                get { return "A"; }
-            }
+            public virtual string Value => "A";
         }
 
         class B : A
         {
-            public override string Value
-            {
-                get { return "B"; }
-            }
+            public override string Value => "B";
         }
 
         [Fact]

@@ -13,10 +13,7 @@ namespace CSPspEmu.Hle.Modules.audio
 
         [Inject] public HleThreadManager HleThreadManager;
 
-        PspAudioChannel PspVaudioChannel
-        {
-            get { return PspAudio.SrcOutput2Channel; }
-        }
+        PspAudioChannel PspVaudioChannel => PspAudio.SrcOutput2Channel;
 
         /// <summary>
         /// 

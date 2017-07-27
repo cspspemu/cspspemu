@@ -243,8 +243,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         protected ObjectListView ListView
         {
-            get { return listView; }
-            set { listView = value; }
+            get => listView;
+            set => listView = value;
         }
 
         private ObjectListView listView;
@@ -252,18 +252,12 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets the row of the cell that is currently being edited
         /// </summary>
-        protected OLVListItem ItemBeingEdited
-        {
-            get { return this.ListView.cellEditEventArgs.ListViewItem; }
-        }
+        protected OLVListItem ItemBeingEdited => this.ListView.cellEditEventArgs.ListViewItem;
 
         /// <summary>
         /// Gets the index of the column of the cell that is being edited
         /// </summary>
-        protected int SubItemIndexBeingEdited
-        {
-            get { return this.ListView.cellEditEventArgs.SubItemIndex; }
-        }
+        protected int SubItemIndexBeingEdited => this.ListView.cellEditEventArgs.SubItemIndex;
 
         /// <summary>
         /// Gets or sets the map that remembers the normal behaviour of keys
@@ -276,7 +270,7 @@ namespace BrightIdeasSoftware
                     this.InitializeCellEditKeyMaps();
                 return cellEditKeyMap;
             }
-            set { cellEditKeyMap = value; }
+            set => cellEditKeyMap = value;
         }
 
         private IDictionary<Keys, CellEditCharacterBehaviour> cellEditKeyMap;
@@ -293,7 +287,7 @@ namespace BrightIdeasSoftware
                     this.InitializeCellEditKeyMaps();
                 return cellEditKeyAtEdgeBehaviourMap;
             }
-            set { cellEditKeyAtEdgeBehaviourMap = value; }
+            set => cellEditKeyAtEdgeBehaviourMap = value;
         }
 
         private IDictionary<Keys, CellEditAtEdgeBehaviour> cellEditKeyAtEdgeBehaviourMap;

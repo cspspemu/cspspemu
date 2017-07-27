@@ -266,7 +266,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool CanWrap
         {
-            get { return canWrap; }
+            get => canWrap;
             set
             {
                 canWrap = value;
@@ -291,8 +291,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public Rectangle? CellPadding
         {
-            get { return this.cellPadding; }
-            set { this.cellPadding = value; }
+            get => this.cellPadding;
+            set => this.cellPadding = value;
         }
 
         private Rectangle? cellPadding;
@@ -310,8 +310,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public virtual StringAlignment? CellVerticalAlignment
         {
-            get { return this.cellVerticalAlignment; }
-            set { this.cellVerticalAlignment = value; }
+            get => this.cellVerticalAlignment;
+            set => this.cellVerticalAlignment = value;
         }
 
         private StringAlignment? cellVerticalAlignment;
@@ -372,8 +372,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public ImageList ImageList
         {
-            get { return imageList; }
-            set { imageList = value; }
+            get => imageList;
+            set => imageList = value;
         }
 
         private ImageList imageList;
@@ -386,8 +386,8 @@ namespace BrightIdeasSoftware
          DefaultValue(1)]
         public int Spacing
         {
-            get { return spacing; }
-            set { spacing = value; }
+            get => spacing;
+            set => spacing = value;
         }
 
         private int spacing = 1;
@@ -401,12 +401,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool UseGdiTextRendering
         {
-            get
-            {
-                // Can't use GDI routines on a GDI+ printer context
-                return !this.IsPrinting && useGdiTextRendering;
-            }
-            set { useGdiTextRendering = value; }
+            get => !this.IsPrinting && useGdiTextRendering;
+            set => useGdiTextRendering = value;
         }
 
         private bool useGdiTextRendering = true;
@@ -428,7 +424,7 @@ namespace BrightIdeasSoftware
                     aspect = column.GetValue(this.rowObject);
                 return aspect;
             }
-            set { aspect = value; }
+            set => aspect = value;
         }
 
         private object aspect;
@@ -440,8 +436,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Rectangle Bounds
         {
-            get { return bounds; }
-            set { bounds = value; }
+            get => bounds;
+            set => bounds = value;
         }
 
         private Rectangle bounds;
@@ -453,8 +449,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OLVColumn Column
         {
-            get { return column; }
-            set { column = value; }
+            get => column;
+            set => column = value;
         }
 
         private OLVColumn column;
@@ -466,8 +462,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public DrawListViewItemEventArgs DrawItemEvent
         {
-            get { return drawItemEventArgs; }
-            set { drawItemEventArgs = value; }
+            get => drawItemEventArgs;
+            set => drawItemEventArgs = value;
         }
 
         private DrawListViewItemEventArgs drawItemEventArgs;
@@ -479,8 +475,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public DrawListViewSubItemEventArgs Event
         {
-            get { return eventArgs; }
-            set { eventArgs = value; }
+            get => eventArgs;
+            set => eventArgs = value;
         }
 
         private DrawListViewSubItemEventArgs eventArgs;
@@ -502,7 +498,7 @@ namespace BrightIdeasSoftware
 
                 return this.SubItem.Font;
             }
-            set { this.font = value; }
+            set => this.font = value;
         }
 
         private Font font;
@@ -512,20 +508,14 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ImageList ImageListOrDefault
-        {
-            get { return this.ImageList ?? this.ListView.SmallImageList; }
-        }
+        public ImageList ImageListOrDefault => this.ImageList ?? this.ListView.SmallImageList;
 
         /// <summary>
         /// Should this renderer fill in the background before drawing?
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsDrawBackground
-        {
-            get { return !this.IsPrinting; }
-        }
+        public bool IsDrawBackground => !this.IsPrinting;
 
         /// <summary>
         /// Cache whether or not our item is selected
@@ -534,8 +524,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsItemSelected
         {
-            get { return isItemSelected; }
-            set { isItemSelected = value; }
+            get => isItemSelected;
+            set => isItemSelected = value;
         }
 
         private bool isItemSelected;
@@ -547,8 +537,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsPrinting
         {
-            get { return isPrinting; }
-            set { isPrinting = value; }
+            get => isPrinting;
+            set => isPrinting = value;
         }
 
         private bool isPrinting;
@@ -560,8 +550,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OLVListItem ListItem
         {
-            get { return listItem; }
-            set { listItem = value; }
+            get => listItem;
+            set => listItem = value;
         }
 
         private OLVListItem listItem;
@@ -573,8 +563,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ObjectListView ListView
         {
-            get { return objectListView; }
-            set { objectListView = value; }
+            get => objectListView;
+            set => objectListView = value;
         }
 
         private ObjectListView objectListView;
@@ -585,10 +575,7 @@ namespace BrightIdeasSoftware
         /// <remarks>This returns null for column 0.</remarks>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public OLVListSubItem OLVSubItem
-        {
-            get { return listSubItem as OLVListSubItem; }
-        }
+        public OLVListSubItem OLVSubItem => listSubItem as OLVListSubItem;
 
         /// <summary>
         /// Get or set the model object that this renderer should draw
@@ -597,8 +584,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object RowObject
         {
-            get { return rowObject; }
-            set { rowObject = value; }
+            get => rowObject;
+            set => rowObject = value;
         }
 
         private object rowObject;
@@ -610,8 +597,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OLVListSubItem SubItem
         {
-            get { return listSubItem; }
-            set { listSubItem = value; }
+            get => listSubItem;
+            set => listSubItem = value;
         }
 
         private OLVListSubItem listSubItem;
@@ -630,7 +617,7 @@ namespace BrightIdeasSoftware
                 else
                     return this.textBrush;
             }
-            set { textBrush = value; }
+            set => textBrush = value;
         }
 
         private Brush textBrush;
@@ -1448,27 +1435,15 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Should this checkbox be drawn as disabled?
         /// </summary>
-        protected virtual bool IsCheckBoxDisabled
-        {
-            get
-            {
-                return this.ListView.RenderNonEditableCheckboxesAsDisabled &&
-                       (this.ListView.CellEditActivation == ObjectListView.CellEditActivateMode.None ||
-                        (this.Column != null && !this.Column.IsEditable));
-            }
-        }
+        protected virtual bool IsCheckBoxDisabled => this.ListView.RenderNonEditableCheckboxesAsDisabled &&
+                                                     (this.ListView.CellEditActivation == ObjectListView.CellEditActivateMode.None ||
+                                                      (this.Column != null && !this.Column.IsEditable));
 
-        protected bool IsItemHot
-        {
-            get
-            {
-                return this.ListView != null &&
-                       this.ListItem != null &&
-                       this.ListView.HotRowIndex == this.ListItem.Index &&
-                       this.ListView.HotColumnIndex == (this.Column == null ? 0 : this.Column.Index) &&
-                       this.ListView.HotCellHitLocation == HitTestLocation.CheckBox;
-            }
-        }
+        protected bool IsItemHot => this.ListView != null &&
+                                    this.ListItem != null &&
+                                    this.ListView.HotRowIndex == this.ListItem.Index &&
+                                    this.ListView.HotColumnIndex == (this.Column == null ? 0 : this.Column.Index) &&
+                                    this.ListView.HotCellHitLocation == HitTestLocation.CheckBox;
 
         protected Rectangle CalculateCheckBoxBounds(Graphics g, Rectangle cellBounds)
         {
@@ -1658,10 +1633,7 @@ namespace BrightIdeasSoftware
             TextRenderer.DrawText(g, txt, this.Font, r, this.GetForegroundColor(), backColor, flags);
         }
 
-        private bool ColumnIsPrimary
-        {
-            get { return this.Column != null && this.Column.Index == 0; }
-        }
+        private bool ColumnIsPrimary => this.Column != null && this.Column.Index == 0;
 
         protected TextFormatFlags CellVerticalAlignmentAsTextFormatFlag
         {
@@ -1788,8 +1760,8 @@ namespace BrightIdeasSoftware
          Description("How rounded will be the corners of the text match frame?")]
         public float CornerRoundness
         {
-            get { return cornerRoundness; }
-            set { cornerRoundness = value; }
+            get => cornerRoundness;
+            set => cornerRoundness = value;
         }
 
         private float cornerRoundness = 3.0f;
@@ -1802,8 +1774,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Brush FillBrush
         {
-            get { return fillBrush; }
-            set { fillBrush = value; }
+            get => fillBrush;
+            set => fillBrush = value;
         }
 
         private Brush fillBrush;
@@ -1816,8 +1788,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextMatchFilter Filter
         {
-            get { return filter; }
-            set { filter = value; }
+            get => filter;
+            set => filter = value;
         }
 
         private TextMatchFilter filter;
@@ -1830,8 +1802,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Pen FramePen
         {
-            get { return framePen; }
-            set { framePen = value; }
+            get => framePen;
+            set => framePen = value;
         }
 
         private Pen framePen;
@@ -1844,8 +1816,8 @@ namespace BrightIdeasSoftware
          Description("Will the frame around a text match will have rounded corners?")]
         public bool UseRoundedRectangle
         {
-            get { return useRoundedRectangle; }
-            set { useRoundedRectangle = value; }
+            get => useRoundedRectangle;
+            set => useRoundedRectangle = value;
         }
 
         private bool useRoundedRectangle = true;
@@ -2040,14 +2012,8 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets whether the renderer should actually draw highlighting
         /// </summary>
-        protected bool ShouldDrawHighlighting
-        {
-            get
-            {
-                return this.Column == null ||
-                       (this.Column.Searchable && this.Filter != null && this.Filter.HasComponents);
-            }
-        }
+        protected bool ShouldDrawHighlighting => this.Column == null ||
+                                                 (this.Column.Searchable && this.Filter != null && this.Filter.HasComponents);
 
         /// <summary>
         /// Return a GraphicPath that is a round cornered rectangle
@@ -2372,7 +2338,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool Paused
         {
-            get { return isPaused; }
+            get => isPaused;
             set
             {
                 if (isPaused != value)
@@ -2681,10 +2647,7 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Does this state represent a valid animation
             /// </summary>
-            public bool IsValid
-            {
-                get { return (this.image != null && this.frameCount > 0); }
-            }
+            public bool IsValid => (this.image != null && this.frameCount > 0);
 
             /// <summary>
             /// Advance our images current frame and calculate when it will expire
@@ -2790,8 +2753,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool UseStandardBar
         {
-            get { return useStandardBar; }
-            set { useStandardBar = value; }
+            get => useStandardBar;
+            set => useStandardBar = value;
         }
 
         private bool useStandardBar = true;
@@ -2804,8 +2767,8 @@ namespace BrightIdeasSoftware
          DefaultValue(2)]
         public int Padding
         {
-            get { return padding; }
-            set { padding = value; }
+            get => padding;
+            set => padding = value;
         }
 
         private int padding = 2;
@@ -2819,8 +2782,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "AliceBlue")]
         public Color BackgroundColor
         {
-            get { return backgroundColor; }
-            set { backgroundColor = value; }
+            get => backgroundColor;
+            set => backgroundColor = value;
         }
 
         private Color backgroundColor = Color.AliceBlue;
@@ -2833,8 +2796,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "Black")]
         public Color FrameColor
         {
-            get { return frameColor; }
-            set { frameColor = value; }
+            get => frameColor;
+            set => frameColor = value;
         }
 
         private Color frameColor = Color.Black;
@@ -2847,8 +2810,8 @@ namespace BrightIdeasSoftware
          DefaultValue(1.0f)]
         public float FrameWidth
         {
-            get { return frameWidth; }
-            set { frameWidth = value; }
+            get => frameWidth;
+            set => frameWidth = value;
         }
 
         private float frameWidth = 1.0f;
@@ -2862,8 +2825,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "BlueViolet")]
         public Color FillColor
         {
-            get { return fillColor; }
-            set { fillColor = value; }
+            get => fillColor;
+            set => fillColor = value;
         }
 
         private Color fillColor = Color.BlueViolet;
@@ -2876,8 +2839,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "CornflowerBlue")]
         public Color GradientStartColor
         {
-            get { return startColor; }
-            set { startColor = value; }
+            get => startColor;
+            set => startColor = value;
         }
 
         private Color startColor = Color.CornflowerBlue;
@@ -2890,8 +2853,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "DarkBlue")]
         public Color GradientEndColor
         {
-            get { return endColor; }
-            set { endColor = value; }
+            get => endColor;
+            set => endColor = value;
         }
 
         private Color endColor = Color.DarkBlue;
@@ -2904,8 +2867,8 @@ namespace BrightIdeasSoftware
          DefaultValue(100)]
         public int MaximumWidth
         {
-            get { return maximumWidth; }
-            set { maximumWidth = value; }
+            get => maximumWidth;
+            set => maximumWidth = value;
         }
 
         private int maximumWidth = 100;
@@ -2918,8 +2881,8 @@ namespace BrightIdeasSoftware
          DefaultValue(16)]
         public int MaximumHeight
         {
-            get { return maximumHeight; }
-            set { maximumHeight = value; }
+            get => maximumHeight;
+            set => maximumHeight = value;
         }
 
         private int maximumHeight = 16;
@@ -2932,8 +2895,8 @@ namespace BrightIdeasSoftware
          DefaultValue(0.0)]
         public double MinimumValue
         {
-            get { return minimumValue; }
-            set { minimumValue = value; }
+            get => minimumValue;
+            set => minimumValue = value;
         }
 
         private double minimumValue = 0.0;
@@ -2946,8 +2909,8 @@ namespace BrightIdeasSoftware
          DefaultValue(100.0)]
         public double MaximumValue
         {
-            get { return maximumValue; }
-            set { maximumValue = value; }
+            get => maximumValue;
+            set => maximumValue = value;
         }
 
         private double maximumValue = 100.0;
@@ -2970,7 +2933,7 @@ namespace BrightIdeasSoftware
                 else
                     return this.pen;
             }
-            set { this.pen = value; }
+            set => this.pen = value;
         }
 
         private Pen pen;
@@ -2989,7 +2952,7 @@ namespace BrightIdeasSoftware
                 else
                     return this.brush;
             }
-            set { this.brush = value; }
+            set => this.brush = value;
         }
 
         private Brush brush;
@@ -3008,7 +2971,7 @@ namespace BrightIdeasSoftware
                 else
                     return this.backgroundBrush;
             }
-            set { this.backgroundBrush = value; }
+            set => this.backgroundBrush = value;
         }
 
         private Brush backgroundBrush;
@@ -3159,7 +3122,7 @@ namespace BrightIdeasSoftware
                 else
                     return -1;
             }
-            set { imageSelector = value; }
+            set => imageSelector = value;
         }
 
         /// <summary>
@@ -3170,8 +3133,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public string ImageName
         {
-            get { return imageSelector as string; }
-            set { imageSelector = value; }
+            get => imageSelector as string;
+            set => imageSelector = value;
         }
 
         /// <summary>
@@ -3182,8 +3145,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object ImageSelector
         {
-            get { return imageSelector; }
-            set { imageSelector = value; }
+            get => imageSelector;
+            set => imageSelector = value;
         }
 
         private object imageSelector;
@@ -3196,8 +3159,8 @@ namespace BrightIdeasSoftware
          DefaultValue(10)]
         public int MaxNumberImages
         {
-            get { return maxNumberImages; }
-            set { maxNumberImages = value; }
+            get => maxNumberImages;
+            set => maxNumberImages = value;
         }
 
         private int maxNumberImages = 10;
@@ -3210,8 +3173,8 @@ namespace BrightIdeasSoftware
          DefaultValue(0)]
         public int MinimumValue
         {
-            get { return minimumValue; }
-            set { minimumValue = value; }
+            get => minimumValue;
+            set => minimumValue = value;
         }
 
         private int minimumValue = 0;
@@ -3224,8 +3187,8 @@ namespace BrightIdeasSoftware
          DefaultValue(100)]
         public int MaximumValue
         {
-            get { return maximumValue; }
-            set { maximumValue = value; }
+            get => maximumValue;
+            set => maximumValue = value;
         }
 
         private int maximumValue = 100;
@@ -3421,8 +3384,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public Font TitleFont
         {
-            get { return titleFont; }
-            set { titleFont = value; }
+            get => titleFont;
+            set => titleFont = value;
         }
 
         private Font titleFont;
@@ -3431,10 +3394,7 @@ namespace BrightIdeasSoftware
         /// Return a font that has been set for the title or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public Font TitleFontOrDefault
-        {
-            get { return this.TitleFont ?? this.ListView.Font; }
-        }
+        public Font TitleFontOrDefault => this.TitleFont ?? this.ListView.Font;
 
         /// <summary>
         /// Gets or set the color of the title of the task
@@ -3446,8 +3406,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public Color TitleColor
         {
-            get { return titleColor; }
-            set { titleColor = value; }
+            get => titleColor;
+            set => titleColor = value;
         }
 
         private Color titleColor;
@@ -3476,8 +3436,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public Font DescriptionFont
         {
-            get { return descriptionFont; }
-            set { descriptionFont = value; }
+            get => descriptionFont;
+            set => descriptionFont = value;
         }
 
         private Font descriptionFont;
@@ -3486,10 +3446,7 @@ namespace BrightIdeasSoftware
         /// Return a font that has been set for the title or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public Font DescriptionFontOrDefault
-        {
-            get { return this.DescriptionFont ?? this.ListView.Font; }
-        }
+        public Font DescriptionFontOrDefault => this.DescriptionFont ?? this.ListView.Font;
 
         /// <summary>
         /// Gets or set the color of the description of the task
@@ -3501,8 +3458,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "DimGray")]
         public Color DescriptionColor
         {
-            get { return descriptionColor; }
-            set { descriptionColor = value; }
+            get => descriptionColor;
+            set => descriptionColor = value;
         }
 
         private Color descriptionColor = Color.DimGray;
@@ -3530,8 +3487,8 @@ namespace BrightIdeasSoftware
          DefaultValue(4)]
         public int ImageTextSpace
         {
-            get { return imageTextSpace; }
-            set { imageTextSpace = value; }
+            get => imageTextSpace;
+            set => imageTextSpace = value;
         }
 
         private int imageTextSpace = 4;
@@ -3544,8 +3501,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public string DescriptionAspectName
         {
-            get { return descriptionAspectName; }
-            set { descriptionAspectName = value; }
+            get => descriptionAspectName;
+            set => descriptionAspectName = value;
         }
 
         private string descriptionAspectName;

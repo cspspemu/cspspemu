@@ -72,8 +72,8 @@ namespace BrightIdeasSoftware
          TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
         public virtual object DataSource
         {
-            get { return this.Adapter.DataSource; }
-            set { this.Adapter.DataSource = value; }
+            get => this.Adapter.DataSource;
+            set => this.Adapter.DataSource = value;
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace BrightIdeasSoftware
          DefaultValue("")]
         public virtual string DataMember
         {
-            get { return this.Adapter.DataMember; }
-            set { this.Adapter.DataMember = value; }
+            get => this.Adapter.DataMember;
+            set => this.Adapter.DataMember = value;
         }
 
         #endregion
@@ -105,7 +105,7 @@ namespace BrightIdeasSoftware
                     adapter = this.CreateDataSourceAdapter();
                 return adapter;
             }
-            set { adapter = value; }
+            set => adapter = value;
         }
 
         private DataSourceAdapter adapter;

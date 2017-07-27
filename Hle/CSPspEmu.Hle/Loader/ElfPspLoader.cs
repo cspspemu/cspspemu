@@ -170,7 +170,7 @@ namespace CSPspEmu.Hle.Loader
             var relocProgramIndex = 0;
             foreach (var programHeader in ElfLoader.ProgramHeaders)
             {
-                if (RelocOutput != null) RelocOutput.WriteLine("Program Header: %d".Sprintf(relocProgramIndex++));
+                RelocOutput?.WriteLine("Program Header: %d".Sprintf(relocProgramIndex++));
                 switch (programHeader.Type)
                 {
                     case Elf.ProgramHeader.TypeEnum.Reloc1:

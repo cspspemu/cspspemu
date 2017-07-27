@@ -80,16 +80,16 @@ namespace BrightIdeasSoftware
 
         public long[] Values
         {
-            get { return this.values; }
-            private set { this.values = value; }
+            get => this.values;
+            private set => this.values = value;
         }
 
         private long[] values;
 
         public string[] Labels
         {
-            get { return this.labels; }
-            private set { this.labels = value; }
+            get => this.labels;
+            private set => this.labels = value;
         }
 
         private string[] labels;

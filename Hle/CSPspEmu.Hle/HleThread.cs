@@ -24,10 +24,7 @@ namespace CSPspEmu.Hle
         /// <summary>
         /// Lower priority value is a higher priority, so we negate the priorityvalue.
         /// </summary>
-        int IPreemptiveItem.Priority
-        {
-            get { return -PriorityValue; }
-        }
+        int IPreemptiveItem.Priority => -PriorityValue;
 
         bool IPreemptiveItem.Ready
         {
@@ -47,7 +44,7 @@ namespace CSPspEmu.Hle
         /// </summary>
         public int PriorityValue
         {
-            get { return _PriorityValue; }
+            get => _PriorityValue;
             set
             {
                 if (_PriorityValue != value)
@@ -133,14 +130,11 @@ namespace CSPspEmu.Hle
         /// </summary>
         protected int YieldCount = 0;
 
-        public bool IsWaitingAndHandlingCallbacks
-        {
-            get { return HasAllStatus(Status.Waiting) && HandleCallbacks; }
-        }
+        public bool IsWaitingAndHandlingCallbacks => HasAllStatus(Status.Waiting) && HandleCallbacks;
 
         public uint GP
         {
-            get { return Info.GP; }
+            get => Info.GP;
             set
             {
                 Info.GP = value;
@@ -383,27 +377,19 @@ namespace CSPspEmu.Hle
 
         public override string ToString()
         {
-            return string.Format(
-                "HleThread(Id={0}, Priority={1}, Name='{2}', Status={3}, WaitDescription='{4}', YieldCount={5})",
-                Id, PriorityValue, Name, CurrentStatus, WaitDescription, YieldCount
-            );
+            return
+                $"HleThread(Id={Id}, Priority={PriorityValue}, Name='{Name}', Status={CurrentStatus}, WaitDescription='{WaitDescription}', YieldCount={YieldCount})";
         }
 
         public string ToExtendedString()
         {
-            var Ret = string.Format(
-                "HleThread(Id={0}, Priority={1}, PC=0x{2:X}, LastValidPC=0x{3:X}, SP=0x{4:X}, Name='{5}', Status={6}, YieldCount={7}",
-                Id, PriorityValue,
-                CpuThreadState.Pc, CpuThreadState.LastValidPc, CpuThreadState.Sp,
-                Name, CurrentStatus, YieldCount
-            );
+            var Ret =
+                $"HleThread(Id={Id}, Priority={PriorityValue}, PC=0x{CpuThreadState.Pc:X}, LastValidPC=0x{CpuThreadState.LastValidPc:X}, SP=0x{CpuThreadState.Sp:X}, Name='{Name}', Status={CurrentStatus}, YieldCount={YieldCount}";
             switch (CurrentStatus)
             {
                 case Status.Waiting:
-                    Ret += string.Format(
-                        ", CurrentWaitType={0}, WaitDescription={1}, WaitObject={2}, HandleCallbacks={3}",
-                        CurrentWaitType, WaitDescription, WaitObject, HandleCallbacks
-                    );
+                    Ret +=
+                        $", CurrentWaitType={CurrentWaitType}, WaitDescription={WaitDescription}, WaitObject={WaitObject}, HandleCallbacks={HandleCallbacks}";
                     break;
             }
             //Ret += String.Format(", LastCalledHleFunction={0}", LastCalledHleFunction);
@@ -412,16 +398,13 @@ namespace CSPspEmu.Hle
 
         public void Terminate()
         {
-            if (OnTerminate != null)
-            {
-                OnTerminate();
-            }
+            OnTerminate?.Invoke();
         }
 
         public void Dispose()
         {
-            if (Coroutine != null) Coroutine.Dispose();
-            if (GreenThread != null) GreenThread.Dispose();
+            Coroutine?.Dispose();
+            GreenThread?.Dispose();
         }
 
         public void DumpStack(TextWriter TextWriter)

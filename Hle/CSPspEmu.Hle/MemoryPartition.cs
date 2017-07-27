@@ -41,18 +41,12 @@ namespace CSPspEmu.Hle
         public uint Low { get; protected set; }
         public uint High { get; protected set; }
 
-        public int Size
-        {
-            get { return (int) (High - Low); }
-        }
+        public int Size => (int) (High - Low);
 
         public MemoryPartition ParentPartition { get; private set; }
         private SortedSet<MemoryPartition> _ChildPartitions;
 
-        public void* LowPointer
-        {
-            get { return PspMemory.PspPointerToPointerSafe(Low, Size); }
-        }
+        public void* LowPointer => PspMemory.PspPointerToPointerSafe(Low, Size);
 
         public uint GetAnchoredAddress(Anchor Anchor)
         {
@@ -64,10 +58,7 @@ namespace CSPspEmu.Hle
             throw (new InvalidOperationException("Invalid Anchor Value : " + Anchor));
         }
 
-        public MemoryPartition Root
-        {
-            get { return (ParentPartition != null) ? ParentPartition.Root : this; }
-        }
+        public MemoryPartition Root => (ParentPartition != null) ? ParentPartition.Root : this;
 
         public int MaxFreeSize
         {
@@ -93,10 +84,7 @@ namespace CSPspEmu.Hle
             }
         }
 
-        public IEnumerable<MemoryPartition> ChildPartitions
-        {
-            get { return _ChildPartitions; }
-        }
+        public IEnumerable<MemoryPartition> ChildPartitions => _ChildPartitions;
 
         public MemoryPartition(InjectContext InjectContext, uint Low, uint High, bool Allocated = true,
             string Name = "<Unknown>", MemoryPartition ParentPartition = null)
@@ -309,10 +297,7 @@ namespace CSPspEmu.Hle
 					Console.WriteLine("");
 #endif
                 throw (new MemoryPartitionNoMemoryException(
-                    string.Format(
-                        "Can't allocate Size={0} : AllocateAnchor={1} : Position=0x{2:X}",
-                        Size, AllocateAnchor, Position
-                    )
+                    $"Can't allocate Size={Size} : AllocateAnchor={AllocateAnchor} : Position=0x{Position:X}"
                 ));
             }
         }
@@ -320,15 +305,8 @@ namespace CSPspEmu.Hle
         public void Dump(MemoryPartition Mark = null, int Level = 0)
         {
             Console.Write(new string(' ', Level * 2));
-            Console.WriteLine(string.Format(
-                "MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Size={3}, Name='{4}'){5}",
-                Low,
-                High,
-                Allocated,
-                Size,
-                Name,
-                (this == Mark) ? " * " : ""
-            ));
+            Console.WriteLine(
+                $"MemoryPartition(Low={Low:X}, High={High:X}, Allocated={Allocated}, Size={Size}, Name='{Name}'){((this == Mark) ? " * " : "")}");
             foreach (var ChildPartition in ChildPartitions)
             {
                 ChildPartition.Dump(Level: Level + 1, Mark: Mark);
@@ -347,22 +325,13 @@ namespace CSPspEmu.Hle
         {
             if ((_ChildPartitions != null) && _ChildPartitions.Count > 0)
             {
-                return string.Format(
-                    "MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', Size={4}, ChildPartitions=[{5}])",
-                    Low, High, Allocated,
-                    Name,
-                    Size,
-                    string.Join(",", _ChildPartitions)
-                );
+                return
+                    $"MemoryPartition(Low={Low:X}, High={High:X}, Allocated={Allocated}, Name='{Name}', Size={Size}, ChildPartitions=[{string.Join(",", _ChildPartitions)}])";
             }
             else
             {
-                return string.Format(
-                    "MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', Size={4})",
-                    Low, High, Allocated,
-                    Name,
-                    Size
-                );
+                return
+                    $"MemoryPartition(Low={Low:X}, High={High:X}, Allocated={Allocated}, Name='{Name}', Size={Size})";
             }
         }
 

@@ -20,10 +20,7 @@ namespace CSPspEmu.Core.Gpu
     public abstract unsafe class Texture<TGpuImpl> : IDisposable
     {
         //public int TextureId { get; private set; }
-        public ulong TextureHash
-        {
-            get { return TextureCacheKey.TextureHash; }
-        }
+        public ulong TextureHash => TextureCacheKey.TextureHash;
 
         public TGpuImpl GpuImpl;
         public DateTime RecheckTimestamp;

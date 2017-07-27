@@ -13,7 +13,7 @@ namespace CSharpUtilsTests
 
             public override string ToString()
             {
-                return string.Format("TestShorts(0x{0:X4}, 0x{1:X4}, 0x{2:X4})", A, B, C);
+                return $"TestShorts(0x{A:X4}, 0x{B:X4}, 0x{C:X4})";
             }
         }
 

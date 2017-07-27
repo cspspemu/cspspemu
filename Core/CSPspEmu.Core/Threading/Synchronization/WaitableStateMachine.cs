@@ -22,10 +22,7 @@ namespace CSPspEmu.Core.Threading.Synchronization
             this.Debug = Debug;
         }
 
-        public TEnum Value
-        {
-            get { return _Value; }
-        }
+        public TEnum Value => _Value;
 
         public void SetValue(TEnum value)
         {
@@ -73,8 +70,7 @@ namespace CSPspEmu.Core.Threading.Synchronization
             lock (Notifications)
             {
                 if (Debug)
-                    Console.WriteLine(string.Format("CallbackOnStateOnce({0}, Callback). Current: {1}", ExpectedValue,
-                        Value));
+                    Console.WriteLine($"CallbackOnStateOnce({ExpectedValue}, Callback). Current: {Value}");
 
                 if (Value.Equals(ExpectedValue))
                 {

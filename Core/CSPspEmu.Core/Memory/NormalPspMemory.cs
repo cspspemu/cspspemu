@@ -10,15 +10,9 @@ namespace CSPspEmu.Core.Memory
 {
     public unsafe class NormalPspMemory : PspMemory
     {
-        public override bool HasFixedGlobalAddress
-        {
-            get { return false; }
-        }
+        public override bool HasFixedGlobalAddress => false;
 
-        public override IntPtr FixedGlobalAddress
-        {
-            get { return IntPtr.Zero; }
-        }
+        public override IntPtr FixedGlobalAddress => IntPtr.Zero;
 
         public NormalPspMemory()
         {
@@ -172,7 +166,7 @@ namespace CSPspEmu.Core.Memory
                         }
                         uint Offset = Address - ScratchPadOffset;
 #if ADDITIONAL_CHECKS
-                        if (Offset >= ScratchPadSize) throw (new Exception(string.Format("Outside! 0x{0:X}", Address)));
+                        if (Offset >= ScratchPadSize) throw (new Exception($"Outside! 0x{Address:X}"));
 #endif
                         return &ScratchPadPtr[Address - ScratchPadOffset];
                     }
@@ -182,7 +176,7 @@ namespace CSPspEmu.Core.Memory
                         uint Offset = Address - FrameBufferOffset;
 #if ADDITIONAL_CHECKS
                         if (Offset >= FrameBufferSize)
-                            throw (new Exception(string.Format("Outside! 0x{0:X}", Address)));
+                            throw (new Exception($"Outside! 0x{Address:X}"));
 #endif
 
                         return &FrameBufferPtr[Offset];
@@ -195,7 +189,7 @@ namespace CSPspEmu.Core.Memory
                     {
                         uint Offset = Address - MainOffset;
 #if ADDITIONAL_CHECKS
-                        if (Offset >= MainSize) throw (new Exception(string.Format("Outside! 0x{0:X}", Address)));
+                        if (Offset >= MainSize) throw (new Exception($"Outside! 0x{Address:X}"));
 #endif
 
                         return &MainPtr[Offset];
@@ -209,7 +203,7 @@ namespace CSPspEmu.Core.Memory
                         //return HardwareVectors
                         uint Offset = Address - VectorsOffset;
 #if ADDITIONAL_CHECKS
-                        if (Offset >= VectorsSize) throw (new Exception(string.Format("Outside! 0x{0:X}", Address)));
+                        if (Offset >= VectorsSize) throw (new Exception($"Outside! 0x{Address:X}"));
 #endif
                         return &VectorsPtr[Offset];
                     }

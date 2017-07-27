@@ -10,19 +10,9 @@ namespace CSPspEmuLLETest
 {
     unsafe class Program
     {
-        public static string NandPath
-        {
-            get
-            {
-                return @"..\..\..\deploy\cspspemu\nand-dump.bin";
-                //return @"..\..\..\deploy\cspspemu\nand-dump-420.bin";
-            }
-        }
+        public static string NandPath => @"..\..\..\deploy\cspspemu\nand-dump.bin";
 
-        public static string PreIplPath
-        {
-            get { return @"..\..\..\deploy\cspspemu\psp_bios.bin"; }
-        }
+        public static string PreIplPath => @"..\..\..\deploy\cspspemu\psp_bios.bin";
 
         [Inject] protected DebugPspMemory PspMemory;
 

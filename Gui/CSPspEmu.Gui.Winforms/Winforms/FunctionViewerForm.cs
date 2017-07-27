@@ -32,10 +32,7 @@ namespace CSPspEmu.Gui.Winforms
             public uint PC;
             public MethodCacheInfo Entry;
 
-            public MethodCacheInfo MethodCacheInfo
-            {
-                get { return MethodCache.GetForPc(PC); }
-            }
+            public MethodCacheInfo MethodCacheInfo => MethodCache.GetForPc(PC);
 
             public Color ItemColor
             {
@@ -52,10 +49,7 @@ namespace CSPspEmu.Gui.Winforms
                 }
             }
 
-            public string Message
-            {
-                get { return Entry.Name; }
-            }
+            public string Message => Entry.Name;
 
             public override string ToString()
             {
@@ -101,33 +95,27 @@ namespace CSPspEmu.Gui.Winforms
 
                 var InfoLines = new List<string>();
 
-                InfoLines.Add(string.Format("Name: {0}", MethodCacheInfo.Name));
-                InfoLines.Add(string.Format("TotalInstructions: {0}", MethodCacheInfo.TotalInstructions));
-                InfoLines.Add(string.Format("DisableOptimizations: {0}",
-                    MethodCacheInfo.DynarecFunction.DisableOptimizations));
+                InfoLines.Add($"Name: {MethodCacheInfo.Name}");
+                InfoLines.Add($"TotalInstructions: {MethodCacheInfo.TotalInstructions}");
+                InfoLines.Add($"DisableOptimizations: {MethodCacheInfo.DynarecFunction.DisableOptimizations}");
 
-                InfoLines.Add(string.Format("EntryPC: 0x{0:X8}", MethodCacheInfo.EntryPc));
-                InfoLines.Add(string.Format("MinPC: 0x{0:X8}", MethodCacheInfo.MinPc));
-                InfoLines.Add(string.Format("MaxPC: 0x{0:X8}", MethodCacheInfo.MaxPc));
-                InfoLines.Add(string.Format("TimeAnalyzeBranches: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds));
-                InfoLines.Add(string.Format("TimeGenerateAst: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeGenerateAst.TotalMilliseconds));
-                InfoLines.Add(string.Format("TimeOptimize: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeOptimize.TotalMilliseconds));
-                InfoLines.Add(string.Format("TimeGenerateIL: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeGenerateIl.TotalMilliseconds));
-                InfoLines.Add(string.Format("TimeCreateDelegate: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeCreateDelegate.TotalMilliseconds));
-                InfoLines.Add(string.Format("TimeLinking: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeLinking.TotalMilliseconds));
-                InfoLines.Add(string.Format("TimeTotal: {0}",
-                    MethodCacheInfo.DynarecFunction.TimeTotal.TotalMilliseconds));
+                InfoLines.Add($"EntryPC: 0x{MethodCacheInfo.EntryPc:X8}");
+                InfoLines.Add($"MinPC: 0x{MethodCacheInfo.MinPc:X8}");
+                InfoLines.Add($"MaxPC: 0x{MethodCacheInfo.MaxPc:X8}");
+                InfoLines.Add(
+                    $"TimeAnalyzeBranches: {MethodCacheInfo.DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds}");
+                InfoLines.Add($"TimeGenerateAst: {MethodCacheInfo.DynarecFunction.TimeGenerateAst.TotalMilliseconds}");
+                InfoLines.Add($"TimeOptimize: {MethodCacheInfo.DynarecFunction.TimeOptimize.TotalMilliseconds}");
+                InfoLines.Add($"TimeGenerateIL: {MethodCacheInfo.DynarecFunction.TimeGenerateIl.TotalMilliseconds}");
+                InfoLines.Add(
+                    $"TimeCreateDelegate: {MethodCacheInfo.DynarecFunction.TimeCreateDelegate.TotalMilliseconds}");
+                InfoLines.Add($"TimeLinking: {MethodCacheInfo.DynarecFunction.TimeLinking.TotalMilliseconds}");
+                InfoLines.Add($"TimeTotal: {MethodCacheInfo.DynarecFunction.TimeTotal.TotalMilliseconds}");
 
                 InfoLines.Add(string.Format(""));
                 foreach (var Item in MethodCacheInfo.DynarecFunction.InstructionStats.OrderBy(Pair => Pair.Value))
                 {
-                    InfoLines.Add(string.Format("{0}: {1}", Item.Key, Item.Value));
+                    InfoLines.Add($"{Item.Key}: {Item.Value}");
                 }
 
                 InfoTextBox.Text = string.Join("\r\n", InfoLines);
@@ -162,7 +150,7 @@ namespace CSPspEmu.Gui.Winforms
                             {
                                 var Instruction = Memory.ReadSafe<Instruction>(PC);
                                 var Result = MipsDisassembler.Disassemble(PC, Instruction);
-                                OutString += string.Format("0x{0:X8}: {1}\r\n", PC, Result.ToString());
+                                OutString += $"0x{PC:X8}: {Result.ToString()}\r\n";
                             }
                         }
                         catch (Exception Exception)

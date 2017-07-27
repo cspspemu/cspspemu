@@ -371,8 +371,8 @@ namespace CSPspEmu.Gui.Winforms
 
             public int Width
             {
-                get { return _Width; }
-                set { _Width = MathUtils.Clamp(value, MinimumWidth, MaximumWidth); }
+                get => _Width;
+                set => _Width = MathUtils.Clamp(value, MinimumWidth, MaximumWidth);
             }
         }
 

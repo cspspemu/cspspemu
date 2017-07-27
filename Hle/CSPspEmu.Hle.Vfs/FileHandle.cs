@@ -8,30 +8,18 @@ namespace CSPspEmu.Hle.Vfs
         HleIoDrvFileArg HleIoDrvFileArg;
         //public HleIoManager HleIoManager;
 
-        public IHleIoDriver HleIoDriver
-        {
-            get { return HleIoDrvFileArg.HleIoDriver; }
-        }
+        public IHleIoDriver HleIoDriver => HleIoDrvFileArg.HleIoDriver;
 
         public FileHandle(HleIoDrvFileArg HleIoDrvFileArg)
         {
             this.HleIoDrvFileArg = HleIoDrvFileArg;
         }
 
-        public override bool CanRead
-        {
-            get { return true; }
-        }
+        public override bool CanRead => true;
 
-        public override bool CanSeek
-        {
-            get { return true; }
-        }
+        public override bool CanSeek => true;
 
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        public override bool CanWrite => true;
 
         public override void Flush()
         {
@@ -50,8 +38,8 @@ namespace CSPspEmu.Hle.Vfs
 
         public override long Position
         {
-            get { return HleIoDriver.IoLseek(HleIoDrvFileArg, 0, SeekAnchor.Cursor); }
-            set { HleIoDriver.IoLseek(HleIoDrvFileArg, value, SeekAnchor.Set); }
+            get => HleIoDriver.IoLseek(HleIoDrvFileArg, 0, SeekAnchor.Cursor);
+            set => HleIoDriver.IoLseek(HleIoDrvFileArg, value, SeekAnchor.Set);
         }
 
         public override void SetLength(long value)

@@ -46,30 +46,18 @@ namespace CSPspEmu.Core
 
         public const int BytesPerBlock = BytesPerPage * PagesPerBlock;
 
-        public override bool CanRead
-        {
-            get { return Stream.CanRead; }
-        }
+        public override bool CanRead => Stream.CanRead;
 
-        public override bool CanSeek
-        {
-            get { return Stream.CanSeek; }
-        }
+        public override bool CanSeek => Stream.CanSeek;
 
-        public override bool CanWrite
-        {
-            get { return Stream.CanWrite; }
-        }
+        public override bool CanWrite => Stream.CanWrite;
 
         public override void Flush()
         {
             Stream.Flush();
         }
 
-        public override long Length
-        {
-            get { return (Stream.Length / BytesPerRawPage) * BytesPerPage; }
-        }
+        public override long Length => (Stream.Length / BytesPerRawPage) * BytesPerPage;
 
         public override long Position { get; set; }
 

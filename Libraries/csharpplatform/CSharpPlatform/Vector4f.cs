@@ -7,10 +7,7 @@ namespace CSharpPlatform
     {
         public float X, Y, Z, W;
 
-        public static Vector4f Zero
-        {
-            get { return new Vector4f(0, 0, 0, 0); }
-        }
+        public static Vector4f Zero => new Vector4f(0, 0, 0, 0);
 
         public float this[int Index]
         {
@@ -81,7 +78,7 @@ namespace CSharpPlatform
 
         public override string ToString()
         {
-            return string.Format("Vector4({0}, {1}, {2}, {3})", X, Y, Z, W);
+            return $"Vector4({X}, {Y}, {Z}, {W})";
         }
     }
 }

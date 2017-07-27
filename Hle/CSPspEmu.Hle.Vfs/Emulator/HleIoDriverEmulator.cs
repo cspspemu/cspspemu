@@ -160,8 +160,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
                         throw (new Exception("PspHleRunningConfig.FileNameBase is empty"));
                     this.PspDisplay.TakeScreenshot()
                         .Save(
-                            string.Format("{0}.lastoutput.{1}.png", PspHleRunningConfig.FileNameBase,
-                                ScreenShotCount++), ImageFormat.Png);
+                            $"{PspHleRunningConfig.FileNameBase}.lastoutput.{ScreenShotCount++}.png", ImageFormat.Png);
                     break;
                 default:
                     Console.Error.WriteLine("Unknown emulator command '{0}':0x{1:X} <- {2}", DeviceName, Command,

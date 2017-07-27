@@ -129,8 +129,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public OLVColumn[] Columns
         {
-            get { return columns; }
-            set { columns = value; }
+            get => columns;
+            set => columns = value;
         }
 
         private OLVColumn[] columns;
@@ -161,10 +161,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets whether or not this filter has any search criteria
         /// </summary>
-        public bool HasComponents
-        {
-            get { return this.MatchingStrategies.Count > 0; }
-        }
+        public bool HasComponents => this.MatchingStrategies.Count > 0;
 
         /// <summary>
         /// Gets or set the ObjectListView upon which this filter will work
@@ -175,8 +172,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public ObjectListView ListView
         {
-            get { return listView; }
-            set { listView = value; }
+            get => listView;
+            set => listView = value;
         }
 
         private ObjectListView listView;
@@ -241,7 +238,7 @@ namespace BrightIdeasSoftware
                 }
                 return regexOptions.Value;
             }
-            set { regexOptions = value; }
+            set => regexOptions = value;
         }
 
         private RegexOptions? regexOptions;
@@ -274,8 +271,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public StringComparison StringComparison
         {
-            get { return this.stringComparison; }
-            set { this.stringComparison = value; }
+            get => this.stringComparison;
+            set => this.stringComparison = value;
         }
 
         private StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase;
@@ -391,18 +388,15 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets how the filter will match text
             /// </summary>
-            public StringComparison StringComparison
-            {
-                get { return this.TextFilter.StringComparison; }
-            }
+            public StringComparison StringComparison => this.TextFilter.StringComparison;
 
             /// <summary>
             /// Gets the text filter to which this component belongs
             /// </summary>
             public TextMatchFilter TextFilter
             {
-                get { return textFilter; }
-                set { textFilter = value; }
+                get => textFilter;
+                set => textFilter = value;
             }
 
             private TextMatchFilter textFilter;
@@ -412,8 +406,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             public string Text
             {
-                get { return this.text; }
-                set { this.text = value; }
+                get => this.text;
+                set => this.text = value;
             }
 
             private string text;
@@ -570,10 +564,7 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets or sets the options that will be used when compiling the regular expression.
             /// </summary>
-            public RegexOptions RegexOptions
-            {
-                get { return this.TextFilter.RegexOptions; }
-            }
+            public RegexOptions RegexOptions => this.TextFilter.RegexOptions;
 
             /// <summary>
             /// Gets or sets a compilex regular expression, based on our current Text and RegexOptions.
@@ -599,7 +590,7 @@ namespace BrightIdeasSoftware
                     }
                     return this.regex;
                 }
-                set { this.regex = value; }
+                set => this.regex = value;
             }
 
             private Regex regex;
@@ -607,10 +598,7 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets whether or not our current regular expression is a valid regex
             /// </summary>
-            protected bool IsRegexInvalid
-            {
-                get { return this.Regex == TextRegexMatchingStrategy.InvalidRegexMarker; }
-            }
+            protected bool IsRegexInvalid => this.Regex == TextRegexMatchingStrategy.InvalidRegexMarker;
 
             private static Regex InvalidRegexMarker = new Regex(".*");
 

@@ -32,70 +32,31 @@ namespace CSPspEmu.Gui.Winforms
 
         internal IGuiExternalInterface IGuiExternalInterface;
 
-        internal InjectContext InjectContext
-        {
-            get { return IGuiExternalInterface.InjectContext; }
-        }
+        internal InjectContext InjectContext => IGuiExternalInterface.InjectContext;
 
-        internal CpuProcessor CpuProcessor
-        {
-            get { return InjectContext.GetInstance<CpuProcessor>(); }
-        }
+        internal CpuProcessor CpuProcessor => InjectContext.GetInstance<CpuProcessor>();
 
-        internal GpuProcessor GpuProcessor
-        {
-            get { return InjectContext.GetInstance<GpuProcessor>(); }
-        }
+        internal GpuProcessor GpuProcessor => InjectContext.GetInstance<GpuProcessor>();
 
-        internal CpuConfig CpuConfig
-        {
-            get { return InjectContext.GetInstance<CpuConfig>(); }
-        }
+        internal CpuConfig CpuConfig => InjectContext.GetInstance<CpuConfig>();
 
-        internal GpuConfig GpuConfig
-        {
-            get { return InjectContext.GetInstance<GpuConfig>(); }
-        }
+        internal GpuConfig GpuConfig => InjectContext.GetInstance<GpuConfig>();
 
-        internal HleConfig HleConfig
-        {
-            get { return InjectContext.GetInstance<HleConfig>(); }
-        }
+        internal HleConfig HleConfig => InjectContext.GetInstance<HleConfig>();
 
-        internal ElfConfig ElfConfig
-        {
-            get { return InjectContext.GetInstance<ElfConfig>(); }
-        }
+        internal ElfConfig ElfConfig => InjectContext.GetInstance<ElfConfig>();
 
-        internal GuiConfig GuiConfig
-        {
-            get { return InjectContext.GetInstance<GuiConfig>(); }
-        }
+        internal GuiConfig GuiConfig => InjectContext.GetInstance<GuiConfig>();
 
-        internal DisplayConfig DisplayConfig
-        {
-            get { return InjectContext.GetInstance<DisplayConfig>(); }
-        }
+        internal DisplayConfig DisplayConfig => InjectContext.GetInstance<DisplayConfig>();
 
-        internal PspStoredConfig StoredConfig
-        {
-            get { return InjectContext.GetInstance<PspStoredConfig>(); }
-        }
+        internal PspStoredConfig StoredConfig => InjectContext.GetInstance<PspStoredConfig>();
 
-        internal PspMemory Memory
-        {
-            get { return InjectContext.GetInstance<PspMemory>(); }
-        }
+        internal PspMemory Memory => InjectContext.GetInstance<PspMemory>();
 
-        internal PspDisplay PspDisplay
-        {
-            get { return InjectContext.GetInstance<PspDisplay>(); }
-        }
+        internal PspDisplay PspDisplay => InjectContext.GetInstance<PspDisplay>();
 
-        internal PspController PspController
-        {
-            get { return InjectContext.GetInstance<PspController>(); }
-        }
+        internal PspController PspController => InjectContext.GetInstance<PspController>();
 
         internal bool EnableRefreshing = true;
 
@@ -162,9 +123,9 @@ namespace CSPspEmu.Gui.Winforms
 
             UpdateCheckboxes();
 
-            Debug.WriteLine(string.Format("Now: {0}", DateTime.UtcNow));
-            Debug.WriteLine(string.Format("LastCheckedTime: {0}", StoredConfig.LastCheckedTime));
-            Debug.WriteLine(string.Format("Elapsed: {0}", (DateTime.UtcNow - StoredConfig.LastCheckedTime)));
+            Debug.WriteLine($"Now: {DateTime.UtcNow}");
+            Debug.WriteLine($"LastCheckedTime: {StoredConfig.LastCheckedTime}");
+            Debug.WriteLine($"Elapsed: {(DateTime.UtcNow - StoredConfig.LastCheckedTime)}");
             if ((DateTime.UtcNow - StoredConfig.LastCheckedTime).TotalDays > 3)
             {
                 CheckForUpdates(NotifyIfNotFound: false);
@@ -212,12 +173,9 @@ namespace CSPspEmu.Gui.Winforms
                             UpdateTitle();
                             if (GLControl == null || !GLControl.Visible) return;
                             CommonGuiInput.SendControllerFrame();
-                            if (GLControl != null)
-                            {
-                                // @TODO: Causes flickering and slowness in mono
-                                //GLControl.Refresh();
-                                GLControl.ReDraw();
-                            }
+                            // @TODO: Causes flickering and slowness in mono
+                            //GLControl.Refresh();
+                            GLControl?.ReDraw();
                             //Refresh();
                         }));
                     }
@@ -231,15 +189,9 @@ namespace CSPspEmu.Gui.Winforms
             }
         }
 
-        bool ShowMenus
-        {
-            get { return GuiConfig.ShowMenus; }
-        }
+        bool ShowMenus => GuiConfig.ShowMenus;
 
-        bool AutoLoad
-        {
-            get { return GuiConfig.AutoLoad; }
-        }
+        bool AutoLoad => GuiConfig.AutoLoad;
 
         void PspDisplayForm_HandleCreated(object sender, EventArgs e)
         {
@@ -270,7 +222,7 @@ namespace CSPspEmu.Gui.Winforms
 
         public int RenderScale
         {
-            get { return GpuProcessor.GpuImpl.ScaleViewport; }
+            get => GpuProcessor.GpuImpl.ScaleViewport;
             set
             {
                 GpuProcessor.GpuImpl.ScaleViewport = value;
@@ -301,7 +253,7 @@ namespace CSPspEmu.Gui.Winforms
 
                 StoredConfig.DisplayScale = _DisplayScale;
             }
-            get { return _DisplayScale; }
+            get => _DisplayScale;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -384,8 +336,8 @@ namespace CSPspEmu.Gui.Winforms
                 {
                     var SaveFileDialog = new SaveFileDialog();
                     SaveFileDialog.Filter = "PNG|*.png|All Files|*.*";
-                    SaveFileDialog.FileName = string.Format("{0} - screenshot - {1:yyyy-MM-dd-H-mm-ss}.png",
-                        ElfConfig.GameTitle, DateTime.Now);
+                    SaveFileDialog.FileName =
+                        $"{ElfConfig.GameTitle} - screenshot - {DateTime.Now:yyyy-MM-dd-H-mm-ss}.png";
                     SaveFileDialog.AddExtension = true;
                     SaveFileDialog.DefaultExt = "png";
                     if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -448,8 +400,7 @@ namespace CSPspEmu.Gui.Winforms
             {
                 var SaveFileDialog = new SaveFileDialog();
                 SaveFileDialog.Filter = "DUMP|*.dump|All Files|*.*";
-                SaveFileDialog.FileName = string.Format("memory-{0}.dump",
-                    (long) (DateTime.UtcNow - new DateTime(0)).TotalMilliseconds);
+                SaveFileDialog.FileName = $"memory-{(long) (DateTime.UtcNow - new DateTime(0)).TotalMilliseconds}.dump";
                 SaveFileDialog.AddExtension = true;
                 SaveFileDialog.DefaultExt = "dump";
                 if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -775,8 +726,8 @@ namespace CSPspEmu.Gui.Winforms
                         if (MessageBox.Show(
                                 string.Format("There is a new version of the emulator.\n") +
                                 string.Format("\n") +
-                                string.Format("Current Version: {0}\n", CurrentVersion) +
-                                string.Format("Last Version: {0}\n", LastVersion) +
+                                $"Current Version: {CurrentVersion}\n" +
+                                $"Last Version: {LastVersion}\n" +
                                 string.Format("\n") +
                                 string.Format("Download the new version?") +
                                 "",
@@ -920,7 +871,7 @@ namespace CSPspEmu.Gui.Winforms
             this.GameListComponent.Visible = !Enable;
             if (Enable)
             {
-                if (GLControl != null) this.GLControl.Focus();
+                GLControl?.Focus();
             }
             else
             {
@@ -932,8 +883,7 @@ namespace CSPspEmu.Gui.Winforms
         {
             ThreadPool.QueueUserWorkItem((state) =>
             {
-                if (GameListComponent != null)
-                    GameListComponent.Init(StoredConfig.IsosPath, ApplicationPaths.MemoryStickRootFolder);
+                GameListComponent?.Init(StoredConfig.IsosPath, ApplicationPaths.MemoryStickRootFolder);
             });
         }
 

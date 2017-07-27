@@ -91,8 +91,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This must be set before the DataSource is set. It has no effect afterwards.</remarks>
         public bool AutoGenerateColumns
         {
-            get { return this.autoGenerateColumns; }
-            set { this.autoGenerateColumns = value; }
+            get => this.autoGenerateColumns;
+            set => this.autoGenerateColumns = value;
         }
 
         private bool autoGenerateColumns = true;
@@ -102,7 +102,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual object DataSource
         {
-            get { return dataSource; }
+            get => dataSource;
             set
             {
                 dataSource = value;
@@ -118,7 +118,7 @@ namespace BrightIdeasSoftware
         /// <remarks>If the data source is not a DataSet or DataViewManager, this property has no effect</remarks>
         public virtual string DataMember
         {
-            get { return dataMember; }
+            get => dataMember;
             set
             {
                 if (dataMember != value)
@@ -136,8 +136,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public ObjectListView ListView
         {
-            get { return listView; }
-            internal set { listView = value; }
+            get => listView;
+            internal set => listView = value;
         }
 
         private ObjectListView listView;
@@ -151,8 +151,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         protected CurrencyManager CurrencyManager
         {
-            get { return currencyManager; }
-            set { currencyManager = value; }
+            get => currencyManager;
+            set => currencyManager = value;
         }
 
         private CurrencyManager currencyManager = null;
@@ -219,7 +219,7 @@ namespace BrightIdeasSoftware
         protected virtual void RebindDataSource(bool forceDataInitialization)
         {
             CurrencyManager tempCurrencyManager = null;
-            if (this.ListView != null && this.ListView.BindingContext != null && this.DataSource != null)
+            if (ListView?.BindingContext != null && this.DataSource != null)
             {
                 tempCurrencyManager = this.ListView.BindingContext[this.DataSource, this.DataMember] as CurrencyManager;
             }

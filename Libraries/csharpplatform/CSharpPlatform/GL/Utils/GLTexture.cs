@@ -23,10 +23,7 @@ namespace CSharpPlatform.GL.Utils
         private TextureFormat TextureFormat = TextureFormat.RGBA;
         private byte[] Data;
 
-        public uint Texture
-        {
-            get { return _Texture; }
-        }
+        public uint Texture => _Texture;
 
         private GLTexture(uint _Texture)
         {

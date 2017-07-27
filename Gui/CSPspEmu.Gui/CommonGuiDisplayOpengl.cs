@@ -46,25 +46,13 @@ namespace CSPspEmu.Gui
         IGuiExternalInterface IGuiExternalInterface;
         IGuiWindowInfo IGuiWindowInfo;
 
-        internal InjectContext InjectContext
-        {
-            get { return IGuiExternalInterface.InjectContext; }
-        }
+        internal InjectContext InjectContext => IGuiExternalInterface.InjectContext;
 
-        internal GpuProcessor GpuProcessor
-        {
-            get { return InjectContext.GetInstance<GpuProcessor>(); }
-        }
+        internal GpuProcessor GpuProcessor => InjectContext.GetInstance<GpuProcessor>();
 
-        internal PspDisplay PspDisplay
-        {
-            get { return InjectContext.GetInstance<PspDisplay>(); }
-        }
+        internal PspDisplay PspDisplay => InjectContext.GetInstance<PspDisplay>();
 
-        internal PspMemory Memory
-        {
-            get { return InjectContext.GetInstance<PspMemory>(); }
-        }
+        internal PspMemory Memory => InjectContext.GetInstance<PspMemory>();
 
         GLTexture TexVram;
         public Bitmap Buffer = new Bitmap(512, 272);

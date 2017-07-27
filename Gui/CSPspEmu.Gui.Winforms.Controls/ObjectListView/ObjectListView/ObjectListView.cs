@@ -656,8 +656,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public static System.Drawing.Drawing2D.SmoothingMode SmoothingMode
         {
-            get { return ObjectListView.smoothingMode; }
-            set { ObjectListView.smoothingMode = value; }
+            get => ObjectListView.smoothingMode;
+            set => ObjectListView.smoothingMode = value;
         }
 
         private static System.Drawing.Drawing2D.SmoothingMode smoothingMode =
@@ -668,8 +668,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public static System.Drawing.Text.TextRenderingHint TextRenderingHint
         {
-            get { return ObjectListView.textRendereringHint; }
-            set { ObjectListView.textRendereringHint = value; }
+            get => ObjectListView.textRendereringHint;
+            set => ObjectListView.textRendereringHint = value;
         }
 
         private static System.Drawing.Text.TextRenderingHint textRendereringHint =
@@ -728,8 +728,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public static bool IgnoreMissingAspects
         {
-            get { return Munger.IgnoreMissingAspects; }
-            set { Munger.IgnoreMissingAspects = value; }
+            get => Munger.IgnoreMissingAspects;
+            set => Munger.IgnoreMissingAspects = value;
         }
 
         /// <summary>
@@ -743,8 +743,8 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public static bool ShowCellPaddingBounds
         {
-            get { return showCellPaddingBounds; }
-            set { showCellPaddingBounds = value; }
+            get => showCellPaddingBounds;
+            set => showCellPaddingBounds = value;
         }
 
         private static bool showCellPaddingBounds;
@@ -762,7 +762,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IModelFilter AdditionalFilter
         {
-            get { return this.additionalFilter; }
+            get => this.additionalFilter;
             set
             {
                 if (this.additionalFilter == value)
@@ -791,8 +791,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public virtual List<OLVColumn> AllColumns
         {
-            get { return this.allColumns; }
-            set { this.allColumns = value ?? new List<OLVColumn>(); }
+            get => this.allColumns;
+            set => this.allColumns = value ?? new List<OLVColumn>();
         }
 
         private List<OLVColumn> allColumns = new List<OLVColumn>();
@@ -805,8 +805,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public Color AlternateRowBackColor
         {
-            get { return alternateRowBackColor; }
-            set { alternateRowBackColor = value; }
+            get => alternateRowBackColor;
+            set => alternateRowBackColor = value;
         }
 
         private Color alternateRowBackColor = Color.Empty;
@@ -815,10 +815,7 @@ namespace BrightIdeasSoftware
         /// Gets the alternate row background color that has been set, or the default color
         /// </summary>
         [Browsable(false)]
-        public virtual Color AlternateRowBackColorOrDefault
-        {
-            get { return this.alternateRowBackColor == Color.Empty ? Color.LemonChiffon : this.alternateRowBackColor; }
-        }
+        public virtual Color AlternateRowBackColorOrDefault => this.alternateRowBackColor == Color.Empty ? Color.LemonChiffon : this.alternateRowBackColor;
 
         /// <summary>
         /// This property forces the ObjectListView to always group items by the given column.
@@ -827,8 +824,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual OLVColumn AlwaysGroupByColumn
         {
-            get { return alwaysGroupByColumn; }
-            set { alwaysGroupByColumn = value; }
+            get => alwaysGroupByColumn;
+            set => alwaysGroupByColumn = value;
         }
 
         private OLVColumn alwaysGroupByColumn;
@@ -842,8 +839,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual SortOrder AlwaysGroupBySortOrder
         {
-            get { return alwaysGroupBySortOrder; }
-            set { alwaysGroupBySortOrder = value; }
+            get => alwaysGroupBySortOrder;
+            set => alwaysGroupBySortOrder = value;
         }
 
         private SortOrder alwaysGroupBySortOrder = SortOrder.None;
@@ -859,8 +856,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual ImageList BaseSmallImageList
         {
-            get { return base.SmallImageList; }
-            set { base.SmallImageList = value; }
+            get => base.SmallImageList;
+            set => base.SmallImageList = value;
         }
 
         /// <summary>
@@ -873,7 +870,7 @@ namespace BrightIdeasSoftware
          DefaultValue(CellEditActivateMode.None)]
         public virtual CellEditActivateMode CellEditActivation
         {
-            get { return cellEditActivation; }
+            get => cellEditActivation;
             set
             {
                 cellEditActivation = value;
@@ -892,8 +889,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public CellEditKeyEngine CellEditKeyEngine
         {
-            get { return this.cellEditKeyEngine ?? (this.cellEditKeyEngine = new CellEditKeyEngine()); }
-            set { this.cellEditKeyEngine = value; }
+            get => this.cellEditKeyEngine ?? (this.cellEditKeyEngine = new CellEditKeyEngine());
+            set => this.cellEditKeyEngine = value;
         }
 
         private CellEditKeyEngine cellEditKeyEngine;
@@ -903,10 +900,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <remarks>This will obviously be null if no cell is being edited.</remarks>
         [Browsable(false)]
-        public Control CellEditor
-        {
-            get { return this.cellEditor; }
-        }
+        public Control CellEditor => this.cellEditor;
 
         /// <summary>
         /// Gets or sets the behaviour of the Tab key when editing a cell on the left or right
@@ -920,7 +914,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool CellEditTabChangesRows
         {
-            get { return cellEditTabChangesRows; }
+            get => cellEditTabChangesRows;
             set
             {
                 cellEditTabChangesRows = value;
@@ -954,7 +948,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool CellEditEnterChangesRows
         {
-            get { return cellEditEnterChangesRows; }
+            get => cellEditEnterChangesRows;
             set
             {
                 cellEditEnterChangesRows = value;
@@ -1022,8 +1016,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public Rectangle? CellPadding
         {
-            get { return this.cellPadding; }
-            set { this.cellPadding = value; }
+            get => this.cellPadding;
+            set => this.cellPadding = value;
         }
 
         private Rectangle? cellPadding;
@@ -1038,8 +1032,8 @@ namespace BrightIdeasSoftware
          DefaultValue(StringAlignment.Center)]
         public virtual StringAlignment CellVerticalAlignment
         {
-            get { return this.cellVerticalAlignment; }
-            set { this.cellVerticalAlignment = value; }
+            get => this.cellVerticalAlignment;
+            set => this.cellVerticalAlignment = value;
         }
 
         private StringAlignment cellVerticalAlignment = StringAlignment.Center;
@@ -1049,7 +1043,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public new bool CheckBoxes
         {
-            get { return base.CheckBoxes; }
+            get => base.CheckBoxes;
             set
             {
                 base.CheckBoxes = value;
@@ -1072,7 +1066,7 @@ namespace BrightIdeasSoftware
                 IList checkedObjects = this.CheckedObjects;
                 return checkedObjects.Count == 1 ? checkedObjects[0] : null;
             }
-            set { this.CheckedObjects = new ArrayList(new object[] {value}); }
+            set => this.CheckedObjects = new ArrayList(new object[] {value});
         }
 
         /// <summary>
@@ -1148,8 +1142,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IEnumerable CheckedObjectsEnumerable
         {
-            get { return this.CheckedObjects; }
-            set { this.CheckedObjects = ObjectListView.EnumerableToArray(value, true); }
+            get => this.CheckedObjects;
+            set => this.CheckedObjects = ObjectListView.EnumerableToArray(value, true);
         }
 
         /// <summary>
@@ -1157,10 +1151,7 @@ namespace BrightIdeasSoftware
         /// a specialised editor with it.
         /// </summary>
         [Editor("BrightIdeasSoftware.Design.OLVColumnCollectionEditor", "System.Drawing.Design.UITypeEditor")]
-        public new ListView.ColumnHeaderCollection Columns
-        {
-            get { return base.Columns; }
-        }
+        public new ListView.ColumnHeaderCollection Columns => base.Columns;
 
         /// <summary>
         /// Get/set the list of columns that should be used when the list switches to tile view.
@@ -1168,10 +1159,7 @@ namespace BrightIdeasSoftware
         [Browsable(false),
          Obsolete("Use GetFilteredColumns() and OLVColumn.IsTileViewColumn instead"),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<OLVColumn> ColumnsForTileView
-        {
-            get { return this.GetFilteredColumns(View.Tile); }
-        }
+        public List<OLVColumn> ColumnsForTileView => this.GetFilteredColumns(View.Tile);
 
         /// <summary>
         /// Return the visible columns in the order they are displayed to the user
@@ -1222,8 +1210,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool CopySelectionOnControlC
         {
-            get { return copySelectionOnControlC; }
-            set { copySelectionOnControlC = value; }
+            get => copySelectionOnControlC;
+            set => copySelectionOnControlC = value;
         }
 
         private bool copySelectionOnControlC = true;
@@ -1240,8 +1228,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool CopySelectionOnControlCUsesDragSource
         {
-            get { return this.copySelectionOnControlCUsesDragSource; }
-            set { this.copySelectionOnControlCUsesDragSource = value; }
+            get => this.copySelectionOnControlCUsesDragSource;
+            set => this.copySelectionOnControlCUsesDragSource = value;
         }
 
         private bool copySelectionOnControlCUsesDragSource = true;
@@ -1258,10 +1246,7 @@ namespace BrightIdeasSoftware
         /// </para>
         /// </remarks>
         [Browsable(false)]
-        protected IList<IDecoration> Decorations
-        {
-            get { return this.decorations; }
-        }
+        protected IList<IDecoration> Decorations => this.decorations;
 
         private readonly List<IDecoration> decorations = new List<IDecoration>();
 
@@ -1274,8 +1259,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IRenderer DefaultRenderer
         {
-            get { return this.defaultRenderer; }
-            set { this.defaultRenderer = value ?? new BaseRenderer(); }
+            get => this.defaultRenderer;
+            set => this.defaultRenderer = value ?? new BaseRenderer();
         }
 
         private IRenderer defaultRenderer = new BaseRenderer();
@@ -1287,8 +1272,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IDragSource DragSource
         {
-            get { return this.dragSource; }
-            set { this.dragSource = value; }
+            get => this.dragSource;
+            set => this.dragSource = value;
         }
 
         private IDragSource dragSource;
@@ -1309,7 +1294,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IDropSink DropSink
         {
-            get { return this.dropSink; }
+            get => this.dropSink;
             set
             {
                 if (this.dropSink == value)
@@ -1429,10 +1414,7 @@ namespace BrightIdeasSoftware
         /// Return the font for the 'list empty' message or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual Font EmptyListMsgFontOrDefault
-        {
-            get { return this.EmptyListMsgFont ?? new Font("Tahoma", 14); }
-        }
+        public virtual Font EmptyListMsgFontOrDefault => this.EmptyListMsgFont ?? new Font("Tahoma", 14);
 
         /// <summary>
         /// Gets or sets the overlay responsible for drawing the List Empty msg.
@@ -1441,7 +1423,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IOverlay EmptyListMsgOverlay
         {
-            get { return this.emptyListMsgOverlay; }
+            get => this.emptyListMsgOverlay;
             set
             {
                 if (this.emptyListMsgOverlay != value)
@@ -1488,8 +1470,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public FilterMenuBuilder FilterMenuBuildStrategy
         {
-            get { return filterMenuBuilder; }
-            set { filterMenuBuilder = value; }
+            get => filterMenuBuilder;
+            set => filterMenuBuilder = value;
         }
 
         private FilterMenuBuilder filterMenuBuilder = new FilterMenuBuilder();
@@ -1507,7 +1489,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual bool Frozen
         {
-            get { return freezeCount > 0; }
+            get => freezeCount > 0;
             set
             {
                 if (value)
@@ -1527,10 +1509,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public new ListViewGroupCollection Groups
-        {
-            get { return base.Groups; }
-        }
+        public new ListViewGroupCollection Groups => base.Groups;
 
         /// <summary>
         /// Gets or sets the image list from which group header will take their images
@@ -1541,7 +1520,7 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public ImageList GroupImageList
         {
-            get { return this.groupImageList; }
+            get => this.groupImageList;
             set
             {
                 this.groupImageList = value;
@@ -1572,8 +1551,8 @@ namespace BrightIdeasSoftware
          Localizable(true)]
         public virtual string GroupWithItemCountFormat
         {
-            get { return groupWithItemCountFormat; }
-            set { groupWithItemCountFormat = value; }
+            get => groupWithItemCountFormat;
+            set => groupWithItemCountFormat = value;
         }
 
         private string groupWithItemCountFormat;
@@ -1582,15 +1561,9 @@ namespace BrightIdeasSoftware
         /// Return this.GroupWithItemCountFormat or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual string GroupWithItemCountFormatOrDefault
-        {
-            get
-            {
-                return string.IsNullOrEmpty(this.GroupWithItemCountFormat)
-                    ? "{0} [{1} items]"
-                    : this.GroupWithItemCountFormat;
-            }
-        }
+        public virtual string GroupWithItemCountFormatOrDefault => string.IsNullOrEmpty(this.GroupWithItemCountFormat)
+            ? "{0} [{1} items]"
+            : this.GroupWithItemCountFormat;
 
         /// <summary>
         /// Gets how the group label should be formatted when a group contains only a single item
@@ -1609,8 +1582,8 @@ namespace BrightIdeasSoftware
          Localizable(true)]
         public virtual string GroupWithItemCountSingularFormat
         {
-            get { return groupWithItemCountSingularFormat; }
-            set { groupWithItemCountSingularFormat = value; }
+            get => groupWithItemCountSingularFormat;
+            set => groupWithItemCountSingularFormat = value;
         }
 
         private string groupWithItemCountSingularFormat;
@@ -1619,15 +1592,9 @@ namespace BrightIdeasSoftware
         /// Gets GroupWithItemCountSingularFormat or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual string GroupWithItemCountSingularFormatOrDefault
-        {
-            get
-            {
-                return string.IsNullOrEmpty(this.GroupWithItemCountSingularFormat)
-                    ? "{0} [{1} item]"
-                    : this.GroupWithItemCountSingularFormat;
-            }
-        }
+        public virtual string GroupWithItemCountSingularFormatOrDefault => string.IsNullOrEmpty(this.GroupWithItemCountSingularFormat)
+            ? "{0} [{1} item]"
+            : this.GroupWithItemCountSingularFormat;
 
         /// <summary>
         /// Gets or sets whether or not the groups in this ObjectListView should be collapsible.
@@ -1641,8 +1608,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool HasCollapsibleGroups
         {
-            get { return hasCollapsibleGroups; }
-            set { hasCollapsibleGroups = value; }
+            get => hasCollapsibleGroups;
+            set => hasCollapsibleGroups = value;
         }
 
         private bool hasCollapsibleGroups = true;
@@ -1651,33 +1618,21 @@ namespace BrightIdeasSoftware
         /// Does this listview have a message that should be drawn when the list is empty?
         /// </summary>
         [Browsable(false)]
-        public virtual bool HasEmptyListMsg
-        {
-            get { return !string.IsNullOrEmpty(this.EmptyListMsg); }
-        }
+        public virtual bool HasEmptyListMsg => !string.IsNullOrEmpty(this.EmptyListMsg);
 
         /// <summary>
         /// Get whether there are any overlays to be drawn
         /// </summary>
         [Browsable(false)]
-        public bool HasOverlays
-        {
-            get
-            {
-                return (this.Overlays.Count > 2 ||
-                        this.imageOverlay.Image != null ||
-                        !string.IsNullOrEmpty(this.textOverlay.Text));
-            }
-        }
+        public bool HasOverlays => (this.Overlays.Count > 2 ||
+                                    this.imageOverlay.Image != null ||
+                                    !string.IsNullOrEmpty(this.textOverlay.Text));
 
         /// <summary>
         /// Gets the header control for the ListView
         /// </summary>
         [Browsable(false)]
-        public HeaderControl HeaderControl
-        {
-            get { return this.headerControl ?? (this.headerControl = new HeaderControl(this)); }
-        }
+        public HeaderControl HeaderControl => this.headerControl ?? (this.headerControl = new HeaderControl(this));
 
         private HeaderControl headerControl;
 
@@ -1690,7 +1645,7 @@ namespace BrightIdeasSoftware
         [Obsolete("Use a HeaderFormatStyle instead", false)]
         public Font HeaderFont
         {
-            get { return this.HeaderFormatStyle == null ? null : this.HeaderFormatStyle.Normal.Font; }
+            get => this.HeaderFormatStyle == null ? null : this.HeaderFormatStyle.Normal.Font;
             set
             {
                 if (value == null && this.HeaderFormatStyle == null)
@@ -1719,8 +1674,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public HeaderFormatStyle HeaderFormatStyle
         {
-            get { return this.headerFormatStyle; }
-            set { this.headerFormatStyle = value; }
+            get => this.headerFormatStyle;
+            set => this.headerFormatStyle = value;
         }
 
         private HeaderFormatStyle headerFormatStyle;
@@ -1733,8 +1688,8 @@ namespace BrightIdeasSoftware
          DefaultValue(-1)]
         public int HeaderMaximumHeight
         {
-            get { return headerMaximumHeight; }
-            set { headerMaximumHeight = value; }
+            get => headerMaximumHeight;
+            set => headerMaximumHeight = value;
         }
 
         private int headerMaximumHeight = -1;
@@ -1762,8 +1717,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool HeaderUsesThemes
         {
-            get { return this.headerUsesThemes; }
-            set { this.headerUsesThemes = value; }
+            get => this.headerUsesThemes;
+            set => this.headerUsesThemes = value;
         }
 
         private bool headerUsesThemes = true;
@@ -1784,7 +1739,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool HeaderWordWrap
         {
-            get { return this.headerWordWrap; }
+            get => this.headerWordWrap;
             set
             {
                 this.headerWordWrap = value;
@@ -1799,10 +1754,7 @@ namespace BrightIdeasSoftware
         /// Gets the tool tip that shows tips for the column headers
         /// </summary>
         [Browsable(false)]
-        public ToolTipControl HeaderToolTip
-        {
-            get { return this.HeaderControl.ToolTip; }
-        }
+        public ToolTipControl HeaderToolTip => this.HeaderControl.ToolTip;
 
         /// <summary>
         /// Gets the index of the row that the mouse is currently over
@@ -1811,8 +1763,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual int HotRowIndex
         {
-            get { return this.hotRowIndex; }
-            protected set { this.hotRowIndex = value; }
+            get => this.hotRowIndex;
+            protected set => this.hotRowIndex = value;
         }
 
         private int hotRowIndex;
@@ -1824,8 +1776,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual int HotColumnIndex
         {
-            get { return this.hotColumnIndex; }
-            protected set { this.hotColumnIndex = value; }
+            get => this.hotColumnIndex;
+            protected set => this.hotColumnIndex = value;
         }
 
         private int hotColumnIndex;
@@ -1837,8 +1789,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual HitTestLocation HotCellHitLocation
         {
-            get { return this.hotCellHitLocation; }
-            protected set { this.hotCellHitLocation = value; }
+            get => this.hotCellHitLocation;
+            protected set => this.hotCellHitLocation = value;
         }
 
         private HitTestLocation hotCellHitLocation;
@@ -1850,8 +1802,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual HitTestLocationEx HotCellHitLocationEx
         {
-            get { return this.hotCellHitLocationEx; }
-            protected set { this.hotCellHitLocationEx = value; }
+            get => this.hotCellHitLocationEx;
+            protected set => this.hotCellHitLocationEx = value;
         }
 
         private HitTestLocationEx hotCellHitLocationEx;
@@ -1863,8 +1815,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OLVGroup HotGroup
         {
-            get { return hotGroup; }
-            internal set { hotGroup = value; }
+            get => hotGroup;
+            internal set => hotGroup = value;
         }
 
         private OLVGroup hotGroup;
@@ -1874,10 +1826,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          Obsolete("Use HotRowIndex instead", false)]
-        public virtual int HotItemIndex
-        {
-            get { return this.HotRowIndex; }
-        }
+        public virtual int HotItemIndex => this.HotRowIndex;
 
         /// <summary>
         /// What sort of formatting should be applied to the row under the cursor?
@@ -1888,7 +1837,7 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public virtual HotItemStyle HotItemStyle
         {
-            get { return this.hotItemStyle; }
+            get => this.hotItemStyle;
             set
             {
                 if (this.HotItemStyle != null)
@@ -1909,8 +1858,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public virtual HyperlinkStyle HyperlinkStyle
         {
-            get { return this.hyperlinkStyle; }
-            set { this.hyperlinkStyle = value; }
+            get => this.hyperlinkStyle;
+            set => this.hyperlinkStyle = value;
         }
 
         private HyperlinkStyle hyperlinkStyle;
@@ -1926,8 +1875,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public virtual Color HighlightBackgroundColor
         {
-            get { return highlightBackgroundColor; }
-            set { highlightBackgroundColor = value; }
+            get => highlightBackgroundColor;
+            set => highlightBackgroundColor = value;
         }
 
         private Color highlightBackgroundColor = Color.Empty;
@@ -1936,13 +1885,7 @@ namespace BrightIdeasSoftware
         /// Return the color should be used for the background of selected rows or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual Color HighlightBackgroundColorOrDefault
-        {
-            get
-            {
-                return this.HighlightBackgroundColor.IsEmpty ? SystemColors.Highlight : this.HighlightBackgroundColor;
-            }
-        }
+        public virtual Color HighlightBackgroundColorOrDefault => this.HighlightBackgroundColor.IsEmpty ? SystemColors.Highlight : this.HighlightBackgroundColor;
 
         /// <summary>
         /// What color should be used for the foreground of selected rows?
@@ -1955,8 +1898,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public virtual Color HighlightForegroundColor
         {
-            get { return highlightForegroundColor; }
-            set { highlightForegroundColor = value; }
+            get => highlightForegroundColor;
+            set => highlightForegroundColor = value;
         }
 
         private Color highlightForegroundColor = Color.Empty;
@@ -1965,15 +1908,9 @@ namespace BrightIdeasSoftware
         /// Return the color should be used for the foreground of selected rows or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual Color HighlightForegroundColorOrDefault
-        {
-            get
-            {
-                return this.HighlightForegroundColor.IsEmpty
-                    ? SystemColors.HighlightText
-                    : this.HighlightForegroundColor;
-            }
-        }
+        public virtual Color HighlightForegroundColorOrDefault => this.HighlightForegroundColor.IsEmpty
+            ? SystemColors.HighlightText
+            : this.HighlightForegroundColor;
 
         /// <summary>
         /// Gets or sets whether or not hidden columns should be included in the text representation
@@ -1986,8 +1923,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool IncludeHiddenColumnsInDataTransfer
         {
-            get { return includeHiddenColumnsInDataTransfer; }
-            set { includeHiddenColumnsInDataTransfer = value; }
+            get => includeHiddenColumnsInDataTransfer;
+            set => includeHiddenColumnsInDataTransfer = value;
         }
 
         private bool includeHiddenColumnsInDataTransfer = false;
@@ -2002,8 +1939,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool IncludeColumnHeadersInCopy
         {
-            get { return includeColumnHeadersInCopy; }
-            set { includeColumnHeadersInCopy = value; }
+            get => includeColumnHeadersInCopy;
+            set => includeColumnHeadersInCopy = value;
         }
 
         private bool includeColumnHeadersInCopy = false;
@@ -2012,29 +1949,20 @@ namespace BrightIdeasSoftware
         /// Return true if a cell edit operation is currently happening
         /// </summary>
         [Browsable(false)]
-        public virtual bool IsCellEditing
-        {
-            get { return this.cellEditor != null; }
-        }
+        public virtual bool IsCellEditing => this.cellEditor != null;
 
         /// <summary>
         /// Return true if the ObjectListView is being used within the development environment.
         /// </summary>
         [Browsable(false)]
-        public virtual bool IsDesignMode
-        {
-            get { return this.DesignMode; }
-        }
+        public virtual bool IsDesignMode => this.DesignMode;
 
         /// <summary>
         /// Gets whether or not the current list is filtering its contents
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual bool IsFiltering
-        {
-            get { return this.UseFiltering && (this.ModelFilter != null || this.ListFilter != null); }
-        }
+        public virtual bool IsFiltering => this.UseFiltering && (this.ModelFilter != null || this.ListFilter != null);
 
         /// <summary>
         /// When the user types into a list, should the values in the current sort column be searched to find a match?
@@ -2047,8 +1975,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool IsSearchOnSortColumn
         {
-            get { return isSearchOnSortColumn; }
-            set { isSearchOnSortColumn = value; }
+            get => isSearchOnSortColumn;
+            set => isSearchOnSortColumn = value;
         }
 
         private bool isSearchOnSortColumn = true;
@@ -2071,8 +1999,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool IsSimpleDropSink
         {
-            get { return this.DropSink != null; }
-            set { this.DropSink = value ? new SimpleDropSink() : null; }
+            get => this.DropSink != null;
+            set => this.DropSink = value ? new SimpleDropSink() : null;
         }
 
         /// <summary>
@@ -2084,8 +2012,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool IsSimpleDragSource
         {
-            get { return this.DragSource != null; }
-            set { this.DragSource = value ? new SimpleDragSource() : null; }
+            get => this.DragSource != null;
+            set => this.DragSource = value ? new SimpleDragSource() : null;
         }
 
         /// <summary>
@@ -2093,10 +2021,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public new ListViewItemCollection Items
-        {
-            get { return base.Items; }
-        }
+        public new ListViewItemCollection Items => base.Items;
 
         /// <summary>
         /// This renderer draws the items when in the list is in non-details view.
@@ -2107,8 +2032,8 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public IRenderer ItemRenderer
         {
-            get { return itemRenderer; }
-            set { itemRenderer = value; }
+            get => itemRenderer;
+            set => itemRenderer = value;
         }
 
         private IRenderer itemRenderer;
@@ -2121,8 +2046,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual OLVColumn LastSortColumn
         {
-            get { return this.PrimarySortColumn; }
-            set { this.PrimarySortColumn = value; }
+            get => this.PrimarySortColumn;
+            set => this.PrimarySortColumn = value;
         }
 
         /// <summary>
@@ -2133,8 +2058,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual SortOrder LastSortOrder
         {
-            get { return this.PrimarySortOrder; }
-            set { this.PrimarySortOrder = value; }
+            get => this.PrimarySortOrder;
+            set => this.PrimarySortOrder = value;
         }
 
         /// <summary>
@@ -2147,7 +2072,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IListFilter ListFilter
         {
-            get { return listFilter; }
+            get => listFilter;
             set
             {
                 listFilter = value;
@@ -2173,7 +2098,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IModelFilter ModelFilter
         {
-            get { return modelFilter; }
+            get => modelFilter;
             set
             {
                 modelFilter = value;
@@ -2193,8 +2118,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual OlvListViewHitTestInfo MouseMoveHitTest
         {
-            get { return mouseMoveHitTest; }
-            private set { mouseMoveHitTest = value; }
+            get => mouseMoveHitTest;
+            private set => mouseMoveHitTest = value;
         }
 
         private OlvListViewHitTestInfo mouseMoveHitTest;
@@ -2215,8 +2140,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IList<OLVGroup> OLVGroups
         {
-            get { return this.olvGroups; }
-            set { this.olvGroups = value; }
+            get => this.olvGroups;
+            set => this.olvGroups = value;
         }
 
         private IList<OLVGroup> olvGroups;
@@ -2235,8 +2160,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool OwnerDrawnHeader
         {
-            get { return ownerDrawnHeader; }
-            set { ownerDrawnHeader = value; }
+            get => ownerDrawnHeader;
+            set => ownerDrawnHeader = value;
         }
 
         private bool ownerDrawnHeader;
@@ -2261,8 +2186,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IEnumerable Objects
         {
-            get { return this.objects; }
-            set { this.SetObjects(value, true); }
+            get => this.objects;
+            set => this.SetObjects(value, true);
         }
 
         private IEnumerable objects;
@@ -2273,10 +2198,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual IEnumerable ObjectsForClustering
-        {
-            get { return this.Objects; }
-        }
+        public virtual IEnumerable ObjectsForClustering => this.Objects;
 
         /// <summary>
         /// Gets or sets the image that will be drawn over the top of the ListView
@@ -2286,7 +2208,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public ImageOverlay OverlayImage
         {
-            get { return this.imageOverlay; }
+            get => this.imageOverlay;
             set
             {
                 if (this.imageOverlay == value)
@@ -2308,7 +2230,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public TextOverlay OverlayText
         {
-            get { return this.textOverlay; }
+            get => this.textOverlay;
             set
             {
                 if (this.textOverlay == value)
@@ -2333,8 +2255,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int OverlayTransparency
         {
-            get { return this.overlayTransparency; }
-            set { this.overlayTransparency = Math.Min(255, Math.Max(0, value)); }
+            get => this.overlayTransparency;
+            set => this.overlayTransparency = Math.Min(255, Math.Max(0, value));
         }
 
         private int overlayTransparency = 128;
@@ -2347,10 +2269,7 @@ namespace BrightIdeasSoftware
         /// don't mess with the overlays that you didn't create.
         /// </remarks>
         [Browsable(false)]
-        protected IList<IOverlay> Overlays
-        {
-            get { return this.overlays; }
-        }
+        protected IList<IOverlay> Overlays => this.overlays;
 
         private readonly List<IOverlay> overlays = new List<IOverlay>();
 
@@ -2371,7 +2290,7 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool PersistentCheckBoxes
         {
-            get { return persistentCheckBoxes; }
+            get => persistentCheckBoxes;
             set
             {
                 if (persistentCheckBoxes == value)
@@ -2389,8 +2308,8 @@ namespace BrightIdeasSoftware
         /// <remarks>This is used when PersistentCheckBoxes is true and for virtual lists.</remarks>
         protected Dictionary<object, CheckState> CheckStateMap
         {
-            get { return checkStateMap ?? (checkStateMap = new Dictionary<object, CheckState>()); }
-            set { checkStateMap = value; }
+            get => checkStateMap ?? (checkStateMap = new Dictionary<object, CheckState>());
+            set => checkStateMap = value;
         }
 
         private Dictionary<object, CheckState> checkStateMap;
@@ -2403,7 +2322,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual OLVColumn PrimarySortColumn
         {
-            get { return this.primarySortColumn; }
+            get => this.primarySortColumn;
             set
             {
                 this.primarySortColumn = value;
@@ -2423,8 +2342,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual SortOrder PrimarySortOrder
         {
-            get { return primarySortOrder; }
-            set { primarySortOrder = value; }
+            get => primarySortOrder;
+            set => primarySortOrder = value;
         }
 
         private SortOrder primarySortOrder;
@@ -2440,8 +2359,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool RenderNonEditableCheckboxesAsDisabled
         {
-            get { return renderNonEditableCheckboxesAsDisabled; }
-            set { renderNonEditableCheckboxesAsDisabled = value; }
+            get => renderNonEditableCheckboxesAsDisabled;
+            set => renderNonEditableCheckboxesAsDisabled = value;
         }
 
         private bool renderNonEditableCheckboxesAsDisabled = false;
@@ -2461,7 +2380,7 @@ namespace BrightIdeasSoftware
          DefaultValue(-1)]
         public virtual int RowHeight
         {
-            get { return rowHeight; }
+            get => rowHeight;
             set
             {
                 if (value < 1)
@@ -2513,10 +2432,7 @@ namespace BrightIdeasSoftware
         /// How many rows appear on each page of this control
         /// </summary>
         [Browsable(false)]
-        public virtual int RowsPerPage
-        {
-            get { return NativeMethods.GetCountPerPage(this); }
-        }
+        public virtual int RowsPerPage => NativeMethods.GetCountPerPage(this);
 
         /// <summary>
         /// Get/set the column that will be used to resolve comparisons that are equal when sorting.
@@ -2526,8 +2442,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual OLVColumn SecondarySortColumn
         {
-            get { return this.secondarySortColumn; }
-            set { this.secondarySortColumn = value; }
+            get => this.secondarySortColumn;
+            set => this.secondarySortColumn = value;
         }
 
         private OLVColumn secondarySortColumn;
@@ -2539,8 +2455,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual SortOrder SecondarySortOrder
         {
-            get { return this.secondarySortOrder; }
-            set { this.secondarySortOrder = value; }
+            get => this.secondarySortOrder;
+            set => this.secondarySortOrder = value;
         }
 
         private SortOrder secondarySortOrder = SortOrder.None;
@@ -2553,8 +2469,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool SelectAllOnControlA
         {
-            get { return selectAllOnControlA; }
-            set { selectAllOnControlA = value; }
+            get => selectAllOnControlA;
+            set => selectAllOnControlA = value;
         }
 
         private bool selectAllOnControlA = true;
@@ -2571,7 +2487,7 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool SelectColumnsOnRightClick
         {
-            get { return this.SelectColumnsOnRightClickBehaviour != ColumnSelectBehaviour.None; }
+            get => this.SelectColumnsOnRightClickBehaviour != ColumnSelectBehaviour.None;
             set
             {
                 if (value)
@@ -2594,8 +2510,8 @@ namespace BrightIdeasSoftware
          DefaultValue(ColumnSelectBehaviour.InlineMenu)]
         public virtual ColumnSelectBehaviour SelectColumnsOnRightClickBehaviour
         {
-            get { return selectColumnsOnRightClickBehaviour; }
-            set { selectColumnsOnRightClickBehaviour = value; }
+            get => selectColumnsOnRightClickBehaviour;
+            set => selectColumnsOnRightClickBehaviour = value;
         }
 
         private ColumnSelectBehaviour selectColumnsOnRightClickBehaviour = ColumnSelectBehaviour.InlineMenu;
@@ -2611,8 +2527,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool SelectColumnsMenuStaysOpen
         {
-            get { return selectColumnsMenuStaysOpen; }
-            set { selectColumnsMenuStaysOpen = value; }
+            get => selectColumnsMenuStaysOpen;
+            set => selectColumnsMenuStaysOpen = value;
         }
 
         private bool selectColumnsMenuStaysOpen = true;
@@ -2633,7 +2549,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OLVColumn SelectedColumn
         {
-            get { return this.selectedColumn; }
+            get => this.selectedColumn;
             set
             {
                 this.selectedColumn = value;
@@ -2659,8 +2575,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual IDecoration SelectedRowDecoration
         {
-            get { return this.selectedRowDecoration; }
-            set { this.selectedRowDecoration = value; }
+            get => this.selectedRowDecoration;
+            set => this.selectedRowDecoration = value;
         }
 
         private IDecoration selectedRowDecoration;
@@ -2677,7 +2593,7 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public virtual Color SelectedColumnTint
         {
-            get { return selectedColumnTint; }
+            get => selectedColumnTint;
             set
             {
                 this.selectedColumnTint = value.A == 255 ? Color.FromArgb(15, value) : value;
@@ -2695,7 +2611,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual int SelectedIndex
         {
-            get { return this.SelectedIndices.Count == 1 ? this.SelectedIndices[0] : -1; }
+            get => this.SelectedIndices.Count == 1 ? this.SelectedIndices[0] : -1;
             set
             {
                 this.SelectedIndices.Clear();
@@ -2711,7 +2627,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual OLVListItem SelectedItem
         {
-            get { return this.SelectedIndices.Count == 1 ? this.GetItem(this.SelectedIndices[0]) : null; }
+            get => this.SelectedIndices.Count == 1 ? this.GetItem(this.SelectedIndices[0]) : null;
             set
             {
                 this.SelectedIndices.Clear();
@@ -2730,7 +2646,7 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual object SelectedObject
         {
-            get { return this.SelectedIndices.Count == 1 ? this.GetModelObject(this.SelectedIndices[0]) : null; }
+            get => this.SelectedIndices.Count == 1 ? this.GetModelObject(this.SelectedIndices[0]) : null;
             set
             {
                 // If the given model is already selected, don't do anything else (prevents an flicker)
@@ -2775,8 +2691,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool ShowCommandMenuOnRightClick
         {
-            get { return showCommandMenuOnRightClick; }
-            set { showCommandMenuOnRightClick = value; }
+            get => showCommandMenuOnRightClick;
+            set => showCommandMenuOnRightClick = value;
         }
 
         private bool showCommandMenuOnRightClick = false;
@@ -2790,8 +2706,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool ShowFilterMenuOnRightClick
         {
-            get { return showFilterMenuOnRightClick; }
-            set { showFilterMenuOnRightClick = value; }
+            get => showFilterMenuOnRightClick;
+            set => showFilterMenuOnRightClick = value;
         }
 
         private bool showFilterMenuOnRightClick = true;
@@ -2804,7 +2720,7 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public new virtual bool ShowGroups
         {
-            get { return base.ShowGroups; }
+            get => base.ShowGroups;
             set
             {
                 this.GroupImageList = this.GroupImageList;
@@ -2826,8 +2742,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool ShowSortIndicators
         {
-            get { return showSortIndicators; }
-            set { showSortIndicators = value; }
+            get => showSortIndicators;
+            set => showSortIndicators = value;
         }
 
         private bool showSortIndicators;
@@ -2843,7 +2759,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool ShowImagesOnSubItems
         {
-            get { return showImagesOnSubItems; }
+            get => showImagesOnSubItems;
             set
             {
                 showImagesOnSubItems = value;
@@ -2867,8 +2783,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool ShowItemCountOnGroups
         {
-            get { return showItemCountOnGroups; }
-            set { showItemCountOnGroups = value; }
+            get => showItemCountOnGroups;
+            set => showItemCountOnGroups = value;
         }
 
         private bool showItemCountOnGroups;
@@ -2898,7 +2814,7 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool ShowHeaderInAllViews
         {
-            get { return showHeaderInAllViews; }
+            get => showHeaderInAllViews;
             set
             {
                 if (showHeaderInAllViews == value)
@@ -2938,7 +2854,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         public new ImageList SmallImageList
         {
-            get { return this.shadowedImageList; }
+            get => this.shadowedImageList;
             set
             {
                 this.shadowedImageList = value;
@@ -2954,10 +2870,7 @@ namespace BrightIdeasSoftware
         /// Return the size of the images in the small image list or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual Size SmallImageSize
-        {
-            get { return this.SmallImageList == null ? new Size(16, 16) : this.SmallImageList.ImageSize; }
-        }
+        public virtual Size SmallImageSize => this.SmallImageList == null ? new Size(16, 16) : this.SmallImageList.ImageSize;
 
         /// <summary>
         /// When the listview is grouped, should the items be sorted by the primary column?
@@ -2969,8 +2882,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool SortGroupItemsByPrimaryColumn
         {
-            get { return this.sortGroupItemsByPrimaryColumn; }
-            set { this.sortGroupItemsByPrimaryColumn = value; }
+            get => this.sortGroupItemsByPrimaryColumn;
+            set => this.sortGroupItemsByPrimaryColumn = value;
         }
 
         private bool sortGroupItemsByPrimaryColumn = true;
@@ -2984,7 +2897,7 @@ namespace BrightIdeasSoftware
          DefaultValue(0)]
         public virtual int SpaceBetweenGroups
         {
-            get { return this.spaceBetweenGroups; }
+            get => this.spaceBetweenGroups;
             set
             {
                 if (this.spaceBetweenGroups == value)
@@ -3017,7 +2930,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool TintSortColumn
         {
-            get { return this.tintSortColumn; }
+            get => this.tintSortColumn;
             set
             {
                 this.tintSortColumn = value;
@@ -3043,7 +2956,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool TriStateCheckBoxes
         {
-            get { return triStateCheckBoxes; }
+            get => triStateCheckBoxes;
             set
             {
                 if (triStateCheckBoxes == value)
@@ -3129,8 +3042,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public virtual bool UpdateSpaceFillingColumnsWhenDraggingColumnDivider
         {
-            get { return updateSpaceFillingColumnsWhenDraggingColumnDivider; }
-            set { updateSpaceFillingColumnsWhenDraggingColumnDivider = value; }
+            get => updateSpaceFillingColumnsWhenDraggingColumnDivider;
+            set => updateSpaceFillingColumnsWhenDraggingColumnDivider = value;
         }
 
         private bool updateSpaceFillingColumnsWhenDraggingColumnDivider = true;
@@ -3147,8 +3060,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public virtual Color UnfocusedHighlightBackgroundColor
         {
-            get { return unfocusedHighlightBackgroundColor; }
-            set { unfocusedHighlightBackgroundColor = value; }
+            get => unfocusedHighlightBackgroundColor;
+            set => unfocusedHighlightBackgroundColor = value;
         }
 
         private Color unfocusedHighlightBackgroundColor = Color.Empty;
@@ -3157,15 +3070,9 @@ namespace BrightIdeasSoftware
         /// Return the color should be used for the background of selected rows when the control doesn't have the focus or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual Color UnfocusedHighlightBackgroundColorOrDefault
-        {
-            get
-            {
-                return this.UnfocusedHighlightBackgroundColor.IsEmpty
-                    ? SystemColors.Control
-                    : this.UnfocusedHighlightBackgroundColor;
-            }
-        }
+        public virtual Color UnfocusedHighlightBackgroundColorOrDefault => this.UnfocusedHighlightBackgroundColor.IsEmpty
+            ? SystemColors.Control
+            : this.UnfocusedHighlightBackgroundColor;
 
         /// <summary>
         /// What color should be used for the foreground of selected rows when the control doesn't have the focus?
@@ -3179,8 +3086,8 @@ namespace BrightIdeasSoftware
          DefaultValue(typeof(Color), "")]
         public virtual Color UnfocusedHighlightForegroundColor
         {
-            get { return unfocusedHighlightForegroundColor; }
-            set { unfocusedHighlightForegroundColor = value; }
+            get => unfocusedHighlightForegroundColor;
+            set => unfocusedHighlightForegroundColor = value;
         }
 
         private Color unfocusedHighlightForegroundColor = Color.Empty;
@@ -3189,15 +3096,9 @@ namespace BrightIdeasSoftware
         /// Return the color should be used for the foreground of selected rows when the control doesn't have the focus or a reasonable default
         /// </summary>
         [Browsable(false)]
-        public virtual Color UnfocusedHighlightForegroundColorOrDefault
-        {
-            get
-            {
-                return this.UnfocusedHighlightForegroundColor.IsEmpty
-                    ? SystemColors.ControlText
-                    : this.UnfocusedHighlightForegroundColor;
-            }
-        }
+        public virtual Color UnfocusedHighlightForegroundColorOrDefault => this.UnfocusedHighlightForegroundColor.IsEmpty
+            ? SystemColors.ControlText
+            : this.UnfocusedHighlightForegroundColor;
 
         /// <summary>
         /// Should the list give a different background color to every second row?
@@ -3210,8 +3111,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool UseAlternatingBackColors
         {
-            get { return useAlternatingBackColors; }
-            set { useAlternatingBackColors = value; }
+            get => useAlternatingBackColors;
+            set => useAlternatingBackColors = value;
         }
 
         private bool useAlternatingBackColors;
@@ -3234,8 +3135,8 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseCellFormatEvents
         {
-            get { return useCellFormatEvents; }
-            set { useCellFormatEvents = value; }
+            get => useCellFormatEvents;
+            set => useCellFormatEvents = value;
         }
 
         private bool useCellFormatEvents;
@@ -3251,7 +3152,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseCustomSelectionColors
         {
-            get { return this.useCustomSelectionColors; }
+            get => this.useCustomSelectionColors;
             set
             {
                 this.useCustomSelectionColors = value;
@@ -3284,7 +3185,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseExplorerTheme
         {
-            get { return useExplorerTheme; }
+            get => useExplorerTheme;
             set
             {
                 useExplorerTheme = value;
@@ -3303,7 +3204,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool UseFiltering
         {
-            get { return useFiltering; }
+            get => useFiltering;
             set
             {
                 useFiltering = value;
@@ -3324,7 +3225,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public virtual bool UseFilterIndicator
         {
-            get { return useFilterIndicator; }
+            get => useFilterIndicator;
             set
             {
                 if (this.useFilterIndicator == value)
@@ -3346,7 +3247,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseHotItem
         {
-            get { return this.useHotItem; }
+            get => this.useHotItem;
             set
             {
                 this.useHotItem = value;
@@ -3370,7 +3271,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseHyperlinks
         {
-            get { return this.useHyperlinks; }
+            get => this.useHyperlinks;
             set
             {
                 this.useHyperlinks = value;
@@ -3391,8 +3292,8 @@ namespace BrightIdeasSoftware
          DefaultValue(true)]
         public bool UseOverlays
         {
-            get { return this.useOverlays; }
-            set { this.useOverlays = value; }
+            get => this.useOverlays;
+            set => this.useOverlays = value;
         }
 
         private bool useOverlays = true;
@@ -3408,7 +3309,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseSubItemCheckBoxes
         {
-            get { return this.useSubItemCheckBoxes; }
+            get => this.useSubItemCheckBoxes;
             set
             {
                 this.useSubItemCheckBoxes = value;
@@ -3436,7 +3337,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseTranslucentSelection
         {
-            get { return useTranslucentSelection; }
+            get => useTranslucentSelection;
             set
             {
                 useTranslucentSelection = value;
@@ -3465,7 +3366,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseTranslucentHotItem
         {
-            get { return useTranslucentHotItem; }
+            get => useTranslucentHotItem;
             set
             {
                 useTranslucentHotItem = value;
@@ -3495,7 +3396,7 @@ namespace BrightIdeasSoftware
         /// Confusingly, in tile view, every column is shown as a row of information.</remarks>
         public new View View
         {
-            get { return base.View; }
+            get => base.View;
             set
             {
                 if (base.View == value)
@@ -3580,10 +3481,7 @@ namespace BrightIdeasSoftware
         /// Gets whether or not this listview is capabale of showing groups
         /// </summary>
         [Browsable(false)]
-        public virtual bool CanShowGroups
-        {
-            get { return true; }
-        }
+        public virtual bool CanShowGroups => true;
 
         /// <summary>
         /// Gets or sets whether ObjectListView can rely on Application.Idle events
@@ -3598,8 +3496,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual bool CanUseApplicationIdle
         {
-            get { return this.canUseApplicationIdle; }
-            set { this.canUseApplicationIdle = value; }
+            get => this.canUseApplicationIdle;
+            set => this.canUseApplicationIdle = value;
         }
 
         private bool canUseApplicationIdle = true;
@@ -3617,8 +3515,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual CellToolTipGetterDelegate CellToolTipGetter
         {
-            get { return cellToolTipGetter; }
-            set { cellToolTipGetter = value; }
+            get => cellToolTipGetter;
+            set => cellToolTipGetter = value;
         }
 
         private CellToolTipGetterDelegate cellToolTipGetter;
@@ -3638,7 +3536,7 @@ namespace BrightIdeasSoftware
          DefaultValue(null)]
         public virtual string CheckedAspectName
         {
-            get { return checkedAspectName; }
+            get => checkedAspectName;
             set
             {
                 checkedAspectName = value;
@@ -3685,8 +3583,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual CheckStateGetterDelegate CheckStateGetter
         {
-            get { return checkStateGetter; }
-            set { checkStateGetter = value; }
+            get => checkStateGetter;
+            set => checkStateGetter = value;
         }
 
         private CheckStateGetterDelegate checkStateGetter;
@@ -3700,8 +3598,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual CheckStatePutterDelegate CheckStatePutter
         {
-            get { return checkStatePutter; }
-            set { checkStatePutter = value; }
+            get => checkStatePutter;
+            set => checkStatePutter = value;
         }
 
         private CheckStatePutterDelegate checkStatePutter;
@@ -3724,8 +3622,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual SortDelegate CustomSorter
         {
-            get { return customSorter; }
-            set { customSorter = value; }
+            get => customSorter;
+            set => customSorter = value;
         }
 
         private SortDelegate customSorter;
@@ -3742,8 +3640,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual HeaderToolTipGetterDelegate HeaderToolTipGetter
         {
-            get { return headerToolTipGetter; }
-            set { headerToolTipGetter = value; }
+            get => headerToolTipGetter;
+            set => headerToolTipGetter = value;
         }
 
         private HeaderToolTipGetterDelegate headerToolTipGetter;
@@ -3770,8 +3668,8 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual RowFormatterDelegate RowFormatter
         {
-            get { return rowFormatter; }
-            set { rowFormatter = value; }
+            get => rowFormatter;
+            set => rowFormatter = value;
         }
 
         private RowFormatterDelegate rowFormatter;
@@ -4559,14 +4457,8 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a point that represents the current horizontal and vertical scroll positions 
         /// </summary>
-        internal Point LowLevelScrollPosition
-        {
-            get
-            {
-                return new Point(NativeMethods.GetScrollPosition(this, true),
-                    NativeMethods.GetScrollPosition(this, false));
-            }
-        }
+        internal Point LowLevelScrollPosition => new Point(NativeMethods.GetScrollPosition(this, true),
+            NativeMethods.GetScrollPosition(this, false));
 
         /// <summary>
         /// Remember that the given URL has been visited
@@ -5125,7 +5017,7 @@ namespace BrightIdeasSoftware
          DefaultValue(false)]
         public bool UseNotifyPropertyChanged
         {
-            get { return this.useNotifyPropertyChanged; }
+            get => this.useNotifyPropertyChanged;
             set
             {
                 if (this.useNotifyPropertyChanged == value)
@@ -6913,8 +6805,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Sort ascending by '{0}'"), Localizable(true)]
         public string MenuLabelSortAscending
         {
-            get { return this.menuLabelSortAscending; }
-            set { this.menuLabelSortAscending = value; }
+            get => this.menuLabelSortAscending;
+            set => this.menuLabelSortAscending = value;
         }
 
         private string menuLabelSortAscending = "Sort ascending by '{0}'";
@@ -6925,8 +6817,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Sort descending by '{0}'"), Localizable(true)]
         public string MenuLabelSortDescending
         {
-            get { return this.menuLabelSortDescending; }
-            set { this.menuLabelSortDescending = value; }
+            get => this.menuLabelSortDescending;
+            set => this.menuLabelSortDescending = value;
         }
 
         private string menuLabelSortDescending = "Sort descending by '{0}'";
@@ -6937,8 +6829,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Group by '{0}'"), Localizable(true)]
         public string MenuLabelGroupBy
         {
-            get { return this.menuLabelGroupBy; }
-            set { this.menuLabelGroupBy = value; }
+            get => this.menuLabelGroupBy;
+            set => this.menuLabelGroupBy = value;
         }
 
         private string menuLabelGroupBy = "Group by '{0}'";
@@ -6949,8 +6841,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Lock grouping on '{0}'"), Localizable(true)]
         public string MenuLabelLockGroupingOn
         {
-            get { return this.menuLabelLockGroupingOn; }
-            set { this.menuLabelLockGroupingOn = value; }
+            get => this.menuLabelLockGroupingOn;
+            set => this.menuLabelLockGroupingOn = value;
         }
 
         private string menuLabelLockGroupingOn = "Lock grouping on '{0}'";
@@ -6961,8 +6853,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Unlock grouping from '{0}'"), Localizable(true)]
         public string MenuLabelUnlockGroupingOn
         {
-            get { return this.menuLabelUnlockGroupingOn; }
-            set { this.menuLabelUnlockGroupingOn = value; }
+            get => this.menuLabelUnlockGroupingOn;
+            set => this.menuLabelUnlockGroupingOn = value;
         }
 
         private string menuLabelUnlockGroupingOn = "Unlock grouping from '{0}'";
@@ -6973,8 +6865,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Turn off groups"), Localizable(true)]
         public string MenuLabelTurnOffGroups
         {
-            get { return this.menuLabelTurnOffGroups; }
-            set { this.menuLabelTurnOffGroups = value; }
+            get => this.menuLabelTurnOffGroups;
+            set => this.menuLabelTurnOffGroups = value;
         }
 
         private string menuLabelTurnOffGroups = "Turn off groups";
@@ -6985,8 +6877,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Unsort"), Localizable(true)]
         public string MenuLabelUnsort
         {
-            get { return this.menuLabelUnsort; }
-            set { this.menuLabelUnsort = value; }
+            get => this.menuLabelUnsort;
+            set => this.menuLabelUnsort = value;
         }
 
         private string menuLabelUnsort = "Unsort";
@@ -6997,8 +6889,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Columns"), Localizable(true)]
         public string MenuLabelColumns
         {
-            get { return this.menuLabelColumns; }
-            set { this.menuLabelColumns = value; }
+            get => this.menuLabelColumns;
+            set => this.menuLabelColumns = value;
         }
 
         private string menuLabelColumns = "Columns";
@@ -7009,8 +6901,8 @@ namespace BrightIdeasSoftware
         [Category("Labels - ObjectListView"), DefaultValue("Select Columns..."), Localizable(true)]
         public string MenuLabelSelectColumns
         {
-            get { return this.menuLabelSelectColumns; }
-            set { this.menuLabelSelectColumns = value; }
+            get => this.menuLabelSelectColumns;
+            set => this.menuLabelSelectColumns = value;
         }
 
         private string menuLabelSelectColumns = "Select Columns...";

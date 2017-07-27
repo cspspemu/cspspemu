@@ -48,7 +48,7 @@ namespace CSPspEmu.Hle
 
         public override string ToString()
         {
-            return string.Format("HleCallback(Name='{0}', Function=0x{1:X})", Name, Function);
+            return $"HleCallback(Name='{Name}', Function=0x{Function:X})";
         }
     }
 }

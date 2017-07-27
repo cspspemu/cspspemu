@@ -117,10 +117,7 @@ namespace CSharpUtils.Ext.Compression.Lz
             /// <summary>
             /// 
             /// </summary>
-            public bool Found
-            {
-                get { return Size > 0; }
-            }
+            public bool Found => Size > 0;
 
             /// <summary>
             /// 

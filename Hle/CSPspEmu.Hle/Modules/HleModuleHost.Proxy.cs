@@ -298,9 +298,8 @@ namespace CSPspEmu.Hle
                     {
                         if (!ParameterType.Implements(typeof(IHleUidPoolClass)))
                         {
-                            throw (new InvalidCastException(string.Format(
-                                "Can't use a class '{0}' not implementing IHleUidPoolClass as parameter",
-                                ParameterType)));
+                            throw (new InvalidCastException(
+                                $"Can't use a class '{ParameterType}' not implementing IHleUidPoolClass as parameter"));
                         }
 
                         AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
@@ -336,9 +335,8 @@ namespace CSPspEmu.Hle
             {
                 if (!AstMethodCall.Type.Implements(typeof(IHleUidPoolClass)))
                 {
-                    throw (new InvalidCastException(string.Format(
-                        "Can't use a class '{0}' not implementing IHleUidPoolClass as return value",
-                        AstMethodCall.Type)));
+                    throw (new InvalidCastException(
+                        $"Can't use a class '{AstMethodCall.Type}' not implementing IHleUidPoolClass as return value"));
                 }
                 AstNodes.AddStatement(ast.Assign(
                     ast.Gpr(2),
@@ -360,7 +358,7 @@ namespace CSPspEmu.Hle
         {
             if (!MethodInfo.DeclaringType.IsAssignableFrom(this.GetType()))
             {
-                throw (new Exception(string.Format("Invalid {0} != {1}", MethodInfo.DeclaringType, this.GetType())));
+                throw (new Exception($"Invalid {MethodInfo.DeclaringType} != {this.GetType()}"));
             }
 
             bool SkipLog = HlePspFunctionAttribute.SkipLog;
@@ -379,7 +377,7 @@ namespace CSPspEmu.Hle
             );
 
             var Delegate = AstNodeExtensions.GeneratorIlPsp.GenerateDelegate<Action<CpuThreadState>>(
-                string.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
+                $"Proxy_{this.GetType().Name}_{MethodInfo.Name}",
                 AstNodes
             );
 
@@ -488,7 +486,7 @@ namespace CSPspEmu.Hle
                 catch (Exception Exception)
                 {
                     throw (new Exception(
-                        string.Format("ERROR calling {0}.{1}!", MethodInfo.DeclaringType.Name, MethodInfo.Name),
+                        $"ERROR calling {MethodInfo.DeclaringType.Name}.{MethodInfo.Name}!",
                         Exception
                     ));
                 }
@@ -517,12 +515,12 @@ namespace CSPspEmu.Hle
 
             if (ParameterType == typeof(string))
             {
-                return string.Format("'{0}'", StringFromAddress(CpuThreadState, (uint) Convert.ToInt64(Value)));
+                return $"'{StringFromAddress(CpuThreadState, (uint) Convert.ToInt64(Value))}'";
             }
 
             if (ParameterType == typeof(int))
             {
-                return string.Format("{0}", Convert.ToInt32(Value));
+                return $"{Convert.ToInt32(Value)}";
             }
 
             if (ParameterType.IsEnum)
@@ -534,16 +532,16 @@ namespace CSPspEmu.Hle
 
             if (ParameterType.IsPointer)
             {
-                return string.Format("0x{0:X8}",
-                    CpuThreadState.CpuProcessor.Memory.PointerToPspAddressUnsafe((void*) Convert.ToInt64(Value)));
+                return
+                    $"0x{CpuThreadState.CpuProcessor.Memory.PointerToPspAddressUnsafe((void*) Convert.ToInt64(Value)):X8}";
             }
 
             if (ParameterType == typeof(float))
             {
-                return string.Format("{0}", Convert.ToSingle(Value));
+                return $"{Convert.ToSingle(Value)}";
             }
 
-            return string.Format("0x{0:X8}", Value);
+            return $"0x{Value:X8}";
         }
     }
 }

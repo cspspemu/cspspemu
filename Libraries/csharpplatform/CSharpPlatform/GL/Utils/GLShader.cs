@@ -128,15 +128,9 @@ namespace CSharpPlatform.GL.Utils
         private readonly Dictionary<string, GlUniform> _Uniforms = new Dictionary<string, GlUniform>();
         private readonly Dictionary<string, GlAttribute> _Attributes = new Dictionary<string, GlAttribute>();
 
-        public IEnumerable<GlUniform> Uniforms
-        {
-            get { return _Uniforms.Values; }
-        }
+        public IEnumerable<GlUniform> Uniforms => _Uniforms.Values;
 
-        public IEnumerable<GlAttribute> Attributes
-        {
-            get { return _Attributes.Values; }
-        }
+        public IEnumerable<GlAttribute> Attributes => _Attributes.Values;
 
         private void GetAllUniforms()
         {

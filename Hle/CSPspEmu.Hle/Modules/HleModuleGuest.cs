@@ -38,10 +38,7 @@ namespace CSPspEmu.Hle
     {
         public int ID;
 
-        public string Name
-        {
-            get { return ModuleInfo.Name; }
-        }
+        public string Name => ModuleInfo.Name;
 
         public bool Loaded;
         public ElfPsp.ModuleInfo ModuleInfo;
@@ -175,9 +172,7 @@ namespace CSPspEmu.Hle
                         Module = null,
                         ModuleName = ModuleImports.Name,
                     };
-                    var FunctionEntry = (HleModuleHost != null)
-                        ? HleModuleHost.EntriesByNID.GetOrDefault(NID, DefaultEntry)
-                        : DefaultEntry;
+                    var FunctionEntry = HleModuleHost?.EntriesByNID.GetOrDefault(NID, DefaultEntry) ?? DefaultEntry;
                     FunctionEntry.NID = NID;
                     //var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
 
@@ -216,7 +211,7 @@ namespace CSPspEmu.Hle
                         );
                     }
                     throw (new NotImplementedException("Not Implemented '" +
-                                                       string.Format("{0}:{1}", ModuleImportName, NIDName) + "'"));
+                                                       $"{ModuleImportName}:{NIDName}" + "'"));
                 }
                 else
                 {

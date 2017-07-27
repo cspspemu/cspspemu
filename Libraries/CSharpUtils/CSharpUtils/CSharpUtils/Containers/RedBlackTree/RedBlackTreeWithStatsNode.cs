@@ -114,13 +114,8 @@ namespace CSharpUtils.Containers.RedBlackTree
             /// <returns></returns>
             public override string ToString()
             {
-                return string.Format(
-                    "RedBlackTreeWithStats.Node(Value={0}, Color={1}, ChildCountLeft={2}, ChildCountRight={3})",
-                    Value,
-                    Enum.GetName(typeof(Color), Color),
-                    ChildCountLeft,
-                    ChildCountRight
-                );
+                return
+                    $"RedBlackTreeWithStats.Node(Value={Value}, Color={Enum.GetName(typeof(Color), Color)}, ChildCountLeft={ChildCountLeft}, ChildCountRight={ChildCountRight})";
             }
 
             internal void PrintTree(Node markNode = null, int level = 0, string label = "L")
@@ -519,20 +514,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
 
             // Tail recursion.
-            internal Node LeftMostNode
-            {
-                get
-                {
-                    /*
-                    var result = this;
-                    while (result._LeftNode != null) result = result._LeftNode;
-                    return result;
-                    */
-                    //if (_LeftNode == null) return this;
-                    //return _LeftNode.LeftMostNode;
-                    return (LeftNode == null) ? this : LeftNode.LeftMostNode;
-                }
-            }
+            internal Node LeftMostNode => (LeftNode == null) ? this : LeftNode.LeftMostNode;
 
             internal Node RightMostNode => RightNode == null ? this : RightNode.RightMostNode;
 
@@ -566,11 +548,13 @@ namespace CSharpUtils.Containers.RedBlackTree
 
             internal Node Clone()
             {
-                var that = new Node();
-                that.Value = Value;
-                that.Color = Color;
-                that.ChildCountLeft = ChildCountLeft;
-                that.ChildCountRight = ChildCountRight;
+                var that = new Node
+                {
+                    Value = Value,
+                    Color = Color,
+                    ChildCountLeft = ChildCountLeft,
+                    ChildCountRight = ChildCountRight
+                };
                 if (_LeftNode != null) that.LeftNode = _LeftNode.Clone();
                 if (_RightNode != null) that.RightNode = _RightNode.Clone();
                 return that;

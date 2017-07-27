@@ -87,10 +87,7 @@ namespace BrightIdeasSoftware
         /// Return the model object that is checked, if only one row is checked.
         /// If zero rows are checked, or more than one row, null is returned.
         /// </summary>
-        public virtual T CheckedObject
-        {
-            get { return (T) this.olv.CheckedObject; }
-        }
+        public virtual T CheckedObject => (T) this.olv.CheckedObject;
 
         /// <summary>
         /// Return the list of all the checked model objects
@@ -106,7 +103,7 @@ namespace BrightIdeasSoftware
 
                 return objects;
             }
-            set { this.olv.CheckedObjects = (IList) value; }
+            set => this.olv.CheckedObjects = (IList) value;
         }
 
         /// <summary>
@@ -114,8 +111,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual ObjectListView ListView
         {
-            get { return olv; }
-            set { olv = value; }
+            get => olv;
+            set => olv = value;
         }
 
         private ObjectListView olv;
@@ -133,7 +130,7 @@ namespace BrightIdeasSoftware
 
                 return objects;
             }
-            set { this.olv.SetObjects(value); }
+            set => this.olv.SetObjects(value);
         }
 
         /// <summary>
@@ -142,8 +139,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual T SelectedObject
         {
-            get { return (T) this.olv.SelectedObject; }
-            set { this.olv.SelectedObject = value; }
+            get => (T) this.olv.SelectedObject;
+            set => this.olv.SelectedObject = value;
         }
 
         /// <summary>
@@ -159,7 +156,7 @@ namespace BrightIdeasSoftware
 
                 return objects;
             }
-            set { this.olv.SelectedObjects = (IList) value; }
+            set => this.olv.SelectedObjects = (IList) value;
         }
 
         //--------------------------------------------------------------------------------------
@@ -210,7 +207,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual TypedCheckStateGetterDelegate CheckStateGetter
         {
-            get { return checkStateGetter; }
+            get => checkStateGetter;
             set
             {
                 this.checkStateGetter = value;
@@ -257,7 +254,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual TypedCheckStatePutterDelegate CheckStatePutter
         {
-            get { return checkStatePutter; }
+            get => checkStatePutter;
             set
             {
                 this.checkStatePutter = value;
@@ -325,8 +322,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         public virtual HeaderToolTipGetterDelegate HeaderToolTipGetter
         {
-            get { return this.olv.HeaderToolTipGetter; }
-            set { this.olv.HeaderToolTipGetter = value; }
+            get => this.olv.HeaderToolTipGetter;
+            set => this.olv.HeaderToolTipGetter = value;
         }
 
         //--------------------------------------------------------------------------------------
@@ -392,7 +389,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public TypedAspectGetterDelegate AspectGetter
         {
-            get { return this.aspectGetter; }
+            get => this.aspectGetter;
             set
             {
                 this.aspectGetter = value;
@@ -410,7 +407,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public TypedAspectPutterDelegate AspectPutter
         {
-            get { return aspectPutter; }
+            get => aspectPutter;
             set
             {
                 this.aspectPutter = value;
@@ -431,7 +428,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public TypedImageGetterDelegate ImageGetter
         {
-            get { return imageGetter; }
+            get => imageGetter;
             set
             {
                 this.imageGetter = value;
@@ -449,7 +446,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         public TypedGroupKeyGetterDelegate GroupKeyGetter
         {
-            get { return groupKeyGetter; }
+            get => groupKeyGetter;
             set
             {
                 this.groupKeyGetter = value;
@@ -555,8 +552,7 @@ namespace BrightIdeasSoftware
                     il.Emit(OpCodes.Ldnull);
                 else
                     il.Emit(OpCodes.Ldstr,
-                        string.Format("'{0}' is not a parameter-less method, property or field of type '{1}'", pathPart,
-                            type.FullName));
+                        $"'{pathPart}' is not a parameter-less method, property or field of type '{type.FullName}'");
                 return null;
             }
 

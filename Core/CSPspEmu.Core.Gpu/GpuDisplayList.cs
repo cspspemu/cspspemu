@@ -164,8 +164,7 @@ namespace CSPspEmu.Core.Gpu
             InstructionAddressStall = value & PspMemory.MemoryMask;
             if (InstructionAddressStall != 0 && !PspMemory.IsAddressValid(InstructionAddressStall))
             {
-                throw (new InvalidOperationException(string.Format("Invalid StallAddress! 0x{0}",
-                    InstructionAddressStall)));
+                throw (new InvalidOperationException($"Invalid StallAddress! 0x{InstructionAddressStall}"));
             }
             if (Debug) Console.WriteLine("GpuDisplayList.SetInstructionAddressStall:{0:X8}", value);
             StallAddressUpdated.Set();

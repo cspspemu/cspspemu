@@ -142,10 +142,7 @@ namespace BrightIdeasSoftware
             else
             {
                 IComparable comparable = x as IComparable;
-                if (comparable != null)
-                    return comparable.CompareTo(y);
-                else
-                    return 0;
+                return comparable?.CompareTo(y) ?? 0;
             }
         }
 
@@ -282,10 +279,7 @@ namespace BrightIdeasSoftware
             else
             {
                 IComparable comparable = x as IComparable;
-                if (comparable != null)
-                    return comparable.CompareTo(y);
-                else
-                    return 0;
+                return comparable?.CompareTo(y) ?? 0;
             }
         }
 

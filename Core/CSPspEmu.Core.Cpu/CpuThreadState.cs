@@ -513,8 +513,8 @@ namespace CSPspEmu.Core.Cpu
         /// </summary>
         public uint V0
         {
-            get { return Gpr2; }
-            set { Gpr2 = value; }
+            get => Gpr2;
+            set => Gpr2 = value;
         }
 
         public GprList Gpr;
