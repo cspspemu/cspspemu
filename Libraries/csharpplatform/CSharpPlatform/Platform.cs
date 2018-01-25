@@ -88,7 +88,14 @@ namespace CSPspEmu.Core
                     OS = OS.Mac;
                     break;
                 case PlatformID.Unix:
-                    OS = OS.Linux;
+                    if (IsRunningOnMac())
+                    {
+                        OS = OS.Mac;
+                    }
+                    else
+                    {
+                        OS = OS.Linux;
+                    }
                     break;
                 default:
                     throw (new PlatformNotSupportedException());
@@ -373,7 +380,7 @@ namespace CSPspEmu.Core
 
         static bool IsRunningOnMac()
         {
-            IntPtr buf = IntPtr.Zero;
+            var buf = IntPtr.Zero;
             try
             {
                 buf = Marshal.AllocHGlobal(8192);
@@ -391,7 +398,9 @@ namespace CSPspEmu.Core
             finally
             {
                 if (buf != IntPtr.Zero)
+                {
                     Marshal.FreeHGlobal(buf);
+                }
             }
             return false;
         }
