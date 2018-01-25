@@ -2,6 +2,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using CSharpPlatform.Library.Impl;
 
 namespace CSharpPlatform.Library
 {
@@ -35,6 +36,7 @@ namespace CSharpPlatform.Library
             switch (Platform.OS)
             {
                 case OS.Windows: return new DynamicLibraryWindows(Name);
+                case OS.Mac: return new DynamicLibraryMac(Name);
                 default: return new DynamicLibraryPosix(Name);
             }
         }

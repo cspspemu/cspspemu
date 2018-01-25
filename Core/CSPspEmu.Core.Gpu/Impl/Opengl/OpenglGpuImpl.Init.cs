@@ -70,36 +70,41 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                     OpenglContext = GlContextFactory.CreateWindowless();
                     OpenglContext.MakeCurrent();
 
-                    Console.Out.WriteLineColored(ConsoleColor.White, "## OpenGL Context Version: {0}",
-                        GlGetString(GL.GL_VERSION));
-                    Console.Out.WriteLineColored(ConsoleColor.White, "## Depth Bits: {0}",
-                        GL.glGetInteger(GL.GL_DEPTH_BITS));
-                    Console.Out.WriteLineColored(ConsoleColor.White, "## Stencil Bits: {0}",
-                        GL.glGetInteger(GL.GL_STENCIL_BITS));
-                    Console.Out.WriteLineColored(ConsoleColor.White, "## Color Bits: {0},{1},{2},{3}",
-                        GL.glGetInteger(GL.GL_RED_BITS), GL.glGetInteger(GL.GL_GREEN_BITS),
-                        GL.glGetInteger(GL.GL_BLUE_BITS), GL.glGetInteger(GL.GL_ALPHA_BITS));
-
-                    if (GL.glGetInteger(GL.GL_STENCIL_BITS) <= 0)
-                    {
-                        Console.Error.WriteLineColored(ConsoleColor.Red, "No stencil bits available!");
-                    }
-
-                    OpenglContext.ReleaseCurrent();
-
-                    completedEvent.Set();
-                    Console.WriteLine("OpenglGpuImpl.Init.Start()");
                     try
                     {
-                        while (Running)
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## OpenGL Context Version: {0}",
+                            GlGetString(GL.GL_VERSION));
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## Depth Bits: {0}",
+                            GL.glGetInteger(GL.GL_DEPTH_BITS));
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## Stencil Bits: {0}",
+                            GL.glGetInteger(GL.GL_STENCIL_BITS));
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## Color Bits: {0},{1},{2},{3}",
+                            GL.glGetInteger(GL.GL_RED_BITS), GL.glGetInteger(GL.GL_GREEN_BITS),
+                            GL.glGetInteger(GL.GL_BLUE_BITS), GL.glGetInteger(GL.GL_ALPHA_BITS));
+
+                        if (GL.glGetInteger(GL.GL_STENCIL_BITS) <= 0)
                         {
-                            Thread.Sleep(10);
+                            Console.Error.WriteLineColored(ConsoleColor.Red, "No stencil bits available!");
                         }
-                        StopEvent.Set();
-                    }
-                    finally
-                    {
-                        Console.WriteLine("OpenglGpuImpl.Init.End()");
+
+                        OpenglContext.ReleaseCurrent();
+
+                        completedEvent.Set();
+                        Console.WriteLine("OpenglGpuImpl.Init.Start()");
+                        try
+                        {
+                            while (Running)
+                            {
+                                Thread.Sleep(10);
+                            }
+                            StopEvent.Set();
+                        }
+                        finally
+                        {
+                            Console.WriteLine("OpenglGpuImpl.Init.End()");
+                        }
+                    } catch (Exception e) {
+                        Console.WriteLine("OpenglGpuImpl.Init.Error: {0}", e);
                     }
                 })
                 {
