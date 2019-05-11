@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Emit;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu;
@@ -181,7 +182,7 @@ class Program
                     {
                         //Console.WriteLine(display.CurrentInfo.FrameAddress);
                         var pixels2 = new uint[512 * 272];
-                        var displayData = (uint*) memory.PspAddressToPointerSafe(display.CurrentInfo.FrameAddress);
+                        var displayData = memory.Range<uint>(display.CurrentInfo.FrameAddress, 512 * 272);
                         for (var m = 0; m < 512 * 272; m++)
                         {
                             var color = displayData[m];

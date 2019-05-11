@@ -37,14 +37,14 @@ namespace CSPspEmu.Hle.Formats
 
             //Console.WriteLine(StartMagic);
 
-            if (startMagic == '\0' + "PBP") return SubType.Pbp;
-            if (startMagic == '\0' + "PSF") return SubType.Psf;
-            if (startMagic == '\x7F' + "ELF") return SubType.Elf;
+            if (startMagic == "\u0000PBP") return SubType.Pbp;
+            if (startMagic == "\u0000PSF") return SubType.Psf;
+            if (startMagic == "\u007FELF") return SubType.Elf;
             if (startMagic == "~PSP") return SubType.EncryptedElf;
             if (startMagic == "CISO") return SubType.Cso;
-            if (startMagic == "DAX" + '\0') return SubType.Dax;
+            if (startMagic == "DAX\u0000") return SubType.Dax;
 
-            if (stream.SliceWithLength(0x8000, 6).ReadAllContentsAsString() == '\x01' + "CD001") return SubType.Iso;
+            if (stream.SliceWithLength(0x8000, 6).ReadAllContentsAsString() == "\u0001CD001") return SubType.Iso;
 
             return SubType.Unknown;
         }

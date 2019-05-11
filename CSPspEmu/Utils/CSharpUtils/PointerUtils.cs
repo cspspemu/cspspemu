@@ -5,27 +5,10 @@ using System.Text;
 
 namespace CSharpUtils
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public unsafe class PointerUtils
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pointer"></param>
-        /// <returns></returns>
-        public static string PtrToStringUtf8(byte* pointer)
-        {
-            return PtrToString(pointer, Encoding.UTF8);
-        }
+        public static string PtrToStringUtf8(byte* pointer) => PtrToString(pointer, Encoding.UTF8);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pointer"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
         public static string PtrToString(byte* pointer, Encoding encoding)
         {
             if (pointer == null) return null;
@@ -34,11 +17,6 @@ namespace CSharpUtils
             return encoding.GetString(bytes.ToArray());
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ptr"></param>
-        /// <returns></returns>
         public static ushort PtrToShort_BE(void* ptr)
         {
             var bytes = (byte*) ptr;
@@ -46,13 +24,6 @@ namespace CSharpUtils
             return (ushort) ((bytes[0] << 8) | (bytes[1] << 0));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pointer"></param>
-        /// <param name="length"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
         public static string PtrToString(byte* pointer, int length, Encoding encoding)
         {
             if (pointer == null) return null;
@@ -65,13 +36,6 @@ namespace CSharpUtils
             return encoding.GetString(bytes.ToArray());
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="String"></param>
-        /// <param name="encoding"></param>
-        /// <param name="pointer"></param>
-        /// <param name="pointerMaxLength"></param>
         public static void StoreStringOnPtr(string String, Encoding encoding, byte* pointer,
             int pointerMaxLength = 0x10000)
         {
@@ -89,25 +53,8 @@ namespace CSharpUtils
             *pointer = 0;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="value"></param>
-        /// <param name="count"></param>
-        public static void Memset(byte[] array, byte value, int count)
-        {
-            Memset(array, value, 0, count);
-        }
+        public static void Memset(byte[] array, byte value, int count) => Memset(array, value, 0, count);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="value"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
-        /// <exception cref="InvalidOperationException"></exception>
         public static void Memset(byte[] array, byte value, int offset, int count)
         {
             if (count <= 0) return;
@@ -119,86 +66,10 @@ namespace CSharpUtils
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public static bool Is64;
+        public static readonly bool Is64 = Environment.Is64BitProcess;
 
-        static PointerUtils()
-        {
-            Is64 = Environment.Is64BitProcess;
-        }
+        public static void Memset(byte* pointer, byte value, int count) => new Span<byte>(pointer, count).Fill(value);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pointer"></param>
-        /// <param name="value"></param>
-        /// <param name="count"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static void Memset(byte* pointer, byte value, int count)
-        {
-            if (pointer == null) throw new ArgumentNullException(nameof(pointer));
-
-#if true
-            if (count >= 16)
-            {
-                var value2 = (ushort) ((value << 8) | (value << 0));
-                var value4 = ((uint) value2 << 16) | ((uint) value2 << 0);
-
-                if (Is64)
-                {
-                    var value8 = ((ulong) value4 << 32) | ((ulong) value4 << 0);
-                    var pointer8 = (ulong*) pointer;
-                    while (count >= 8)
-                    {
-                        *pointer8++ = value8;
-                        count -= 8;
-                    }
-                    pointer = (byte*) pointer8;
-                }
-                else
-                {
-                    var pointer4 = (uint*) pointer;
-                    while (count >= 4)
-                    {
-                        *pointer4++ = value4;
-                        count -= 4;
-                    }
-                    pointer = (byte*) pointer4;
-                }
-            }
-#endif
-
-            while (count > 0)
-            {
-                *pointer++ = value;
-                count--;
-            }
-        }
-
-#if false
-		static public void MemsetSlow(byte[] Array, byte Value, int Count)
-		{
-			fixed (byte* ArrayPointer = Array)
-			{
-				MemsetSlow(ArrayPointer, Value, Count);
-			}
-		}
-
-		static public void MemsetSlow(byte* Pointer, byte Value, int Count)
-		{
-			if (Pointer == null) throw (new ArgumentNullException("Memset pointer is null"));
-
-			while (Count-- > 0) *Pointer++ = Value;
-		}
-#endif
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="destination"></param>
-        /// <param name="source"></param>
         public static void Memcpy(byte* destination, ArraySegment<byte> source)
         {
             if (source.Count > 0)
@@ -210,12 +81,6 @@ namespace CSharpUtils
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="destination"></param>
-        /// <param name="source"></param>
-        /// <param name="count"></param>
         public static void Memcpy(byte* destination, byte[] source, int count)
         {
             fixed (byte* sourcePtr = source)
@@ -224,11 +89,6 @@ namespace CSharpUtils
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="destination"></param>
-        /// <param name="source"></param>
         public static void Memcpy(ArraySegment<byte> destination, byte* source)
         {
             //var Pin = GCHandle.Alloc(Destination.Array, GCHandleType.Pinned);
@@ -243,12 +103,6 @@ namespace CSharpUtils
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="destination"></param>
-        /// <param name="source"></param>
-        /// <param name="count"></param>
         public static void Memcpy(byte[] destination, byte* source, int count)
         {
             fixed (byte* destinationPtr = destination)
@@ -257,13 +111,6 @@ namespace CSharpUtils
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="haystack"></param>
-        /// <param name="needle"></param>
-        /// <param name="maxLength"></param>
-        /// <returns></returns>
         public static int FindLargestMatch(byte* haystack, byte* needle, int maxLength)
         {
             var match = 0;
@@ -345,61 +192,8 @@ namespace CSharpUtils
             return match;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="destination"></param>
-        /// <param name="source"></param>
-        /// <param name="size"></param>
-        public static void Memcpy(byte* destination, byte* source, int size)
-        {
-            var distance = Math.Abs(destination - source);
-#if true
-            if (Is64 && (distance >= 8))
-            {
-                while (size >= sizeof(ulong))
-                {
-                    *(ulong*) destination = *(ulong*) source;
-                    destination += sizeof(ulong);
-                    source += sizeof(ulong);
-                    size -= sizeof(ulong);
-                }
-            }
-            else if (distance >= 4)
-            {
-                while (size >= sizeof(uint))
-                {
-                    *(uint*) destination = *(uint*) source;
-                    destination += sizeof(uint);
-                    source += sizeof(uint);
-                    size -= sizeof(uint);
-                }
-            }
-            else if (distance >= 2)
-            {
-                while (size >= sizeof(ushort))
-                {
-                    *(ushort*) destination = *(ushort*) source;
-                    destination += sizeof(ushort);
-                    source += sizeof(ushort);
-                    size -= sizeof(ushort);
-                }
-            }
-#endif
+        public static void Memcpy(byte* destination, byte* source, int size) => new Span<byte>(source, size).CopyTo(new Span<byte>(destination, size));
 
-            while (size > 0)
-            {
-                *destination++ = *source++;
-                size--;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pointer"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
         public static byte[] PointerToByteArray(byte* pointer, int size)
         {
             var data = new byte[size];
@@ -495,55 +289,11 @@ namespace CSharpUtils
             return array;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="output"></param>
-        public static void ByteArrayToPointer(byte[] array, byte* output)
-        {
-            Memcpy(output, array, array.Length);
-        }
+        public static void ByteArrayToPointer(byte[] array, byte* output) => Memcpy(output, array, array.Length);
+        public static string FixedByteGet(int size, byte* ptr) => PtrToStringUtf8(ptr);
+        public static void FixedByteSet(int size, byte* ptr, string value) => StoreStringOnPtr(value, Encoding.UTF8, ptr, size);
+        public static int Sizeof<T>() => Marshal.SizeOf(typeof(T));
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="size"></param>
-        /// <param name="ptr"></param>
-        /// <returns></returns>
-        public static string FixedByteGet(int size, byte* ptr)
-        {
-            return PtrToStringUtf8(ptr);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="size"></param>
-        /// <param name="ptr"></param>
-        /// <param name="value"></param>
-        public static void FixedByteSet(int size, byte* ptr, string value)
-        {
-            StoreStringOnPtr(value, Encoding.UTF8, ptr, size);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static int Sizeof<T>()
-        {
-            return Marshal.SizeOf(typeof(T));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
         public static int Memcmp(byte* left, byte* right, int count)
         {
             for (var n = 0; n < count; n++)

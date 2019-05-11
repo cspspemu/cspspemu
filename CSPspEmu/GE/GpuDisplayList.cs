@@ -217,16 +217,16 @@ namespace CSPspEmu.Core.Gpu
         {
             //GpuDisplayListRunnerDelegate.
             var DynamicMethod = new DynamicMethod("GpuDisplayList.GenerateSwitch", typeof(void),
-                new Type[] {typeof(GpuDisplayListRunner), typeof(GpuOpCodes), typeof(uint)});
+                new[] {typeof(GpuDisplayListRunner), typeof(GpuOpCodes), typeof(uint)});
             ILGenerator ILGenerator = DynamicMethod.GetILGenerator();
-            var SwitchLabels = new Label[typeof(GpuOpCodes).GetEnumValues().Length];
-            var Names = typeof(GpuOpCodes).GetEnumNames();
-            for (int n = 0; n < SwitchLabels.Length; n++)
+            var switchLabels = new Label[typeof(GpuOpCodes).GetEnumValues().Length];
+            var names = typeof(GpuOpCodes).GetEnumNames();
+            for (var n = 0; n < switchLabels.Length; n++)
             {
-                SwitchLabels[n] = ILGenerator.DefineLabel();
+                switchLabels[n] = ILGenerator.DefineLabel();
             }
             ILGenerator.Emit(OpCodes.Ldarg_1);
-            ILGenerator.Emit(OpCodes.Switch, SwitchLabels);
+            ILGenerator.Emit(OpCodes.Switch, switchLabels);
             ILGenerator.Emit(OpCodes.Ret);
 
             var opcodesToMethods = new Dictionary<GpuOpCodes, MethodInfo>();
@@ -240,9 +240,9 @@ namespace CSPspEmu.Core.Gpu
                 }
             }
 
-            for (int n = 0; n < SwitchLabels.Length; n++)
+            for (var n = 0; n < switchLabels.Length; n++)
             {
-                ILGenerator.MarkLabel(SwitchLabels[n]);
+                ILGenerator.MarkLabel(switchLabels[n]);
                 var MethodInfo_Operation = opcodesToMethods[(GpuOpCodes) n];
                 if (MethodInfo_Operation == null)
                 {
@@ -252,7 +252,7 @@ namespace CSPspEmu.Core.Gpu
                 //var MethodInfo_Operation = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
                 if (MethodInfo_Operation == null)
                 {
-                    Console.Error.WriteLine("Warning! Can't find Gpu.OpCode '" + Names[n] + "'");
+                    Console.Error.WriteLine("Warning! Can't find Gpu.OpCode '" + names[n] + "'");
                     MethodInfo_Operation = ((Action) GpuDisplayListRunner.Methods.OP_UNKNOWN).Method;
                 }
                 if (MethodInfo_Operation.GetCustomAttributes(typeof(GpuOpCodesNotImplementedAttribute), true).Length >

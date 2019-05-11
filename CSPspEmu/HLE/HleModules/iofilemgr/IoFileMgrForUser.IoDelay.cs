@@ -56,16 +56,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
         {
             //return;
 
-            var TimeSpan = ioDelayType.GetTimePerSize(dataSize);
+            var timeSpan = ioDelayType.GetTimePerSize(dataSize);
 
             //Console.WriteLine("_DelayIo: {0}, {1} : {2}", IoDelayType, DataSize, TimeSpan);
 
-            if (TimeSpan != TimeSpan.Zero)
+            if (timeSpan != TimeSpan.Zero)
             {
-                var CurrentThread = ThreadManager.Current;
+                var currentThread = ThreadManager.Current;
                 //ThreadManager
-                CurrentThread?.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "_DelayIo", null,
-                    WakeUpCallback => { PspRtc.RegisterTimerInOnce(TimeSpan, WakeUpCallback); },
+                currentThread?.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "_DelayIo", null,
+                    WakeUpCallback => { PspRtc.RegisterTimerInOnce(timeSpan, WakeUpCallback); },
                     HandleCallbacks: false);
             }
             else

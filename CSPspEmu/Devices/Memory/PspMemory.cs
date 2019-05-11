@@ -85,6 +85,7 @@ namespace CSPspEmu.Core.Memory
 
         public void ZeroFillSegment(Segment Segment)
         {
+            //Range<byte>(Segment.Low, (int)Segment.Size).Fill(0);
             PointerUtils.Memset((byte*) PspAddressToPointerSafe(Segment.Low), 0, (int) Segment.Size);
         }
 
@@ -190,6 +191,13 @@ namespace CSPspEmu.Core.Memory
             if (Address == 0 && CanBeNull) return null;
             ValidateRange(Address, Size);
             return PspAddressToPointerUnsafe(Address);
+        }
+        
+        unsafe public virtual Span<T> Range<T>(uint Address, int Size, bool CanBeNull = true) where T : unmanaged
+        {
+            if (Address == 0 && CanBeNull) return null;
+            ValidateRange(Address, Size);
+            return new Span<T>(PspAddressToPointerUnsafe(Address), Size * sizeof(T));
         }
 
         public static void CheckAndEnforceAddressValid(uint Address)

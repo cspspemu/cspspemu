@@ -1,4 +1,5 @@
-﻿namespace CSPspEmu.Core.Gpu
+﻿// ReSharper disable InconsistentNaming
+namespace CSPspEmu.Core.Gpu
 {
     public enum GpuOpCodes : byte
     {
@@ -712,9 +713,7 @@
         /// </summary>
         SPOTCUT2,
 
-        /// <summary>
-        /// 0x8E - Spot light 3 cutoff
-        /// </summary>
+        /// <summary>0x8E - Spot light 3 cutoff</summary>
         SPOTCUT3,
 
         /// <summary>

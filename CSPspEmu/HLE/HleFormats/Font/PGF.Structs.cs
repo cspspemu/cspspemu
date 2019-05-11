@@ -51,9 +51,7 @@ namespace CSPspEmu.Hle.Formats.Font
             /// </summary>
             public int TableCharMapBpe;
 
-            /// <summary>
-            /// Number of bits per packedCharPointerTable entry.
-            /// </summary>
+            /// <summary>Number of bits per packedCharPointerTable entry.</summary>
             public int TableCharPointerBpe;
 
             /// <summary>
@@ -296,10 +294,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
         public static implicit operator float(Fixed266 that) => that.Value;
 
-        public static implicit operator Fixed266(float that) => new Fixed266()
-        {
-            Value = that,
-        };
+        public static implicit operator Fixed266(float that) => new Fixed266 {Value = that};
 
         public override string ToString() => Value.ToString(CultureInfo.InvariantCulture);
     }
@@ -309,10 +304,7 @@ namespace CSPspEmu.Hle.Formats.Font
         public uint Src;
         public uint Dst;
 
-        public override string ToString()
-        {
-            return $"MapUshort({Src}, {Dst})";
-        }
+        public override string ToString() => $"MapUshort({Src}, {Dst})";
     }
 
     public struct MapUint
@@ -320,10 +312,7 @@ namespace CSPspEmu.Hle.Formats.Font
         public uint Src;
         public uint Dst;
 
-        public override string ToString()
-        {
-            return $"MapUint({Src}, {Dst})";
-        }
+        public override string ToString() => $"MapUint({Src}, {Dst})";
     }
 
     public struct MapInt
@@ -331,10 +320,7 @@ namespace CSPspEmu.Hle.Formats.Font
         public int Src;
         public int Dst;
 
-        public override string ToString()
-        {
-            return $"MapUint({Src}, {Dst})";
-        }
+        public override string ToString() => $"MapUint({Src}, {Dst})";
     }
 
     public enum FamilyEnum : ushort

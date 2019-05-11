@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using CSPspEmu.Core.Gpu;
 using System;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu.Runner.Components.Gpu
 {
@@ -26,7 +27,7 @@ namespace CSPspEmu.Runner.Components.Gpu
                     WaitHandle.WaitAny(
                         new WaitHandle[]
                             {GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent},
-                        200);
+                        200.Milliseconds());
 
                     // TODO: Should wait until the Form has created its context.
 
