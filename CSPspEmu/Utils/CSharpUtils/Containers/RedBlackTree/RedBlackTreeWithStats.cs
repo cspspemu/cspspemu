@@ -268,7 +268,7 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// </summary>
         public bool IsEmpty => RealRootNode == null;
 
-        internal Node RealRootNode
+        public Node RealRootNode
         {
             get => BaseRootNode.LeftNode;
             set => BaseRootNode.LeftNode = value;

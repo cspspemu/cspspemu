@@ -62,40 +62,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Acme1FileTest.cs" />
-    <Compile Include="AsyncTaskTest.cs" />
-    <Compile Include="ConcatStreamTest.cs" />
-    <Compile Include="ConsumerMemoryStreamTest.cs" />
-    <Compile Include="RinbBufferTest.cs" />
-    <Compile Include="Extensions\StreamExtensionsTest.cs" />
-    <Compile Include="Getopt\GetoptTest.cs" />
-    <Compile Include="Factory\MockeableFactoryTest.cs" />
-    <Compile Include="PointerUtilsTest.cs" />
-    <Compile Include="Streams\StreamBitReaderTest.cs" />
-    <Compile Include="Streams\MapStreamTest.cs" />
-    <Compile Include="Streams\ZeroStreamTest.cs" />
-    <Compile Include="Threading\GreenThreadTest.cs" />
-    <Compile Include="SerializationExtensionsTest.cs" />
-    <Compile Include="Threading\CustomThreadPoolTest.cs" />
-    <Compile Include="Json\JSONTest.cs" />
-    <Compile Include="ListExtensionsTest.cs" />
-    <Compile Include="Containers\RedBlackTree\RedBlackTreeWithStatsTest.cs" />
-    <Compile Include="ReaderWriterLockExtensionsTest.cs" />
-    <Compile Include="SliceStreamTest.cs" />
-    <Compile Include="Streams\StreamChunker2Test.cs" />
-    <Compile Include="Streams\StreamChunkerTest.cs" />
-    <Compile Include="Extensions\StructExtensionsTest.cs" />
-    <Compile Include="TypeUtilsTest.cs" />
-    <Compile Include="LinqExExtensionsTest.cs" />
-    <Compile Include="DateTimeRangeTest.cs" />
-    <Compile Include="ProduceConsumeBufferTest.cs" />
-    <Compile Include="Paths.cs" />
-    <Compile Include="StreamExtensionsTest.cs" />
-    <Compile Include="TimeSamplerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StructUtilsTest.cs" />
-    <Compile Include="MathUtilsTest.cs" />
-    <Compile Include="HashingTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSharpUtils\CSharpUtils.csproj">
@@ -105,14 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestInput\sample.deflated">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestInput\sample.inflated">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

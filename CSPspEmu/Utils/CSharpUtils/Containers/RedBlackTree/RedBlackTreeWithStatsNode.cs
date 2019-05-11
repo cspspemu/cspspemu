@@ -33,7 +33,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             internal int ChildCountLeft;
             internal int ChildCountRight;
 
-            internal TElement Value;
+            public TElement Value;
             internal Color Color;
 
             internal Node LeftNode
@@ -514,9 +514,9 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
 
             // Tail recursion.
-            internal Node LeftMostNode => (LeftNode == null) ? this : LeftNode.LeftMostNode;
+            public Node LeftMostNode => (LeftNode == null) ? this : LeftNode.LeftMostNode;
 
-            internal Node RightMostNode => RightNode == null ? this : RightNode.RightMostNode;
+            public Node RightMostNode => RightNode == null ? this : RightNode.RightMostNode;
 
             internal Node NextNode
             {

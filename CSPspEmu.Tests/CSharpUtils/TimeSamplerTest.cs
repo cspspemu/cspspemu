@@ -2,7 +2,6 @@
 using CSharpUtils;
 using Xunit;
 
-
 namespace CSharpUtilsTests
 {
     

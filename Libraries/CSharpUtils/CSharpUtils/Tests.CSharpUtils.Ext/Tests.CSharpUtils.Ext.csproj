@@ -63,16 +63,7 @@
     <Compile Include="..\CSharpUtilsTests\Paths.cs">
       <Link>Paths.cs</Link>
     </Compile>
-    <Compile Include="Compression\HuffmanTest.cs" />
-    <Compile Include="Compression\LzBufferTest.cs" />
-    <Compile Include="Compression\RleMatcherTest.cs" />
-    <Compile Include="Compression\MatcherTest.cs" />
-    <Compile Include="Compression\Zip\ZipArchiveTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpaceAssigner\SpaceAssigner1DTest.cs" />
-    <Compile Include="SpaceAssigner\SpaceAssigner1D_SpaceTest.cs" />
-    <Compile Include="StreamExtensionsExtTest.cs" />
-    <Compile Include="Streams\ProxyStreamReadWriteAnalyzerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSharpUtils.Ext\CSharpUtils.Ext.csproj">

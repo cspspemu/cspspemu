@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CSharpUtils
 {
-    class TimeSampler
+    public class TimeSampler
     {
         readonly Dictionary<DateTime, double> _samples = new Dictionary<DateTime, double>();
 

@@ -61,16 +61,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Ast\Generators\GeneratorCSharpTest.cs" />
-    <Compile Include="Ast\Generators\GeneratorILTest.cs" />
-    <Compile Include="Ast\Optimizers\AstOptimizerTest.cs" />
-    <Compile Include="Ast\Serializers\UnitTest1.cs" />
-    <Compile Include="Ast\Utils\IndentedStringBuilderTest.cs" />
-    <Compile Include="BenchMarkTest.cs" />
-    <Compile Include="TestUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\ILInstanceHolderPoolTest.cs" />
-    <Compile Include="Util\ILFieldInfoTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SafeILGenerator\SafeILGenerator.csproj">

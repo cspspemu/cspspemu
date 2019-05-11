@@ -60,13 +60,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseModuleTest.cs" />
-    <Compile Include="iofilemgr\umd\ioctlTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="rtc\sceRtcTest.cs" />
-    <Compile Include="sceDefltTest.cs" />
-    <Compile Include="TestHleUtils.cs" />
-    <Compile Include="utils\UtilsForUserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
@@ -128,10 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="TestInput\sample.deflated" />
-    <EmbeddedResource Include="TestInput\sample.inflated" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

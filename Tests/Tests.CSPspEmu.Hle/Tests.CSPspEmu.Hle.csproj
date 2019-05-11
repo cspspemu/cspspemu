@@ -65,29 +65,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CStringFormaterTest.cs" />
-    <Compile Include="Formats\Archive\ZipTest.cs" />
-    <Compile Include="Formats\CsoTest.cs" />
-    <Compile Include="Formats\EncryptedPrxTest.cs" />
-    <Compile Include="Formats\Font\PGFTest.cs" />
-    <Compile Include="Formats\PbpTest.cs" />
-    <Compile Include="Formats\PsfTest.cs" />
-    <Compile Include="Formats\video\MpegPsDemuxerTest.cs" />
-    <Compile Include="Formats\video\PmfTest.cs" />
-    <Compile Include="HlePspThreadManagerTest.cs" />
-    <Compile Include="HlePspThreadTest.cs" />
-    <Compile Include="Loader\ElfLoaderTest.cs" />
-    <Compile Include="MemoryPartitionTest.cs" />
-    <Compile Include="PreemptiveSchedulerTest.cs" />
-    <Compile Include="TestHleUtils.cs" />
-    <Compile Include="Vfs\HleIoManagerTest.cs" />
-    <Compile Include="Vfs\Iso\CsoProxyStreamTest.cs" />
-    <Compile Include="Vfs\Iso\IsoTest.cs" />
-    <Compile Include="Vfs\Local\HleIoDriverLocalFileSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Formats\audio\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
