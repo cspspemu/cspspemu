@@ -45,13 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GuPixelFormats.cs" />
-    <Compile Include="OutputPixel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controller\PspCtrlButtons.cs" />
-    <Compile Include="PspLanguages.cs" />
-    <Compile Include="Controller\SceCtrlData.cs" />
-    <Compile Include="SoundSample.cs" />
+    <Folder Include="Controller" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

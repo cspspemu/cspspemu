@@ -1,190 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSharpUtils</RootNamespace>
-    <AssemblyName>CSharpUtils</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\CSharpUtils.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>Always</RunPostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trace|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Trace\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Debug\CSharpUtils.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
+    <_UnmanagedRegistrationCache Remove="obj\CSharpUtils.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AnonymousComparer.cs" />
-    <Compile Include="ArrayEqualityComparer.cs" />
-    <Compile Include="Arrays\ArrayWrapper.cs" />
-    <Compile Include="AsyncTask.cs" />
-    <Compile Include="BitUtils.cs" />
-    <Compile Include="BitWriter2.cs" />
-    <Compile Include="ConsoleUtils.cs" />
-    <Compile Include="Containers\RedBlackTree\RedBlackTreeWithStats.cs" />
-    <Compile Include="Containers\RedBlackTree\RedBlackTreeWithStatsNode.cs" />
-    <Compile Include="Containers\RedBlackTree\RedBlackTreeWithStatsQueryProvider.cs" />
-    <Compile Include="Containers\RedBlackTree\RedBlackTreeWithStatsRange.cs" />
-    <Compile Include="Diff.cs" />
-    <Compile Include="Endian\EndianStructs.cs" />
-    <Compile Include="Extensions\ArrayExtensions.cs" />
-    <Compile Include="Extensions\BinaryReaderWriterExtensions.cs" />
-    <Compile Include="BitReader.cs" />
-    <Compile Include="BitWriter.cs" />
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\DictionaryExtensions.cs" />
-    <Compile Include="Extensions\EnumExtensions.cs" />
-    <Compile Include="Extensions\IntegerExtensions.cs" />
-    <Compile Include="Extensions\LinkedListExtensions.cs" />
-    <Compile Include="Extensions\ListExtensions.cs" />
-    <Compile Include="Extensions\ICustomAttributeProviderExtensions.cs" />
-    <Compile Include="Extensions\ReaderWriterLockExtensions.cs" />
-    <Compile Include="Extensions\SerializationExtensions.cs" />
-    <Compile Include="Extensions\TextReaderExtensions.cs" />
-    <Compile Include="Extensions\StructExtensions.cs" />
-    <Compile Include="Extensions\TimeSpanExtensions.cs" />
-    <Compile Include="Extensions\TypeExtensions.cs" />
-    <Compile Include="Factory\Factory.cs" />
-    <Compile Include="Factory\MockeableFactory.cs" />
-    <Compile Include="Getopt\GetoptCommandLineProgram.cs" />
-    <Compile Include="Getopt\Getopt.cs" />
-    <Compile Include="Hashing.cs" />
-    <Compile Include="Iterators.cs" />
-    <Compile Include="Json\IJsonSerializable.cs" />
-    <Compile Include="Json\JSON.cs" />
-    <Compile Include="LanguageUtils.cs" />
-    <Compile Include="MathFloat.cs" />
-    <Compile Include="Misc\Acme1\Acme1File.cs" />
-    <Compile Include="NumberUtils.cs" />
-    <Compile Include="PointerUtils.cs" />
-    <Compile Include="Pool.cs" />
-    <Compile Include="ProcessUtils.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="RingBuffer.cs" />
-    <Compile Include="StackTraceUtils.cs" />
-    <Compile Include="Streams\ConcatStream.cs" />
-    <Compile Include="Streams\ConsumerMemoryStream.cs" />
-    <Compile Include="FieldMapping.cs" />
-    <Compile Include="Extensions\LinqXmlExExtensions.cs" />
-    <Compile Include="ProduceConsumeBuffer.cs" />
-    <Compile Include="ArrayUtils.cs" />
-    <Compile Include="ConvertEx.cs" />
-    <Compile Include="DateTimeRange.cs" />
-    <Compile Include="Endianness.cs" />
-    <Compile Include="EnumerableComparer.cs" />
-    <Compile Include="LinqEqualityComparer.cs" />
-    <Compile Include="FileUtils.cs" />
-    <Compile Include="LazyHolder.cs" />
-    <Compile Include="Extensions\LinqExExtensions.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="MathUtils.cs" />
-    <Compile Include="Streams\FilterStream.cs" />
-    <Compile Include="Arrays\IArray.cs" />
-    <Compile Include="Streams\MapStream.cs" />
-    <Compile Include="Streams\ProxyStream.cs" />
-    <Compile Include="Streams\RingBufferStream.cs" />
-    <Compile Include="Streams\SerializerUtils.cs" />
-    <Compile Include="Streams\SliceStream.cs" />
-    <Compile Include="Extensions\StreamExtensions.cs" />
-    <Compile Include="Streams\StreamBitReader.cs" />
-    <Compile Include="Streams\StreamChunker.cs" />
-    <Compile Include="Streams\StreamChunker2.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Streams\StreamStructArrayWrapper.cs" />
-    <Compile Include="Streams\StreamStructCachedArrayWrapper.cs" />
-    <Compile Include="Streams\ZeroStream.cs" />
-    <Compile Include="StructUtils.cs" />
-    <Compile Include="Threading\Coroutines.cs" />
-    <Compile Include="Threading\CustomThreadPool.cs" />
-    <Compile Include="Threading\GreenThread.cs" />
-    <Compile Include="Threading\GreenThreadException.cs" />
-    <Compile Include="Threading\ThreadMessageBus.cs" />
-    <Compile Include="Threading\TaskQueue.cs" />
-    <Compile Include="ThreadUtils.cs" />
-    <Compile Include="TimeSampler.cs" />
-    <Compile Include="TimeSpanUtils.cs" />
-    <Compile Include="TypeUtils.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wildcard.cs" />
-    <Compile Include="XmlSerializerUtils.cs" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\CSharpUtils.csproj.ResolveComReference.cache" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\CSharpUtils.dll" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\CSharpUtils.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\CSharpUtils.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\CSharpUtils.dll.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\CSharpUtils.application" />
+  </ItemGroup>
+
 </Project>

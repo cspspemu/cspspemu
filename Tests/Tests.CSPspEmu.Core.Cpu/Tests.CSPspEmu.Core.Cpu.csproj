@@ -64,15 +64,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Assembler\MipsAssemblerTest.cs" />
-    <Compile Include="Assembler\MipsDisassemblerTest.cs" />
-    <Compile Include="CpuUtils.cs" />
-    <Compile Include="Dynarec\DynarecFunctionCompilerTaskTest.cs" />
-    <Compile Include="Dynarec\DynarecFunctionCompilerTest.cs" />
-    <Compile Include="Emitter\CpuEmitterTest.cs" />
-    <Compile Include="InstructionTest.cs" />
-    <Compile Include="Switch\EmitLookupGeneratorTest.cs" />
-    <Compile Include="Table\InstructionTableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

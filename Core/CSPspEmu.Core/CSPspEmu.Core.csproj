@@ -62,33 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationPaths.cs" />
-    <Compile Include="DebugUtils.cs" />
-    <Compile Include="GlobalConfig.cs" />
-    <Compile Include="ManagedPointer.cs" />
-    <Compile Include="Memory\DefaultMemoryInfo.cs" />
-    <Compile Include="Memory\FastPspMemory.cs" />
-    <Compile Include="Memory\FastPspMemoryUnsafe.cs" />
-    <Compile Include="Memory\IPspMemoryInfo.cs" />
-    <Compile Include="Memory\LazyPspMemory.cs" />
-    <Compile Include="Memory\NormalPspMemory.cs" />
-    <Compile Include="Memory\PspMemory.cs" />
-    <Compile Include="Memory\PspMemoryStream.cs" />
-    <Compile Include="Memory\PspPointer.cs" />
-    <Compile Include="NandReader.cs" />
-    <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PspGlobalConfiguration.cs" />
-    <Compile Include="PspHleRunningConfig.cs" />
-    <Compile Include="PspPluginImpl.cs" />
-    <Compile Include="PspStoredConfig.cs" />
-    <Compile Include="PspUntestedAttribute.cs" />
-    <Compile Include="Threading\Synchronization\MessagePipe.cs" />
-    <Compile Include="Threading\Synchronization\PspAutoResetEvent.cs" />
-    <Compile Include="Threading\Synchronization\PspManualResetEvent.cs" />
-    <Compile Include="Threading\Synchronization\PspResetEvent.cs" />
-    <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
-    <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">

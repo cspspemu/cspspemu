@@ -4,8 +4,6 @@ using System.Reflection;
 using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
-using System.Windows.Forms;
-using Microsoft.Win32;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Core;
 using CSPspEmu.AutoTests;
@@ -13,30 +11,44 @@ using CSharpUtils;
 using CSharpUtils.Getopt;
 using CSPspEmu.Hle.Vfs.Iso;
 using System.Diagnostics;
+using System.Drawing;
 using CSharpPlatform.GL;
 using CSharpPlatform.GL.Utils;
-using System.Drawing;
 using CSharpUtils.Drawing;
 using CSharpUtils.Drawing.Extensions;
 using CSharpUtils.Extensions;
 using CSPspEmu.Gui.XBR.Shader;
+using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu
 {
     unsafe class Program
     {
+        public static void Main(string[] arguments)
+        {
+            Console.WriteLine("Program.Main");
+            try
+            {
+                DoMain(arguments);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e);
+            }
+        }
+
         public static readonly Logger Logger = Logger.GetLogger("Program");
 
         private static void Form1_UIThreadException(object sender, ThreadExceptionEventArgs e)
         {
             Console.Error.WriteLine(e.Exception);
-            Application.Exit();
+            Environment.Exit(-1);
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Console.Error.WriteLine(e.ExceptionObject);
-            Application.Exit();
+            Environment.Exit(-1);
         }
 
         public static bool IsNet45OrNewer()
@@ -64,7 +76,7 @@ namespace CSPspEmu
         {
             var context = GlContextFactory.CreateWindowless().MakeCurrent();
             //var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\1.png"));
-            var bitmapIn = new Bitmap(Image.FromFile(@"C:\temp\in.png"));
+            var bitmapIn = new Bitmap(@"C:\temp\in.png");
 
             Console.WriteLine("{0}", string.Join("\n", Assembly.GetExecutingAssembly().GetManifestResourceNames()));
 
@@ -94,7 +106,7 @@ namespace CSPspEmu
         /// <param name="arguments"></param>
         [STAThread]
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
-        static void Main(string[] arguments)
+        static void DoMain(string[] arguments)
         {
             //Console.WriteLine(GL.GetConstantString(GL.GL_TEXTURE_2D));
             //_MainData();
@@ -102,17 +114,18 @@ namespace CSPspEmu
 
             if (!IsNet45OrNewer())
             {
-                MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error,
-                    MessageBoxDefaultButton.Button1);
+                //ThreadManForUser.MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
 
             // Add the event handler for handling UI thread exceptions to the event.
-            Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);
+            //Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);
+
+            //System.AppDomain.CurrentDomain.UnhandledException += 
 
             // Set the unhandled exception mode to force all Windows Forms errors to go through
             // our handler.
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
             // Add the event handler for handling non-UI thread exceptions to the event. 
             AppDomain.CurrentDomain.UnhandledException +=
@@ -206,6 +219,7 @@ namespace CSPspEmu
                         var stat = isoFileSystem.GetStat(fileName);
                         Console.WriteLine("{0} : {1}", fileName, stat.Size);
                     }
+
                     //Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
                     Environment.Exit(0);
                 });
@@ -233,13 +247,16 @@ namespace CSPspEmu
                             {
                                 Console.WriteLine(e);
                             }
+
                             using (var inputStream = isoFileSystem.OpenRead(fileName))
                             {
                                 inputStream.CopyToFile(outputFileName);
                             }
                         }
+
                         Console.WriteLine("Ok");
                     }
+
                     //Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
                     Environment.Exit(0);
                 });
@@ -270,32 +287,32 @@ namespace CSPspEmu
                     Console.Write("{0}", PspGlobalConfiguration.GitRevision);
                     Environment.Exit(0);
                 });
-                getopt.AddRule("/associate", () =>
-                {
-                    try
-                    {
-                        var classesRoot = Registry.ClassesRoot;
-
-                        classesRoot.CreateSubKey(".pbp")?.SetValue(null, "cspspemu.executable");
-                        classesRoot.CreateSubKey(".elf")?.SetValue(null, "cspspemu.executable");
-                        classesRoot.CreateSubKey(".prx")?.SetValue(null, "cspspemu.executable");
-                        classesRoot.CreateSubKey(".cso")?.SetValue(null, "cspspemu.executable");
-                        classesRoot.CreateSubKey(".dax")?.SetValue(null, "cspspemu.executable");
-
-                        var reg = classesRoot.CreateSubKey("cspspemu.executable");
-                        reg?.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx, .dax)");
-                        reg?.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
-                        reg?.CreateSubKey("shell")?.CreateSubKey("open")?.CreateSubKey("command")?.SetValue(null,
-                            @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
-
-                        Environment.Exit(0);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.Error.WriteLine(e);
-                        Environment.Exit(-1);
-                    }
-                });
+                //getopt.AddRule("/associate", () =>
+                //{
+                //    try
+                //    {
+                //        var classesRoot = Registry.ClassesRoot;
+//
+                //        classesRoot.CreateSubKey(".pbp")?.SetValue(null, "cspspemu.executable");
+                //        classesRoot.CreateSubKey(".elf")?.SetValue(null, "cspspemu.executable");
+                //        classesRoot.CreateSubKey(".prx")?.SetValue(null, "cspspemu.executable");
+                //        classesRoot.CreateSubKey(".cso")?.SetValue(null, "cspspemu.executable");
+                //        classesRoot.CreateSubKey(".dax")?.SetValue(null, "cspspemu.executable");
+//
+                //        var reg = classesRoot.CreateSubKey("cspspemu.executable");
+                //        reg?.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx, .dax)");
+                //        reg?.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
+                //        reg?.CreateSubKey("shell")?.CreateSubKey("open")?.CreateSubKey("command")?.SetValue(null,
+                //            @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
+//
+                //        Environment.Exit(0);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        Console.Error.WriteLine(e);
+                //        Environment.Exit(-1);
+                //    }
+                //});
                 getopt.AddRule("/viewout", () => { runTestsViewOut = true; });
                 getopt.AddRule("/timeout", (int seconds) => { runTestsTimeout = seconds; });
                 getopt.AddRule("/tests",
