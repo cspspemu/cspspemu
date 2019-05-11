@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Timers;
+using CSPspEmu.Utils;
 
 namespace CSharpUtils
 {
@@ -8,15 +9,7 @@ namespace CSharpUtils
     /// </summary>
     public static class TimeSpanUtils
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="microseconds"></param>
-        /// <returns></returns>
-        public static TimeSpan FromMicroseconds(long microseconds)
-        {
-            return TimeSpan.FromMilliseconds((double) microseconds / (double) 1000.0);
-        }
+        public static TimeSpan FromMicroseconds(long microseconds) => microseconds.Microseconds();
 
         /// <summary>
         /// </summary>

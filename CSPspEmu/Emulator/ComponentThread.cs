@@ -4,6 +4,7 @@ using System.Threading;
 using CSharpUtils.Threading;
 using CSPspEmu.Core;
 using CSharpUtils;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu.Runner.Components
 {
@@ -89,7 +90,7 @@ namespace CSPspEmu.Runner.Components
             {
                 //int MaxCounts = 200;
                 //Console.WriteLine("[2]");
-                while (!PauseEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
+                while (!PauseEvent.WaitOne(10.Milliseconds()))
                 {
                     //Console.WriteLine("[3]");
                     if (!Running) break;

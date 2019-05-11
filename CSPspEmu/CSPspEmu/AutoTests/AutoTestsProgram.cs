@@ -20,12 +20,13 @@ using CSPspEmu.Compat;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu.Impl.Null;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu.AutoTests
 {
     public class AutoTestsProgram
     {
-        static TimeSpan _timeoutTime = TimeSpan.FromMilliseconds(0);
+        static TimeSpan _timeoutTime = 0.Milliseconds();
 
         public class HleOutputHandlerMock : HleOutputHandler
         {
