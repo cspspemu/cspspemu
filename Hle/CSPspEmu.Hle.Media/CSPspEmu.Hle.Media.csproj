@@ -42,77 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_DecFunc.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_StaticData.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_SubFunc.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusFrameDecoder.cs" />
-    <Compile Include="audio\At3\ManagedPointer.cs" />
-    <Compile Include="audio\At3\Sample\MiniPlayer.cs" />
-    <Compile Include="audio\At3\SUB\MaiBitReader.cs" />
-    <Compile Include="audio\At3\SUB\MaiQueue0.cs" />
-    <Compile Include="audio\RiffWaveReader.cs" />
-    <Compile Include="audio\Vag.cs" />
-    <Compile Include="audio\Wav.cs" />
-    <Compile Include="av\AVComponentDescriptor.cs" />
-    <Compile Include="av\AVFrame.cs" />
-    <Compile Include="av\AVPacket.cs" />
-    <Compile Include="av\AVPanScan.cs" />
-    <Compile Include="av\AVPicture.cs" />
-    <Compile Include="av\AVPixFmtDescriptor.cs" />
-    <Compile Include="av\AVRational.cs" />
-    <Compile Include="av\Constants.cs" />
-    <Compile Include="av\ImageUtils.cs" />
-    <Compile Include="av\PixFmtYUV420P.cs" />
-    <Compile Include="CRC16.cs" />
-    <Compile Include="CRC32.cs" />
-    <Compile Include="FrameCrc.cs" />
-    <Compile Include="FrameUtils.cs" />
-    <Compile Include="h264\decoder\CABACContext.cs" />
-    <Compile Include="h264\decoder\CAVLCContext.cs" />
-    <Compile Include="h264\decoder\CAVLCTables.cs" />
-    <Compile Include="h264\decoder\DebugTool.cs" />
-    <Compile Include="h264\decoder\DSPContext.cs" />
-    <Compile Include="h264\decoder\ErrorResilience.cs" />
-    <Compile Include="h264\decoder\GetBitContext.cs" />
-    <Compile Include="h264\decoder\H264Context.cs" />
-    <Compile Include="h264\decoder\H264Data.cs" />
-    <Compile Include="h264\decoder\H264Decoder.cs" />
-    <Compile Include="h264\decoder\H264DSPContext.cs" />
-    <Compile Include="h264\decoder\H264PredictionContext.cs" />
-    <Compile Include="h264\decoder\IMbInfo.cs" />
-    <Compile Include="h264\decoder\InternalBuffer.cs" />
-    <Compile Include="h264\decoder\LoopFilter.cs" />
-    <Compile Include="h264\decoder\MMCO.cs" />
-    <Compile Include="h264\decoder\MotionEstContext.cs" />
-    <Compile Include="h264\decoder\MpegEncContext.cs" />
-    <Compile Include="h264\decoder\ParseContext.cs" />
-    <Compile Include="h264\decoder\PictureParameterSet.cs" />
-    <Compile Include="h264\decoder\PMbInfo.cs" />
-    <Compile Include="h264\decoder\PutBitContext.cs" />
-    <Compile Include="h264\decoder\Rectangle.cs" />
-    <Compile Include="h264\decoder\RL_VLC_ELEM.cs" />
-    <Compile Include="h264\decoder\ScanTable.cs" />
-    <Compile Include="h264\decoder\SEIDecoder.cs" />
-    <Compile Include="h264\decoder\SequenceParameterSet.cs" />
-    <Compile Include="h264\decoder\VLC.cs" />
-    <Compile Include="h264\decoder\VLCcode.cs" />
-    <Compile Include="player\H264FrameDecoder.cs" />
-    <Compile Include="player\VideoPacket.cs" />
-    <Compile Include="MathUtils.cs" />
-    <Compile Include="player\At3pFrameDecoder.cs" />
-    <Compile Include="player\FrameDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="util\Arrays.cs" />
-    <Compile Include="util\Buffer.cs" />
-    <Compile Include="util\Frame.cs" />
-    <Compile Include="util\HashUtil.cs" />
-    <Compile Include="video\IDemuxer.cs" />
-    <Compile Include="video\MpegPsDemuxer.cs" />
-    <Compile Include="video\Pmf.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">

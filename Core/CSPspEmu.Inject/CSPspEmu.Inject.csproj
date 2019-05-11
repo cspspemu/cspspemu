@@ -44,12 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IInjectInitialize.cs" />
-    <Compile Include="InjectAttribute.cs" />
-    <Compile Include="InjectMapAttribute.cs" />
-    <Compile Include="MessageBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="InjectContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">

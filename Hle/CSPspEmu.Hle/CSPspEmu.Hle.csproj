@@ -61,47 +61,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArgumentReader.cs" />
-    <Compile Include="DelegateInfo.cs" />
-    <Compile Include="HleCallback.cs" />
-    <Compile Include="HleCallbackManager.cs" />
-    <Compile Include="HleConfig.cs" />
-    <Compile Include="HleEmulatorFinalizeCallbackException.cs" />
-    <Compile Include="Interop\HleEmulatorSpecialAddresses.cs" />
-    <Compile Include="HleFunctionEntry.cs" />
-    <Compile Include="Interop\HleInterop.cs" />
-    <Compile Include="Managers\HleUidPoolManager.cs" />
-    <Compile Include="Modules\HleModule.cs" />
-    <Compile Include="Modules\HleModuleHost.cs" />
-    <Compile Include="HleLibrary.cs" />
-    <Compile Include="Modules\HleModuleHost.Proxy.cs" />
-    <Compile Include="HleUidPool.cs" />
-    <Compile Include="HleUidPoolSpecial.cs" />
-    <Compile Include="Loader\ElfConfig.cs" />
-    <Compile Include="Loader\ElfLoader.cs" />
-    <Compile Include="Loader\ElfPspLoader.cs" />
-    <Compile Include="Managers\HleEventFlagManager.cs" />
-    <Compile Include="Managers\HleInterruptManager.cs" />
-    <Compile Include="Managers\HleIoManager.cs" />
-    <Compile Include="Managers\HleMemoryManager.cs" />
-    <Compile Include="Modules\HleModuleGuest.cs" />
-    <Compile Include="Managers\HleModuleManager.cs" />
-    <Compile Include="HleThread.cs" />
-    <Compile Include="Managers\HleRegistryManager.cs" />
-    <Compile Include="Modules\SceModule.cs" />
-    <Compile Include="NewInterop.cs" />
-    <Compile Include="PreemptiveScheduler.cs" />
-    <Compile Include="Threading\EventFlags\HleEventFlag.cs" />
-    <Compile Include="Threading\Semaphores\HleSemaphore.cs" />
-    <Compile Include="Managers\HleSemaphoreManager.cs" />
-    <Compile Include="Managers\HleThreadManager.cs" />
-    <Compile Include="MemoryPartition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Threading\Semaphores\SceKernelSemaInfo.cs" />
-    <Compile Include="Threading\Semaphores\SceKernelSemaOptParam.cs" />
-    <Compile Include="Threading\Semaphores\SemaphoreAttribute.cs" />
-    <Compile Include="Threading\Semaphores\SemaphoreId.cs" />
-    <Compile Include="WakeUpCallbackDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">

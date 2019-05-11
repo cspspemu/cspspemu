@@ -47,26 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Emulator\HleIoDriverEmulator.cs" />
-    <Compile Include="HleOutputHandler.cs" />
-    <Compile Include="MemoryStick\IMemoryStickEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DirectoryEnumerator.cs" />
-    <Compile Include="FileHandle.cs" />
-    <Compile Include="HleIoDriverExtensions.cs" />
-    <Compile Include="HleIoDriverMountable.cs" />
-    <Compile Include="HleIoDrvFileArgExtensions.cs" />
-    <Compile Include="IHleIoDriver.cs" />
-    <Compile Include="IHleIoDriverExtensions.cs" />
-    <Compile Include="Iso\DisposableDummy.cs" />
-    <Compile Include="Iso\HleIoDriverIso.cs" />
-    <Compile Include="Local\HleIoDriverLocalFileSystem.cs" />
-    <Compile Include="MemoryStick\HleIoDriverMemoryStick.cs" />
-    <Compile Include="ProxyHleIoDriver.cs" />
-    <Compile Include="PspIoDriverRaw.cs" />
-    <Compile Include="ReadonlyHleIoDriver.cs" />
-    <Compile Include="SeekAnchor.cs" />
-    <Compile Include="Zip\HleIoDriverZip.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">

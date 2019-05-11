@@ -47,27 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Archive\ZipArchive.cs" />
-    <Compile Include="CompressedIsoProxyStream.cs" />
-    <Compile Include="Cso.cs" />
-    <Compile Include="Dax.cs" />
-    <Compile Include="Elf.cs" />
-    <Compile Include="ElfPsp.cs" />
-    <Compile Include="EncryptedPrx.cs" />
-    <Compile Include="EncryptedPrx.Keys144.cs" />
-    <Compile Include="EncryptedPrx.Keys16.cs" />
-    <Compile Include="EncryptedPrx.Utils.cs" />
-    <Compile Include="Font\BitReader.cs" />
-    <Compile Include="Font\PGF.cs" />
-    <Compile Include="Font\PGF.Structs.cs" />
-    <Compile Include="FormatDetector.cs" />
-    <Compile Include="ICompressedIso.cs" />
-    <Compile Include="IsoFile.cs" />
-    <Compile Include="IsoLoader.cs" />
-    <Compile Include="Pbp.cs" />
-    <Compile Include="Pgd\PgdProxyStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Psf.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">

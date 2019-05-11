@@ -58,27 +58,17 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compression\Huffman.cs" />
-    <Compile Include="Compression\Lz\LzMatcher.cs" />
-    <Compile Include="Compression\Lz\Matcher.cs" />
-    <Compile Include="Compression\Lz\RleMatcher.cs" />
-    <Compile Include="Compression\Zip\ZipArchive.cs" />
-    <Compile Include="Crc32.cs" />
-    <Compile Include="Extensions\LinqExExtensionsExt.cs" />
-    <Compile Include="Extensions\StreamExtensionsExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpaceAssigner\SpaceAssigner1D.cs" />
-    <Compile Include="SpaceAssigner\SpaceAssigner1DUniqueAllocator.cs" />
-    <Compile Include="SpaceAssigner\SpaceAssigner1DUniqueAllocatorStream.cs" />
-    <Compile Include="SpaceAssigner\SpaceAssigner2D.cs" />
-    <Compile Include="Streams\PointerStream.cs" />
-    <Compile Include="Streams\ProxyStreamReadWriteAnalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions" />
+    <Folder Include="Streams" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

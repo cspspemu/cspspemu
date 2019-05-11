@@ -58,16 +58,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Audio\AudioComponentThread.cs" />
-    <Compile Include="Components\ComponentThread.cs" />
-    <Compile Include="Components\Cpu\CpuComponentThread.cs" />
-    <Compile Include="Components\Display\DisplayComponentThread.cs" />
-    <Compile Include="Components\Gpu\GpuComponentThread.cs" />
-    <Compile Include="Components\IRunnableComponent.cs" />
-    <Compile Include="PspInjectContext.cs" />
-    <Compile Include="PspRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="README" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
