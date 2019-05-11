@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 //using OpenTK;
 using CSharpPlatform;
@@ -11,6 +12,7 @@ namespace CSPspEmu.Core.Gpu
             vector * (1.0f / (float) Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z));
 
         public static Vector4f ToVector3(this Vector4f vector) => new Vector4f(vector.X, vector.Y, vector.Z, 0f);
+        public static Vector4 ToVector4(this Vector4f vector) => new Vector4(vector.X, vector.Y, vector.Z, vector.W);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

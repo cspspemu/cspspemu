@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using CSharpPlatform;
 
@@ -93,6 +94,24 @@ namespace CSPspEmu.Core.Gpu.State
                 }
             }
         }
+        
+        public Matrix4x4 Matrix4x4
+        {
+            get
+            {
+                fixed (float* valuesPtr = Values)
+                {
+                    var Matrix4 = new Matrix4x4(
+                        valuesPtr[0], valuesPtr[1], valuesPtr[2], valuesPtr[3],
+                        valuesPtr[4], valuesPtr[5], valuesPtr[6], valuesPtr[7],
+                        valuesPtr[8], valuesPtr[9], valuesPtr[10], valuesPtr[11],
+                        valuesPtr[12], valuesPtr[13], valuesPtr[14], valuesPtr[15]
+                    );
+                    //Matrix4 = Matrix4x4.Transpose(Matrix4);
+                    return Matrix4;
+                }
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -177,7 +196,7 @@ namespace CSPspEmu.Core.Gpu.State
             {
                 fixed (float* valuesPtr = Values)
                 {
-                    var matrix4 = Matrix4F.Create(
+                    var Matrix4 = Matrix4F.Create(
 #if false
 						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
 						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
@@ -190,8 +209,32 @@ namespace CSPspEmu.Core.Gpu.State
                         valuesPtr[12], valuesPtr[13], valuesPtr[14], 1.0f
 #endif
                     );
-                    //Matrix4.Transpose();
-                    return matrix4;
+                    return Matrix4;
+                }
+            }
+        }
+
+        public Matrix4x4 Matrix4x4
+        {
+            get
+            {
+                fixed (float* valuesPtr = Values)
+                {
+                    var Matrix4 = new Matrix4x4(
+#if false
+						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
+						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
+						ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], ValuesPtr[11],
+						ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], ValuesPtr[15]
+#else
+                        valuesPtr[0], valuesPtr[1], valuesPtr[2], 0,
+                        valuesPtr[4], valuesPtr[5], valuesPtr[6], 0,
+                        valuesPtr[8], valuesPtr[9], valuesPtr[10], 0,
+                        valuesPtr[12], valuesPtr[13], valuesPtr[14], 1.0f
+#endif
+                    );
+                    //Matrix4 = Matrix4x4.Transpose(Matrix4);
+                    return Matrix4;
                 }
             }
         }

@@ -1,12 +1,15 @@
 ﻿using System;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Gpu.VertexReading;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu
 {
     public abstract unsafe class GpuImpl : PspPluginImpl
     {
+        [Inject] protected PspMemory Memory;
         [Inject] protected PspStoredConfig PspStoredConfig;
 
         protected int _ScaleViewport = 2;
@@ -106,6 +109,90 @@ namespace CSPspEmu.Core.Gpu
 
         public virtual void DrawVideo(uint FrameBufferAddress, OutputPixel* OutputPixel, int Width, int Height)
         {
+        }
+        
+        protected VertexInfo[] Vertices = new VertexInfo[ushort.MaxValue];
+        protected VertexTypeStruct VertexType;
+        protected byte* indexListByte;
+        protected ushort* indexListShort;
+        protected ReadVertexDelegate readVertex;
+        protected VertexReader VertexReader = new VertexReader();
+
+        protected void ReadVertex_Void(int index, out VertexInfo vertexInfo) => vertexInfo = Vertices[index];
+
+        protected void ReadVertex_Byte(int index, out VertexInfo vertexInfo) =>
+            vertexInfo = Vertices[indexListByte[index]];
+
+        protected void ReadVertex_Short(int index, out VertexInfo vertexInfo) =>
+            vertexInfo = Vertices[indexListShort[index]];
+
+        protected delegate void ReadVertexDelegate(int index, out VertexInfo vertexInfo);
+        
+        unsafe protected void PreparePrim(GpuStateStruct* GpuState, out uint totalVerticesWithoutMorphing, uint vertexCount, out uint morpingVertexCount)
+        {
+            totalVerticesWithoutMorphing = vertexCount;
+            morpingVertexCount = (uint)(VertexType.MorphingVertexCount + 1);
+            // ReSharper disable once RedundantAssignment (Resharper BUG)
+            readVertex = ReadVertex_Void;
+            VertexReader.SetVertexTypeStruct(
+                VertexType,
+                (byte*) Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
+            );
+            
+            void* indexPointer = null;
+            if (VertexType.Index != VertexTypeStruct.IndexEnum.Void)
+            {
+                indexPointer =
+                    Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->IndexAddress), 0);
+            }
+
+            //Console.Error.WriteLine(VertexType.Index);
+            switch (VertexType.Index)
+            {
+                case VertexTypeStruct.IndexEnum.Void:
+                    break;
+                case VertexTypeStruct.IndexEnum.Byte:
+                    readVertex = ReadVertex_Byte;
+                    indexListByte = (byte*) indexPointer;
+                    totalVerticesWithoutMorphing = 0;
+                    for (int n = 0; n < vertexCount; n++)
+                    {
+                        if (totalVerticesWithoutMorphing < indexListByte[n])
+                            totalVerticesWithoutMorphing = indexListByte[n];
+                    }
+                    break;
+                case VertexTypeStruct.IndexEnum.Short:
+                    readVertex = ReadVertex_Short;
+                    indexListShort = (ushort*) indexPointer;
+                    totalVerticesWithoutMorphing = 0;
+                    //VertexCount--;
+                    for (int n = 0; n < vertexCount; n++)
+                    {
+                        //Console.Error.WriteLine(IndexListShort[n]);
+                        if (totalVerticesWithoutMorphing < indexListShort[n])
+                            totalVerticesWithoutMorphing = indexListShort[n];
+                    }
+                    break;
+                default:
+                    throw (new NotImplementedException("VertexType.Index: " + VertexType.Index));
+            }
+            totalVerticesWithoutMorphing++;
+         
+            
+            // Fix missing geometry! At least!
+            if (VertexType.Index == VertexTypeStruct.IndexEnum.Void)
+            {
+                GpuState->VertexAddress += (uint) (VertexReader.VertexSize * vertexCount * morpingVertexCount);
+                //GpuState->VertexAddress += (uint)(VertexReader.VertexSize * VertexCount);
+            }
+
+            if (morpingVertexCount != 1 || VertexType.RealSkinningWeightCount != 0)
+            {
+                //Console.WriteLine("PRIM: {0}, {1}, Morphing:{2}, Skinning:{3}", PrimitiveType, VertexCount, MorpingVertexCount, VertexType.RealSkinningWeightCount);
+            }
+
+
+            //Console.WriteLine(TotalVerticesWithoutMorphing);
         }
     }
 }

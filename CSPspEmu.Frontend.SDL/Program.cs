@@ -7,6 +7,7 @@ using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types.Controller;
+using CSPspEmu.Utils;
 using SDL2;
 
 class Program
@@ -19,7 +20,8 @@ class Program
             //pspEmulator.StartAndLoad("minifire.pbp", GuiRunner: (emulator) =>
             //pspEmulator.StartAndLoad("counter.elf", GuiRunner: (emulator) =>
             //pspEmulator.StartAndLoad("HelloWorldPSP.pbp", GuiRunner: (emulator) =>
-            pspEmulator.StartAndLoad("controller.elf", GuiRunner: (emulator) =>
+            //pspEmulator.StartAndLoad("controller.elf", GuiRunner: (emulator) =>
+            pspEmulator.StartAndLoad("cube.pbp", GuiRunner: (emulator) =>
             {
                 Console.WriteLine("Hello World!");
                 if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) != 0)
@@ -51,7 +53,7 @@ class Program
 
                 //SDL.SDL_FillRect(SDL.SDL_Rect)
                 var texture = SDL.SDL_CreateTexture(renderer, SDL.SDL_PIXELFORMAT_RGBA8888,
-                    (int) SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET, 512, 272);
+                    (int) SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET, 480, 272);
                 //var texture = SDL.SDL_CreateTextureFromSurface(renderer, surface);
 
                 //var surface = SDL.SDL_GetWindowSurface(window);
@@ -186,7 +188,7 @@ class Program
 
                         fixed (uint* pp = pixels2)
                         {
-                            var rect = new SDL.SDL_Rect() {x = 0, y = 0, w = 512, h = 272};
+                            var rect = new SDL.SDL_Rect() {x = 0, y = 0, w = 480, h = 272};
                             SDL.SDL_UpdateTexture(texture, ref rect, new IntPtr(pp), 512 * 4);
                         }
                     }
@@ -212,15 +214,5 @@ class Program
                 SDL.SDL_Quit();
             });
         }
-    }
-}
-
-static class MyExtensions
-{
-    static public int Clamp(this int value, int min, int max)
-    {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
     }
 }
