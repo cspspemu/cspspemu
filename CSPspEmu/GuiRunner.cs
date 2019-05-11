@@ -1,4 +1,6 @@
-﻿using CSPspEmu.Gui.Winforms;
+﻿using CSPspEmu.Core;
+using CSPspEmu.Gui.GtkSharp;
+using CSPspEmu.Gui.Winforms;
 
 namespace CSPspEmu
 {
@@ -13,7 +15,7 @@ namespace CSPspEmu
 
         public void Start()
         {
-#if false
+#if true
 			if (Platform.IsMono) { StartGtkSharp(); return; }
 #endif
             StartWinforms();
@@ -26,7 +28,7 @@ namespace CSPspEmu
 
         private void StartGtkSharp()
         {
-            //GtkProgram.RunStart(PspEmulator);
+            GtkProgram.RunStart(_pspEmulator);
         }
     }
 }

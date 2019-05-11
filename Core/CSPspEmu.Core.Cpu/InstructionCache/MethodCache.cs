@@ -1,4 +1,6 @@
-﻿using CSharpUtils;
+﻿//#define MULTITHREAD_METHOD_COMPILATION
+
+using CSharpUtils;
 using CSharpUtils.Threading;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
@@ -99,12 +101,14 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         {
             _cpuProcessor = cpuProcessor;
             _methodCache = methodCache;
+            #if MULTITHREAD_METHOD_COMPILATION
             var thread = new Thread(Main)
             {
                 Name = "MethodCompilerThread",
                 IsBackground = true
             };
             thread.Start();
+            #endif
         }
 
         private bool _ShouldAdd(uint pc) => !_functions.ContainsKey(pc) && !_exploringPCs.Contains(pc);
@@ -118,6 +122,9 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
                 if (!_ShouldAdd(pc)) return;
                 _AddedPC(pc);
                 _exploreQueue.AddFirst(pc);
+                #if !MULTITHREAD_METHOD_COMPILATION
+                    ProcessQueue();
+                #endif
             }
         }
 
@@ -128,6 +135,9 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
                 if (!_ShouldAdd(pc)) return;
                 _AddedPC(pc);
                 _exploreQueue.AddLast(pc);
+                #if !MULTITHREAD_METHOD_COMPILATION
+                    ProcessQueue();
+                #endif
             }
         }
 
@@ -140,18 +150,31 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             {
                 while (true)
                 {
-                    var pc = _exploreQueue.ReadOne();
-                    //Console.Write("Compiling {0:X8}...", PC);
-                    var dynarecFunction = _GenerateForPC(pc);
-                    lock (this) _functions[pc] = dynarecFunction;
-                    //Console.WriteLine("Ok");
-                    _completedFunction.Set();
+                    ProcessQueueOne();
                 }
             }
             finally
             {
                 Console.WriteLine("MethodCache.End()");
             }
+        }
+
+        private void ProcessQueue()
+        {
+            while (_exploreQueue.HasMore)
+            {
+                ProcessQueueOne();
+            }
+        }
+
+        private void ProcessQueueOne()
+        {
+            var pc = _exploreQueue.ReadOne();
+            //Console.Write("Compiling {0:X8}...", PC);
+            var dynarecFunction = _GenerateForPC(pc);
+            lock (this) _functions[pc] = dynarecFunction;
+            //Console.WriteLine("Ok");
+            _completedFunction.Set();
         }
 
         private DynarecFunction _GenerateForPC(uint pc)

@@ -25,6 +25,11 @@ namespace CSPspEmu
 {
     unsafe class Program
     {
+        static void Main(string[] arguments)
+        {
+            MainEntry(arguments);
+        }
+
         public static readonly Logger Logger = Logger.GetLogger("Program");
 
         private static void Form1_UIThreadException(object sender, ThreadExceptionEventArgs e)
@@ -94,18 +99,18 @@ namespace CSPspEmu
         /// <param name="arguments"></param>
         [STAThread]
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
-        static void Main(string[] arguments)
+        static void MainEntry(string[] arguments)
         {
             //Console.WriteLine(GL.GetConstantString(GL.GL_TEXTURE_2D));
             //_MainData();
             //_MainData2();
 
-            if (!IsNet45OrNewer())
-            {
-                MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error,
-                    MessageBoxDefaultButton.Button1);
-                return;
-            }
+            //if (!IsNet45OrNewer())
+            //{
+            //    MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error,
+            //        MessageBoxDefaultButton.Button1);
+            //    return;
+            //}
 
             // Add the event handler for handling UI thread exceptions to the event.
             Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);
@@ -174,7 +179,7 @@ namespace CSPspEmu
                 });
                 getopt.AddRule("/version2", () =>
                 {
-                    Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
+                    Console.Write($"{PspGlobalConfiguration.CurrentVersionNumeric}");
                     Environment.Exit(0);
                 });
                 getopt.AddRule("/isoconvert", () =>

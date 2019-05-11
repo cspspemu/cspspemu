@@ -1,103 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B4B107B5-030B-451C-8532-13B2306692C3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
     <RootNamespace>CSharpPlatform</RootNamespace>
-    <AssemblyName>CSharpPlatform</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AL\AL.cs" />
-    <Compile Include="GL\DynamicLibraryGL.cs" />
-    <Compile Include="GL\GL.cs" />
-    <Compile Include="GL\Impl\Android\AndroidGLContext.cs" />
-    <Compile Include="GL\Impl\Android\EGL.cs" />
-    <Compile Include="GL\Impl\EGL.cs" />
-    <Compile Include="GL\Impl\Linux\LinuxGLContext.cs" />
-    <Compile Include="GL\Impl\Linux\GLX.cs" />
-    <Compile Include="GL\IOpenglContext.cs" />
-    <Compile Include="GL\Impl\Windows\WGL.cs" />
-    <Compile Include="GL\Impl\Windows\WinGLContext.cs" />
-    <Compile Include="GL\GLContextFactory.cs" />
-    <Compile Include="GL\Utils\GLAttribute.cs" />
-    <Compile Include="GL\Utils\GLBuffer.cs" />
-    <Compile Include="GL\Utils\GLShaderFilter.cs" />
-    <Compile Include="GL\Utils\GLMatrix4.cs" />
-    <Compile Include="GL\Utils\GLRenderTarget.cs" />
-    <Compile Include="GL\Utils\GLShader.cs" />
-    <Compile Include="GL\Utils\GLTexture.cs" />
-    <Compile Include="GL\Utils\GLTextureUnit.cs" />
-    <Compile Include="GL\Utils\GLVector.cs" />
-    <Compile Include="Intrinsics.cs" />
-    <Compile Include="Library\DynamicLibraryFactory.cs" />
-    <Compile Include="Library\Impl\DynamicLibraryPosix.cs" />
-    <Compile Include="Library\Impl\DynamicLibraryWindows.cs" />
-    <Compile Include="Library\IDynamicLibrary.cs" />
-    <Compile Include="MapImportClassToClassWithDelegates.cs" />
-    <Compile Include="RectangleF.cs" />
-    <Compile Include="UI\Dialog.cs" />
-    <Compile Include="Vector4f.cs" />
-    <Compile Include="Matrix4f.cs" />
-    <Compile Include="Platform.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GL\Impl\Mac\MacGlContext.cs" />
-    <Compile Include="GL\Impl\Mac\NSOpenGLContext.cs" />
-    <Compile Include="Library\Impl\DynamicLibraryMac.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
-      <Name>CSharpUtils</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Folder Include="GL\Impl\Mac\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

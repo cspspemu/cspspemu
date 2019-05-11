@@ -90,6 +90,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Gui", "Gui\CSPspEm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.All", "Tests\Tests.All\Tests.All.csproj", "{0E23A702-61B1-4A5E-AA05-479977356821}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Gui.SDL", "CSPspEmu.Gui.SDL\CSPspEmu.Gui.SDL.csproj", "{B15C57AE-DFA1-4E31-AD77-433B0ECED769}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu-2012.vsmdi
@@ -501,6 +503,18 @@ Global
 		{0E23A702-61B1-4A5E-AA05-479977356821}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0E23A702-61B1-4A5E-AA05-479977356821}.Release|x86.ActiveCfg = Release|Any CPU
 		{0E23A702-61B1-4A5E-AA05-479977356821}.Release|x86.Build.0 = Release|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Debug|x86.Build.0 = Debug|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Release|x86.ActiveCfg = Release|Any CPU
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -543,6 +557,7 @@ Global
 		{550E4F4E-704E-48EB-8392-C1EB229348CF} = {6D2F3817-98B8-4AB6-8A2A-8D5F35E3116C}
 		{EE3EB2A5-24C3-440E-8AC7-0C70FA753E89} = {6D2F3817-98B8-4AB6-8A2A-8D5F35E3116C}
 		{0E23A702-61B1-4A5E-AA05-479977356821} = {62C51087-397E-4594-A604-762D348BA89D}
+		{B15C57AE-DFA1-4E31-AD77-433B0ECED769} = {6D2F3817-98B8-4AB6-8A2A-8D5F35E3116C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = d38aaf0d-8be1-4b81-a305-6434120ed494

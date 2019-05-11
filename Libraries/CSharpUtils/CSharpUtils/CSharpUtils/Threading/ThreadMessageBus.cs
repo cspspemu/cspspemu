@@ -53,5 +53,7 @@ namespace CSharpUtils.Threading
                 return item;
             }
         }
+        
+        public bool HasMore => Queue.Count != 0;
     }
 }

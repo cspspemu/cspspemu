@@ -44,7 +44,7 @@ namespace CSPspEmu.Runner
             {
                 // GPU
                 PspPluginImpl.SelectWorkingPlugin<GpuImpl>(injectContext,
-#if false
+#if true
 					typeof(GpuImplNull)
 #else
                     typeof(OpenglGpuImpl),
