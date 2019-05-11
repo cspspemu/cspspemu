@@ -13,6 +13,8 @@ namespace CSPspEmu.Core.Gpu
 
         public static Vector4f ToVector3(this Vector4f vector) => new Vector4f(vector.X, vector.Y, vector.Z, 0f);
         public static Vector4 ToVector4(this Vector4f vector) => new Vector4(vector.X, vector.Y, vector.Z, vector.W);
+        //public static Vector4 ToVector4(this Vector4f vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
+        //public static Vector4 ToVector4(this Vector4f vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

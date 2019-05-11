@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using CSharpUtils.Drawing;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Types;
@@ -29,11 +30,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             base.StopSynchronized();
         }
 
-        private Matrix4x4 worldView = new Matrix4x4();
-        private Matrix4x4 worldViewProjection3D = new Matrix4x4();
-        private Matrix4x4 worldViewProjection2D = new Matrix4x4();
-        private Matrix4x4 transform3d = new Matrix4x4();
-        private Matrix4x4 unitToScreenCoords = Matrix4x4.CreateTranslation(-1, -1, 0) * Matrix4x4.CreateScale(512 / 2, 272 / 2, 0);
+        private Matrix4x4 modelView = Matrix4x4.Identity;
+        private Matrix4x4 worldViewProjection3D = Matrix4x4.Identity;
+        private Matrix4x4 worldViewProjection2D = Matrix4x4.Identity;
+        private Matrix4x4 transform3d = Matrix4x4.Identity;
+        private Matrix4x4 unitToScreenCoords = Matrix4x4.CreateScale(1f, -1f, 1f) * Matrix4x4.CreateTranslation(+1f, +1f, 0f) * Matrix4x4.CreateScale(.5f, .5f, 1f) * Matrix4x4.CreateScale(480, 272, 1f);
 
         private GpuStateStruct* GpuState;
         private uint DrawAddress;
@@ -45,31 +46,32 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             GpuState = gpuState;
             VertexType = gpuState->VertexState.Type;
             PrimitiveType = primitiveType;
-            var world = gpuState->VertexState.WorldMatrix.Matrix4x4;
+            var model = gpuState->VertexState.WorldMatrix.Matrix4x4;
             var view = gpuState->VertexState.ViewMatrix.Matrix4x4;
             var projection3D = gpuState->VertexState.ProjectionMatrix.Matrix4x4;
-            var projection2D = Matrix4x4.CreateOrthographic(512, 272, -1000f, +1000f);
-            worldView = world * view;
-            worldViewProjection3D = worldView * projection3D;
-            worldViewProjection2D = worldView * projection2D;
+            var projection2D = Matrix4x4.CreateOrthographic(512, 272, -1f, +1f);
+            //Matrix4x4.Invert(projection2D, out unitToScreenCoords);
+            modelView = model * view;
+            worldViewProjection3D = modelView * projection3D;
+            worldViewProjection2D = modelView * projection2D;
             DrawAddress = GpuState->DrawBufferState.Address;
-            if (primitiveType == GuPrimitiveType.Triangles)
-            {
-                Console.WriteLine($"primitiveType {primitiveType}");
-                Console.WriteLine($"World {world}");
-                Console.WriteLine($"View {view}");
-                Console.WriteLine($"Projection3D {projection3D}");
-                //Console.WriteLine($"Projection2D {projection2D}");
-                Console.WriteLine($"worldView {worldView}");
-                Console.WriteLine($"worldViewProjection3D {worldViewProjection3D}");
-                //Console.WriteLine($"worldViewProjection2D {worldViewProjection2D}");
-                Console.WriteLine($"PrimStart: {primitiveType}");
-            }
+            //if (primitiveType == GuPrimitiveType.Triangles)
+            //{
+            //    Console.WriteLine($"primitiveType {primitiveType}");
+            //    Console.WriteLine($"Model {model}");
+            //    Console.WriteLine($"View {view}");
+            //    Console.WriteLine($"Projection3D {projection3D}");
+            //    //Console.WriteLine($"Projection2D {projection2D}");
+            //    Console.WriteLine($"worldView {modelView}");
+            //    Console.WriteLine($"worldViewProjection3D {worldViewProjection3D}");
+            //    //Console.WriteLine($"worldViewProjection2D {worldViewProjection2D}");
+            //    Console.WriteLine($"PrimStart: {primitiveType}");
+            //}
         }
 
         public override void PrimEnd()
         {
-            Console.WriteLine($"PrimEnd");
+            //Console.WriteLine($"PrimEnd");
         }
 
         public override void Prim(ushort vertexCount)
@@ -77,6 +79,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             uint morpingVertexCount, totalVerticesWithoutMorphing;
             PreparePrim(GpuState, out totalVerticesWithoutMorphing, vertexCount, out morpingVertexCount);
             var vertices = new Vector4[vertexCount];
+            var verticesP = new VPoint[vertexCount];
             var vertexTransform = this.worldViewProjection3D;
             {
                 var transform = VertexType.Transform2D ? Matrix4x4.Identity : worldViewProjection3D;
@@ -86,9 +89,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                 {
                     var vinfo = VertexReader.ReadVertex(n);
                     var vector = vinfo.Position.ToVector4();
+                    var tvertex = VertexType.Transform2D ? vector : Vector4.Transform(vector, rtransform);
 
-                    //Console.WriteLine($"VertexType.Transform2D: {VertexType.Transform2D} : {rtransform}");
-                    vertices[n] = VertexType.Transform2D ? vector : Vector4.Transform(vector, rtransform);
+                    //Console.WriteLine($"VertexType.Transform2D: {VertexType.Transform2D} : {PrimitiveType} : {vinfo}");
+                    vertices[n] = tvertex;
+                    verticesP[n] = Vector4ToPoint(tvertex, vinfo.Normal.ToVector4(), vinfo.Color.ToVector4());
                 }
             }
             {
@@ -96,11 +101,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                 {
                     case GuPrimitiveType.Triangles:
                     {
-                        { for (var n = 0; n < vertexCount; n++) Console.WriteLine($"Triangle {VertexType.Transform2D}:" + VertexReader.ReadVertex(n) + " : " + Vector4ToPoint(vertices[n])); }
+                        //{ for (var n = 0; n < vertexCount; n++) Console.WriteLine($"Triangle {VertexType.Transform2D}:{VertexReader.ReadVertex(n)} : {vertices[n]} : {Vector4ToPoint(vertices[n])}"); }
                         var m = 0;
                         for (var n = 0; n < vertexCount; n += 3)
                         { 
-                            DrawTriangleFast(Vector4ToPoint(vertices[n + 0]), Vector4ToPoint(vertices[n + 1]), Vector4ToPoint(vertices[n + 2]), colors[m++ % colors.Length]);
+                            DrawTriangleFast((verticesP[n + 0]), (verticesP[n + 1]), (verticesP[n + 2]));
                         }
 
                         //DrawTriangleFast(new PointIS(100, 0), new PointIS(50, 100), new PointIS(150, 50), 0xFF00FFFF);
@@ -113,7 +118,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                         //{ for (var n = 0; n < vertexCount; n++) Console.WriteLine($"Sprite {VertexType.Transform2D}:" + VertexReader.ReadVertex(n) + " : " + Vector4ToPoint(vertices[n])); }
                         for (var n = 0; n < vertexCount; n += 2)
                         {
-                            DrawSprite(Vector4ToPoint(vertices[n + 0]), Vector4ToPoint(vertices[n + 1]));
+                            DrawSprite((verticesP[n + 0]), (verticesP[n + 1]));
                         }
 
                         break;
@@ -126,60 +131,168 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             }
 
             //DrawPixel(52, 52, 0xFFFFFFFF);
-            Console.WriteLine($"Prim {vertexCount}");
+            //Console.WriteLine($"Prim {vertexCount}");
         }
 
-        private PointIS Vector4ToPoint(Vector4 v) => new PointIS((int) v.X, (int) v.Y);
+        private VPoint Vector4ToPoint(Vector4 v, Vector4 n, Vector4 color) => new VPoint(new PointIS((int) v.X, (int) v.Y), n, color);
 
-        private void DrawTriangleSlow(PointIS a, PointIS b, PointIS c)
-        {
-            //Console.WriteLine($"Triangle {a}, {b}, {c}");
-            var minX = Math.Min(Math.Min(a.X, b.X), c.X).Clamp(0, 512);
-            var maxX = Math.Max(Math.Max(a.X, b.X), c.X).Clamp(0, 512);
-            var minY = Math.Min(Math.Min(a.Y, b.Y), c.Y).Clamp(0, 272);
-            var maxY = Math.Max(Math.Max(a.Y, b.Y), c.Y).Clamp(0, 272);
-            for (int y = minY; y <= maxY; y++)
-            {
-                for (int x = minX; x <= maxX; x++)
-                {
-                    if (PointInTriangle(new PointIS(x, y), a, b, c))
-                    {
-                        DrawPixel(x, y, 0xFFFFFFFF);
-                    }
-                }
-            }
-        }
+        //private void DrawTriangleSlow(PointIS a, PointIS b, PointIS c)
+        //{
+        //    //Console.WriteLine($"Triangle {a}, {b}, {c}");
+        //    var minX = Math.Min(Math.Min(a.X, b.X), c.X).Clamp(0, 512);
+        //    var maxX = Math.Max(Math.Max(a.X, b.X), c.X).Clamp(0, 512);
+        //    var minY = Math.Min(Math.Min(a.Y, b.Y), c.Y).Clamp(0, 272);
+        //    var maxY = Math.Max(Math.Max(a.Y, b.Y), c.Y).Clamp(0, 272);
+        //    for (int y = minY; y <= maxY; y++)
+        //    {
+        //        for (int x = minX; x <= maxX; x++)
+        //        {
+        //            if (PointInTriangle(new PointIS(x, y), a, b, c))
+        //            {
+        //                DrawPixel(x, y, 0xFFFFFFFF);
+        //            }
+        //        }
+        //    }
+        //}
 
         private uint[] colors = {0xFF0077FF, 0xFF00FFFF, 0xFF0000FF};
 
-        private void DrawTriangleFast(PointIS P0, PointIS P1, PointIS P2, uint color)
-        {
-            // Sort the points so that y0 <= y1 <= y2
-            if (P1.y < P0.y) Swap(ref P1, ref P0);
-            if (P2.y < P0.y) Swap(ref P2, ref P0);
-            if (P2.y < P1.y) Swap(ref P2, ref P1);
+        public struct VPoint {
+            public PointIS P;
+            public Vector4 N;
+            public Vector4 Color;
 
+            public uint IColor => new RgbaFloat(Color).Int;
+
+            public VPoint(PointIS p, Vector4 n, Vector4 color)
+            {
+                P = p;
+                N = n;
+                Color = color;
+            }
+        }
+
+        public struct Triangle
+        {
+            public VPoint P0;
+            public VPoint P1;
+            public VPoint P2;
+
+            public Triangle(VPoint p0, VPoint p1, VPoint p2)
+            {
+                // Sort the points so that y0 <= y1 <= y2
+                if (p1.P.y < p0.P.y) Swap(ref p1, ref p0);
+                if (p2.P.y < p0.P.y) Swap(ref p2, ref p0);
+                if (p2.P.y < p1.P.y) Swap(ref p2, ref p1);
+
+
+                P0 = p0;
+                P1 = p1;
+                P2 = p2;
+            }
+        }
+
+        public struct Sprite
+        {
+            public VPoint P0;
+            public VPoint P1;
+
+            public Sprite(VPoint p0, VPoint p1)
+            {
+                P0 = p0;
+                P1 = p1;
+            }
+        }
+
+        private void DrawTriangleFast(VPoint P0, VPoint P1, VPoint P2)
+        {
+            var triangle = new Triangle(P0, P1, P2);
+            RasterizeTriangle(triangle, triangle, DrawTriangleFastTest);
+        }
+
+        static public Vector4 LerpNotUsedIndex(Vector4 a, Vector4 b, Vector4 c, int notUsedIndex, float ratio)
+        {
+            switch (notUsedIndex)
+            {
+                case 0: return Vector4.Lerp(b, c, ratio);
+                case 1: return Vector4.Lerp(a, c, ratio);
+                case 2: return Vector4.Lerp(a, b, ratio);
+            }
+
+            return a;
+        }
+
+        private void DrawTriangleFastTest(int y, Result a, Result b, Triangle triangle)
+        {
+            //Console.WriteLine($"{a.Ratio} {b.Ratio} {triangle.P0.Color} : {triangle.P1.IColor}");
+            if (triangle.P0.Color == triangle.P1.Color && triangle.P0.Color == triangle.P2.Color)
+            {
+                DrawPixelsFast(y, a.X, b.X, triangle.P0.IColor);
+            }
+            else
+            {
+                var colorA = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, a.NotUsedIndex, a.Ratio);
+                var colorB = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, b.NotUsedIndex, b.Ratio);
+                DrawPixelsFast(y, a.X, b.X, colorA, colorB);
+            }
+        }
+        
+        private void DrawPixelsFastInterpolated(int y, Result r0, Result r1, int x0, int x1, uint color)
+        {
+            if (x0 < 0 || y < 0 || x0 > 512 || y > 272) return;
+            var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + x0) * 4));
+            var count = x1 - x0;
+            for (int n = 0; n < count; n++) ptr[n] = color;
+        }
+
+        static public void RasterizeTriangle<T>(Triangle Tri, T param, Action<int, Result, Result, T> DrawPixelsFast)
+        {
+            var P0 = Tri.P0.P;
+            var P1 = Tri.P1.P;
+            var P2 = Tri.P2.P;
             //Console.WriteLine($"{P0}, {P1}, {P2}");
 
             var y0 = P0.y.Clamp(0, 272);
             var y2 = P2.y.Clamp(0, 272);
 
+            var V0 = new Vector3(1f, 0f, 0f);
+            var V1 = new Vector3(0f, 1f, 0f);
+            var V2 = new Vector3(0f, 0f, 1f);
+
             for (var y = y0; y <= y2; y++)
             {
-                var xa = InterpolateX(P0, P2, y);
-                var xb = (y <= P1.y) ? InterpolateX(P0, P1, y) : InterpolateX(P1, P2, y);
-                var xmin = Math.Min(xa, xb).Clamp(0, 512);
-                var xmax = Math.Max(xa, xb).Clamp(0, 512);
-                DrawPixelsFast(xmin, y, xmax - xmin, color);
+                var xa = InterpolateX(y, P0, P2, 1);
+                var xb = (y <= P1.y) ? InterpolateX(y, P0, P1, 2) : InterpolateX(y, P1, P2, 0);
+                if (xa.X < xb.X)
+                {
+                    DrawPixelsFast(y, xa, xb, param);
+                }
+                else
+                {
+                    DrawPixelsFast(y, xb, xa, param);   
+                }
                 //Console.WriteLine($"{y}: {xa} - {xb}");
                 //for (var x = xmin; x <= xmax; x++) DrawPixel(x, y, 0xFFFFFFFF);
             }
         }
 
-        static public int InterpolateX(PointIS a, PointIS b, int y)
+        public struct Result
         {
-            var ratio = (double) (y - a.Y) / (double) (b.Y - a.Y);
-            return ratio.Interpolate(a.X, b.X);
+            public int X;
+            public int NotUsedIndex;
+            public float Ratio;
+        }
+
+        public static Result InterpolateX(int y, PointIS a, PointIS b, int notUsedIndex)
+        {
+            var ratio = (float) (y - a.Y) / (float) (b.Y - a.Y);
+            var res = ratio.Interpolate(a.X, b.X);
+            return new Result()
+            {
+                X = res,
+                Ratio = ratio,
+                NotUsedIndex = notUsedIndex,
+            };
         }
 
         public static void Swap<T>(ref T lhs, ref T rhs)
@@ -189,16 +302,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             rhs = temp;
         }
 
-        private void DrawSprite(PointIS a, PointIS b)
+        private void DrawSprite(VPoint a, VPoint b)
         {
-            var minX = Math.Min(a.X, b.X).Clamp(0, 512);
-            var maxX = Math.Max(a.X, b.X).Clamp(0, 512);
-            var minY = Math.Min(a.Y, b.Y).Clamp(0, 272);
-            var maxY = Math.Max(a.Y, b.Y).Clamp(0, 272);
+            var minX = Math.Min(a.P.X, b.P.X).Clamp(0, 512);
+            var maxX = Math.Max(a.P.X, b.P.X).Clamp(0, 512);
+            var minY = Math.Min(a.P.Y, b.P.Y).Clamp(0, 272);
+            var maxY = Math.Max(a.P.Y, b.P.Y).Clamp(0, 272);
             //Console.WriteLine($"Sprite {a}, {b}");
             for (var y = minY; y <= maxY; y++)
             {
-                DrawPixelsFast(minX, y, maxX - minX, 0x777777FF);
+                DrawPixelsFast(y, minX, maxX, a.IColor);
             }
         }
 
@@ -226,11 +339,28 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             Memory.Write4((uint) (DrawAddress + (y * 512 + x) * 4), color);
         }
 
-        private void DrawPixelsFast(int x, int y, int count, uint color)
+        private void DrawPixelsFast(int y, int x0, int x1, uint color)
         {
-            if (x < 0 || y < 0 || x > 512 || y > 272) return;
-            var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + x) * 4));
+            if (y < 0 || y > 272) return;
+            var startX = x0.Clamp(0, 512);
+            var endX = x1.Clamp(0, 512);
+            var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + startX) * 4));
+            var count = endX - startX;
             for (int n = 0; n < count; n++) ptr[n] = color;
+        }
+
+        private void DrawPixelsFast(int y, int x0, int x1, Vector4 c1, Vector4 c2)
+        {
+            if (y < 0 || y >= 272) return;
+            var startX = x0.Clamp(0, 512);
+            var endX = x1.Clamp(0, 512);
+            var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + startX) * 4));
+            var count = endX - startX;
+            for (int n = 0; n < count; n++)
+            {
+                var ratio = (startX + n).RatioInRange(x0, x1);
+                ptr[n] = new RgbaFloat(Vector4.Lerp(c1, c2, ratio)).Int;
+            }
         }
 
         public override void Finish(GpuStateStruct* gpuState)

@@ -23,6 +23,7 @@ class Program
             //pspEmulator.StartAndLoad("controller.elf", GuiRunner: (emulator) =>
             //pspEmulator.StartAndLoad("cube.pbp", GuiRunner: (emulator) =>
             pspEmulator.StartAndLoad("ortho.pbp", GuiRunner: (emulator) =>
+            //pspEmulator.StartAndLoad("ortho_norot.elf", GuiRunner: (emulator) =>
             {
                 Console.WriteLine("Hello World!");
                 if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) != 0)

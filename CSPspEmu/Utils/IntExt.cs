@@ -17,9 +17,9 @@ namespace CSPspEmu.Utils
             return value;
         }
 
-        public static int Interpolate(this double ratio, int min, int max)
-        {
-            return (int) (min + (max - min) * ratio);
-        }
+        public static int Interpolate(this double ratio, int min, int max) => (int) (min + (max - min) * ratio);
+        public static int Interpolate(this float ratio, int min, int max) => (int) (min + (max - min) * ratio);
+
+        public static float RatioInRange(this int value, int min, int max) => (float) (value - min) / (float) (max - min);
     }
 }

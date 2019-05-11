@@ -233,6 +233,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
             VertexInfo->Position.X = ((sbyte*) Pointer)[0];
             VertexInfo->Position.Y = ((sbyte*) Pointer)[1];
             VertexInfo->Position.Z = Transform2D ? Pointer[2] : (float) ((sbyte*) Pointer)[2];
+            VertexInfo->Position.W = 1f;
 
             if (!Transform2D)
             {
@@ -252,6 +253,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
             VertexInfo->Position.X = ((short*) Pointer)[0];
             VertexInfo->Position.Y = ((short*) Pointer)[1];
             VertexInfo->Position.Z = Transform2D ? ((ushort*) Pointer)[2] : (float) ((short*) Pointer)[2];
+            VertexInfo->Position.W = 1f;
 
             if (!Transform2D)
             {
@@ -270,6 +272,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
             VertexInfo->Position.X = ((float*) Pointer)[0];
             VertexInfo->Position.Y = ((float*) Pointer)[1];
             VertexInfo->Position.Z = ((float*) Pointer)[2];
+            VertexInfo->Position.W = 1f;
             PointerOffset += sizeof(float) * 3;
         }
 

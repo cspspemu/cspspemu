@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Numerics;
+using CSPspEmu.Utils;
 
 namespace CSharpUtils.Drawing
 {
@@ -28,6 +30,14 @@ namespace CSharpUtils.Drawing
             B = b;
         }
 
+        public Rgba(uint r, uint g, uint b, uint a)
+        {
+            A = (byte)a;
+            R = (byte)r;
+            G = (byte)g;
+            B = (byte)b;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -41,6 +51,11 @@ namespace CSharpUtils.Drawing
         /// <param name="col"></param>
         /// <returns></returns>
         public static implicit operator ArgbRev(Rgba col) => new ArgbRev(col.A, col.R, col.G, col.B);
+
+        public uint Value => PackInt(R, G, B, A);
+
+        public static uint PackInt(byte r, byte  g, byte  b, byte  a) => (((uint)r) << 0) | (((uint)g) << 8) | (((uint)b) << 16) | (((uint)a) << 24);
+        public static uint PackInt(uint r, uint g, uint b, uint a) => ((r & 0xFF) << 0) | ((g & 0xFF) << 8) | ((b & 0xFF) << 16) | ((a & 0xFF) << 24);
     }
 
     /// <summary>
@@ -157,6 +172,22 @@ namespace CSharpUtils.Drawing
         /// 
         /// </summary>
         public float R, G, B, A;
+
+        public RgbaFloat(float r, float g, float b, float a)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
+
+        public RgbaFloat(Vector4 v) : this(v.X, v.Y, v.Z, v.W)
+        {
+        }
+
+        public Rgba Rgba => new Rgba(PackComponent(R), PackComponent(G), PackComponent(B), PackComponent(A));
+        public uint Int => Rgba.Value;
+        static private uint PackComponent(float v) => (uint)((int) (v * 255)).Clamp(0, 255);
     }
 
     /// <summary>
