@@ -2,8 +2,11 @@
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu;
+using CSPspEmu.Core.Components.Controller;
 using CSPspEmu.Core.Components.Display;
+using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Types.Controller;
 using SDL2;
 
 class Program
@@ -15,7 +18,8 @@ class Program
         {
             //pspEmulator.StartAndLoad("minifire.pbp", GuiRunner: (emulator) =>
             //pspEmulator.StartAndLoad("counter.elf", GuiRunner: (emulator) =>
-            pspEmulator.StartAndLoad("HelloWorldPSP.pbp", GuiRunner: (emulator) =>
+            //pspEmulator.StartAndLoad("HelloWorldPSP.pbp", GuiRunner: (emulator) =>
+            pspEmulator.StartAndLoad("controller.elf", GuiRunner: (emulator) =>
             {
                 Console.WriteLine("Hello World!");
                 if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) != 0)
@@ -46,19 +50,48 @@ class Program
                 */
 
                 //SDL.SDL_FillRect(SDL.SDL_Rect)
-                var texture = SDL.SDL_CreateTexture(renderer, SDL.SDL_PIXELFORMAT_RGBA8888, (int) SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET, 512, 272);
+                var texture = SDL.SDL_CreateTexture(renderer, SDL.SDL_PIXELFORMAT_RGBA8888,
+                    (int) SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET, 512, 272);
                 //var texture = SDL.SDL_CreateTextureFromSurface(renderer, surface);
-                
+
                 //var surface = SDL.SDL_GetWindowSurface(window);
                 //var renderer = SDL.SDL_CreateSoftwareRenderer(surface);
                 SDL.SDL_Event e;
                 var running = true;
 
+                var rtc = emulator.InjectContext.GetInstance<PspRtc>();
                 var display = emulator.InjectContext.GetInstance<PspDisplay>();
                 var memory = emulator.InjectContext.GetInstance<PspMemory>();
+                var controller = emulator.InjectContext.GetInstance<PspController>();
 
                 //var image = SDL_image.IMG_Load("icon0.png");
                 //var texture = SDL.SDL_CreateTextureFromSurface(renderer, image);
+                var ctrlData = new SceCtrlData();
+
+                ctrlData.Buttons = 0;
+                ctrlData.Lx = 0;
+                ctrlData.Ly = 0;
+
+                var lx = 0;
+                var ly = 0;
+
+                var pressingAnalogLeft = 0;
+                var pressingAnalogRight = 0;
+                var pressingAnalogUp = 0;
+                var pressingAnalogDown = 0;
+
+                void UpdatePressing(ref int value, bool pressing)
+                {
+                    if (pressing)
+                    {
+                        value++;
+                    }
+                    else
+                    {
+                        value = 0;
+                    }
+                }
+
                 while (running)
                 {
                     while (SDL.SDL_PollEvent(out e) != 0)
@@ -69,6 +102,64 @@ class Program
                                 running = false;
                                 break;
                             case SDL.SDL_EventType.SDL_KEYDOWN:
+                            case SDL.SDL_EventType.SDL_KEYUP:
+                                var pressed = e.type == SDL.SDL_EventType.SDL_KEYDOWN;
+                                PspCtrlButtons buttonMask = 0;
+                                switch (e.key.keysym.sym)
+                                {
+                                    case SDL.SDL_Keycode.SDLK_a:
+                                        buttonMask = PspCtrlButtons.Square;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_w:
+                                        buttonMask = PspCtrlButtons.Triangle;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_d:
+                                        buttonMask = PspCtrlButtons.Circle;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_s:
+                                        buttonMask = PspCtrlButtons.Cross;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_SPACE:
+                                        buttonMask = PspCtrlButtons.Select;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_RETURN:
+                                        buttonMask = PspCtrlButtons.Start;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_UP:
+                                        buttonMask = PspCtrlButtons.Up;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_DOWN:
+                                        buttonMask = PspCtrlButtons.Down;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_LEFT:
+                                        buttonMask = PspCtrlButtons.Left;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_RIGHT:
+                                        buttonMask = PspCtrlButtons.Right;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_i:
+                                        UpdatePressing(ref pressingAnalogUp, pressed);
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_k:
+                                        UpdatePressing(ref pressingAnalogDown, pressed);
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_j:
+                                        UpdatePressing(ref pressingAnalogLeft, pressed);
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_l:
+                                        UpdatePressing(ref pressingAnalogRight, pressed);
+                                        break;
+                                }
+                                
+                                if (pressed)
+                                {
+                                    ctrlData.Buttons |= buttonMask;
+                                }
+                                else
+                                {
+                                    ctrlData.Buttons &= ~buttonMask;
+                                }
+
                                 break;
                         }
                     }
@@ -79,12 +170,11 @@ class Program
                     SDL.SDL_RenderClear(renderer);
                     SDL.SDL_UpdateWindowSurface(window);
                     */
-                    
-                    SDL.SDL_RenderClear(renderer);
+
                     {
                         //Console.WriteLine(display.CurrentInfo.FrameAddress);
                         var pixels2 = new uint[512 * 272];
-                        var displayData = (uint*)memory.PspAddressToPointerSafe(display.CurrentInfo.FrameAddress);
+                        var displayData = (uint*) memory.PspAddressToPointerSafe(display.CurrentInfo.FrameAddress);
                         for (var m = 0; m < 512 * 272; m++)
                         {
                             var color = displayData[m];
@@ -100,9 +190,18 @@ class Program
                             SDL.SDL_UpdateTexture(texture, ref rect, new IntPtr(pp), 512 * 4);
                         }
                     }
+                    SDL.SDL_RenderClear(renderer);
                     SDL.SDL_RenderCopy(renderer, texture, IntPtr.Zero, IntPtr.Zero);
                     SDL.SDL_RenderPresent(renderer);
-                    
+
+                    lx = (pressingAnalogLeft != 0) ? -pressingAnalogLeft : pressingAnalogRight;
+                    ly = (pressingAnalogUp != 0) ? -pressingAnalogUp : pressingAnalogDown;
+
+                    ctrlData.Lx = (byte)(lx * 90).Clamp(-127, 128);
+                    ctrlData.Ly = (byte)(ly * 90).Clamp(-127, 128);
+                    ctrlData.TimeStamp = rtc.UnixTimeStamp;
+
+                    controller.InsertSceCtrlData(ctrlData);
                     SDL.SDL_Delay(16);
                 }
                 //SDL.SDL_FreeSurface(image);
@@ -113,5 +212,15 @@ class Program
                 SDL.SDL_Quit();
             });
         }
+    }
+}
+
+static class MyExtensions
+{
+    static public int Clamp(this int value, int min, int max)
+    {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 }
