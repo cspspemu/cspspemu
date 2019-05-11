@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using System.Windows.Forms;
 using System.IO;
+using CSPspEmu.Compat;
 
 namespace CSPspEmu.Core
 {

@@ -58,6 +58,7 @@ namespace CSPspEmuLLETest
             while (true) Thread.Sleep(int.MaxValue);
         }
 
+        /*
         static void Main(string[] args)
         {
             //new Program().Run();
@@ -68,14 +69,13 @@ namespace CSPspEmuLLETest
             // It doesn't start the ME
             //DebugPspMemory.Write4(0xBFC00FFC, 0xFFFFFFFF);
 
-            /*
-            ME:
-            li      $t0, 0x40EC19C
-            jr      $t0
-            nop
-            */
+            //ME:
+            //li      $t0, 0x40EC19C
+            //jr      $t0
+            //nop
 
             //IplReader.WriteIplToFile(File.Open(NandPath + ".ipl.bin", FileMode.Create, FileAccess.Write));
         }
+        */
     }
 }

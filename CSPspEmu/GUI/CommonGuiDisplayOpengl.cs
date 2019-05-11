@@ -9,6 +9,7 @@ using CSPspEmu.Core.Types;
 using CSPspEmu.Gui.SMAA;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 //using System.Drawing;
 using CSharpUtils.Drawing.Extensions;
 using CSPspEmu.Core.Components.Display;
@@ -178,7 +179,7 @@ namespace CSPspEmu.Gui
                     if (Hash != LastHash)
                     {
                         LastHash = Hash;
-                        Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+                        Buffer.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
                         {
                             var Count = Width * Height;
                             fixed (OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)

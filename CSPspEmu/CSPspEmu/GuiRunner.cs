@@ -1,4 +1,5 @@
-﻿using CSPspEmu.Gui.Winforms;
+﻿using System;
+using CSPspEmu.Gui.Winforms;
 
 namespace CSPspEmu
 {
@@ -21,7 +22,8 @@ namespace CSPspEmu
 
         private void StartWinforms()
         {
-            PspDisplayForm.RunStart(_pspEmulator);
+            //PspDisplayForm.RunStart(_pspEmulator);
+            throw new NotImplementedException();
         }
 
         private void StartGtkSharp()

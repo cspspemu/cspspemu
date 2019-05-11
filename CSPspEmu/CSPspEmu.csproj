@@ -7,19 +7,49 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
     <PackageReference Include="sdl2.nuget" Version="2.0.9" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.6.0-preview5.19224.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj" />
+    <_UnmanagedRegistrationCache Remove="obj\CSPspEmu.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\x86\Debug\netcoreapp2.2\CSPspEmu.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\x86\Debug\netcoreapp2.2\CSPspEmu.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\x86\Debug\netcoreapp2.2\CSPspEmu.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\x86\Debug\netcoreapp2.2\CSPspEmu.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\x86\Debug\netcoreapp2.2\CSPspEmu.dll.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeployManifest Remove="obj\x86\Debug\netcoreapp2.2\CSPspEmu.application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Devices" />
   </ItemGroup>
 
 </Project>
