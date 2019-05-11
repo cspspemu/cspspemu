@@ -7,6 +7,7 @@ using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types.Controller;
+using CSPspEmu.Runner.Components.Display;
 using CSPspEmu.Utils;
 using SDL2;
 
@@ -65,8 +66,10 @@ class Program
 
                 var rtc = emulator.InjectContext.GetInstance<PspRtc>();
                 var display = emulator.InjectContext.GetInstance<PspDisplay>();
+                var displayComponent = emulator.InjectContext.GetInstance<DisplayComponentThread>();
                 var memory = emulator.InjectContext.GetInstance<PspMemory>();
                 var controller = emulator.InjectContext.GetInstance<PspController>();
+                displayComponent.triggerStuff = false;
 
                 //var image = SDL_image.IMG_Load("icon0.png");
                 //var texture = SDL.SDL_CreateTextureFromSurface(renderer, image);
@@ -194,19 +197,33 @@ class Program
                             SDL.SDL_UpdateTexture(texture, ref rect, new IntPtr(pp), 512 * 4);
                         }
                     }
-                    SDL.SDL_RenderClear(renderer);
-                    SDL.SDL_RenderCopy(renderer, texture, IntPtr.Zero, IntPtr.Zero);
-                    SDL.SDL_RenderPresent(renderer);
+                    displayComponent.Step(DrawStart: () =>
+                    {
 
-                    lx = (pressingAnalogLeft != 0) ? -pressingAnalogLeft : pressingAnalogRight;
-                    ly = (pressingAnalogUp != 0) ? -pressingAnalogUp : pressingAnalogDown;
+                        display.TriggerDrawStart();                        
+                    }, VBlankStart: () =>
+                    {
+                        display.TriggerVBlankStart();                        
+                    }, VBlankEnd: () =>
+                    {
 
-                    ctrlData.X = lx / 3f;
-                    ctrlData.Y = ly / 3f;
-                    ctrlData.TimeStamp = rtc.UnixTimeStamp;
+                        lx = (pressingAnalogLeft != 0) ? -pressingAnalogLeft : pressingAnalogRight;
+                        ly = (pressingAnalogUp != 0) ? -pressingAnalogUp : pressingAnalogDown;
 
-                    controller.InsertSceCtrlData(ctrlData);
-                    SDL.SDL_Delay(16);
+                        ctrlData.X = lx / 3f;
+                        ctrlData.Y = ly / 3f;
+                        ctrlData.TimeStamp = rtc.UnixTimeStamp;
+
+                        controller.InsertSceCtrlData(ctrlData);
+                        //SDL.SDL_RenderClear(renderer);
+                        SDL.SDL_RenderCopy(renderer, texture, IntPtr.Zero, IntPtr.Zero);
+                        SDL.SDL_RenderPresent(renderer);
+
+                        display.TriggerVBlankEnd();
+                    });
+                    //display.TriggerVBlankStart();
+
+                    //display.TriggerVBlankEnd();
                 }
                 //SDL.SDL_FreeSurface(image);
 
