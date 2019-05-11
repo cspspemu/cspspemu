@@ -14,6 +14,7 @@ using CSPspEmu.Core.Audio.Impl.Null;
 using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Gpu.Impl.Null;
+using CSPspEmu.Core.Gpu.Impl.Soft;
 
 namespace CSPspEmu.Runner
 {
@@ -44,8 +45,9 @@ namespace CSPspEmu.Runner
             {
                 // GPU
                 PspPluginImpl.SelectWorkingPlugin<GpuImpl>(injectContext,
-#if false
-					typeof(GpuImplNull)
+#if true
+					//typeof(GpuImplNull)
+                    typeof(GpuImplSoft)
 #else
                     typeof(OpenglGpuImpl),
                     //typeof(GpuImplOpenglEs),

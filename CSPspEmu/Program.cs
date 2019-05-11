@@ -27,7 +27,14 @@ namespace CSPspEmu
         public static void Main(string[] arguments)
         {
             Console.WriteLine("Program.Main");
-            DoMain(arguments);
+            try
+            {
+                DoMain(arguments);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e);
+            }
         }
 
         public static readonly Logger Logger = Logger.GetLogger("Program");
@@ -115,7 +122,7 @@ namespace CSPspEmu
             //Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);
 
             //System.AppDomain.CurrentDomain.UnhandledException += 
-                
+
             // Set the unhandled exception mode to force all Windows Forms errors to go through
             // our handler.
             //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
@@ -212,6 +219,7 @@ namespace CSPspEmu
                         var stat = isoFileSystem.GetStat(fileName);
                         Console.WriteLine("{0} : {1}", fileName, stat.Size);
                     }
+
                     //Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
                     Environment.Exit(0);
                 });
@@ -239,13 +247,16 @@ namespace CSPspEmu
                             {
                                 Console.WriteLine(e);
                             }
+
                             using (var inputStream = isoFileSystem.OpenRead(fileName))
                             {
                                 inputStream.CopyToFile(outputFileName);
                             }
                         }
+
                         Console.WriteLine("Ok");
                     }
+
                     //Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
                     Environment.Exit(0);
                 });

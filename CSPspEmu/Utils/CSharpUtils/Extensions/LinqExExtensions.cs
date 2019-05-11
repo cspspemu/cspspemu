@@ -152,6 +152,11 @@ namespace CSharpUtils.Extensions
             return items.Implode(separator);
         }
 
+        public static string ToStringList<TSource>(this IEnumerable<TSource> items, string separator = ",")
+        {
+            return "[" + items.JoinToString(", ") + "]";
+        }
+
         /// <summary>
         /// 
         /// </summary>

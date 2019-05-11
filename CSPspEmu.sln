@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu", "CSPspEmu\CSPspEmu.csproj", "{B4C3D929-6A7E-4A71-B896-D2C1C36C4554}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.WinForms", "CSPspEmu.WinForms\CSPspEmu.WinForms.csproj", "{93E1D17F-ECDC-4121-A62C-25427AE81134}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Frontend.WinForms", "CSPspEmu.Frontend.WinForms\CSPspEmu.Frontend.WinForms.csproj", "{93E1D17F-ECDC-4121-A62C-25427AE81134}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.SDL", "CSPspEmu.SDL\CSPspEmu.SDL.csproj", "{B1C3D028-7286-4503-B5CA-ADC380220BDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Frontend.SDL", "CSPspEmu.Frontend.SDL\CSPspEmu.Frontend.SDL.csproj", "{B1C3D028-7286-4503-B5CA-ADC380220BDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Tests", "CSPspEmu.Tests\CSPspEmu.Tests.csproj", "{5F3B2C91-CD79-4530-8A0E-4DC23EC0B098}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Frontend.HelloWorld", "CSPspEmu.Frontend.HelloWorld\CSPspEmu.Frontend.HelloWorld.csproj", "{31873A29-4C73-4221-B052-7577402F0EAB}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -70,6 +72,18 @@ Global
 		{5F3B2C91-CD79-4530-8A0E-4DC23EC0B098}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5F3B2C91-CD79-4530-8A0E-4DC23EC0B098}.Release|x86.ActiveCfg = Release|Any CPU
 		{5F3B2C91-CD79-4530-8A0E-4DC23EC0B098}.Release|x86.Build.0 = Release|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Debug|x86.Build.0 = Debug|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Release|x86.ActiveCfg = Release|Any CPU
+		{31873A29-4C73-4221-B052-7577402F0EAB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

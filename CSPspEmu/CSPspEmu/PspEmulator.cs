@@ -19,7 +19,7 @@ using CSPspEmu.Gui.texture;
 
 namespace CSPspEmu
 {
-    class PspEmulator : IGuiExternalInterface, IDisposable
+    public class PspEmulator : IGuiExternalInterface, IDisposable
     {
         [Inject] CpuConfig CpuConfig;
 
@@ -123,7 +123,7 @@ namespace CSPspEmu
         /// <summary>
         /// 
         /// </summary>
-        public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true,
+        public void StartAndLoad(string File, Action<PspEmulator> GuiRunner = null, bool TraceSyscalls = false, bool ShowMenus = true,
             bool TrackCallStack = true, bool? EnableMpeg = null)
         {
             Start(() =>
@@ -131,13 +131,14 @@ namespace CSPspEmu
                 CpuConfig.DebugSyscalls = TraceSyscalls;
                 CpuConfig.TrackCallStack = TrackCallStack;
                 LoadFile(File);
-            }, ShowMenus: ShowMenus, AutoLoad: true);
+            }, GuiRunner,
+            ShowMenus: ShowMenus, AutoLoad: true);
         }
 
         /// <summary>
         /// Start.
         /// </summary>
-        public void Start(Action CallbackOnInit = null, bool ShowMenus = true, bool AutoLoad = false,
+        public void Start(Action CallbackOnInit = null, Action<PspEmulator> GuiRunner = null, bool ShowMenus = true, bool AutoLoad = false,
             bool TrackCallStack = true)
         {
             try
@@ -157,7 +158,8 @@ namespace CSPspEmu
                 GuiConfig.DefaultDisplayScale = ShowMenus ? 1 : 2;
                 //ContextInitialized.WaitOne();
 
-                new GuiRunner(this).Start();
+                GuiRunner?.Invoke(this);
+                //new GuiRunner(this).Start();
 
                 PspRunner.StopSynchronized();
             }
