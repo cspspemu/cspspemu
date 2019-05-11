@@ -29,23 +29,42 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             base.StopSynchronized();
         }
 
-        private Matrix4x4 vertexTransform = new Matrix4x4();
+        private Matrix4x4 worldView = new Matrix4x4();
+        private Matrix4x4 worldViewProjection3D = new Matrix4x4();
+        private Matrix4x4 worldViewProjection2D = new Matrix4x4();
+        private Matrix4x4 transform3d = new Matrix4x4();
+        private Matrix4x4 unitToScreenCoords = Matrix4x4.CreateTranslation(-1, -1, 0) * Matrix4x4.CreateScale(512 / 2, 272 / 2, 0);
 
         private GpuStateStruct* GpuState;
         private uint DrawAddress;
-        private GuPrimitiveType PrimitiveType;
+        private GuPrimitiveType PrimitiveType; 
 
-        public override void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState, GuPrimitiveType primitiveType)
+        public override void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState,
+            GuPrimitiveType primitiveType)
         {
             GpuState = gpuState;
             VertexType = gpuState->VertexState.Type;
             PrimitiveType = primitiveType;
             var world = gpuState->VertexState.WorldMatrix.Matrix4x4;
             var view = gpuState->VertexState.ViewMatrix.Matrix4x4;
-            var projection = gpuState->VertexState.ProjectionMatrix.Matrix4x4;
-            vertexTransform = world * view * projection * Matrix4x4.CreateTranslation(-1, -1, 0) * Matrix4x4.CreateScale(512 / 2, 272 / 2, 0);
+            var projection3D = gpuState->VertexState.ProjectionMatrix.Matrix4x4;
+            var projection2D = Matrix4x4.CreateOrthographic(512, 272, -1000f, +1000f);
+            worldView = world * view;
+            worldViewProjection3D = worldView * projection3D;
+            worldViewProjection2D = worldView * projection2D;
             DrawAddress = GpuState->DrawBufferState.Address;
-            Console.WriteLine($"PrimStart: {primitiveType}");
+            if (primitiveType == GuPrimitiveType.Triangles)
+            {
+                Console.WriteLine($"primitiveType {primitiveType}");
+                Console.WriteLine($"World {world}");
+                Console.WriteLine($"View {view}");
+                Console.WriteLine($"Projection3D {projection3D}");
+                //Console.WriteLine($"Projection2D {projection2D}");
+                Console.WriteLine($"worldView {worldView}");
+                Console.WriteLine($"worldViewProjection3D {worldViewProjection3D}");
+                //Console.WriteLine($"worldViewProjection2D {worldViewProjection2D}");
+                Console.WriteLine($"PrimStart: {primitiveType}");
+            }
         }
 
         public override void PrimEnd()
@@ -58,14 +77,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             uint morpingVertexCount, totalVerticesWithoutMorphing;
             PreparePrim(GpuState, out totalVerticesWithoutMorphing, vertexCount, out morpingVertexCount);
             var vertices = new Vector4[vertexCount];
-            var vertexTransform = this.vertexTransform;
+            var vertexTransform = this.worldViewProjection3D;
             {
+                var transform = VertexType.Transform2D ? Matrix4x4.Identity : worldViewProjection3D;
+                var rtransform = VertexType.Transform2D ? transform : transform * unitToScreenCoords;
+                    
                 for (var n = 0; n < vertexCount; n++)
                 {
                     var vinfo = VertexReader.ReadVertex(n);
                     var vector = vinfo.Position.ToVector4();
-                    
-                    vertices[n] = VertexType.Transform2D ? vector : Vector4.Transform(vector, vertexTransform);
+
+                    //Console.WriteLine($"VertexType.Transform2D: {VertexType.Transform2D} : {rtransform}");
+                    vertices[n] = VertexType.Transform2D ? vector : Vector4.Transform(vector, rtransform);
                 }
             }
             {
@@ -73,29 +96,29 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                 {
                     case GuPrimitiveType.Triangles:
                     {
+                        { for (var n = 0; n < vertexCount; n++) Console.WriteLine($"Triangle {VertexType.Transform2D}:" + VertexReader.ReadVertex(n) + " : " + Vector4ToPoint(vertices[n])); }
                         var m = 0;
                         for (var n = 0; n < vertexCount; n += 3)
-                        {
-                            //DrawTriangleFast(Vector4ToPoint(vertices[n + 0]), Vector4ToPoint(vertices[n + 1]), Vector4ToPoint(vertices[n + 2]), colors[m++ % colors.Length]);
+                        { 
+                            DrawTriangleFast(Vector4ToPoint(vertices[n + 0]), Vector4ToPoint(vertices[n + 1]), Vector4ToPoint(vertices[n + 2]), colors[m++ % colors.Length]);
                         }
 
-                        DrawTriangleFast(new PointIS(100, 0), new PointIS(50, 100), new PointIS(150, 50), 0xFF00FFFF);
+                        //DrawTriangleFast(new PointIS(100, 0), new PointIS(50, 100), new PointIS(150, 50), 0xFF00FFFF);
 
                         break;
                     }
 
                     case GuPrimitiveType.Sprites:
                     {
-                        {
-                            //for (var n = 0; n < vertexCount; n++) Console.WriteLine("Sprite:" + VertexReader.ReadVertex(n));
-
-                        }
+                        //{ for (var n = 0; n < vertexCount; n++) Console.WriteLine($"Sprite {VertexType.Transform2D}:" + VertexReader.ReadVertex(n) + " : " + Vector4ToPoint(vertices[n])); }
                         for (var n = 0; n < vertexCount; n += 2)
                         {
                             DrawSprite(Vector4ToPoint(vertices[n + 0]), Vector4ToPoint(vertices[n + 1]));
                         }
+
                         break;
                     }
+
                     default:
                         Console.WriteLine($"Unsupported {PrimitiveType}");
                         break;
@@ -106,11 +129,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             Console.WriteLine($"Prim {vertexCount}");
         }
 
-        private PointIS Vector4ToPoint(Vector4 v) => new PointIS(
-            (int)v.X, (int)v.Y
-            //(int) (((v.X + 1.0) / 2.0) * 512),
-            //(int) (((v.Y + 1.0) / 2.0) * 272)
-        );
+        private PointIS Vector4ToPoint(Vector4 v) => new PointIS((int) v.X, (int) v.Y);
 
         private void DrawTriangleSlow(PointIS a, PointIS b, PointIS c)
         {
@@ -139,12 +158,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             if (P1.y < P0.y) Swap(ref P1, ref P0);
             if (P2.y < P0.y) Swap(ref P2, ref P0);
             if (P2.y < P1.y) Swap(ref P2, ref P1);
-            
-            Console.WriteLine($"{P0}, {P1}, {P2}");
+
+            //Console.WriteLine($"{P0}, {P1}, {P2}");
 
             var y0 = P0.y.Clamp(0, 272);
             var y2 = P2.y.Clamp(0, 272);
-            
+
             for (var y = y0; y <= y2; y++)
             {
                 var xa = InterpolateX(P0, P2, y);
@@ -152,22 +171,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                 var xmin = Math.Min(xa, xb).Clamp(0, 512);
                 var xmax = Math.Max(xa, xb).Clamp(0, 512);
                 DrawPixelsFast(xmin, y, xmax - xmin, color);
+                //Console.WriteLine($"{y}: {xa} - {xb}");
                 //for (var x = xmin; x <= xmax; x++) DrawPixel(x, y, 0xFFFFFFFF);
             }
         }
 
-        private int InterpolateX(PointIS a, PointIS b, int y)
+        static public int InterpolateX(PointIS a, PointIS b, int y)
         {
-            var ratio = (double)(y - b.Y) / (double)(b.Y - a.Y);
+            var ratio = (double) (y - a.Y) / (double) (b.Y - a.Y);
             return ratio.Interpolate(a.X, b.X);
         }
-        
-        public static void Swap<T> (ref T lhs, ref T rhs) {
+
+        public static void Swap<T>(ref T lhs, ref T rhs)
+        {
             T temp = lhs;
             lhs = rhs;
             rhs = temp;
         }
-        
+
         private void DrawSprite(PointIS a, PointIS b)
         {
             var minX = Math.Min(a.X, b.X).Clamp(0, 512);
@@ -175,18 +196,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             var minY = Math.Min(a.Y, b.Y).Clamp(0, 272);
             var maxY = Math.Max(a.Y, b.Y).Clamp(0, 272);
             //Console.WriteLine($"Sprite {a}, {b}");
-            for (int y = minY; y <= maxY; y++)
+            for (var y = minY; y <= maxY; y++)
             {
                 DrawPixelsFast(minX, y, maxX - minX, 0x777777FF);
             }
         }
-        
-        float sign (PointIS p1, PointIS p2, PointIS p3)
-        {
-            return (p1.X - p3.X) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
-        }
 
-        bool PointInTriangle (PointIS pt, PointIS v1, PointIS v2, PointIS v3)
+        private static float sign(PointIS p1, PointIS p2, PointIS p3) =>
+            (p1.X - p3.X) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+
+        private static bool PointInTriangle(PointIS pt, PointIS v1, PointIS v2, PointIS v3)
         {
             float d1, d2, d3;
             bool has_neg, has_pos;
@@ -204,14 +223,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
         private void DrawPixel(int x, int y, uint color)
         {
             if (x < 0 || y < 0 || x > 512 || y > 272) return;
-            Memory.Write4((uint)(DrawAddress + (y * 512 + x) * 4), color);
+            Memory.Write4((uint) (DrawAddress + (y * 512 + x) * 4), color);
         }
 
         private void DrawPixelsFast(int x, int y, int count, uint color)
         {
             if (x < 0 || y < 0 || x > 512 || y > 272) return;
-            var ptr = (uint *)Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + x) * 4));
-            for (int n = 0; n < count; n++) ptr[n] = color; 
+            var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + x) * 4));
+            for (int n = 0; n < count; n++) ptr[n] = color;
         }
 
         public override void Finish(GpuStateStruct* gpuState)
@@ -279,7 +298,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             base.UnsetCurrent();
         }
 
-        public override void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount,
+        public override void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct,
+            VertexInfo[,] Patch, int UCount,
             int VCount)
         {
             base.DrawCurvedSurface(GlobalGpuState, GpuStateStruct, Patch, UCount, VCount);

@@ -21,7 +21,8 @@ class Program
             //pspEmulator.StartAndLoad("counter.elf", GuiRunner: (emulator) =>
             //pspEmulator.StartAndLoad("HelloWorldPSP.pbp", GuiRunner: (emulator) =>
             //pspEmulator.StartAndLoad("controller.elf", GuiRunner: (emulator) =>
-            pspEmulator.StartAndLoad("cube.pbp", GuiRunner: (emulator) =>
+            //pspEmulator.StartAndLoad("cube.pbp", GuiRunner: (emulator) =>
+            pspEmulator.StartAndLoad("ortho.pbp", GuiRunner: (emulator) =>
             {
                 Console.WriteLine("Hello World!");
                 if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) != 0)
@@ -199,8 +200,8 @@ class Program
                     lx = (pressingAnalogLeft != 0) ? -pressingAnalogLeft : pressingAnalogRight;
                     ly = (pressingAnalogUp != 0) ? -pressingAnalogUp : pressingAnalogDown;
 
-                    ctrlData.Lx = (byte)(lx * 90).Clamp(-127, 128);
-                    ctrlData.Ly = (byte)(ly * 90).Clamp(-127, 128);
+                    ctrlData.X = lx / 3f;
+                    ctrlData.Y = ly / 3f;
                     ctrlData.TimeStamp = rtc.UnixTimeStamp;
 
                     controller.InsertSceCtrlData(ctrlData);

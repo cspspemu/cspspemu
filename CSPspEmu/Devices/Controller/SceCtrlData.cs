@@ -1,4 +1,6 @@
-﻿namespace CSPspEmu.Core.Types.Controller
+﻿using CSPspEmu.Utils;
+
+namespace CSPspEmu.Core.Types.Controller
 {
     public struct SceCtrlData
     {
@@ -46,7 +48,7 @@
         public float X
         {
             get => ((Lx / 255.0f) - 0.5f) * 2.0f;
-            set => Lx = (byte) (((value / 2.0f) + 0.5f) * 255.0f);
+            set => Lx = (byte) (((value / 2.0f) + 0.5f) * 255.0f).Clamp(0, 255);
         }
 
         /// <summary>
@@ -55,7 +57,7 @@
         public float Y
         {
             get => ((Ly / 255.0f) - 0.5f) * 2.0f;
-            set => Ly = (byte) (((value / 2.0f) + 0.5f) * 255.0f);
+            set => Ly = (byte) (((value / 2.0f) + 0.5f) * 255.0f).Clamp(0, 255);
         }
 
         public void UpdateButtons(PspCtrlButtons buttons, bool pressed)

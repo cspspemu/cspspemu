@@ -9,7 +9,14 @@ namespace CSPspEmu.Utils
             if (value > max) return max;
             return value;
         }
-        
+
+        static public float Clamp(this float value, float min, float max)
+        {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }
+
         public static int Interpolate(this double ratio, int min, int max)
         {
             return (int) (min + (max - min) * ratio);

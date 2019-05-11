@@ -303,50 +303,15 @@ namespace CSPspEmu.Core.Memory
             return *(byte*) PspAddressToPointerNotNull(Address);
         }
 
-        public virtual ushort Read2(uint Address)
-        {
-            return *(ushort*) PspAddressToPointerNotNull(Address);
-        }
-
-        public virtual uint Read4(uint Address)
-        {
-            return *(uint*) PspAddressToPointerNotNull(Address);
-        }
-
-        public virtual ulong Read8(uint Address)
-        {
-            return *(ulong*) PspAddressToPointerNotNull(Address);
-        }
-
-        public virtual void Write1(uint Address, byte Value)
-        {
-            *(byte*) PspAddressToPointerNotNull(Address) = Value;
-        }
-
-        public virtual void Write2(uint Address, ushort Value)
-        {
-            *(ushort*) PspAddressToPointerNotNull(Address) = Value;
-        }
-
-        public virtual void Write4(uint Address, uint Value)
-        {
-            *(uint*) PspAddressToPointerNotNull(Address) = Value;
-        }
-
-        public virtual void Write8(uint Address, ulong Value)
-        {
-            *(ulong*) PspAddressToPointerNotNull(Address) = Value;
-        }
-
-        public void ReadBytes(uint Address, byte* DataOutPointer, int DataOutLength)
-        {
-            PointerUtils.Memcpy(DataOutPointer, (byte*) PspAddressToPointerSafe(Address, DataOutLength), DataOutLength);
-        }
-
-        public TType ReadStruct<TType>(uint Address) where TType : struct
-        {
-            return StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
-        }
+        public virtual ushort Read2(uint Address) => *(ushort*) PspAddressToPointerNotNull(Address);
+        public virtual uint Read4(uint Address) => *(uint*) PspAddressToPointerNotNull(Address);
+        public virtual ulong Read8(uint Address) => *(ulong*) PspAddressToPointerNotNull(Address);
+        public virtual void Write1(uint Address, byte Value) => *(byte*) PspAddressToPointerNotNull(Address) = Value;
+        public virtual void Write2(uint Address, ushort Value) => *(ushort*) PspAddressToPointerNotNull(Address) = Value;
+        public virtual void Write4(uint Address, uint Value) => *(uint*) PspAddressToPointerNotNull(Address) = Value;
+        public virtual void Write8(uint Address, ulong Value) => *(ulong*) PspAddressToPointerNotNull(Address) = Value;
+        public void ReadBytes(uint Address, byte* DataOutPointer, int DataOutLength) => PointerUtils.Memcpy(DataOutPointer, (byte*) PspAddressToPointerSafe(Address, DataOutLength), DataOutLength);
+        public TType ReadStruct<TType>(uint Address) where TType : struct => StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
 
         public abstract void Dispose();
 
