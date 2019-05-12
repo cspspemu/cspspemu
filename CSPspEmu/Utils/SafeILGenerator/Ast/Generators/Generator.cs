@@ -72,7 +72,7 @@ namespace SafeILGenerator.Ast.Generators
             foreach (var method in GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(method => method.ReturnType == typeof(void))
-                .Where(method => method.GetParameters().Count() == 1)
+                .Where(method => method.GetParameters().Length == 1)
             )
             {
                 var parameterType = method.GetParameters().First().ParameterType;

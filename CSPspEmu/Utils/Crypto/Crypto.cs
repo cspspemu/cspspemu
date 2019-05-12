@@ -13,21 +13,8 @@ namespace CSPspEmu.Core.Components.Crypto
 
         //memcpy(block_buff, src, 16);
         public static void Memcpy(byte* dst, byte* src, int count) => PointerUtils.Memcpy(dst, src, count);
-
-        public static int Memcmp(byte* str1, byte* str2, int count)
-        {
-            for (var n = 0; n < count; n++)
-            {
-                var c1 = str1[n];
-                var c2 = str2[n];
-                if (c1 > c2) return -1;
-                if (c1 < c2) return +1;
-            }
-            return 0;
-        }
-
-
         public static void Memcpy(void* dst, void* src, int count) => Memcpy((byte*) dst, (byte*) src, count);
+        public static int Memcmp(byte* str1, byte* str2, int count) => PointerUtils.Memcmp(str1, str2, count);
 
         //private static void PUTuint(byte[] ct, uint st) {
         //	(ct)[0] = (byte)((st) >> 24);

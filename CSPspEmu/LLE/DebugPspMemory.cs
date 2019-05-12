@@ -14,7 +14,7 @@ namespace CSPspEmuLLETest
 
         private bool IsHwRegister(uint address)
         {
-            var maskedAddress = address & PspMemory.MemoryMask;
+            var maskedAddress = address & MemoryMask;
 
             if (maskedAddress >= 0x1FD00000 && maskedAddress < 0x1FD00000 + 0x1000) return false;
 
@@ -23,7 +23,7 @@ namespace CSPspEmuLLETest
                 //if ((Address & PspMemory.MemoryMask) >= VectorsOffset) return true;
                 //if ((MaskedAddress >= VectorsOffset) && (MaskedAddress < (VectorsOffset + 0x1000))) return true;
 
-                if ((maskedAddress >= VectorsOffset)) return true;
+                if (maskedAddress >= VectorsOffset) return true;
 
 
                 //var MaskedAddress = Address;
@@ -32,7 +32,7 @@ namespace CSPspEmuLLETest
             else
             {
             }
-            return !IsAddressValid(address & PspMemory.MemoryMask);
+            return !IsAddressValid(address & MemoryMask);
         }
 
         public override byte Read1(uint address)

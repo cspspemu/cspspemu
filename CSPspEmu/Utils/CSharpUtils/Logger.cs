@@ -168,38 +168,12 @@ namespace CSharpUtils
         /// <param name="format"></param>
         /// <param name="Params"></param>
         /// <returns></returns>
-        public Logger Unimplemented(object format, params object[] Params)
-        {
-            return Log(Level.Unimplemented, format, Params);
-        }
+        public Logger Unimplemented(object format, params object[] Params) => Log(Level.Unimplemented, format, Params);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="format"></param>
-        /// <param name="Params"></param>
-        /// <returns></returns>
-        public Logger Error(object format, params object[] Params)
-        {
-            return Log(Level.Error, format, Params);
-        }
+        public Logger Error(object format, params object[] Params) => Log(Level.Error, format, Params);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="format"></param>
-        /// <param name="Params"></param>
-        /// <returns></returns>
-        public Logger Fatal(object format, params object[] Params)
-        {
-            return Log(Level.Fatal, format, Params);
-        }
+        public Logger Fatal(object format, params object[] Params) => Log(Level.Fatal, format, Params);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
         public static TimeSpan Measure(Action action)
         {
             var start = DateTime.UtcNow;
@@ -216,28 +190,13 @@ namespace CSharpUtils
             protected List<DateTime> DateTimeList = new List<DateTime>();
             protected DateTime LastDateTime;
 
-            /// <summary>
-            /// 
-            /// </summary>
-            public Stopwatch()
-            {
-                Start();
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
+            public Stopwatch() => Start();
             public Stopwatch Start()
             {
                 LastDateTime = DateTime.UtcNow;
                 return this;
             }
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
             public TimeSpan Tick()
             {
                 var now = DateTime.UtcNow;
@@ -259,13 +218,8 @@ namespace CSharpUtils
             public override string ToString()
             {
                 var timeSpans = new List<TimeSpan>();
-                for (var n = 1; n < DateTimeList.Count; n++)
-                {
-                    timeSpans.Add(DateTimeList[n] - DateTimeList[n - 1]);
-                }
-
-                return
-                    $"Logger.Stopwatch({Join(",", timeSpans.Select(item => $"{(int) item.TotalMilliseconds} ms"))})";
+                for (var n = 1; n < DateTimeList.Count; n++) timeSpans.Add(DateTimeList[n] - DateTimeList[n - 1]);
+                return $"Logger.Stopwatch({Join(",", timeSpans.Select(item => $"{(int) item.TotalMilliseconds} ms"))})";
             }
         }
 

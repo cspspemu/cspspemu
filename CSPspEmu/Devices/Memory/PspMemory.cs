@@ -35,7 +35,7 @@ namespace CSPspEmu.Core.Memory
         public const uint MemoryMask = 0x1FFFFFFF;
 
         public static readonly void* InvalidPointer = Marshal.AllocHGlobal(0x10000).ToPointer();
-        public readonly void* InvalidPointerInstance = PspMemory.InvalidPointer;
+        public readonly void* InvalidPointerInstance = InvalidPointer;
 
         public class InvalidAddressException : Exception
         {
