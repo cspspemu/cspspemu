@@ -9,14 +9,8 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
     {
         public static readonly MethodCacheInfo Methods = new MethodCacheInfo();
 
-        /// <summary>
-        /// 
-        /// </summary>
         private DynarecFunction _dynarecFunction;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private Action<CpuThreadState> _functionDelegate;
 
         public DynarecFunction DynarecFunction => _dynarecFunction;
@@ -30,14 +24,8 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
         public bool HasSpecialName => !string.IsNullOrEmpty(DynarecFunction?.Name);
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Name => HasSpecialName ? DynarecFunction.Name : $"0x{EntryPc:X8}";
 
-        /// <summary>
-        /// 
-        /// </summary>
         public MethodCache MethodCache;
 
         /// <summary>
@@ -50,9 +38,6 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// </summary>
         public IlInstanceHolderPoolItem<Action<CpuThreadState>> StaticField;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool FollowPspCallingConventions;
 
         private MethodCacheInfo()
@@ -67,49 +52,26 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             Pc = pc;
         }
 
-        /// <summary>
-        /// EntryPoint setted first.
-        /// </summary>
+        /// <summary>EntryPoint setted first.</summary>
         public uint Pc;
 
-        /// <summary>
-        /// EntryPoint for this function.
-        /// </summary>
+        /// <summary>EntryPoint for this function.</summary>
         public uint EntryPc => DynarecFunction.EntryPc;
 
-        /// <summary>
-        /// Address of the start of the function. Usually is equal to EntryPC but not always.
-        /// </summary>
+        /// <summary>Address of the start of the function. Usually is equal to EntryPC but not always.</summary>
         public uint MinPc => DynarecFunction.MinPc;
 
-        /// <summary>
-        /// Last address with code for this function.
-        /// </summary>
+        /// <summary>Last address with code for this function.</summary>
         public uint MaxPc => DynarecFunction.MaxPc;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public uint TotalInstructions => (DynarecFunction.MaxPc - DynarecFunction.MinPc) / 7;
 
-        /// <summary>
-        /// Ast for this function.
-        /// </summary>
+        /// <summary>Ast for this function.</summary>
         public AstNodeStm AstTree => DynarecFunction?.AstNode;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cpuThreadState"></param>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CallDelegate(CpuThreadState cpuThreadState) => _functionDelegate(cpuThreadState);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Free()
-        {
-            MethodCache.Free(this);
-        }
+        public void Free() => MethodCache.Free(this);
     }
 }

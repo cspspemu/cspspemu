@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
     public sealed class VfpuUtils
     {
         public static string GetRegisterName(int matrix, int column, int row) =>
-            "VFR" + GetIndexCell(matrix, column, row);
+            $"VFR{GetIndexCell(matrix, column, row)}";
 
         //public static int GetIndexCell(int Matrix, int Column, int Row, bool Transposed)
         //{

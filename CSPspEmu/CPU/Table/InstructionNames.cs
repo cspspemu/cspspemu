@@ -1,6 +1,8 @@
-﻿namespace CSPspEmu.Core.Cpu.Table
+﻿// ReSharper disable InconsistentNaming
+// ReSharper disable IdentifierTypo
+namespace CSPspEmu.Core.Cpu.Table
 {
-    public class InstructionNames
+    public static class InstructionNames
     {
         public const string Syscall = "syscall";
         public const string Unhandled = "unhandled";

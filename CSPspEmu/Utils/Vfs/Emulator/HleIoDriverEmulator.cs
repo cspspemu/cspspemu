@@ -19,7 +19,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
         EmitScreenshot = 0x00000020,
     }
 
-    public class HleIoDriverEmulator : IHleIoDriver
+    public class HleIoDriverEmulator : AbstractHleIoDriver, IHleIoDriver
     {
         [Inject] PspDisplay PspDisplay;
 
@@ -64,8 +64,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
             throw new NotImplementedException();
         }
 
-        public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength,
-            byte* OutputPointer, int OutputLength)
+        public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, Span<byte> Input, Span<byte> Output)
         {
             throw new NotImplementedException();
         }
@@ -132,8 +131,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 
         int ScreenShotCount = 0;
 
-        public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer,
-            int InputLength, byte* OutputPointer, int OutputLength)
+        public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output)
         {
             switch (DeviceName)
             {
@@ -146,10 +144,10 @@ namespace CSPspEmu.Hle.Vfs.Emulator
             switch ((EmulatorDevclEnum) Command)
             {
                 case EmulatorDevclEnum.GetHasDisplay:
-                    *((int*) OutputPointer) = DisplayConfig.Enabled ? 1 : 0;
+                    ReinterpretSpan<int>(Output)[0] = DisplayConfig.Enabled ? 1 : 0;
                     break;
                 case EmulatorDevclEnum.SendOutput:
-                    var OutputString = new string((sbyte*) InputPointer, 0, InputLength, Encoding.ASCII);
+                    var OutputString = Encoding.ASCII.GetString(ReinterpretSpan<byte>(Input));
                     this.HleOutputHandler.Output(OutputString);
                     //Console.Error.WriteLine("{0}", OutputString);
                     break;

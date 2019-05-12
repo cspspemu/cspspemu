@@ -213,7 +213,7 @@ class Program
 
                         ctrlData.X = lx / 3f;
                         ctrlData.Y = ly / 3f;
-                        ctrlData.TimeStamp = rtc.UnixTimeStamp;
+                        ctrlData.TimeStamp = (uint) rtc.UnixTimeStampTS.Milliseconds;
 
                         controller.InsertSceCtrlData(ctrlData);
                         //SDL.SDL_RenderClear(renderer);

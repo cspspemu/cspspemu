@@ -173,7 +173,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm Mfhi() => _ast.AssignGpr(Rd, _ast.Cast<uint>(_ast.Hi()));
 
         [InstructionName(InstructionNames.Mflo)]
-        public AstNodeStm Mflo() => _ast.AssignGpr(Rd, _ast.Cast<uint>(_ast.Lo()));
+        public AstNodeStm Mflo() => _ast.AssignGpr(Rd, _ast.Cast<uint>(_ast.Lo));
 
         [InstructionName(InstructionNames.Mthi)]
         public AstNodeStm Mthi() => _ast.AssignHi(_ast.GPR_s(Rs));

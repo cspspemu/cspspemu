@@ -157,7 +157,7 @@ namespace CSPspEmu.Core.Cpu.Table
                             displacement = 26;
                             break;
                         default:
-                            throw(new Exception("Unknown part '" + part + "'"));
+                            throw new Exception("Unknown part '" + part + "'");
                     }
 
                     Mask <<= displacement;

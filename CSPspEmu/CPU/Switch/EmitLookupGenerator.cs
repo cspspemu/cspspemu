@@ -16,10 +16,7 @@ namespace CSPspEmu.Core.Cpu.Switch
         private static readonly AstGenerator Ast = AstGenerator.Instance;
 
         public static Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> callback,
-            TType instance)
-        {
-            return value => callback(value, instance);
-        }
+            TType instance) => value => callback(value, instance);
 
         public static Action<uint, TType> GenerateSwitchDelegate<TType>(string name,
             IEnumerable<InstructionInfo> instructionInfoList)
@@ -29,9 +26,8 @@ namespace CSPspEmu.Core.Cpu.Switch
                 var instructionInfoName = (instructionInfo != null) ? instructionInfo.Name : "Default";
                 var methodInfo = typeof(TType).GetMethod(instructionInfoName);
                 if (methodInfo == null)
-                    throw (new Exception(
-                        $"Cannot find method \'{instructionInfoName}\' on type \'{typeof(TType).Name}\' {name}, {instructionInfo?.Name} ")
-                    );
+                    throw new Exception(
+                        $"Cannot find method \'{instructionInfoName}\' on type \'{typeof(TType).Name}\' {name}, {instructionInfo?.Name} ");
 
                 //Console.WriteLine("MethodInfo: {0}", MethodInfo);
                 //Console.WriteLine("Argument(1): {0}", typeof(TType));
@@ -53,10 +49,7 @@ namespace CSPspEmu.Core.Cpu.Switch
         {
             var customNamesToMethodInfo = new Dictionary<string, MethodInfo>();
 
-            string NormalizeName(string nname)
-            {
-                return nname.ToLower().Replace('.', '_').Trim('_');
-            }
+            string NormalizeName(string nname) => nname.ToLower().Replace('.', '_').Trim('_');
 
             //Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
             foreach (var methodInfo in typeof(TType).GetMethods())
@@ -101,9 +94,8 @@ namespace CSPspEmu.Core.Cpu.Switch
 
                 if (methodInfo == null)
                 {
-                    throw (new Exception(
-                        $"Cannot find method \'{instructionInfoName}\' on type \'{typeof(TType).Name}\' : {name}, {instructionInfo?.Name}")
-                    );
+                    throw new Exception(
+                        $"Cannot find method '{instructionInfoName}' on type '{typeof(TType).Name}' : {name}, {instructionInfo?.Name}");
                 }
 
                 if (methodInfo.ReturnType == typeof(TRetType))

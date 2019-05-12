@@ -18,7 +18,8 @@ namespace CSPspEmu.Core.Components.Rtc
         public PspTimeStruct ElapsedTime;
 
         public TimeSpan Elapsed => CurrentDateTime - StartDateTime;
-        public uint UnixTimeStamp => (uint) (CurrentDateTime - new DateTime(1970, 1, 1)).TotalSeconds;
+        public TimeSpan UnixTimeStampTS => (CurrentDateTime - new DateTime(1970, 1, 1));
+        public uint UnixTimeStamp => (uint) UnixTimeStampTS.TotalSeconds;
         public PspRtc() => Start();
 
         public void Start()

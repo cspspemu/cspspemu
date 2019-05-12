@@ -24,24 +24,24 @@ namespace CSPspEmu.Tests
         [Fact]
         public void TestMemcpy()
         {
-            int SizeStart = 17;
-            int SizeMiddle = 77;
-            int SizeEnd = 17;
-            var Dst = new byte[SizeStart + SizeMiddle + SizeEnd];
-            fixed (byte* DstPtr = &Dst[SizeStart])
+            var sizeStart = 17;
+            var sizeMiddle = 77;
+            var sizeEnd = 17;
+            var dst = new byte[sizeStart + sizeMiddle + sizeEnd];
+            fixed (byte* DstPtr = &dst[sizeStart])
             {
-                PointerUtils.Memcpy(DstPtr, ((byte) 0x1D).Repeat(SizeMiddle).ToArray(), SizeMiddle);
+                PointerUtils.Memcpy(DstPtr, ((byte) 0x1D).Repeat(sizeMiddle).ToArray(), sizeMiddle);
             }
 
-            var Expected = ((byte) 0x00).Repeat(SizeStart).Concat(((byte) 0x1D).Repeat(SizeMiddle))
-                .Concat(((byte) 0x00).Repeat(SizeEnd)).ToArray();
+            var Expected = ((byte) 0x00).Repeat(sizeStart).Concat(((byte) 0x1D).Repeat(sizeMiddle))
+                .Concat(((byte) 0x00).Repeat(sizeEnd)).ToArray();
 
             //Console.WriteLine(BitConverter.ToString(Dst));
             //Console.WriteLine(BitConverter.ToString(Expected));
 
             Assert.Equal(
                 Expected,
-                Dst
+                dst
             );
         }
 
@@ -54,21 +54,16 @@ namespace CSPspEmu.Tests
 
             foreach (var Set64 in new[] {false, true})
             {
-                PointerUtils.Is64 = Set64;
+                //PointerUtils.Is64 = Set64;
 
-                fixed (byte* SourcePtr = Source)
-                fixed (byte* DestPtr = Dest)
+                fixed (byte* sourcePtr = Source)
+                fixed (byte* destPtr = Dest)
                 {
-                    for (int count = 0; count < TotalSize; count++)
+                    for (var count = 0; count < TotalSize; count++)
                     {
-                        for (int m = 0; m < TotalSize; m++) Dest[m] = 0;
-
-                        PointerUtils.Memcpy(DestPtr, SourcePtr, count);
-
-                        for (int m = 0; m < TotalSize; m++)
-                        {
-                            Assert.Equal((m < count) ? m : 0, Dest[m]);
-                        }
+                        for (var m = 0; m < TotalSize; m++) Dest[m] = 0;
+                        PointerUtils.Memcpy(destPtr, sourcePtr, count);
+                        for (var m = 0; m < TotalSize; m++) Assert.Equal((m < count) ? m : 0, Dest[m]);
                     }
                 }
             }
@@ -82,7 +77,7 @@ namespace CSPspEmu.Tests
 
             foreach (var Set64 in new[] {false, true})
             {
-                PointerUtils.Is64 = Set64;
+                //PointerUtils.Is64 = Set64;
 
                 fixed (byte* DestPtr = Dest)
                 {

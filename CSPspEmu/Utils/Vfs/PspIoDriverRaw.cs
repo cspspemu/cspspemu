@@ -1,3 +1,0 @@
-﻿namespace CSPspEmu.Hle.Vfs
-{
-}

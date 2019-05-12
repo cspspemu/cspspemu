@@ -144,7 +144,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeStm AssignHi(AstNodeExpr expr) => Ast.Assign(Ast.Hi(), expr);
 
-        public AstNodeStm AssignLo(AstNodeExpr expr) => Ast.Assign(Ast.Lo(), expr);
+        public AstNodeStm AssignLo(AstNodeExpr expr) => Ast.Assign(Ast.Lo, expr);
 
         public AstNodeStm AssignIc(AstNodeExpr expr) => Ast.Assign(Ast.Ic(), expr);
 
@@ -193,7 +193,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         public AstNodeExprLValue Hi() => Reg(nameof(CpuThreadState.Hi));
 
-        public AstNodeExprLValue Lo() => Reg(nameof(CpuThreadState.Lo));
+        public AstNodeExprLValue Lo => Reg(nameof(CpuThreadState.Lo));
 
         public AstNodeExprLValue C0R(int index) => Reg(CpuThreadState.C0RNames[index]);
 

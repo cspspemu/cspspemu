@@ -21,8 +21,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
             try
             {
-                return HleIoDrvFileArg.HleIoDriver.IoIoctl(HleIoDrvFileArg, Command, InputPointer, InputLength,
-                    OutputPointer, OutputLength);
+                return HleIoDrvFileArg.HleIoDriver.IoIoctl(HleIoDrvFileArg, Command, new Span<byte>(InputPointer, InputLength),
+                    new Span<byte>(OutputPointer, OutputLength));
             }
             finally
             {
@@ -53,7 +53,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             {
                 var Info = HleIoManager.ParseDeviceName(DeviceName);
                 return Info.HleIoDrvFileArg.HleIoDriver.IoDevctl(Info.HleIoDrvFileArg, DeviceName, Command,
-                    InputPointer, InputLength, OutputPointer, OutputLength);
+                    new Span<byte>(InputPointer, InputLength), new Span<byte>(OutputPointer, OutputLength));
             }
             catch (NotImplementedException NotImplementedException)
             {

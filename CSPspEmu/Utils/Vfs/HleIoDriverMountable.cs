@@ -69,8 +69,7 @@ namespace CSPspEmu.Hle.Vfs
             throw new NotImplementedException();
         }
 
-        public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength,
-            byte* OutputPointer, int OutputLength)
+        public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, Span<byte> Input, Span<byte> Output)
         {
             throw new NotImplementedException();
         }
@@ -140,8 +139,7 @@ namespace CSPspEmu.Hle.Vfs
             throw new NotImplementedException();
         }
 
-        public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer,
-            int InputLength, byte* OutputPointer, int OutputLength)
+        public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output)
         {
             throw new NotImplementedException();
         }

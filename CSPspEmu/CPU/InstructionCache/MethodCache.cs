@@ -30,12 +30,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         MethodCompilerThread _methodCompilerThread;
 
         void IInjectInitialize.Initialize() => _methodCompilerThread = new MethodCompilerThread(CpuProcessor, this);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pc"></param>
-        /// <returns></returns>
+        
         public MethodCacheInfo GetForPc(uint pc)
         {
             if (_methodMapping.ContainsKey(pc))

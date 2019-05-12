@@ -49,10 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Devices" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Resources\flash0.zip" />
     <EmbeddedResource Include="Resources\flash0.zip" />
     <None Remove="Resources\Translations.xml" />

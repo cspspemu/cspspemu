@@ -29,7 +29,7 @@ namespace CSharpUtilsTests
         public void SetPaletteTest()
         {
             Bitmap Bitmap = new Bitmap(2, 2, PixelFormat.Format8bppIndexed);
-            var Colors = new Color[]
+            var Colors = new[]
             {
                 Color.FromArgb(255, 0, 0, 0),
                 Color.FromArgb(255, 255, 255, 255),

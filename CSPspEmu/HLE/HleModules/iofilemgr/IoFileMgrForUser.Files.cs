@@ -134,8 +134,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
                 throw new NotImplementedException();
             }
 
-            public int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength,
-                byte* OutputPointer, int OutputLength)
+            public int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, Span<byte> Input, Span<byte> Output)
             {
                 throw new NotImplementedException();
             }
@@ -200,8 +199,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
                 throw new NotImplementedException();
             }
 
-            public int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer,
-                int InputLength, byte* OutputPointer, int OutputLength)
+            public int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output)
             {
                 throw new NotImplementedException();
             }

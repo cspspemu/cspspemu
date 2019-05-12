@@ -97,7 +97,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                 var dictionary = new Dictionary<InstructionInfo, int>();
 
                 InstructionLookup = InstructionTable.All.ToArray();
-                for (int n = 0; n < InstructionLookup.Length; n++) dictionary[InstructionLookup[n]] = n;
+                for (var n = 0; n < InstructionLookup.Length; n++) dictionary[InstructionLookup[n]] = n;
 
                 ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>("",
                     InstructionTable.All, instructionInfo => ast.Return(ast.CallStatic(

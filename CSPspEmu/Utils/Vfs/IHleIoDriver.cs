@@ -383,6 +383,19 @@ namespace CSPspEmu.Hle.Vfs
         }
     }
 
+    public abstract class AbstractHleIoDriver
+    {
+        protected unsafe Span<T> ReinterpretSpan<T>(Span<byte> Span, int count = 1) where T : unmanaged
+        {
+            if (Span == null || Span.Length < count * sizeof(T))
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT);
+            fixed (byte* bp = &Span.GetPinnableReference()) {
+                //return new Span<T>(bp, count * sizeof(T));
+                return new Span<T>(bp, Span.Length / sizeof(T));
+            }
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -455,8 +468,7 @@ namespace CSPspEmu.Hle.Vfs
         /// <param name="OutputPointer"></param>
         /// <param name="OutputLength"></param>
         /// <returns></returns>
-        int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength,
-            byte* OutputPointer, int OutputLength);
+        int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, Span<byte> Input, Span<byte> Output);
 
         /// <summary>
         /// Removes a file.
@@ -568,8 +580,7 @@ namespace CSPspEmu.Hle.Vfs
         /// <param name="OutputPointer"></param>
         /// <param name="OutputLength"></param>
         /// <returns></returns>
-        int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer,
-            int InputLength, byte* OutputPointer, int OutputLength);
+        int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output);
 
         /// <summary>
         /// 

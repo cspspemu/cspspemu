@@ -310,20 +310,22 @@ namespace CSharpUtils
         /// <param name="ptr"></param>
         /// <param name="len"></param>
         /// <returns></returns>
-        public static int FastHash(byte* ptr, int len)
+        public static int FastHash(byte* ptr, int len) => FastHash(new Span<byte>(ptr, len));
+
+        public static int FastHash(Span<byte> data)
         {
-            switch (len)
+            switch (data.Length)
             {
                 case 0: return 0;
-                case 1: return (ptr[0] << 0);
-                case 2: return (ptr[0] << 0) | (ptr[1] << 8);
-                case 3: return (ptr[0] << 0) | (ptr[1] << 8) | (ptr[2] << 16);
+                case 1: return (data[0] << 0);
+                case 2: return (data[0] << 0) | (data[1] << 8);
+                case 3: return (data[0] << 0) | (data[1] << 8) | (data[2] << 16);
                 default:
-                    var hash = len;
-                    for (var n = 0; n < len; n++)
+                    var hash = data.Length;
+                    for (var n = 0; n < data.Length; n++)
                     {
                         hash ^= n << 28;
-                        hash += *ptr++;
+                        hash += data[n];
                     }
                     return hash;
             }

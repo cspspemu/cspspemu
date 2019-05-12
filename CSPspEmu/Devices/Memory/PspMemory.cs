@@ -129,20 +129,9 @@ namespace CSPspEmu.Core.Memory
             return Pointer;
         }
 
-        public PspPointer PointerToPspPointer(void* Pointer)
-        {
-            return new PspPointer(PointerToPspAddressSafe(Pointer));
-        }
-
-        public void* PspPointerToPointerSafe(PspPointer Pointer, int Size = 0)
-        {
-            return PspAddressToPointerSafe(Pointer.Address, Size);
-        }
-
-        public virtual uint PointerToPspAddressSafe(void* Pointer)
-        {
-            return PointerToPspAddressSafe((byte*) Pointer);
-        }
+        public PspPointer PointerToPspPointer(void* Pointer) => new PspPointer(PointerToPspAddressSafe(Pointer));
+        public void* PspPointerToPointerSafe(PspPointer Pointer, int Size = 0) => PspAddressToPointerSafe(Pointer.Address, Size);
+        public virtual uint PointerToPspAddressSafe(void* Pointer) => PointerToPspAddressSafe((byte*) Pointer);
 
         public virtual uint PointerToPspAddressSafe(byte* Pointer)
         {
@@ -164,10 +153,7 @@ namespace CSPspEmu.Core.Memory
         {
         }
 
-        public virtual uint GetPCWriteAddress(uint Address)
-        {
-            return 0xFFFFFFFF;
-        }
+        public virtual uint GetPCWriteAddress(uint Address) => 0xFFFFFFFF;
 
         public static bool IsRangeValid(uint Address, int Size)
         {
@@ -237,64 +223,18 @@ namespace CSPspEmu.Core.Memory
         }
         */
 
-        public void WriteSafe<TType>(uint Address, TType Value) where TType : struct
-        {
-            WriteStruct<TType>(Address, Value);
-        }
-
-        public void WriteBytes(uint Address, byte[] DataIn)
-        {
-            fixed (byte* DataInPtr = DataIn)
-            {
-                WriteBytes(Address, DataInPtr, DataIn.Length);
-            }
-        }
+        public void WriteSafe<TType>(uint Address, TType Value) where TType : struct => WriteStruct<TType>(Address, Value);
+        public void WriteBytes(uint Address, byte[] DataIn) => Write(Address, new Span<byte>(DataIn));
 
         //public delegate void WriteBytesDelegate(uint Address, byte* DataInPointer, int DataInLength);
         //public event WriteBytesDelegate WriteBytesHook;
 
-        public void WriteBytes(uint Address, byte* DataInPointer, int DataInLength)
-        {
-            //if (WriteBytesHook != null) WriteBytesHook(Address, DataInPointer, DataInLength);
-            PointerUtils.Memcpy((byte*) PspAddressToPointerSafe(Address, DataInLength), DataInPointer, DataInLength);
-        }
+        public void WriteBytes(uint Address, byte* DataInPointer, int DataInLength) => Write(Address, new Span<byte>(DataInPointer, DataInLength));
+        public void Write<T>(uint Address, Span<T> DataIn) where T : unmanaged => DataIn.CopyTo(Range<T>(Address, DataIn.Length));
+        public void WriteStruct<TType>(uint Address, TType Value) where TType : struct => WriteBytes(Address, StructUtils.StructToBytes(Value));
+        public void WriteRepeated1(byte Value, uint Address, int Count) => Range<byte>(Address, Count).Fill(Value);
 
-        public void WriteStruct<TType>(uint Address, TType Value) where TType : struct
-        {
-            WriteBytes(Address, StructUtils.StructToBytes(Value));
-        }
-
-        public void WriteRepeated1(byte Value, uint Address, int Count)
-        {
-            PointerUtils.Memset((byte*) PspAddressToPointerSafe(Address, Count), Value, Count);
-        }
-
-        /*
-        public byte Read1Unsafe(uint Address)
-        {
-            return *((byte*)PspAddressToPointerUnsafe(Address));
-        }
-
-        public ushort Read2Unsafe(uint Address)
-        {
-            return *((ushort*)PspAddressToPointerUnsafe(Address));
-        }
-
-        public uint Read4Unsafe(uint Address)
-        {
-            return *((uint*)PspAddressToPointerUnsafe(Address));
-        }
-
-        public ulong Read8Unsafe(uint Address)
-        {
-            return *((ulong*)PspAddressToPointerUnsafe(Address));
-        }
-        */
-
-        public TType ReadSafe<TType>(uint Address) where TType : struct
-        {
-            return StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
-        }
+        public TType ReadSafe<TType>(uint Address) where TType : struct => StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
 
         public byte[] ReadBytes(uint Address, int Count)
         {
@@ -306,11 +246,7 @@ namespace CSPspEmu.Core.Memory
             return Output;
         }
 
-        public virtual byte Read1(uint Address)
-        {
-            return *(byte*) PspAddressToPointerNotNull(Address);
-        }
-
+        public virtual byte Read1(uint Address) => *(byte*) PspAddressToPointerNotNull(Address);
         public virtual ushort Read2(uint Address) => *(ushort*) PspAddressToPointerNotNull(Address);
         public virtual uint Read4(uint Address) => *(uint*) PspAddressToPointerNotNull(Address);
         public virtual ulong Read8(uint Address) => *(ulong*) PspAddressToPointerNotNull(Address);
@@ -319,25 +255,17 @@ namespace CSPspEmu.Core.Memory
         public virtual void Write4(uint Address, uint Value) => *(uint*) PspAddressToPointerNotNull(Address) = Value;
         public virtual void Write8(uint Address, ulong Value) => *(ulong*) PspAddressToPointerNotNull(Address) = Value;
         public void ReadBytes(uint Address, byte* DataOutPointer, int DataOutLength) => PointerUtils.Memcpy(DataOutPointer, (byte*) PspAddressToPointerSafe(Address, DataOutLength), DataOutLength);
+        public void Read<T>(uint Address, Span<T> DataOut) where T : unmanaged => Range<T>(Address, DataOut.Length).CopyTo(DataOut);
         public TType ReadStruct<TType>(uint Address) where TType : struct => StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
 
         public abstract void Dispose();
+        public void Copy(uint SourceAddress, uint DestinationAddress, int Size) => Range<byte>(SourceAddress, Size).CopyTo(Range<byte>(DestinationAddress, Size));
 
-        public void Copy(uint SourceAddress, uint DestinationAddress, int Size)
-        {
-            var Source = PspAddressToPointerSafe(SourceAddress, Size);
-            var Destination = PspAddressToPointerSafe(DestinationAddress, Size);
-            PointerUtils.Memcpy((byte*) Destination, (byte*) Source, Size);
-        }
-
-        public string ReadStringz(uint Address, Encoding Encoding)
-        {
-            return new PspMemoryStream(this).SliceWithLength(Address).ReadStringz(-1, Encoding);
-        }
+        public string ReadStringz(uint Address, Encoding Encoding) => new PspMemoryStream(this).SliceWithLength(Address).ReadStringz(-1, Encoding);
 
         public uint WriteStringz(uint Address, string String)
         {
-            var Bytes = Encoding.UTF8.GetBytes(String + "\0");
+            var Bytes = Encoding.UTF8.GetBytes($"{String}\0");
             WriteBytes(Address, Bytes);
             return (uint) Bytes.Length;
         }

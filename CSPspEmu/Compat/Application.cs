@@ -4,6 +4,6 @@ namespace CSPspEmu.Compat
 {
     public class Application
     {
-        static public string ExecutablePath => AppDomain.CurrentDomain.BaseDirectory;
+        public static string ExecutablePath => AppDomain.CurrentDomain.BaseDirectory;
     }
 }
