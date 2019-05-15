@@ -131,7 +131,8 @@ class Program
                                 SDL.SDL_Keycode.SDLK_i => UpdatePressing(ref pressingAnalogUp, pressed),
                                 SDL.SDL_Keycode.SDLK_k => UpdatePressing(ref pressingAnalogDown, pressed),
                                 SDL.SDL_Keycode.SDLK_j => UpdatePressing(ref pressingAnalogLeft, pressed),
-                                SDL.SDL_Keycode.SDLK_l => UpdatePressing(ref pressingAnalogRight, pressed)
+                                SDL.SDL_Keycode.SDLK_l => UpdatePressing(ref pressingAnalogRight, pressed),
+                                _ => (PspCtrlButtons)0
                                 };
 
                                 
