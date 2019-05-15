@@ -58,13 +58,11 @@ namespace CSPspEmu.Runner
 
                 // AUDIO
 
-                var audioPlugins = new List<Type>
-                {
-                    //typeof(PspAudioOpenalImpl)
-                };
+                var audioPlugins = new List<Type>();
 
                 //if (Platform.OS == OS.Windows) audioPlugins.Add(typeof(PspAudioWaveOutImpl));
                 //if (Platform.OS == OS.Linux) audioPlugins.Add(typeof(AudioAlsaImpl));
+                //audioPlugins.Add(typeof(PspAudioOpenalImpl));
                 audioPlugins.Add(typeof(AudioImplNull));
 
                 PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(injectContext, audioPlugins.ToArray());

@@ -255,10 +255,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             var y0 = P0.y.Clamp(0, 272);
             var y2 = P2.y.Clamp(0, 272);
 
-            var V0 = new Vector3(1f, 0f, 0f);
-            var V1 = new Vector3(0f, 1f, 0f);
-            var V2 = new Vector3(0f, 0f, 1f);
-
             for (var y = y0; y <= y2; y++)
             {
                 var xa = InterpolateX(y, P0, P2, 1);

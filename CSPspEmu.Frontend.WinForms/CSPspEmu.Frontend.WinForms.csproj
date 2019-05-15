@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <LangVersion>8</LangVersion>
+        <NullableContextOptions>warnings</NullableContextOptions>
         <RootNamespace>CSPspEmu.WinForms</RootNamespace>
     </PropertyGroup>
 
