@@ -29,11 +29,13 @@
 #region Using Statements
 using System;
 using System.Runtime.InteropServices;
+using CSPspEmu.Utils.CSharpPlatform;
+
 #endregion
 
 namespace SDL2
 {
-	public static class SDL
+	public class SDL : NativeLibraryResolver
 	{
 		#region SDL2# Variables
 

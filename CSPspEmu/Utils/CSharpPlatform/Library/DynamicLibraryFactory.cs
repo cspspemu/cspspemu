@@ -6,66 +6,51 @@ using CSharpPlatform.Library.Impl;
 
 namespace CSharpPlatform.Library
 {
-    public class DynamicLibraryFactory
+    public static class DynamicLibraryFactory
     {
-        public static IDynamicLibrary CreateForLibrary(string NameWindows, string NameLinux = null,
-            string NameMac = null, string NameAndroid = null)
+        public static IDynamicLibrary CreateForLibrary(string nameWindows, string nameLinux = null,
+            string nameMac = null, string nameAndroid = null)
         {
-            if (NameLinux == null) NameLinux = NameWindows;
-            if (NameMac == null) NameMac = NameLinux;
-            if (NameAndroid == null) NameAndroid = NameLinux;
+            if (nameLinux == null) nameLinux = nameWindows;
+            if (nameMac == null) nameMac = nameLinux;
+            if (nameAndroid == null) nameAndroid = nameLinux;
 
-            string Name = NameWindows;
-            switch (Platform.OS)
-            {
-                case OS.Windows:
-                    Name = NameWindows;
-                    break;
-                case OS.Mac:
-                    Name = NameMac;
-                    break;
-                case OS.Android:
-                    Name = NameAndroid;
-                    break;
-                default:
-                case OS.Linux:
-                    Name = NameLinux;
-                    break;
-            }
+            var name = Platform.OS switch {
+                OS.Windows => nameWindows,
+                OS.Mac => nameMac,
+                OS.Android => nameAndroid,
+                OS.IOS => nameWindows,
+                OS.Linux => nameLinux,
+                _ => nameLinux
+                };
 
-            switch (Platform.OS)
-            {
-                case OS.Windows: return new DynamicLibraryWindows(Name);
-                case OS.Mac: return new DynamicLibraryMac(Name);
-                default: return new DynamicLibraryPosix(Name);
-            }
+
+            return Platform.OS switch
+                {
+                OS.Windows => (IDynamicLibrary)new DynamicLibraryWindows(name),
+                OS.Mac => (IDynamicLibrary)new DynamicLibraryMac(name),
+                _ => (IDynamicLibrary)new DynamicLibraryPosix(name)
+                };
         }
 
-        public static void MapLibraryToType<TType>(IDynamicLibrary DynamicLibrary)
+        public static void MapLibraryToType<TType>(IDynamicLibrary dynamicLibrary)
         {
-            var Type = typeof(TType);
-            foreach (var Field in Type.GetFields(BindingFlags.Public | BindingFlags.Static))
+            var type = typeof(TType);
+            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
-                if (Field.FieldType.IsSubclassOf(typeof(Delegate)))
+                if (!field.FieldType.IsSubclassOf(typeof(Delegate))) continue;
+                if (field.GetValue(null) != null) continue;
+                var method = dynamicLibrary.GetMethod(field.Name);
+                if (method != IntPtr.Zero)
                 {
-                    if (Field.GetValue(null) == null)
-                    {
-                        var Method = DynamicLibrary.GetMethod(Field.Name);
-                        if (Method != IntPtr.Zero)
-                        {
-                            Field.SetValue(
-                                null,
-                                Marshal.GetDelegateForFunctionPointer(
-                                    Method,
-                                    Field.FieldType
-                                )
-                            );
-                        }
-                        else
-                        {
-                            //Console.WriteLine(Field.Name);
-                        }
-                    }
+                    field.SetValue(
+                        null,
+                        Marshal.GetDelegateForFunctionPointer(method, field.FieldType)
+                    );
+                }
+                else
+                {
+                    //Console.WriteLine(Field.Name);
                 }
             }
         }
