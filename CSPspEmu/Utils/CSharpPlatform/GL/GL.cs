@@ -50,12 +50,13 @@ namespace CSharpPlatform.GL
         static GL()
         {
             DynamicLibraryFactory.MapLibraryToType<GL>(
-                DynamicLibraryFactory.CreateForLibrary(DllWindows, DllLinux, DllMac, DllAndroid));
+                DynamicLibraryFactory.CreateForLibrary(DllWindows, DllLinux, DllMac, DllAndroid)
+            );
         }
 
         private static bool LoadedAll;
 
-        internal static void LoadAllOnce()
+        public static void LoadAllOnce()
         {
             if (!LoadedAll)
             {
@@ -467,10 +468,7 @@ namespace CSharpPlatform.GL
             return Out;
         }
 
-        public static string GetString(int Name)
-        {
-            return Marshal.PtrToStringAnsi(new GLintptr(glGetString(Name)));
-        }
+        public static string GetString(int Name) => Marshal.PtrToStringAnsi(new GLintptr(glGetString(Name)));
 
         public static readonly glGenTextures glGenTextures;
         public static readonly glGetActiveAttrib glGetActiveAttrib;

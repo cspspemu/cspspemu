@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -242,7 +243,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             if (x0 < 0 || y < 0 || x0 > 512 || y > 272) return;
             var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + x0) * 4));
             var count = x1 - x0;
-            for (int n = 0; n < count; n++) ptr[n] = color;
+            for (var n = 0; n < count; n++) ptr[n] = color;
         }
 
         static public void RasterizeTriangle<T>(Triangle Tri, T param, Action<int, Result, Result, T> DrawPixelsFast)
@@ -342,7 +343,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             var endX = x1.Clamp(0, 512);
             var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + startX) * 4));
             var count = endX - startX;
-            for (int n = 0; n < count; n++) ptr[n] = color;
+            for (var n = 0; n < count; n++) ptr[n] = color;
         }
 
         private void DrawPixelsFast(int y, int x0, int x1, Vector4 c1, Vector4 c2)

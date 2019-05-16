@@ -88,10 +88,7 @@ public sealed class InjectContext : IDisposable
     /// </summary>
     /// <typeparam name="TType"></typeparam>
     /// <returns></returns>
-    public TType GetInstance<TType>() // where TType : IInjectComponent
-    {
-        return (TType) GetInstance(typeof(TType));
-    }
+    public TType GetInstance<TType>() => (TType) GetInstance(typeof(TType));
 
     /// <summary>
     /// 

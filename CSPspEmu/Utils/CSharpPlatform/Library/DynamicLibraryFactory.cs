@@ -15,24 +15,39 @@ namespace CSharpPlatform.Library
             if (nameMac == null) nameMac = nameLinux;
             if (nameAndroid == null) nameAndroid = nameLinux;
 
-            var name = Platform.OS switch {
-                OS.Windows => nameWindows,
-                OS.Mac => nameMac,
-                OS.Android => nameAndroid,
-                OS.IOS => nameWindows,
-                OS.Linux => nameLinux,
-                _ => nameLinux
-                };
+            string name;
+            switch (Platform.OS) {
+                case OS.Windows:
+                    name = nameWindows;
+                    break;
+                case OS.Mac:
+                    name = nameMac;
+                    break;
+                case OS.Android:
+                    name = nameAndroid;
+                    break;
+                case OS.IOS:
+                    name = nameWindows;
+                    break;
+                case OS.Linux:
+                    name = nameLinux;
+                    break;
+                default:
+                    name = nameLinux;
+                    break;
+            }
 
 
-            return Platform.OS switch
-                {
-                OS.Windows => (IDynamicLibrary)new DynamicLibraryWindows(name),
-                OS.Mac => (IDynamicLibrary)new DynamicLibraryMac(name),
-                _ => (IDynamicLibrary)new DynamicLibraryPosix(name)
-                };
+            switch (Platform.OS) 
+            {
+                case OS.Windows:
+                    return (IDynamicLibrary) new DynamicLibraryWindows(name);
+                case OS.Mac:
+                    return (IDynamicLibrary) new DynamicLibraryMac(name);
+                default: return (IDynamicLibrary) new DynamicLibraryPosix(name);
+            }
         }
-
+        
         public static void MapLibraryToType<TType>(IDynamicLibrary dynamicLibrary)
         {
             var type = typeof(TType);
@@ -41,6 +56,7 @@ namespace CSharpPlatform.Library
                 if (!field.FieldType.IsSubclassOf(typeof(Delegate))) continue;
                 if (field.GetValue(null) != null) continue;
                 var method = dynamicLibrary.GetMethod(field.Name);
+                //Console.WriteLine($"{field.Name} : {method}");
                 if (method != IntPtr.Zero)
                 {
                     field.SetValue(
