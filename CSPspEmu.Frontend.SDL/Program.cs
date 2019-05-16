@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using CSharpPlatform.GL;
 using CSharpUtils;
 using CSharpUtils.Extensions;
@@ -18,10 +19,10 @@ class Program
     static unsafe void Main(string[] args)
     {
         //Console.WriteLine(GL.glGetString);
-        GL.LoadAllOnce();
-        Console.WriteLine(new IntPtr(GL.glGetString(GL.GL_VENDOR)));
-        Console.WriteLine(new IntPtr(GL.glGetString(GL.GL_VERSION)));
-        Console.WriteLine("Hello World!");
+        //GL.LoadAllOnce();
+        //Console.WriteLine(GLTest.glGetString(GL.GL_VENDOR));
+        //Console.WriteLine(new IntPtr(GL.glGetString(GL.GL_VERSION)));
+        //Console.WriteLine("Hello World!");
 
         Console.WriteLine("Hello World!");
         if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) != 0)
@@ -210,3 +211,14 @@ class Program
         SDL.SDL_Quit();
     }
 }
+
+/*
+static public class GLTest
+{
+    public const string Dll = "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib";
+    //public const string Dll = "OpenGL";
+    
+    [DllImport(Dll, CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr glGetString(int name);
+}
+*/

@@ -44,10 +44,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             IsCurrentWindow = false;
         }
 
-        public static string GlGetString(int name)
-        {
-            return Marshal.PtrToStringAnsi(new IntPtr(GL.glGetString(name)));
-        }
+        public static string GlGetString(int name) => GL.GetString(name);
 
         /// <summary>
         /// 

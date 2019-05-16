@@ -468,7 +468,8 @@ namespace CSharpPlatform.GL
             return Out;
         }
 
-        public static string GetString(int Name) => Marshal.PtrToStringAnsi(new GLintptr(glGetString(Name)));
+        //public static string GetString(int Name) => Marshal.PtrToStringAnsi(new GLintptr(glGetString(Name)));
+        public static string GetString(int Name) => glGetString(Name);
 
         public static readonly glGenTextures glGenTextures;
         public static readonly glGetActiveAttrib glGetActiveAttrib;
@@ -833,7 +834,7 @@ namespace CSharpPlatform.GL
 
     //[System.CLSCompliant(false)]
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate byte* glGetString(int name);
+    public unsafe delegate string glGetString(int name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public unsafe delegate void glGetTexParameterfv(int target, int pname, float* @params);
