@@ -228,7 +228,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Pointer"></param>
+        /// <param name="PspPointer"></param>
         /// <param name="Data"></param>
         /// <param name="Size"></param>
         /// <returns></returns>
@@ -248,24 +248,24 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Destination"></param>
-        /// <param name="Source"></param>
-        /// <param name="Size"></param>
+        /// <param name="destinationPointer"></param>
+        /// <param name="sourcePointer"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
         [HlePspFunction(NID = 0x1839852A, FirmwareVersion = 150)]
-        public uint sceKernelMemcpy(uint DestinationPointer, uint SourcePointer, int Size)
+        public uint sceKernelMemcpy(uint destinationPointer, uint sourcePointer, int size)
         {
             try
             {
-                var Destination = (byte*) Memory.PspAddressToPointerSafe(DestinationPointer, Size);
-                var Source = (byte*) Memory.PspAddressToPointerSafe(SourcePointer, Size);
-                PointerUtils.Memcpy(Destination, Source, Size);
+                var destination = (byte*) Memory.PspAddressToPointerSafe(destinationPointer, size);
+                var source = (byte*) Memory.PspAddressToPointerSafe(sourcePointer, size);
+                PointerUtils.Memcpy(destination, source, size);
             }
             catch
             {
             }
 
-            return DestinationPointer;
+            return destinationPointer;
         }
     }
 }

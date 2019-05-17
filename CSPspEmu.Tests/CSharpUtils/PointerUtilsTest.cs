@@ -96,7 +96,7 @@ namespace CSPspEmu.Tests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Skip")]
         public void TestMemcpyOverlapping()
         {
             var _Data = new byte[] {1, 0, 0, 0, 0, 0};

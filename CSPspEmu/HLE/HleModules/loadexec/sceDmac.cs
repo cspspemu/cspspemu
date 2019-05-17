@@ -12,14 +12,14 @@ namespace CSPspEmu.Hle.Modules.loadexec
         /// you should issue a oslUncacheData on the source and destination addresses
         /// else very strange bugs may happen.
         /// </summary>
-        /// <param name="Destination"></param>
-        /// <param name="Source"></param>
-        /// <param name="Size"></param>
+        /// <param name="destination"></param>
+        /// <param name="source"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
         [HlePspFunction(NID = 0x617F3FE6, FirmwareVersion = 150)]
-        public int sceDmacMemcpy(byte* Destination, byte* Source, int Size)
+        public int sceDmacMemcpy(byte* destination, byte* source, int size)
         {
-            PointerUtils.Memcpy(Destination, Source, Size);
+            PointerUtils.Memcpy(destination, source, size);
             return 0;
         }
 

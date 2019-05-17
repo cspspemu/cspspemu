@@ -49,14 +49,8 @@ namespace SafeILGenerator.Utils
             return new IlInstanceHolderPoolItem<TType>(Alloc(typeof(TType), value));
         }
 
-        public static int FreeCount
-        {
-            get { return TypePools.Values.Sum(pools => pools.Sum(pool => pool.FreeCount)); }
-        }
+        public static int FreeCount => TypePools.Values.Sum(pools => pools.Sum(pool => pool.FreeCount));
 
-        public static int CapacityCount
-        {
-            get { return TypePools.Values.Sum(pools => pools.Sum(pool => pool.CapacityCount)); }
-        }
+        public static int CapacityCount => TypePools.Values.Sum(pools => pools.Sum(pool => pool.CapacityCount));
     }
 }

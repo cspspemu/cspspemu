@@ -33,6 +33,7 @@ namespace CSharpUtils
                 if (pointer[n] == 0) break;
                 bytes.Add(pointer[n]);
             }
+
             return encoding.GetString(bytes.ToArray());
         }
 
@@ -192,9 +193,12 @@ namespace CSharpUtils
             return match;
         }
 
-        public static void Memcpy(byte* destination, byte* source, int size) => new Span<byte>(source, size).CopyTo(new Span<byte>(destination, size));
+        public static void Memcpy(byte* destination, byte* source, int size) {
+            //Buffer.MemoryCopy(source, destination, size, size);
+            new Span<byte>(source, size).CopyTo(new Span<byte>(destination, size));
+        }
 
-        public static byte[] PointerToByteArray(byte* pointer, int size)
+    public static byte[] PointerToByteArray(byte* pointer, int size)
         {
             var data = new byte[size];
             fixed (byte* dataPtr = data)
