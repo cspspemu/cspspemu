@@ -34,7 +34,7 @@ class Program
         var window = SDL.SDL_CreateWindow(
             "",
             SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED,
-            480 * 2, 272 * 2,
+            PspDisplay.MaxVisibleWidth * 2, PspDisplay.MaxVisibleHeight * 2,
             SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE
         );
         SDL.SDL_SetWindowTitle(window, "C# PSP Emulator");
@@ -54,13 +54,14 @@ class Program
 
         //SDL.SDL_FillRect(SDL.SDL_Rect)
         var texture = SDL.SDL_CreateTexture(renderer, SDL.SDL_PIXELFORMAT_RGBA8888,
-            (int) SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET, 480, 272);
+            (int) SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET, PspDisplay.MaxVisibleWidth,
+            PspDisplay.MaxVisibleHeight);
         //var texture = SDL.SDL_CreateTextureFromSurface(renderer, surface);
 
         using (var pspEmulator = new PspEmulator())
         {
-            //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
-            pspEmulator.StartAndLoad("../deploy/cspspemu/demos/compilerPerf.pbp", GuiRunner: (emulator) =>
+            pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
+                //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/compilerPerf.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cubevfpu.prx", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cwd.elf", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/fileio.pbp", GuiRunner: (emulator) =>
@@ -119,24 +120,57 @@ class Program
                             case SDL.SDL_EventType.SDL_KEYDOWN:
                             case SDL.SDL_EventType.SDL_KEYUP:
                                 var pressed = e.type == SDL.SDL_EventType.SDL_KEYDOWN;
-                                PspCtrlButtons buttonMask = 0;
+                                PspCtrlButtons buttonMask;
                                 switch (e.key.keysym.sym)
-                                    {
-                                    case SDL.SDL_Keycode.SDLK_a: buttonMask = PspCtrlButtons.Square; break;
-                                    case SDL.SDL_Keycode.SDLK_w: buttonMask = PspCtrlButtons.Triangle; break;
-                                    case SDL.SDL_Keycode.SDLK_d: buttonMask = PspCtrlButtons.Circle; break;
-                                    case SDL.SDL_Keycode.SDLK_s: buttonMask = PspCtrlButtons.Cross; break;
-                                    case SDL.SDL_Keycode.SDLK_SPACE: buttonMask = PspCtrlButtons.Select; break;
-                                    case SDL.SDL_Keycode.SDLK_RETURN: buttonMask = PspCtrlButtons.Start; break;
-                                    case SDL.SDL_Keycode.SDLK_UP: buttonMask = PspCtrlButtons.Up; break;
-                                    case SDL.SDL_Keycode.SDLK_DOWN: buttonMask = PspCtrlButtons.Down; break;
-                                    case SDL.SDL_Keycode.SDLK_LEFT: buttonMask = PspCtrlButtons.Left; break;
-                                    case SDL.SDL_Keycode.SDLK_RIGHT: buttonMask = PspCtrlButtons.Right; break;
-                                    case SDL.SDL_Keycode.SDLK_i: UpdatePressing(ref pressingAnalogUp, pressed); break;
-                                    case SDL.SDL_Keycode.SDLK_k: UpdatePressing(ref pressingAnalogDown, pressed); break;
-                                    case SDL.SDL_Keycode.SDLK_j: UpdatePressing(ref pressingAnalogLeft, pressed); break;
-                                    case SDL.SDL_Keycode.SDLK_l: UpdatePressing(ref pressingAnalogRight, pressed); break;
-                                    };
+                                {
+                                    case SDL.SDL_Keycode.SDLK_a:
+                                        buttonMask = PspCtrlButtons.Square;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_w:
+                                        buttonMask = PspCtrlButtons.Triangle;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_d:
+                                        buttonMask = PspCtrlButtons.Circle;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_s:
+                                        buttonMask = PspCtrlButtons.Cross;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_SPACE:
+                                        buttonMask = PspCtrlButtons.Select;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_RETURN:
+                                        buttonMask = PspCtrlButtons.Start;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_UP:
+                                        buttonMask = PspCtrlButtons.Up;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_DOWN:
+                                        buttonMask = PspCtrlButtons.Down;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_LEFT:
+                                        buttonMask = PspCtrlButtons.Left;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_RIGHT:
+                                        buttonMask = PspCtrlButtons.Right;
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_i:
+                                        buttonMask = UpdatePressing(ref pressingAnalogUp, pressed);
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_k:
+                                        buttonMask = UpdatePressing(ref pressingAnalogDown, pressed);
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_j:
+                                        buttonMask = UpdatePressing(ref pressingAnalogLeft, pressed);
+                                        break;
+                                    case SDL.SDL_Keycode.SDLK_l:
+                                        buttonMask = UpdatePressing(ref pressingAnalogRight, pressed);
+                                        break;
+                                    default:
+                                        buttonMask = 0;
+                                        break;
+                                }
+
+                                ;
 
 
                                 if (pressed)
@@ -161,9 +195,10 @@ class Program
 
                     {
                         //Console.WriteLine(display.CurrentInfo.FrameAddress);
-                        var pixels2 = new uint[512 * 272];
-                        var displayData = memory.Range<uint>(display.CurrentInfo.FrameAddress, 512 * 272);
-                        for (var m = 0; m < 512 * 272; m++)
+                        var pixels2 = new uint[PspDisplay.MaxBufferArea];
+                        var displayData =
+                            memory.Range<uint>(display.CurrentInfo.FrameAddress, PspDisplay.MaxBufferArea);
+                        for (var m = 0; m < PspDisplay.MaxBufferArea; m++)
                         {
                             var color = displayData[m];
                             var r = color.Extract(0, 8);
@@ -174,8 +209,9 @@ class Program
 
                         fixed (uint* pp = pixels2)
                         {
-                            var rect = new SDL.SDL_Rect() {x = 0, y = 0, w = 480, h = 272};
-                            SDL.SDL_UpdateTexture(texture, ref rect, new IntPtr(pp), 512 * 4);
+                            var rect = new SDL.SDL_Rect()
+                                {x = 0, y = 0, w = PspDisplay.MaxVisibleWidth, h = PspDisplay.MaxBufferHeight};
+                            SDL.SDL_UpdateTexture(texture, ref rect, new IntPtr(pp), PspDisplay.MaxBufferWidth * 4);
                         }
                     }
                     displayComponent.Step(DrawStart: () => { display.TriggerDrawStart(); },

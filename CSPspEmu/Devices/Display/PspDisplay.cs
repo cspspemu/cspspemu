@@ -16,6 +16,12 @@ namespace CSPspEmu.Core.Components.Display
         public const double VsyncRow = 272;
         public const double NumberOfRows = 286;
         public const float HCountPerVblank = 285.72f;
+        public const int MaxBufferWidth = 512;
+        public const int MaxBufferHeight = 272;
+        public const int MaxBufferArea = MaxBufferWidth * MaxBufferHeight;
+        public const int MaxVisibleWidth = 480;
+        public const int MaxVisibleHeight = 272;
+        public const int MaxVisibleArea = MaxVisibleWidth * MaxVisibleHeight;
 
 
         public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;

@@ -6,7 +6,7 @@ namespace CSPspEmu.Benchmark
     [MemoryDiagnoser]
     public class RasterizerBenchmark
     {
-        RasterizeDelegate<int> mydelegate = (a, b, c, d) =>
+        RasterizeDelegate<int> mydelegate = (int a, ref RasterizerResult b, ref RasterizerResult c, ref int d) =>
         {
         };
     

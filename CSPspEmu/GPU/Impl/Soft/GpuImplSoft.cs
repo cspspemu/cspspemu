@@ -188,35 +188,33 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                 DrawTriangleFastTest, 0, 272);
         }
 
-        static public Vector4 LerpNotUsedIndex(Vector4 a, Vector4 b, Vector4 c, int notUsedIndex, float ratio)
-        {
-            switch (notUsedIndex)
-            {
-                case 0: return Vector4.Lerp(b, c, ratio);
-                case 1: return Vector4.Lerp(a, c, ratio);
-                case 2: return Vector4.Lerp(a, b, ratio);
-            }
-
-            return a;
-        }
+        //static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, float ra, float rb, float rc) => (a * ra) + (b * rb) * (c * rc);
+        static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, float ra, float rb, float rc) => new Vector4(
+            ((a.X * ra) + (b.X * rb) + (c.X * rc)).Clamp(0, 1),
+            ((a.Y * ra) + (b.Y * rb) + (c.Y * rc)).Clamp(0, 1),
+            ((a.Z * ra) + (b.Z * rb) + (c.Z * rc)).Clamp(0, 1),
+            ((a.W * ra) + (b.W * rb) + (c.W * rc)).Clamp(0, 1)
+            );
 
         private RasterizeDelegate<Triangle> DrawTriangleFastTest;
 
         public GpuImplSoft()
         {
-            DrawTriangleFastTest = (y, a, b, triangle) =>
+            DrawTriangleFastTest = (int y, ref RasterizerResult a, ref RasterizerResult b, ref Triangle triangle) =>
             {
                 //Console.WriteLine($"{a.Ratio} {b.Ratio} {triangle.P0.Color} : {triangle.P1.IColor}");
-                if (triangle.P0.Color == triangle.P1.Color && triangle.P0.Color == triangle.P2.Color)
+                var C0 = triangle.P0.Color;
+                var C1 = triangle.P1.Color;
+                var C2 = triangle.P2.Color;
+                if (C0 == C1 && C0 == C2)
                 {
                     DrawPixelsFast(y, a.X, b.X, triangle.P0.IColor);
                 }
                 else
                 {
-                    var colorA = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, a.NotUsedIndex,
-                        a.Ratio);
-                    var colorB = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, b.NotUsedIndex,
-                        b.Ratio);
+                    var colorA = LerpRatios(C0, C1, C2, a.Ratio0, a.Ratio1, a.Ratio2);
+                    var colorB = LerpRatios(C0, C1, C2, b.Ratio0, b.Ratio1, b.Ratio2);
+                    //Console.WriteLine($"{a.Ratio0}, {a.Ratio1}, {a.Ratio2}");
                     DrawPixelsFast(y, a.X, b.X, colorA, colorB);
                 }
             };
