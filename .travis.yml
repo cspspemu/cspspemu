@@ -1,9 +1,13 @@
 dist: bionic
-install:
+services:
+  - docker
+#install:
   # https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-current
-  - wget https://download.visualstudio.microsoft.com/download/pr/ece856bb-de15-4df3-9677-67cc817ffc1b/521da52132d23deae5400b8e19e23691/dotnet-sdk-2.2.204-linux-x64.tar.gz
-  - mkdir -p ~/dotnet
-  - tar -C ~/dotnet -xzf dotnet-sdk-2.2.204-linux-x64.tar.gz
+
+  #- wget https://download.visualstudio.microsoft.com/download/pr/ece856bb-de15-4df3-9677-67cc817ffc1b/521da52132d23deae5400b8e19e23691/dotnet-sdk-2.2.204-linux-x64.tar.gz
+  #- mkdir -p ~/dotnet
+  #- tar -C ~/dotnet -xzf dotnet-sdk-2.2.204-linux-x64.tar.gz
+   
   #- sudo apt-get install -y gpg
   #- wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
   #- sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
@@ -16,4 +20,5 @@ install:
   #- sudo apt-get install dotnet-sdk-2.1
 script:
   #- dotnet test
-  - ~/dotnet/dotnet test
+  #- ~/dotnet/dotnet test
+  - docker run -v $PWD:/project mcr.microsoft.com/dotnet/core/sdk:2.2 bash -c "cd /project; dotnet test"
