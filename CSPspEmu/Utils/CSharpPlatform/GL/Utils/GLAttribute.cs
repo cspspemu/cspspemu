@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Numerics;
 
 namespace CSharpPlatform.GL.Utils
 {
@@ -84,14 +85,14 @@ namespace CSharpPlatform.GL.Utils
         }
 
         [DebuggerHidden]
-        public void Set(Vector4f vector)
+        public void Set(Vector4 vector)
         {
             if (!CheckValid()) return;
             Set(new[] {vector});
         }
 
         [DebuggerHidden]
-        public void Set(Vector4f[] vectors)
+        public void Set(Vector4[] vectors)
         {
             if (!CheckValid()) return;
             if (ValueType != GLValueType.GL_FLOAT_VEC4)
@@ -99,7 +100,10 @@ namespace CSharpPlatform.GL.Utils
             if (ArrayLength != vectors.Length)
                 throw (new InvalidOperationException("this.ArrayLength != Vectors.Length"));
             PrepareUsing();
-            vectors[0].FixValues(pointer => { GL.glUniform4fv(Location, vectors.Length, pointer); });
+            fixed (Vector4* ptr = &vectors[0])
+            {
+                GL.glUniform4fv(Location, vectors.Length, (float*)ptr);
+            }
         }
 
         [DebuggerHidden]

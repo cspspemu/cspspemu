@@ -25,7 +25,7 @@ class Program
         //Console.WriteLine("Hello World!");
 
         Console.WriteLine("Hello World!");
-        if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) != 0)
+        if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO) != 0)
         {
             Console.Error.WriteLine("Couldn't initialize SDL");
             return;
@@ -60,12 +60,18 @@ class Program
 
         using (var pspEmulator = new PspEmulator())
         {
-            pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
+            //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/compilerPerf.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cubevfpu.prx", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cwd.elf", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/fileio.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/fputest.pbp", GuiRunner: (emulator) =>
+                //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/nehetutorial02.pbp", GuiRunner: (emulator) =>
+                //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/nehetutorial03.pbp", GuiRunner: (emulator) =>
+                //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/nehetutorial04.pbp", GuiRunner: (emulator) =>
+                //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/pspctrl.PBP", GuiRunner: (emulator) =>
+                //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/text.pbp", GuiRunner: (emulator) =>
+                pspEmulator.StartAndLoad("../deploy/cspspemu/demos/vfputest.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/malloctest.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/minifire.elf", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/lights.pbp", GuiRunner: (emulator) =>

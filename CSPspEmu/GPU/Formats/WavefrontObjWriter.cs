@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Formats
@@ -43,8 +44,8 @@ namespace CSPspEmu.Core.Gpu.Formats
 
         private void WriteVerticeLine(string line) => _vertexWriter.WriteLine(line);
 
-        List<Vector4f> Vertices = new List<Vector4f>();
-        Dictionary<Vector4f, int> VerticesIndices = new Dictionary<Vector4f, int>();
+        List<Vector4> Vertices = new List<Vector4>();
+        Dictionary<Vector4, int> VerticesIndices = new Dictionary<Vector4, int>();
 
         private void _EndVertices()
         {
@@ -68,7 +69,7 @@ namespace CSPspEmu.Core.Gpu.Formats
             }
         }
 
-        public int AddVertex(Vector4f position)
+        public int AddVertex(Vector4 position)
         {
             WriteLine($"# v {position.X} {position.Y} {position.Z} ");
 

@@ -1,6 +1,7 @@
 ﻿#define PRIM_BATCH
 
 using System;
+using System.Numerics;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using System.Runtime;
@@ -742,8 +743,8 @@ namespace CSPspEmu.Core.Gpu.Run
                     ucoeff[i] = BernsteinCoeff(u);
 
                     var p = default(VertexInfo);
-                    p.Position = Vector4f.Zero;
-                    p.Normal = Vector4f.Zero;
+                    p.Position = Vector4.Zero;
+                    p.Normal = Vector4.Zero;
 
                     for (var ii = 0; ii < 4; ++ii)
                     {

@@ -47,10 +47,7 @@ namespace CSPspEmu
         {
             get
             {
-                lock (this)
-                {
-                    return _InjectContext;
-                }
+                lock (this) return _InjectContext;
             }
         }
 
@@ -283,16 +280,8 @@ namespace CSPspEmu
             //Console.WriteLine("-----------------------------------------------------------------");
         }
 
-        public PluginInfo GetAudioPluginInfo()
-        {
-            return InjectContext.GetInstance<PspAudioImpl>().PluginInfo;
-        }
-
-        public PluginInfo GetGpuPluginInfo()
-        {
-            return InjectContext.GetInstance<GpuImpl>().PluginInfo;
-        }
-
+        public PluginInfo GetAudioPluginInfo() => InjectContext.GetInstance<PspAudioImpl>().PluginInfo;
+        public PluginInfo GetGpuPluginInfo() => InjectContext.GetInstance<GpuImpl>().PluginInfo;
         public void CaptureGpuFrame()
         {
             InjectContext.GetInstance<GpuProcessor>().CaptureFrame();

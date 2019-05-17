@@ -1,4 +1,5 @@
-﻿using CSharpPlatform;
+﻿using System.Numerics;
+using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
 {
@@ -14,16 +15,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
 
             v1 = new VertexInfo
             {
-                Texture = new Vector4f(v3.Texture.X, v0.Texture.Y, tz, 0),
-                Position = new Vector4f(v3.Position.X, v0.Position.Y, pz, 0),
-                Normal = new Vector4f(v3.Normal.X, v0.Normal.Y, nz, 0),
+                Texture = new Vector4(v3.Texture.X, v0.Texture.Y, tz, 0),
+                Position = new Vector4(v3.Position.X, v0.Position.Y, pz, 0),
+                Normal = new Vector4(v3.Normal.X, v0.Normal.Y, nz, 0),
             };
 
             v2 = new VertexInfo
             {
-                Texture = new Vector4f(v0.Texture.X, v3.Texture.Y, tz, 0),
-                Position = new Vector4f(v0.Position.X, v3.Position.Y, pz, 0),
-                Normal = new Vector4f(v0.Normal.X, v3.Normal.Y, nz, 0),
+                Texture = new Vector4(v0.Texture.X, v3.Texture.Y, tz, 0),
+                Position = new Vector4(v0.Position.X, v3.Position.Y, pz, 0),
+                Normal = new Vector4(v0.Normal.X, v3.Normal.Y, nz, 0),
             };
 
             v3.Color = v2.Color = v1.Color = v0.Color = color;

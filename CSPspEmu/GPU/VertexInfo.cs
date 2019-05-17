@@ -8,13 +8,13 @@ namespace CSPspEmu.Core.Gpu
 {
     public static class Vector4FRawExtensions
     {
-        public static Vector4f Normalize(this Vector4f vector) =>
+        public static Vector4 Normalize(this Vector4 vector) =>
             vector * (1.0f / (float) Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z));
 
-        public static Vector4f ToVector3(this Vector4f vector) => new Vector4f(vector.X, vector.Y, vector.Z, 0f);
-        public static Vector4 ToVector4(this Vector4f vector) => new Vector4(vector.X, vector.Y, vector.Z, vector.W);
-        //public static Vector4 ToVector4(this Vector4f vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
-        //public static Vector4 ToVector4(this Vector4f vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
+        public static Vector4 ToVector3(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, 0f);
+        public static Vector4 ToVector4(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, vector.W);
+        //public static Vector4 ToVector4(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
+        //public static Vector4 ToVector4(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -22,11 +22,11 @@ namespace CSPspEmu.Core.Gpu
     {
         public float X, Y, Z;
 
-        public VertexInfoVector3F(Vector4f vector4F)
+        public VertexInfoVector3F(Vector4 vector)
         {
-            X = vector4F.X;
-            Y = vector4F.Y;
-            Z = vector4F.Z;
+            X = vector.X;
+            Y = vector.Y;
+            Z = vector.Z;
         }
     }
 
@@ -35,12 +35,12 @@ namespace CSPspEmu.Core.Gpu
     {
         public float R, G, B, A;
 
-        public VertexInfoColor(Vector4f vector4F)
+        public VertexInfoColor(Vector4 vector)
         {
-            R = vector4F.X;
-            G = vector4F.Y;
-            B = vector4F.Z;
-            A = vector4F.W;
+            R = vector.X;
+            G = vector.Y;
+            B = vector.Z;
+            A = vector.W;
         }
     }
 
@@ -62,15 +62,12 @@ namespace CSPspEmu.Core.Gpu
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct VertexInfo
     {
-        public Vector4f Color;
-        public Vector4f Position;
-        public Vector4f Normal;
-        public Vector4f Texture;
+        public Vector4 Color;
+        public Vector4 Position;
+        public Vector4 Normal;
+        public Vector4 Texture;
         public fixed float Weights[8];
 
-        public override string ToString()
-        {
-            return $"VertexInfo(Position={Position}, Normal={Normal}, UV={Texture}, COLOR={Color})";
-        }
+        public override string ToString() => $"VertexInfo(Position={Position}, Normal={Normal}, UV={Texture}, COLOR={Color})";
     }
 }

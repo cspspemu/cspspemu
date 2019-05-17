@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Numerics;
+using CSPspEmu.Utils;
 
 namespace CSharpPlatform
 {
@@ -6,14 +8,14 @@ namespace CSharpPlatform
 
     public unsafe struct Matrix4F
     {
-        public Vector4f Row0, Row1, Row2, Row3;
+        public Vector4 Row0, Row1, Row2, Row3;
 
-        public Vector4f Column(int n)
+        public Vector4 Column(int n)
         {
-            return Vector4f.Create(Row0[n], Row1[n], Row2[n], Row3[n]);
+            return new Vector4(Row0.Get(n), Row1.Get(n), Row2.Get(n), Row3.Get(n));
         }
 
-        public static Matrix4F Create(params Vector4f[] rows)
+        public static Matrix4F Create(params Vector4[] rows)
         {
             var matrix = default(Matrix4F);
             for (var row = 0; row < 4; row++)
@@ -31,7 +33,7 @@ namespace CSharpPlatform
             {
                 for (var column = 0; column < 4; column++)
                 {
-                    (&matrix.Row0)[row][column] = values[n++];
+                    (&matrix.Row0)[row].Set(column, values[n++]);
                 }
             }
             return matrix;
@@ -59,10 +61,10 @@ namespace CSharpPlatform
             var _1OverFmn = 1.0f / fmn;
             var _1OverTmb = 1.0f / tmb;
 
-            matrix.Row0 = Vector4f.Create(2.0f * _1OverRml, 0, 0, 0);
-            matrix.Row1 = Vector4f.Create(0, 2.0f * _1OverTmb, 0, 0);
-            matrix.Row2 = Vector4f.Create(0, 0, -2.0f * _1OverFmn, 0);
-            matrix.Row3 = Vector4f.Create(
+            matrix.Row0 = new Vector4(2.0f * _1OverRml, 0, 0, 0);
+            matrix.Row1 = new Vector4(0, 2.0f * _1OverTmb, 0, 0);
+            matrix.Row2 = new Vector4(0, 0, -2.0f * _1OverFmn, 0);
+            matrix.Row3 = new Vector4(
                 -(right + left) * _1OverRml,
                 -(top + bottom) * _1OverTmb,
                 -(far + near) * _1OverFmn,
@@ -76,11 +78,11 @@ namespace CSharpPlatform
         {
             get
             {
-                fixed (Vector4f* rowsPtr = &Row0) return rowsPtr[row][column];
+                fixed (Vector4* rowsPtr = &Row0) return rowsPtr[row].Get(column);
             }
             set
             {
-                fixed (Vector4f* rowsPtr = &Row0) rowsPtr[row][column] = value;
+                fixed (Vector4* rowsPtr = &Row0) rowsPtr[row].Set(column, value);
             }
         }
 
@@ -122,7 +124,7 @@ namespace CSharpPlatform
 
         public void FixValues(CallbackFloatPointer callback)
         {
-            fixed (Vector4f* rowPtr = &Row0)
+            fixed (Vector4* rowPtr = &Row0)
             {
                 callback((float*) rowPtr);
             }

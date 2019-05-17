@@ -172,7 +172,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             ShaderInfo.matrixWorldViewProjection.Set(_worldViewProjectionMatrix);
             ShaderInfo.matrixTexture.Set(_textureMatrix);
-            ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4F());
+            ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4());
             ShaderInfo.hasPerVertexColor.Set(VertexType.HasColor);
             ShaderInfo.clearingMode.Set(GpuState->ClearingMode);
             ShaderInfo.hasTexture.Set(GpuState->TextureMappingState.Enabled);

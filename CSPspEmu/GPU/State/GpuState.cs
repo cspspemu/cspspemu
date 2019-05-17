@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using CSharpPlatform;
 using CSharpUtils;
@@ -201,8 +202,8 @@ namespace CSPspEmu.Core.Gpu.State
         public bool Enabled;
         public LightTypeEnum Type;
         public LightModelEnum Kind;
-        public Vector4f Position;
-        public Vector4f SpotDirection;
+        public Vector4 Position;
+        public Vector4 SpotDirection;
         public AttenuationStruct Attenuation;
         public float SpotExponent;
         public float SpotCutoff;
@@ -686,8 +687,8 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct ViewportStruct
     {
-        public Vector4f Position;
-        public Vector4f Scale;
+        public Vector4 Position;
+        public Vector4 Scale;
         public PointS RegionTopLeft;
         public PointS RegionBottomRight;
 
@@ -756,7 +757,7 @@ namespace CSPspEmu.Core.Gpu.State
         };
 
 
-        public Vector4f ToVector4F() => new Vector4f(Red, Green, Blue, Alpha);
+        public Vector4 ToVector4() => new Vector4(Red, Green, Blue, Alpha);
     }
 
     public enum TransformModeEnum : byte
