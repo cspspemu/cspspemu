@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using CSharpUtils.Extensions;
 using CSPspEmu.Utils;
 
@@ -36,6 +35,8 @@ namespace CSPspEmu.Rasterizer
             Debug.Assert(p0.Y <= p1.Y);
             Debug.Assert(p1.Y <= p2.Y);
 
+            if (p0.Y > ymax) return;
+
             var y0 = p0.Y.Clamp(ymin, ymax);
             var y1 = p1.Y;
             var y2 = p2.Y.Clamp(ymin, ymax);
@@ -61,18 +62,13 @@ namespace CSPspEmu.Rasterizer
 
             var y0 = p0.Y.Clamp(ymin, ymax);
             var y1 = p1.Y.Clamp(ymin, ymax);
-            var yd = y1 - y0;
-
-            var x0 = p0.X.Clamp(xmin, xmax);
-            var x1 = p1.X.Clamp(xmin, xmax);
-            var xd = x1 - x0;
 
             for (var y = y0; y < y1; y++)
             {
                 var ratio0 = y.RatioInRange(y0, y1);
                 var ratio1 = (y + 1).RatioInRange(y0, y1);
-                var vx0 = ratio0.Interpolate(x0, x1);
-                var vx1 = ratio1.Interpolate(x0, x1) + 1;
+                var vx0 = ratio0.Interpolate(p0.X, p1.X);
+                var vx1 = ratio1.Interpolate(p0.X, p1.X) + 1;
                 var r0 = new RasterizerResult(vx0, new Vector3(ratio0));
                 var r1 = new RasterizerResult(vx1, new Vector3(ratio1));
                 AdjustX(ref r0, ref r1);
@@ -88,7 +84,8 @@ namespace CSPspEmu.Rasterizer
             out RasterizerResult result
         )
         {
-            var ratio = (y - a.Y) / (float) (b.Y - a.Y);
+            int dY = (b.Y - a.Y);
+            var ratio = (y - a.Y) / (float) (dY != 0 ? dY : 1);
             var iratio = 1 - ratio;
             var x = ratio.Interpolate(a.X, b.X);
             switch (notUsedIndex)

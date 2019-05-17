@@ -182,11 +182,14 @@ namespace CSPspEmu.Core.Gpu
 
         //static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, float ra, float rb, float rc) => (a * ra) + (b * rb) * (c * rc);
         static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, float ra, float rb, float rc) => new Vector4(
-            ((a.X * ra) + (b.X * rb) + (c.X * rc)).Clamp(0, 1),
-            ((a.Y * ra) + (b.Y * rb) + (c.Y * rc)).Clamp(0, 1),
-            ((a.Z * ra) + (b.Z * rb) + (c.Z * rc)).Clamp(0, 1),
-            ((a.W * ra) + (b.W * rb) + (c.W * rc)).Clamp(0, 1)
+            ((a.X * ra) + (b.X * rb) + (c.X * rc)),
+            ((a.Y * ra) + (b.Y * rb) + (c.Y * rc)),
+            ((a.Z * ra) + (b.Z * rb) + (c.Z * rc)),
+            ((a.W * ra) + (b.W * rb) + (c.W * rc))
         );
+
+        static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, Vector3 ratios) =>
+            LerpRatios(a, b, c, ratios.X, ratios.Y, ratios.Z);
 
 
         private VPoint Vector4ToPoint(Vector4 v, Vector4 n, Vector4 t, Vector4 color) =>
@@ -201,6 +204,7 @@ namespace CSPspEmu.Core.Gpu
             public Vector4 T;
             public Vector4 Color;
 
+            public Rgba RgbaColor => new RgbaFloat(Color).Rgba;
             public uint IColor => new RgbaFloat(Color).Int;
 
             public VPoint(RasterizerPoint p, Vector4 n, Vector4 t, Vector4 color)

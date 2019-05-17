@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Utils
@@ -9,6 +10,15 @@ namespace CSPspEmu.Utils
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Clamp(this float value, float min, float max) => value < min ? min : value > max ? max : value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector2 Clamp(this Vector2 value, float min, float max) => new Vector2(value.X.Clamp(min, max), value.Y.Clamp(min, max));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3 Clamp(this Vector3 value, float min, float max) => new Vector3(value.X.Clamp(min, max), value.Y.Clamp(min, max), value.Z.Clamp(min, max));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector4 Clamp(this Vector4 value, float min, float max) => new Vector4(value.X.Clamp(min, max), value.Y.Clamp(min, max), value.Z.Clamp(min, max), value.W.Clamp(min, max));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Interpolate(this double ratio, int min, int max) => (int) (min + (max - min) * ratio);
