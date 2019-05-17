@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using CSharpUtils.Extensions;
 using CSPspEmu.Utils;
 
@@ -10,13 +11,25 @@ namespace CSPspEmu.Rasterizer
     public delegate void RasterizeDelegate<T>(int y, ref RasterizerResult left, ref RasterizerResult right,
         ref T context);
 
-    public class Rasterizer
+    public struct TriangleRasterizer<T>
     {
-        public static void RasterizeTriangle<T>(
-            RasterizerPoint p0, RasterizerPoint p1, RasterizerPoint p2,
-            T param,
-            RasterizeDelegate<T> rowHandler,
-            int ymin = int.MinValue, int ymax = int.MaxValue, int xmin = int.MinValue, int xmax = int.MaxValue
+        public RasterizeDelegate<T> rowHandler;
+        public int ymin;
+        public int ymax;
+        public int xmin;
+        public int xmax;
+
+        public TriangleRasterizer(RasterizeDelegate<T> rowHandler, int ymin = int.MinValue, int ymax = int.MaxValue, int xmin = int.MinValue, int xmax = int.MaxValue)
+        {
+            this.rowHandler = rowHandler;
+            this.ymin = ymin;
+            this.ymax = ymax;
+            this.xmin = xmin;
+            this.xmax = xmax;
+        }
+
+        public void RasterizeTriangle(
+            RasterizerPoint p0, RasterizerPoint p1, RasterizerPoint p2, T param
         )
         {
             // ReSharper disable InvocationIsSkipped
@@ -26,9 +39,33 @@ namespace CSPspEmu.Rasterizer
             var y0 = p0.Y.Clamp(ymin, ymax);
             var y1 = p1.Y;
             var y2 = p2.Y.Clamp(ymin, ymax);
+            
+            /*
+            Parallel.For(y0, y2 + 1, (y) =>
+            {
+                InterpolateX(y, p0, p2, 1, out r0);
+                if (y <= y1) InterpolateX(y, p0, p1, 2, out r1);
+                else InterpolateX(y, p1, p2, 0, out r1);
 
+                if (r0.X > r1.X) Swap(ref r0, ref r1);
+
+                var rx0 = r0.X;
+                var rx1 = r1.X;
+
+                if (rx0 < xmin || rx0 > xmax || rx1 < xmin || rx1 > xmax)
+                {
+                    var x0 = rx0.Clamp(xmin, xmax);
+                    var x1 = rx1.Clamp(xmin, xmax);
+
+                    r0 = new RasterizerResult(x0, Vector3.Lerp(r0.Ratios, r1.Ratios, x0.RatioInRange(rx0, rx1)));
+                    r1 = new RasterizerResult(x1, Vector3.Lerp(r0.Ratios, r1.Ratios, x1.RatioInRange(rx0, rx1)));
+                }
+
+                rowHandler(y, ref r0, ref r1, ref param);
+            });
+            */
             RasterizerResult r0, r1;
-
+            
             for (var y = y0; y <= y2; y++)
             {
                 InterpolateX(y, p0, p2, 1, out r0);
@@ -84,6 +121,18 @@ namespace CSPspEmu.Rasterizer
             T temp = lhs;
             lhs = rhs;
             rhs = temp;
+        }
+    }
+
+    public class Rasterizer
+    {
+        public static void RasterizeTriangle<T>(
+            RasterizerPoint p0, RasterizerPoint p1, RasterizerPoint p2,
+            T param, RasterizeDelegate<T> rowHandler,
+            int ymin = int.MinValue, int ymax = int.MaxValue, int xmin = int.MinValue, int xmax = int.MaxValue
+        )
+        {
+            new TriangleRasterizer<T>(rowHandler, ymin, ymax, xmin, xmax).RasterizeTriangle(p0, p1, p2, param);
         }
     }
 

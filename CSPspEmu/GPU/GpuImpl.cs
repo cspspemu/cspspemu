@@ -118,22 +118,33 @@ namespace CSPspEmu.Core.Gpu
         protected ReadVertexDelegate readVertex;
         protected VertexReader VertexReader = new VertexReader();
 
-        protected void ReadVertex_Void(int index, out VertexInfo vertexInfo) => vertexInfo = Vertices[index];
+        protected ReadVertexDelegate ReadVertex_Void_delegate;
+        protected ReadVertexDelegate ReadVertex_Byte_delegate;
+        protected ReadVertexDelegate ReadVertex_Short_delegate;
 
-        protected void ReadVertex_Byte(int index, out VertexInfo vertexInfo) =>
+        public GpuImpl()
+        {
+            // ReSharper disable HeapView.DelegateAllocation
+            ReadVertex_Void_delegate = ReadVertex_Void;
+            ReadVertex_Byte_delegate = ReadVertex_Byte;
+            ReadVertex_Short_delegate = ReadVertex_Short;
+        }
+
+        private void ReadVertex_Void(int index, out VertexInfo vertexInfo) => vertexInfo = Vertices[index];
+
+        private void ReadVertex_Byte(int index, out VertexInfo vertexInfo) =>
             vertexInfo = Vertices[indexListByte[index]];
 
-        protected void ReadVertex_Short(int index, out VertexInfo vertexInfo) =>
+        private void ReadVertex_Short(int index, out VertexInfo vertexInfo) =>
             vertexInfo = Vertices[indexListShort[index]];
 
         protected delegate void ReadVertexDelegate(int index, out VertexInfo vertexInfo);
         
-        unsafe protected void PreparePrim(GpuStateStruct* GpuState, out uint totalVerticesWithoutMorphing, uint vertexCount, out uint morpingVertexCount)
+        protected void PreparePrim(GpuStateStruct* GpuState, out uint totalVerticesWithoutMorphing, uint vertexCount, out uint morpingVertexCount)
         {
             totalVerticesWithoutMorphing = vertexCount;
             morpingVertexCount = (uint)(VertexType.MorphingVertexCount + 1);
-            // ReSharper disable once RedundantAssignment (Resharper BUG)
-            readVertex = ReadVertex_Void;
+            readVertex = ReadVertex_Void_delegate;
             VertexReader.SetVertexTypeStruct(
                 VertexType,
                 (byte*) Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
@@ -152,26 +163,34 @@ namespace CSPspEmu.Core.Gpu
                 case VertexTypeStruct.IndexEnum.Void:
                     break;
                 case VertexTypeStruct.IndexEnum.Byte:
-                    readVertex = ReadVertex_Byte;
+                    readVertex = ReadVertex_Byte_delegate;
                     indexListByte = (byte*) indexPointer;
                     totalVerticesWithoutMorphing = 0;
-                    for (int n = 0; n < vertexCount; n++)
+                    if (indexListByte != null)
                     {
-                        if (totalVerticesWithoutMorphing < indexListByte[n])
-                            totalVerticesWithoutMorphing = indexListByte[n];
+                        for (var n = 0; n < vertexCount; n++)
+                        {
+                            if (totalVerticesWithoutMorphing < indexListByte[n])
+                                totalVerticesWithoutMorphing = indexListByte[n];
+                        }
                     }
+
                     break;
                 case VertexTypeStruct.IndexEnum.Short:
-                    readVertex = ReadVertex_Short;
+                    readVertex = ReadVertex_Short_delegate;
                     indexListShort = (ushort*) indexPointer;
                     totalVerticesWithoutMorphing = 0;
                     //VertexCount--;
-                    for (int n = 0; n < vertexCount; n++)
+                    if (indexListShort != null)
                     {
-                        //Console.Error.WriteLine(IndexListShort[n]);
-                        if (totalVerticesWithoutMorphing < indexListShort[n])
-                            totalVerticesWithoutMorphing = indexListShort[n];
+                        for (var n = 0; n < vertexCount; n++)
+                        {
+                            //Console.Error.WriteLine(IndexListShort[n]);
+                            if (totalVerticesWithoutMorphing < indexListShort[n])
+                                totalVerticesWithoutMorphing = indexListShort[n];
+                        }
                     }
+
                     break;
                 default:
                     throw (new NotImplementedException("VertexType.Index: " + VertexType.Index));

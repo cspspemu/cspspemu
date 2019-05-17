@@ -354,6 +354,10 @@ namespace CSPspEmu.Runner.Components.Cpu
                 //var CpuThreadState = MainThread.CpuThreadState;
                 var currentCpuThreadState = new CpuThreadState(CpuProcessor);
                 {
+                    if (hleModuleGuest == null)
+                    {
+                        //throw new InvalidOperationException("hleModuleGuest == null");
+                    }
                     //CpuThreadState.PC = Loader.InitInfo.PC;
                     currentCpuThreadState.Gp = hleModuleGuest.InitInfo.Gp;
                     currentCpuThreadState.CallerModule = hleModuleGuest;

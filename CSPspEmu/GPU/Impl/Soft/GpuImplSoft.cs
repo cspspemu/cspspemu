@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using CSharpUtils.Drawing;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
@@ -109,6 +110,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                     {
                         //{ for (var n = 0; n < vertexCount; n++) Console.WriteLine($"Triangle {VertexType.Transform2D}:{VertexReader.ReadVertex(n)} : {vertices[n]} : {Vector4ToPoint(vertices[n])}"); }
                         var m = 0;
+                        //Parallel.For(0, vertexCount / 3, (it) =>
+                        //{
+                        //    var n = it * 3;
+                        //    DrawTriangleFast((verticesP[n + 0]), (verticesP[n + 1]), (verticesP[n + 2]));
+                        //});
                         for (var n = 0; n < vertexCount; n += 3)
                         {
                             DrawTriangleFast((verticesP[n + 0]), (verticesP[n + 1]), (verticesP[n + 2]));
@@ -184,8 +190,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
         private void DrawTriangleFast(VPoint p0, VPoint p1, VPoint p2)
         {
             var triangle = new Triangle(p0, p1, p2);
-            Rasterizer.Rasterizer.RasterizeTriangle(triangle.P0.P, triangle.P1.P, triangle.P2.P, triangle,
-                DrawTriangleFastTest, 0, 271, 0, 511);
+            TriangleRasterizer.RasterizeTriangle(triangle.P0.P, triangle.P1.P, triangle.P2.P, triangle);
         }
 
         //static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, float ra, float rb, float rc) => (a * ra) + (b * rb) * (c * rc);
@@ -197,6 +202,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             );
 
         private RasterizeDelegate<Triangle> DrawTriangleFastTest;
+        private TriangleRasterizer<Triangle> TriangleRasterizer;
 
         public GpuImplSoft()
         {
@@ -218,6 +224,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                     DrawPixelsFast(y, a.X, b.X, colorA, colorB);
                 }
             };
+            TriangleRasterizer = new TriangleRasterizer<Triangle>(DrawTriangleFastTest, 0, 271, 0, 511);
         }
 
         public static void Swap<T>(ref T lhs, ref T rhs)
