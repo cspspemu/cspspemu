@@ -1,3 +1,9 @@
+BenchmarkDotNet.Artifacts
+*.DotSettings
+*.DotSettings.user
+.DS_Store
 /.vscode
 /.idea
 /.gradle
+/ms
+/packages
