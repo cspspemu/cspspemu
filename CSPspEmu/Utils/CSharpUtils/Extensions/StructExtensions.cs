@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace CSharpUtils.Extensions
@@ -17,9 +18,16 @@ namespace CSharpUtils.Extensions
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static string
-            ToStringDefault<T>(this T Struct, bool simplifyBool = false, Type structType = null) //where T : struct
+            ToStringDefault<T>(this T Struct, bool simplifyBool = false, Type structType = null, HashSet<object> memory = null) //where T : struct
         {
             if (structType == null) structType = typeof(T);
+
+            if (memory == null) memory = new HashSet<object>();
+            if (!structType.IsPrimitive)
+            {
+                if (memory.Contains(Struct)) return "<recursive>";
+                memory.Add(Struct);
+            }
 
             var ret = "";
 
@@ -31,7 +39,7 @@ namespace CSharpUtils.Extensions
                 foreach (var item in Struct as Array)
                 {
                     if (ret.Length > 0) ret += ", ";
-                    ret += item.ToStringDefault(simplifyBool, elementType);
+                    ret += item.ToStringDefault(simplifyBool, elementType, memory);
                 }
                 return "[" + ret + "]";
             }
@@ -115,7 +123,7 @@ namespace CSharpUtils.Extensions
                             }
                             else
                             {
-                                ret += value.ToStringDefault(simplifyBool, valueType);
+                                ret += value.ToStringDefault(simplifyBool, valueType, memory);
                             }
                             //MemberCount++;
                             addedItem = true;

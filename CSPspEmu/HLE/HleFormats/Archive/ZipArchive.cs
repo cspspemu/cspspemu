@@ -39,60 +39,16 @@ namespace CSPspEmu.Hle.Formats.Archive
         public struct LocalFileHeader
         {
             public const uint ExpectedMagic = 0x04034b50;
-
-            /// <summary>
-            /// 0x04034b50
-            /// </summary>
-            public uint Magic;
-
-            /// <summary>
-            /// 
-            /// </summary>
+            public uint Magic; // 0x04034b50
             public ushort VersionNeededToExtract;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public ushort GeneralPurposeBitFlag;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public CompressionMethods CompressionMethod;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public ushort LastModificationFileTime;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public ushort LastModificationFileDate;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public uint CRC32;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public uint CompressedSize;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public uint UncompressedSize;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public ushort FileNameLength;
-
-            /// <summary>
-            /// 
-            /// </summary>
             public ushort ExtraLength;
         }
 

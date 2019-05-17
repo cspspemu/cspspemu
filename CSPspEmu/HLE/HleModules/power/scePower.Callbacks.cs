@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Modules.power
         {
             var Flags = default(PowerCallbackFlags);
 
-            if (PspBattery.BatteryExist) Flags |= PowerCallbackFlags.PSP_POWER_CB_BATTERY_EXIST;
+            if (PspBattery.BatteryExists) Flags |= PowerCallbackFlags.PSP_POWER_CB_BATTERY_EXIST;
             if (PspBattery.IsStandBy) Flags |= PowerCallbackFlags.PSP_POWER_CB_STANDBY;
             if (PspBattery.BatteryLifePercent == 1) Flags |= PowerCallbackFlags.PSP_POWER_CB_BATTERY_FULL;
 

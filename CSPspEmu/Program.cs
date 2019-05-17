@@ -6,7 +6,6 @@ using System.Security.Permissions;
 using System.Threading;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Core;
-using CSPspEmu.AutoTests;
 using CSharpUtils;
 using CSharpUtils.Getopt;
 using CSPspEmu.Hle.Vfs.Iso;
@@ -59,7 +58,7 @@ namespace CSPspEmu
 
         static void RunTests(bool runTestsViewOut, string[] arguments, int timeout)
         {
-            AutoTestsProgram.Main(runTestsViewOut, arguments.ToArray(), timeout);
+            //AutoTestsProgram.Main(runTestsViewOut, arguments.ToArray(), timeout);
             Environment.Exit(0);
         }
 

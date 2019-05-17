@@ -64,38 +64,38 @@ namespace CSPspEmu.Gui.texture
             MessageBus.Unregister<TextureHookInfo>(Hook);
         }
 
-        public void AddMapping(ulong CacheHash, string FileName)
+        public void AddMapping(ulong cacheHash, string fileName)
         {
-            TexMap[CacheHash] = FileName;
+            TexMap[cacheHash] = fileName;
             SaveTexMapFile();
         }
 
-        public void Hook(TextureHookInfo TextureInfo)
+        public void Hook(TextureHookInfo textureInfo)
         {
             Bitmap OutBitmap = null;
 
-            if (TexMap.ContainsKey(TextureInfo.TextureCacheKey.TextureHash))
+            if (TexMap.ContainsKey(textureInfo.TextureCacheKey.TextureHash))
             {
-                OutBitmap = new Bitmap(Image.FromFile(TexMap[TextureInfo.TextureCacheKey.TextureHash]));
+                OutBitmap = new Bitmap(Image.FromFile(TexMap[textureInfo.TextureCacheKey.TextureHash]));
             }
             else
             {
                 if (PspStoredConfig.ScaleTextures)
                 {
-                    var InBitmap =
-                        new Bitmap(TextureInfo.Width, TextureInfo.Height).SetChannelsDataInterleaved(
-                            TextureInfo.Data.CastToStructArray<OutputPixel, byte>(), BitmapChannelList.Rgba);
+                    var inBitmap =
+                        new Bitmap(textureInfo.Width, textureInfo.Height).SetChannelsDataInterleaved(
+                            textureInfo.Data.CastToStructArray<OutputPixel, byte>(), BitmapChannelList.Rgba);
                     OutBitmap =
-                        (new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32))).Process(InBitmap);
+                        (new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32))).Process(inBitmap);
                 }
             }
 
             if (OutBitmap != null)
             {
-                TextureInfo.Data = OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba)
+                textureInfo.Data = OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba)
                     .CastToStructArray<byte, OutputPixel>();
-                TextureInfo.Width = OutBitmap.Width;
-                TextureInfo.Height = OutBitmap.Height;
+                textureInfo.Width = OutBitmap.Width;
+                textureInfo.Height = OutBitmap.Height;
             }
         }
     }

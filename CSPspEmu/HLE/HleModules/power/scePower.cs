@@ -334,7 +334,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x0AFD0D8B, FirmwareVersion = 150)]
         public int scePowerIsBatteryExist()
         {
-            return PspBattery.BatteryExist ? 1 : 0;
+            return PspBattery.BatteryExists ? 1 : 0;
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace CSPspEmu.Hle.Modules.power
             var Status = default(PowerFlagsSet);
 
             if (PspBattery.IsPresent) Status |= PowerFlagsSet.BatteryExists;
-            if (PspBattery.IsPlugedIn) Status |= PowerFlagsSet.AcPower;
+            if (PspBattery.IsPluggedIn) Status |= PowerFlagsSet.AcPower;
             if (PspBattery.IsBatteryCharging) Status |= PowerFlagsSet.BatteryPower;
 
             return Status;

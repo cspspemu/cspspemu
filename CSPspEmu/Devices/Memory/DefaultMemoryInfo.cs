@@ -8,9 +8,6 @@
         {
         }
 
-        public bool IsAddressValid(uint Address)
-        {
-            return PspMemory.IsAddressValid(Address);
-        }
+        public bool IsAddressValid(uint address) => PspMemory.IsAddressValid(address);
     }
 }

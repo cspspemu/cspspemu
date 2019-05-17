@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Gpu
             vector * (1.0f / (float) Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z));
 
         public static Vector4 ToVector3(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, 0f);
-        public static Vector4 ToVector4(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, vector.W);
+        public static Vector4 ToVector4(this Vector4 vector) => vector;
         //public static Vector4 ToVector4(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
         //public static Vector4 ToVector4(this Vector4 vector) => new Vector4(vector.X, vector.Y, vector.Z, 1f);
     }

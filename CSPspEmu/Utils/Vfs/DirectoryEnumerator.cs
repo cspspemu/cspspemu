@@ -20,10 +20,7 @@ namespace CSPspEmu.Hle.Vfs
 
         public TType Current => List[Index];
 
-        public int GetLeft()
-        {
-            return List.Length - Index;
-        }
+        public int GetLeft() => List.Length - Index;
 
         public void Dispose()
         {

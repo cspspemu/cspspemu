@@ -18,5 +18,13 @@ namespace CSPspEmu.Utils
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float RatioInRange(this int value, int min, int max) => (float) (value - min) / (float) (max - min);
+
+        public static int RangeConvert(this int value, int minSrc, int maxSrc, int minDst, int maxDst)
+        {
+            var srcLen = (maxSrc - minSrc);
+            var dstLen = (maxDst - minDst);
+            return minDst + ((value - minSrc) * dstLen) / srcLen;
+        }
+
     }
 }

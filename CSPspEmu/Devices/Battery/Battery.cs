@@ -3,13 +3,13 @@
     public class Battery
     {
         /// <summary />
-        public bool IsPlugedIn = true;
+        public bool IsPluggedIn = true;
 
         /// <summary />
         public bool IsPresent = true;
 
         /// <summary />
-        public bool BatteryExist = true;
+        public bool BatteryExists = true;
 
         /// <summary />
         public bool IsStandBy = false;
