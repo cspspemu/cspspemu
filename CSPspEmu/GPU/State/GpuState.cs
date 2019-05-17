@@ -74,32 +74,34 @@ namespace CSPspEmu.Core.Gpu.State
         public SkinningStateStruct SkinningState;
         public ColorTestStateStruct ColorTestState;
         public PatchStateStruct PatchState;
+        public TextureMappingStateStruct TextureMappingState;
 
         public GpuStateStruct(GpuStateData data)
         {
             this.data = data;
             
-        DrawBufferState = new ScreenBufferStateStruct(data);
-        DepthBufferState = new ScreenBufferStateStruct(data);
-        TextureTransferState = new TextureTransferStateStruct(data);
-        Viewport = new ViewportStruct(data);
-        VertexState = new VertexStateStruct(data);
-        BackfaceCullingState = new BackfaceCullingStateStruct(data);
-        FogState = new FogState(data);
-        BlendingState = new BlendingStateStruct();
-        StencilState = new StencilStateStruct(data);
-        AlphaTestState = new AlphaTestStateStruct();
-        LogicalOperationState = new LogicalOperationStateStruct();
-        DepthTestState = new DepthTestStateStruct(data);
-        LightingState = new LightingStateStruct(data);
-        MorphingState = new MorphingStateStruct(data);
-        DitheringState = new DitheringStateStruct(data);
-        LineSmoothState = new LineSmoothStateStruct(data);
-        ClipPlaneState = new ClipPlaneStateStruct(data);
-        PatchCullingState = new PatchCullingStateStruct(data);
-        SkinningState = new SkinningStateStruct();
-        ColorTestState = new ColorTestStateStruct(data);
-        PatchState = new PatchStateStruct(data);
+            DrawBufferState = new ScreenBufferStateStruct(data);
+            DepthBufferState = new ScreenBufferStateStruct(data);
+            TextureTransferState = new TextureTransferStateStruct(data);
+            Viewport = new ViewportStruct(data);
+            VertexState = new VertexStateStruct(data);
+            BackfaceCullingState = new BackfaceCullingStateStruct(data);
+            FogState = new FogState(data);
+            BlendingState = new BlendingStateStruct();
+            StencilState = new StencilStateStruct(data);
+            AlphaTestState = new AlphaTestStateStruct();
+            LogicalOperationState = new LogicalOperationStateStruct();
+            DepthTestState = new DepthTestStateStruct(data);
+            LightingState = new LightingStateStruct(data);
+            MorphingState = new MorphingStateStruct(data);
+            DitheringState = new DitheringStateStruct(data);
+            LineSmoothState = new LineSmoothStateStruct(data);
+            ClipPlaneState = new ClipPlaneStateStruct(data);
+            PatchCullingState = new PatchCullingStateStruct(data);
+            SkinningState = new SkinningStateStruct();
+            ColorTestState = new ColorTestStateStruct(data);
+            PatchState = new PatchStateStruct(data);
+            TextureMappingState = new TextureMappingStateStruct(data);
         }
 
         public uint BaseAddress => ((data.Param24(GpuOpCodes.BASE) << 8) & 0xff000000);
@@ -129,7 +131,6 @@ namespace CSPspEmu.Core.Gpu.State
         public ClearBufferSet ClearFlags => (ClearBufferSet) data.Param8(GpuOpCodes.CLEAR, 8);
         public ColorStruct FixColorSource;
         public ColorStruct FixColorDestination;
-        public TextureMappingStateStruct TextureMappingState;
         public ShadingModelEnum ShadeModel => (ShadingModelEnum) data.Int(GpuOpCodes.SHADE);
 
         private sbyte[] _DitherMatrix = new sbyte[16];
@@ -137,12 +138,12 @@ namespace CSPspEmu.Core.Gpu.State
         {
             get
             {
-                for (var n = 0; n < 4; n++)
+                for (byte n = 0; n < 4; n++)
                 {
-                    _DitherMatrix[4 * n + 0] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 0, 4);
-                    _DitherMatrix[4 * n + 1] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 1, 4);
-                    _DitherMatrix[4 * n + 2] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 2, 4);
-                    _DitherMatrix[4 * n + 3] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 3, 4);
+                    _DitherMatrix[4 * n + 0] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + n, 4 * 0, 4);
+                    _DitherMatrix[4 * n + 1] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + n, 4 * 1, 4);
+                    _DitherMatrix[4 * n + 2] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + n, 4 * 2, 4);
+                    _DitherMatrix[4 * n + 3] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + n, 4 * 3, 4);
                 }
 
                 var o = new sbyte[16];
@@ -342,7 +343,15 @@ namespace CSPspEmu.Core.Gpu.State
         public LightingStateStruct(GpuStateData data)
         {
             this.data = data;
+            Lights = new LightStateStruct[4];
+            for (var n = 0; n < 4; n++) Lights[n] = new LightStateStruct(data, (byte)n);
         }
+
+        public LightStateStruct[] Lights;
+        public LightStateStruct Light0 => Lights[0];
+        public LightStateStruct Light1 => Lights[1];
+        public LightStateStruct Light2 => Lights[2];
+        public LightStateStruct Light3 => Lights[3];
 
         public bool Enabled => data.Bool(GpuOpCodes.LTE);
         public ColorfStruct AmbientModelColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.AMC)).SetA(data.Param24(GpuOpCodes.AMA));
@@ -351,7 +360,6 @@ namespace CSPspEmu.Core.Gpu.State
         public ColorfStruct EmissiveModelColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.EMC));
         public ColorfStruct AmbientLightColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.ALC)).SetA(data.Param24(GpuOpCodes.ALA));
         public float SpecularPower => data.Float1(GpuOpCodes.SPOW);
-        public LightStateStruct Light0, Light1, Light2, Light3;
         public LightComponentsSet MaterialColorComponents => (LightComponentsSet) data.Param8(GpuOpCodes.CMAT, 0);
         public LightModelEnum LightModel => (LightModelEnum) data.Param8(GpuOpCodes.LMODE, 0);
     }
@@ -541,14 +549,19 @@ namespace CSPspEmu.Core.Gpu.State
         public TextureMappingStateStruct(GpuStateData data)
         {
             this.data = data;
+
+            TextureState = new TextureStateStruct(data);
+            UploadedClutState = new ClutStateStruct(data);
+            ClutState = new ClutStateStruct(data);
         }
+
+        public TextureStateStruct TextureState;
+        public ClutStateStruct UploadedClutState;
+        public ClutStateStruct ClutState;
 
         public bool Enabled => data.Bool(GpuOpCodes.TME);
         public GpuMatrix4X4Struct Matrix;
         public ColorbStruct TextureEnviromentColor => new ColorbStruct().SetRGB_A1(data.Param24(GpuOpCodes.TEC));
-        public TextureStateStruct TextureState;
-        public ClutStateStruct UploadedClutState;
-        public ClutStateStruct ClutState;
         public TextureMapMode TextureMapMode => (TextureMapMode) data.Param8(GpuOpCodes.TMAP, 0);
         public TextureProjectionMapMode TextureProjectionMapMode => (TextureProjectionMapMode) data.Param8(GpuOpCodes.TMAP, 8);
 
@@ -596,7 +609,17 @@ namespace CSPspEmu.Core.Gpu.State
         public TextureStateStruct(GpuStateData data)
         {
             this.data = data;
+            this.Mipmaps = new MipmapState[8];
+            for (var n = 0; n < 8; n++) this.Mipmaps[n] = new MipmapState(data, (byte)n); 
         }
+
+        /// <summary>
+        /// MipmapState list
+        /// </summary>
+        public MipmapState[] Mipmaps;
+
+        public MipmapState Mipmap0 => Mipmaps[0]; 
+
 
         public class MipmapState
         {
@@ -657,19 +680,6 @@ namespace CSPspEmu.Core.Gpu.State
         /// Texture Data mode
         /// </summary>
         public GuPixelFormats PixelFormat => (GuPixelFormats) data.Extract(GpuOpCodes.TPSM, 0, 4);
-
-        /// <summary>
-        /// MipmapState list
-        /// </summary>
-        public MipmapState Mipmap0;
-
-        public MipmapState Mipmap1;
-        public MipmapState Mipmap2;
-        public MipmapState Mipmap3;
-        public MipmapState Mipmap4;
-        public MipmapState Mipmap5;
-        public MipmapState Mipmap6;
-        public MipmapState Mipmap7;
 
         /// <summary>
         /// TextureFilter when drawing the texture scaled

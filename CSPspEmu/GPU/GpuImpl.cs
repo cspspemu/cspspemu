@@ -88,6 +88,7 @@ namespace CSPspEmu.Core.Gpu
 
         public virtual void Prim(ushort vertexCount)
         {
+            //Console.WriteLine($"Prim({vertexCount})");
             uint morpingVertexCount, totalVerticesWithoutMorphing;
             PreparePrim(GpuState, out totalVerticesWithoutMorphing, vertexCount, out morpingVertexCount);
             var vertices = new Vector4[vertexCount];
