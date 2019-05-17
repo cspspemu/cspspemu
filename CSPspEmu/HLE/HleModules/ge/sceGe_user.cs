@@ -28,7 +28,6 @@ namespace CSPspEmu.Hle.Modules.ge
         [Inject] public SysMemUserForUser SysMemUserForUser;
 
         private MemoryPartition GpuStateStructPartition = null;
-        private GpuStateStruct* GpuStateStructPointer = null;
         private int eDRAMMemoryWidth;
         int CallbackLastId = 1;
 
@@ -64,10 +63,12 @@ namespace CSPspEmu.Hle.Modules.ge
         /// <returns>&lt; 0 on error.</returns>
         [HlePspFunction(NID = 0x438A385A, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceGeSaveContext(GpuStateStruct* Context)
+        public int sceGeSaveContext(uint Address)
         {
-            *Context = *this.GpuStateStructPointer;
-            //throw (new NotImplementedException());
+            var pointer = Memory.PspAddressToSpan<uint>(Address, 0x200);
+            //var current = this.GpuStateStructPointer.data.Span;
+            //current.CopyTo(pointer);
+            throw new NotImplementedException();
             return 0;
         }
 
@@ -78,9 +79,12 @@ namespace CSPspEmu.Hle.Modules.ge
         /// <returns>&lt; 0 on error.</returns>
         [HlePspFunction(NID = 0x0BF608FB, FirmwareVersion = 150)]
         //[HlePspNotImplemented]
-        public int sceGeRestoreContext(GpuStateStruct* Context)
+        public int sceGeRestoreContext(uint Address)
         {
-            *this.GpuStateStructPointer = *Context;
+            var pointer = Memory.PspAddressToSpan<uint>(Address, 0x200);
+            //var current = this.GpuStateStructPointer.data.Span;
+            //pointer.CopyTo(current);
+            throw new NotImplementedException();
             return 0;
         }
 
@@ -260,13 +264,16 @@ namespace CSPspEmu.Hle.Modules.ge
             return 0;
         }
 
+        private uint* DefaultGpuStateData = null;
+
         protected override void ModuleInitialize()
         {
             GpuStateStructPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
-                sizeof(GpuStateStruct),
+                GpuStateStruct.StructSizeInBytes,
                 Name: "GpuStateStruct"
             );
-            GpuStateStructPointer = (GpuStateStruct*) GpuStateStructPartition.GetLowPointerSafe<GpuStateStruct>();
+            
+            DefaultGpuStateData = GpuStateStructPartition.GetLowPointerSafe<uint>(GpuStateStruct.StructSizeInWords);
         }
 
         private GpuDisplayList GetDisplayListFromId(int DisplayListId)
@@ -295,19 +302,13 @@ namespace CSPspEmu.Hle.Modules.ge
                 DisplayList.CallbacksId = CallbackId;
             }
 
-            DisplayList.GpuStateStructPointer = null;
-
             if (Args != null)
             {
-                DisplayList.GpuStateStructPointer =
-                    (GpuStateStruct*) CpuProcessor.Memory.PspAddressToPointerSafe(Args->GpuStateStructAddress,
-                        Marshal.SizeOf(typeof(GpuStateStruct)));
+                DisplayList.GpuStateStructPointer.data.Data =
+                    CpuProcessor.Memory.PspAddressToPointerSafe<uint>(Args->GpuStateStructAddress, GpuStateStruct.StructSizeInWords);
             }
 
-            if (DisplayList.GpuStateStructPointer == null)
-            {
-                DisplayList.GpuStateStructPointer = GpuStateStructPointer;
-            }
+            //if (DisplayList.GpuStateStructPointer == null) DisplayList.GpuStateStructPointer.data.Data = DefaultGpuStateData;
 
             return DisplayList;
         }

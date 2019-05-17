@@ -129,16 +129,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
         private readonly Dictionary<DrawBufferKey, DrawBufferValue> _drawBufferTextures =
             new Dictionary<DrawBufferKey, DrawBufferValue>();
 
-        public GLTexture TextureCacheGetAndBind(GpuStateStruct* gpuState)
+        public GLTexture TextureCacheGetAndBind(GpuStateStruct gpuState)
         {
             if (DynarecConfig.EnableRenderTarget)
             {
-                var textureMappingState = &gpuState->TextureMappingState;
-                var clutState = &textureMappingState->ClutState;
-                var textureState = &textureMappingState->TextureState;
+                var textureMappingState = gpuState.TextureMappingState;
+                var clutState = textureMappingState.ClutState;
+                var textureState = textureMappingState.TextureState;
                 var key = new DrawBufferKey()
                 {
-                    Address = textureState->Mipmap0.Address,
+                    Address = textureState.Mipmap0.Address,
                 };
 
                 if (_drawBufferTextures.ContainsKey(key))
@@ -215,17 +215,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
         private uint _cachedBindAddress;
         public DrawBufferValue CurrentDrawBuffer { get; private set; }
 
-        public void BindCurrentDrawBufferTexture(GpuStateStruct* gpuState)
+        public void BindCurrentDrawBufferTexture(GpuStateStruct gpuState)
         {
-            if (_cachedBindAddress != gpuState->DrawBufferState.Address)
+            if (_cachedBindAddress != gpuState.DrawBufferState.Address)
             {
                 GL.glFlush();
                 GL.glFinish();
 
-                _cachedBindAddress = gpuState->DrawBufferState.Address;
+                _cachedBindAddress = gpuState.DrawBufferState.Address;
                 var key = new DrawBufferKey()
                 {
-                    Address = gpuState->DrawBufferState.Address,
+                    Address = gpuState.DrawBufferState.Address,
                     //Width = (int)GpuState->DrawBufferState.Width,
                     //Height = (int)272,
                 };

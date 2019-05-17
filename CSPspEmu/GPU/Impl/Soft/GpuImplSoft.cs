@@ -113,7 +113,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
         
         public uint* TextureLookupAddress(int x, int y)
         {
-            var textureMappingStateStruct = GpuState->TextureMappingState;
+            var textureMappingStateStruct = GpuState.TextureMappingState;
             var textureStateStruct = textureMappingStateStruct.TextureState;
             var mipmap = textureStateStruct.Mipmap0;
             return (uint*) Memory.PspAddressToPointerSafe((uint)(mipmap.Address + (((y * mipmap.BufferWidth) + x) * 4)));

@@ -1,7 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 namespace CSPspEmu.Core.Gpu
 {
-    public enum GpuOpCodes : byte
+    public enum GpuOpCodes : ushort
     {
         /// <summary>
         /// 0x00 - 0 - NOP
@@ -887,7 +887,7 @@ namespace CSPspEmu.Core.Gpu
         CBP,
 
         /// <summary>
-        /// 0xB1 - CLUT Buffer Pointer H
+        /// 0xB1 - CLUT Buffer Pointer High
         /// </summary>
         CBPH,
 
@@ -1280,6 +1280,12 @@ namespace CSPspEmu.Core.Gpu
         /// 0xFF - 
         /// </summary>
         Dummy,
+        
+        TMATRIX_BASE = 0x100,
+        VIEW_MATRIX_BASE = 0x110,
+        WORLD_MATRIX_BASE = 0x120,
+        PROJ_MATRIX_BASE = 0x130,
+        BONE_MATRIX_BASE = 0x140,
 
         UNKNOWN = unchecked((byte) -1),
     }

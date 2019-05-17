@@ -125,19 +125,19 @@ namespace CSPspEmu.Core.Gpu
 
         TTexture InvalidTexture;
 
-        public TTexture Get(GpuStateStruct* GpuState)
+        public TTexture Get(GpuStateStruct GpuState)
         {
-            var TextureMappingState = &GpuState->TextureMappingState;
-            var ClutState = &TextureMappingState->ClutState;
-            var TextureState = &TextureMappingState->TextureState;
+            var TextureMappingState = GpuState.TextureMappingState;
+            var ClutState = TextureMappingState.ClutState;
+            var TextureState = TextureMappingState.TextureState;
 
             TTexture Texture;
             //GC.Collect();
-            bool Swizzled = TextureState->Swizzled;
-            uint TextureAddress = TextureState->Mipmap0.Address;
-            uint ClutAddress = ClutState->Address;
-            var ClutFormat = ClutState->PixelFormat;
-            var ClutStart = ClutState->Start;
+            bool Swizzled = TextureState.Swizzled;
+            uint TextureAddress = TextureState.Mipmap0.Address;
+            uint ClutAddress = ClutState.Address;
+            var ClutFormat = ClutState.PixelFormat;
+            var ClutStart = ClutState.Start;
             var ClutDataStart = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutStart);
 
             ulong Hash1 = TextureAddress | (ulong) ((ClutAddress + ClutDataStart) << 32);
@@ -160,24 +160,24 @@ namespace CSPspEmu.Core.Gpu
 
                 //Console.WriteLine("{0:X}", ClutAddress);
 
-                var TextureFormat = TextureState->PixelFormat;
+                var TextureFormat = TextureState.PixelFormat;
                 //var Width = TextureState->Mipmap0.TextureWidth;
 
-                int BufferWidth = TextureState->Mipmap0.BufferWidth;
+                int BufferWidth = TextureState.Mipmap0.BufferWidth;
 
                 // FAKE!
                 //BufferWidth = TextureState->Mipmap0.TextureWidth;
 
-                var Height = TextureState->Mipmap0.TextureHeight;
+                var Height = TextureState.Mipmap0.TextureHeight;
                 var TextureDataSize = PixelFormatDecoder.GetPixelsSize(TextureFormat, BufferWidth * Height);
-                if (ClutState->NumberOfColors > 256)
+                if (ClutState.NumberOfColors > 256)
                 {
-                    ClutState->NumberOfColors = 256;
+                    ClutState.NumberOfColors = 256;
                 }
-                var ClutDataSize = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutState->NumberOfColors);
-                var ClutCount = ClutState->NumberOfColors;
-                var ClutShift = ClutState->Shift;
-                var ClutMask = ClutState->Mask;
+                var ClutDataSize = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutState.NumberOfColors);
+                var ClutCount = ClutState.NumberOfColors;
+                var ClutShift = ClutState.Shift;
+                var ClutMask = ClutState.Mask;
 
                 //Console.WriteLine(TextureFormat);
 
@@ -242,10 +242,10 @@ namespace CSPspEmu.Core.Gpu
                     ClutMask = ClutMask,
                     Swizzled = Swizzled,
 
-                    ColorTestEnabled = GpuState->ColorTestState.Enabled,
-                    ColorTestRef = GpuState->ColorTestState.Ref,
-                    ColorTestMask = GpuState->ColorTestState.Mask,
-                    ColorTestFunction = GpuState->ColorTestState.Function,
+                    ColorTestEnabled = GpuState.ColorTestState.Enabled,
+                    ColorTestRef = GpuState.ColorTestState.Ref,
+                    ColorTestMask = GpuState.ColorTestState.Mask,
+                    ColorTestFunction = GpuState.ColorTestState.Function,
                 };
 
                 if (Texture == null || (!Texture.TextureCacheKey.Equals(TextureCacheKey)))

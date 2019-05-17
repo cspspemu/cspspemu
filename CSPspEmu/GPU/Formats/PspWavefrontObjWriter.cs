@@ -14,16 +14,16 @@ namespace CSPspEmu.Core.Gpu.Formats
         private GuPrimitiveType _currentPrimitiveType;
         private readonly List<int> _primitiveIndices = new List<int>();
         private Matrix4F _modelMatrix = default(Matrix4F);
-        private GpuStateStruct* _gpuState;
+        private GpuStateStruct _gpuState;
         private VertexTypeStruct _vertexType;
 
-        public void StartPrimitive(GpuStateStruct* gpuState, GuPrimitiveType primitiveType, uint vertexAddress,
+        public void StartPrimitive(GpuStateStruct gpuState, GuPrimitiveType primitiveType, uint vertexAddress,
             int vertexCount, ref VertexTypeStruct vertexType)
         {
             _gpuState = gpuState;
             _vertexType = vertexType;
-            var viewMatrix = gpuState->VertexState.ViewMatrix.Matrix4;
-            var worldMatrix = gpuState->VertexState.WorldMatrix.Matrix4;
+            var viewMatrix = gpuState.VertexState.ViewMatrix.Matrix4;
+            var worldMatrix = gpuState.VertexState.WorldMatrix.Matrix4;
             _modelMatrix.Multiply(viewMatrix);
             _modelMatrix.Multiply(worldMatrix);
 
@@ -44,7 +44,7 @@ namespace CSPspEmu.Core.Gpu.Formats
         public void PutVertex(ref VertexInfo vertexInfo)
         {
             //GpuState.VertexState.ViewMatrix.Matrix
-            if (_gpuState->ClearingMode) return;
+            if (_gpuState.ClearingMode) return;
             var vector = vertexInfo.Position.ToVector3();
             if (!_vertexType.Transform2D)
             {

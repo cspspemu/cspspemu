@@ -10,7 +10,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
     public sealed unsafe partial class OpenglGpuImpl
     {
-        private void PrepareStateDraw(GpuStateStruct* gpuState)
+        private void PrepareStateDraw(GpuStateStruct gpuState)
         {
             GL.glColorMask(true, true, true, true);
 
@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             PrepareState_Blend(gpuState);
             PrepareState_Clip(gpuState);
 
-            if (gpuState->VertexState.Type.Transform2D)
+            if (gpuState.VertexState.Type.Transform2D)
             {
                 PrepareState_Colors_2D(gpuState);
                 GL.glDisable(GL.GL_STENCIL_TEST);
@@ -42,22 +42,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             PrepareState_AlphaTest(gpuState);
         }
 
-        private void PrepareState_Clip(GpuStateStruct* gpuState)
+        private void PrepareState_Clip(GpuStateStruct gpuState)
         {
-            if (!GL.EnableDisable(GL.GL_SCISSOR_TEST, gpuState->ClipPlaneState.Enabled))
+            if (!GL.EnableDisable(GL.GL_SCISSOR_TEST, gpuState.ClipPlaneState.Enabled))
             {
                 return;
             }
-            var scissor = &gpuState->ClipPlaneState.Scissor;
+            var scissor = gpuState.ClipPlaneState.Scissor;
             GL.glScissor(
-                scissor->Left * ScaleViewport,
-                scissor->Top * ScaleViewport,
-                (scissor->Right - scissor->Left) * ScaleViewport,
-                (scissor->Bottom - scissor->Top) * ScaleViewport
+                scissor.Left * ScaleViewport,
+                scissor.Top * ScaleViewport,
+                scissor.Width * ScaleViewport,
+                scissor.Height * ScaleViewport
             );
         }
 
-        private void PrepareState_AlphaTest(GpuStateStruct* gpuState)
+        private void PrepareState_AlphaTest(GpuStateStruct gpuState)
         {
             //if (!GL.EnableDisable(EnableCap.AlphaTest, GpuState->AlphaTestState.Enabled))
             //{
@@ -70,9 +70,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //);
         }
 
-        private void PrepareState_Stencil(GpuStateStruct* gpuState)
+        private void PrepareState_Stencil(GpuStateStruct gpuState)
         {
-            if (!GL.EnableDisable(GL.GL_STENCIL_TEST, gpuState->StencilState.Enabled))
+            if (!GL.EnableDisable(GL.GL_STENCIL_TEST, gpuState.StencilState.Enabled))
             {
                 return;
             }
@@ -93,58 +93,58 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			);
 #endif
             GL.glStencilFunc(
-                OpenglGpuImplConversionTables.StencilFunctionTranslate[(int) gpuState->StencilState.Function],
-                gpuState->StencilState.FunctionRef,
-                gpuState->StencilState.FunctionMask
+                OpenglGpuImplConversionTables.StencilFunctionTranslate[(int) gpuState.StencilState.Function],
+                gpuState.StencilState.FunctionRef,
+                gpuState.StencilState.FunctionMask
             );
 
             GL.glStencilOp(
-                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState->StencilState.OperationFail],
-                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState->StencilState.OperationZFail],
-                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState->StencilState.OperationZPass]
+                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState.StencilState.OperationFail],
+                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState.StencilState.OperationZFail],
+                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState.StencilState.OperationZPass]
             );
         }
 
-        private void PrepareState_CullFace(GpuStateStruct* gpuState)
+        private void PrepareState_CullFace(GpuStateStruct gpuState)
         {
-            if (!GL.EnableDisable(GL.GL_CULL_FACE, gpuState->BackfaceCullingState.Enabled))
+            if (!GL.EnableDisable(GL.GL_CULL_FACE, gpuState.BackfaceCullingState.Enabled))
             {
                 return;
             }
 
             //GL.EnableDisable(EnableCap.CullFace, false);
 
-            GL.glCullFace((gpuState->BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise)
+            GL.glCullFace((gpuState.BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise)
                 ? GL.GL_FRONT
                 : GL.GL_BACK);
         }
 
-        private void PrepareState_Depth(GpuStateStruct* gpuState)
+        private void PrepareState_Depth(GpuStateStruct gpuState)
         {
-            GL.DepthRange(gpuState->DepthTestState.RangeNear, gpuState->DepthTestState.RangeFar);
+            GL.DepthRange(gpuState.DepthTestState.RangeNear, gpuState.DepthTestState.RangeFar);
         }
 
-        private void PrepareState_DepthTest(GpuStateStruct* gpuState)
+        private void PrepareState_DepthTest(GpuStateStruct gpuState)
         {
-            if (gpuState->DepthTestState.Mask != 0 && gpuState->DepthTestState.Mask != 1)
+            if (gpuState.DepthTestState.Mask != 0 && gpuState.DepthTestState.Mask != 1)
             {
-                Console.Error.WriteLine("WARNING! DepthTestState.Mask: {0}", gpuState->DepthTestState.Mask);
+                Console.Error.WriteLine("WARNING! DepthTestState.Mask: {0}", gpuState.DepthTestState.Mask);
             }
-            GL.glDepthMask(gpuState->DepthTestState.Mask == 0);
-            if (!GL.EnableDisable(GL.GL_DEPTH_TEST, gpuState->DepthTestState.Enabled))
+            GL.glDepthMask(gpuState.DepthTestState.Mask == 0);
+            if (!GL.EnableDisable(GL.GL_DEPTH_TEST, gpuState.DepthTestState.Enabled))
             {
                 return;
             }
             GL.glDepthFunc(
-                OpenglGpuImplConversionTables.DepthFunctionTranslate[(int) gpuState->DepthTestState.Function]);
+                OpenglGpuImplConversionTables.DepthFunctionTranslate[(int) gpuState.DepthTestState.Function]);
         }
 
-        private void PrepareState_Colors_2D(GpuStateStruct* gpuState)
+        private void PrepareState_Colors_2D(GpuStateStruct gpuState)
         {
             PrepareState_Colors_3D(gpuState);
         }
 
-        private void PrepareState_Colors_3D(GpuStateStruct* gpuState)
+        private void PrepareState_Colors_3D(GpuStateStruct gpuState)
         {
             //GL.EnableDisable(EnableCap.ColorMaterial, VertexType.Color != VertexTypeStruct.ColorEnum.Void);
             //
@@ -209,7 +209,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, &GpuState->LightingState.EmissiveModelColor.Red);
         }
 
-        private void PrepareState_Lighting(GpuStateStruct* gpuState)
+        private void PrepareState_Lighting(GpuStateStruct gpuState)
         {
             //var LightingState = &GpuState->LightingState;
             //
@@ -259,10 +259,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //}
         }
 
-        private void PrepareState_Blend(GpuStateStruct* gpuState)
+        private void PrepareState_Blend(GpuStateStruct gpuState)
         {
-            var blendingState = &gpuState->BlendingState;
-            if (!GL.EnableDisable(GL.GL_BLEND, blendingState->Enabled))
+            var blendingState = gpuState.BlendingState;
+            if (!GL.EnableDisable(GL.GL_BLEND, blendingState.Enabled))
             {
                 return;
             }
@@ -270,10 +270,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //Console.WriteLine("Blend!");
 
             var openglFunctionSource =
-                OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int) blendingState->FunctionSource];
+                OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int) blendingState.FunctionSource];
             //var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState->FunctionDestination];
             var openglFunctionDestination =
-                OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int) blendingState->FunctionDestination];
+                OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int) blendingState.FunctionDestination];
 
             Func<ColorfStruct, int> getBlendFix = (color) =>
             {
@@ -282,27 +282,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 return GL.GL_CONSTANT_COLOR;
             };
 
-            if (blendingState->FunctionSource == GuBlendingFactorSource.GuFix)
+            if (blendingState.FunctionSource == GuBlendingFactorSource.GuFix)
             {
-                openglFunctionSource = getBlendFix(blendingState->FixColorSource);
+                openglFunctionSource = getBlendFix(blendingState.FixColorSource);
             }
 
-            if (blendingState->FunctionDestination == GuBlendingFactorDestination.GuFix)
+            if (blendingState.FunctionDestination == GuBlendingFactorDestination.GuFix)
             {
                 if (((int) openglFunctionSource == GL.GL_CONSTANT_COLOR) &&
-                    (blendingState->FixColorSource + blendingState->FixColorDestination).IsColorf(1, 1, 1))
+                    (blendingState.FixColorSource + blendingState.FixColorDestination).IsColorf(1, 1, 1))
                 {
                     openglFunctionDestination = GL.GL_ONE_MINUS_CONSTANT_COLOR;
                 }
                 else
                 {
-                    openglFunctionDestination = getBlendFix(blendingState->FixColorDestination);
+                    openglFunctionDestination = getBlendFix(blendingState.FixColorDestination);
                 }
             }
             //Console.WriteLine("{0}, {1}", OpenglFunctionSource, OpenglFunctionDestination);
 
             var openglBlendEquation =
-                OpenglGpuImplConversionTables.BlendEquationTranslate[(int) blendingState->Equation];
+                OpenglGpuImplConversionTables.BlendEquationTranslate[(int) blendingState.Equation];
 
             /*
             Console.WriteLine(
@@ -315,24 +315,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             GL.glBlendFunc(openglFunctionSource, openglFunctionDestination);
 
             GL.glBlendColor(
-                blendingState->FixColorDestination.Red,
-                blendingState->FixColorDestination.Green,
-                blendingState->FixColorDestination.Blue,
-                blendingState->FixColorDestination.Alpha
+                blendingState.FixColorDestination.Red,
+                blendingState.FixColorDestination.Green,
+                blendingState.FixColorDestination.Blue,
+                blendingState.FixColorDestination.Alpha
             );
         }
 
-        private void PrepareState_Texture_2D(GpuStateStruct* gpuState)
+        private void PrepareState_Texture_2D(GpuStateStruct gpuState)
         {
-            var textureMappingState = &gpuState->TextureMappingState;
-            var mipmap0 = &textureMappingState->TextureState.Mipmap0;
+            var textureMappingState = gpuState.TextureMappingState;
+            var mipmap0 = textureMappingState.TextureState.Mipmap0;
 
-            if (textureMappingState->Enabled)
+            if (textureMappingState.Enabled)
             {
                 _textureMatrix = Matrix4F.Identity
                         .Scale(
-                            1.0f / mipmap0->BufferWidth,
-                            1.0f / mipmap0->TextureHeight,
+                            1.0f / mipmap0.BufferWidth,
+                            1.0f / mipmap0.TextureHeight,
                             1.0f
                         )
                     ;
@@ -348,29 +348,29 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             }
         }
 
-        private void PrepareState_Texture_3D(GpuStateStruct* gpuState)
+        private void PrepareState_Texture_3D(GpuStateStruct gpuState)
         {
-            var textureMappingState = &gpuState->TextureMappingState;
-            var textureState = &textureMappingState->TextureState;
+            var textureMappingState = gpuState.TextureMappingState;
+            var textureState = textureMappingState.TextureState;
 
-            if (textureMappingState->Enabled)
+            if (textureMappingState.Enabled)
             {
                 _textureMatrix = Matrix4F.Identity;
 
-                switch (textureMappingState->TextureMapMode)
+                switch (textureMappingState.TextureMapMode)
                 {
                     case TextureMapMode.GuTextureCoords:
                         _textureMatrix = _textureMatrix
-                                .Translate(textureState->OffsetU, textureState->OffsetV, 0)
-                                .Scale(textureState->ScaleU, textureState->ScaleV, 1)
+                                .Translate(textureState.OffsetU, textureState.OffsetV, 0)
+                                .Scale(textureState.ScaleU, textureState.ScaleV, 1)
                             ;
                         break;
                     case TextureMapMode.GuTextureMatrix:
-                        switch (gpuState->TextureMappingState.TextureProjectionMapMode)
+                        switch (gpuState.TextureMappingState.TextureProjectionMapMode)
                         {
                             default:
                                 Console.Error.WriteLine("NotImplemented: GU_TEXTURE_MATRIX: {0}",
-                                    gpuState->TextureMappingState.TextureProjectionMapMode);
+                                    gpuState.TextureMappingState.TextureProjectionMapMode);
                                 break;
                         }
                         break;
@@ -379,19 +379,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                         break;
                     default:
                         Console.Error.WriteLine("NotImplemented TextureMappingState->TextureMapMode: " +
-                                                textureMappingState->TextureMapMode);
+                                                textureMappingState.TextureMapMode);
                         break;
                 }
             }
         }
 
-        private void PrepareState_Texture_Common(GpuStateStruct* gpuState)
+        private void PrepareState_Texture_Common(GpuStateStruct gpuState)
         {
-            var textureMappingState = &gpuState->TextureMappingState;
+            var textureMappingState = gpuState.TextureMappingState;
             //var ClutState = &TextureMappingState->ClutState;
-            var textureState = &textureMappingState->TextureState;
+            var textureState = textureMappingState.TextureState;
 
-            if (!GL.EnableDisable(GL.GL_TEXTURE_2D, textureMappingState->Enabled)) return;
+            if (!GL.EnableDisable(GL.GL_TEXTURE_2D, textureMappingState.Enabled)) return;
 
             if (VertexType.Transform2D)
             {

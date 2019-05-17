@@ -38,7 +38,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         /// <summary>
         /// 
         /// </summary>
-        private GpuStateStruct* GpuState;
+        private GpuStateStruct GpuState;
 
         public override void InvalidateCache(uint address, int size)
         {
@@ -172,10 +172,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             ShaderInfo.matrixWorldViewProjection.Set(_worldViewProjectionMatrix);
             ShaderInfo.matrixTexture.Set(_textureMatrix);
-            ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4());
+            ShaderInfo.uniformColor.Set(GpuState.LightingState.AmbientModelColor.ToVector4());
             ShaderInfo.hasPerVertexColor.Set(VertexType.HasColor);
-            ShaderInfo.clearingMode.Set(GpuState->ClearingMode);
-            ShaderInfo.hasTexture.Set(GpuState->TextureMappingState.Enabled);
+            ShaderInfo.clearingMode.Set(GpuState.ClearingMode);
+            ShaderInfo.hasTexture.Set(GpuState.TextureMappingState.Enabled);
 
             ShaderInfo.weightCount.Set(VertexType.RealSkinningWeightCount);
             //ShaderInfo.weightCount.Set(0);
@@ -183,42 +183,42 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             {
                 ShaderInfo.matrixBones.Set(new[]
                 {
-                    GpuState->SkinningState.BoneMatrix0.Matrix4,
-                    GpuState->SkinningState.BoneMatrix1.Matrix4,
-                    GpuState->SkinningState.BoneMatrix2.Matrix4,
-                    GpuState->SkinningState.BoneMatrix3.Matrix4,
-                    GpuState->SkinningState.BoneMatrix4.Matrix4,
-                    GpuState->SkinningState.BoneMatrix5.Matrix4,
-                    GpuState->SkinningState.BoneMatrix6.Matrix4,
-                    GpuState->SkinningState.BoneMatrix7.Matrix4,
+                    GpuState.SkinningState.BoneMatrix0.Matrix4,
+                    GpuState.SkinningState.BoneMatrix1.Matrix4,
+                    GpuState.SkinningState.BoneMatrix2.Matrix4,
+                    GpuState.SkinningState.BoneMatrix3.Matrix4,
+                    GpuState.SkinningState.BoneMatrix4.Matrix4,
+                    GpuState.SkinningState.BoneMatrix5.Matrix4,
+                    GpuState.SkinningState.BoneMatrix6.Matrix4,
+                    GpuState.SkinningState.BoneMatrix7.Matrix4,
                 });
             }
 
-            if (VertexType.HasTexture && GpuState->TextureMappingState.Enabled)
+            if (VertexType.HasTexture && GpuState.TextureMappingState.Enabled)
             {
-                var textureState = &GpuState->TextureMappingState.TextureState;
+                var textureState = GpuState.TextureMappingState.TextureState;
 
-                ShaderInfo.tfx.Set((int) textureState->Effect);
-                ShaderInfo.tcc.Set((int) textureState->ColorComponent);
-                ShaderInfo.colorTest.NoWarning().Set(GpuState->ColorTestState.Enabled);
+                ShaderInfo.tfx.Set((int) textureState.Effect);
+                ShaderInfo.tcc.Set((int) textureState.ColorComponent);
+                ShaderInfo.colorTest.NoWarning().Set(GpuState.ColorTestState.Enabled);
 
-                ShaderInfo.alphaTest.Set(GpuState->AlphaTestState.Enabled);
-                ShaderInfo.alphaFunction.Set((int) GpuState->AlphaTestState.Function);
-                ShaderInfo.alphaMask.NoWarning().Set(GpuState->AlphaTestState.Mask);
-                ShaderInfo.alphaValue.Set(GpuState->AlphaTestState.Value);
+                ShaderInfo.alphaTest.Set(GpuState.AlphaTestState.Enabled);
+                ShaderInfo.alphaFunction.Set((int) GpuState.AlphaTestState.Function);
+                ShaderInfo.alphaMask.NoWarning().Set(GpuState.AlphaTestState.Mask);
+                ShaderInfo.alphaValue.Set(GpuState.AlphaTestState.Value);
 
                 //Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}", TextureState->Effect, TextureState->ColorComponent, GpuState->BlendingState.Enabled, GpuState->BlendingState.FunctionSource, GpuState->BlendingState.FunctionDestination, GpuState->ColorTestState.Enabled);
 
                 ShaderInfo.texture0.Set(GLTextureUnit.CreateAtIndex(0)
                     .SetWrap(
-                        (GLWrap) ((textureState->WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE),
-                        (GLWrap) ((textureState->WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE)
+                        (GLWrap) ((textureState.WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE),
+                        (GLWrap) ((textureState.WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE)
                     )
                     .SetFiltering(
-                        (GLScaleFilter) ((textureState->FilterMinification == TextureFilter.Linear)
+                        (GLScaleFilter) ((textureState.FilterMinification == TextureFilter.Linear)
                             ? GL.GL_LINEAR
                             : GL.GL_NEAREST),
-                        (GLScaleFilter) ((textureState->FilterMagnification == TextureFilter.Linear)
+                        (GLScaleFilter) ((textureState.FilterMagnification == TextureFilter.Linear)
                             ? GL.GL_LINEAR
                             : GL.GL_NEAREST)
                     )
@@ -455,7 +455,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         GuPrimitiveType _primitiveType;
         GLRenderTarget _logicOpsRenderTarget;
 
-        public override void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState,
+        public override void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct gpuState,
             GuPrimitiveType primitiveType)
         {
             GpuState = gpuState;
@@ -466,9 +466,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             if (_shader != null)
             {
-                _shader.GetUniform("lopEnabled").Set(gpuState->LogicalOperationState.Enabled);
+                _shader.GetUniform("lopEnabled").Set(gpuState.LogicalOperationState.Enabled);
 
-                if (gpuState->LogicalOperationState.Enabled)
+                if (gpuState.LogicalOperationState.Enabled)
                 {
                     if (_logicOpsRenderTarget == null)
                     {
@@ -478,7 +478,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                     _shader.GetUniform("backtex").Set(GLTextureUnit.CreateAtIndex(1).SetFiltering(GLScaleFilter.Linear)
                         .SetWrap(GLWrap.ClampToEdge).SetTexture(_logicOpsRenderTarget.TextureColor));
 
-                    _shader.GetUniform("lop").Set((int) gpuState->LogicalOperationState.Operation);
+                    _shader.GetUniform("lop").Set((int) gpuState.LogicalOperationState.Operation);
 
                     //new Bitmap(512, 272).SetChannelsDataInterleaved(LogicOpsRenderTarget.ReadPixels(), BitmapChannelList.RGBA).Save(@"c:\temp\test.png");
                 }
@@ -501,7 +501,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         /// <param name="vertexCount"></param>
         public override void Prim(ushort vertexCount)
         {
-            VertexType = GpuState->VertexState.Type;
+            VertexType = GpuState.VertexState.Type;
 
             if (_doPrimStart || (VertexType != _cachedVertexType))
             {
@@ -510,7 +510,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
                 OpenglGpuImplCommon.PrepareStateCommon(GpuState, ScaleViewport);
 
-                if (GpuState->ClearingMode)
+                if (GpuState.ClearingMode)
                 {
                     OpenglGpuImplClear.PrepareStateClear(GpuState);
                 }
@@ -552,14 +552,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                         {
                             VertexReader.ReadVertex(z++, &tempVertexInfo);
                             for (int cc = 0; cc < vertexInfoFloatCount; cc++)
-                                componentsOut[cc] += componentsIn[cc] * GpuState->MorphingState.MorphWeight[m];
+                                componentsOut[cc] += componentsIn[cc] * GpuState.MorphingState.MorphWeight(m);
                         }
                         verticesPtr[n].Normal = verticesPtr[n].Normal.Normalize();
                     }
                 }
             }
 
-            _CapturePrimitive(_primitiveType, GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress),
+            _CapturePrimitive(_primitiveType, GpuState.GetAddressRelativeToBaseOffset(GpuState.VertexAddress),
                 vertexCount, ref VertexType, () =>
                 {
                     // Continuation
@@ -632,7 +632,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             }
         }
 
-        public override void BeforeDraw(GpuStateStruct* gpuState)
+        public override void BeforeDraw(GpuStateStruct gpuState)
         {
             RenderbufferManager.BindCurrentDrawBufferTexture(gpuState);
         }
@@ -644,25 +644,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 
         [HandleProcessCorruptedStateExceptions]
-        public override void Finish(GpuStateStruct* gpuState)
+        public override void Finish(GpuStateStruct gpuState)
         {
         }
 
-        public override void End(GpuStateStruct* gpuState)
+        public override void End(GpuStateStruct gpuState)
         {
             //PrepareWrite(GpuState);
         }
 
-        public override void Sync(GpuStateStruct* gpuState)
+        public override void Sync(GpuStateStruct gpuState)
         {
         }
 
-        public override void TextureFlush(GpuStateStruct* gpuState)
+        public override void TextureFlush(GpuStateStruct gpuState)
         {
             TextureCache.RecheckAll();
         }
 
-        public override void TextureSync(GpuStateStruct* gpuState)
+        public override void TextureSync(GpuStateStruct gpuState)
         {
         }
 

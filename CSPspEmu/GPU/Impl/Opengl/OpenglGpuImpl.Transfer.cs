@@ -7,7 +7,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
     public sealed unsafe partial class OpenglGpuImpl
     {
-        private void TransferToFrameBuffer(GpuStateStruct* gpuState)
+        private void TransferToFrameBuffer(GpuStateStruct gpuState)
         {
             Console.WriteLine("TransferToFrameBuffer Not Implemented");
             //var TextureTransferState = GpuState->TextureTransferState;
@@ -42,10 +42,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //GL.PixelStore(PixelStoreParameter.UnpackSkipRows, 0);
         }
 
-        private void TransferGeneric(GpuStateStruct* gpuState)
+        private void TransferGeneric(GpuStateStruct gpuState)
         {
             Console.WriteLine("TransferGeneric Not Implemented");
-            var textureTransferState = gpuState->TextureTransferState;
+            var textureTransferState = gpuState.TextureTransferState;
 
             var sourceX = textureTransferState.SourceX;
             var sourceY = textureTransferState.SourceY;
@@ -106,16 +106,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             */
         }
 
-        public override void Transfer(GpuStateStruct* gpuState)
+        public override void Transfer(GpuStateStruct gpuState)
         {
             Console.WriteLine("Transfer Not Implemented");
             //return;
-            var textureTransferState = gpuState->TextureTransferState;
+            var textureTransferState = gpuState.TextureTransferState;
 
             if (
-                (textureTransferState.DestinationAddress.Address == gpuState->DrawBufferState.Address) &&
-                (textureTransferState.DestinationLineWidth == gpuState->DrawBufferState.Width) &&
-                (textureTransferState.BytesPerPixel == gpuState->DrawBufferState.BytesPerPixel)
+                (textureTransferState.DestinationAddress.Address == gpuState.DrawBufferState.Address) &&
+                (textureTransferState.DestinationLineWidth == gpuState.DrawBufferState.Width) &&
+                (textureTransferState.BytesPerPixel == gpuState.DrawBufferState.BytesPerPixel)
             )
             {
                 //Console.Error.WriteLine("Writting to DrawBuffer");
@@ -135,7 +135,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 */
             }
             Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}",
-                gpuState->TextureTransferState.ToStringDefault());
+                gpuState.TextureTransferState.ToStringDefault());
         }
 
         /*

@@ -18,7 +18,7 @@ namespace CSharpUtils
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         //public static uint CreateMask(int size) => (size == 0) ? 0 : (uint) ((1 << size) - 1);
-        public static uint CreateMask(int size) => (uint) ((1 << size) - 1);
+        public static uint CreateMask(this int size) => (uint) ((1 << size) - 1);
 
         /// <summary>
         /// 
@@ -43,7 +43,7 @@ namespace CSharpUtils
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint Insert(uint initialValue, int offset, int count, uint valueToInsert) =>
+        public static uint Insert(this uint initialValue, int offset, int count, uint valueToInsert) =>
             InsertWithMask(initialValue, offset, CreateMask(count), valueToInsert);
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace CSharpUtils
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint InsertScaled(uint initialValue, int offset, int count, uint valueToInsert, uint maxValue) =>
+        public static uint InsertScaled(this uint initialValue, int offset, int count, uint valueToInsert, uint maxValue) =>
             InsertWithMask(initialValue, offset, CreateMask(count),
                 valueToInsert * CreateMask(count) / maxValue);
 
@@ -84,7 +84,7 @@ namespace CSharpUtils
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        private static uint InsertWithMask(uint initialValue, int offset, uint mask, uint valueToInsert) =>
+        private static uint InsertWithMask(this uint initialValue, int offset, uint mask, uint valueToInsert) =>
             ((initialValue & ~(mask << offset)) | ((valueToInsert & mask) << offset));
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace CSharpUtils
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint ExtractScaled(uint initialValue, int offset, int count, int scale) =>
+        public static uint ExtractScaled(this uint initialValue, int offset, int count, int scale) =>
             (uint) ((Extract(initialValue, offset, count) * scale) / CreateMask(count));
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace CSharpUtils
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static bool ExtractBool(uint initialValue, int offset) => Extract(initialValue, offset, 1) != 0;
+        public static bool ExtractBool(this uint initialValue, int offset) => Extract(initialValue, offset, 1) != 0;
 
         /// <summary>
         /// 
@@ -131,7 +131,7 @@ namespace CSharpUtils
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static int ExtractSigned(uint initialValue, int offset, int count)
+        public static int ExtractSigned(this uint initialValue, int offset, int count)
         {
             var mask = CreateMask(count);
             var signBit = (uint) (1 << (offset + (count - 1)));
@@ -152,7 +152,7 @@ namespace CSharpUtils
         /// <param name="scale"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float ExtractUnsignedScaled(uint value, int offset, int count, float scale = 1.0f)
+        public static float ExtractUnsignedScaled(this uint value, int offset, int count, float scale = 1.0f)
         {
             return ((float) Extract(value, offset, count) / CreateMask(count)) * scale;
         }
@@ -187,6 +187,6 @@ namespace CSharpUtils
         /// <param name="v"></param>
         /// <returns></returns>
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static int GetFirstBit1(uint v) => MultiplyDeBruijnBitPosition[((uint) ((v & -v) * 0x077CB531U)) >> 27];
+        public static int GetFirstBit1(this uint v) => MultiplyDeBruijnBitPosition[((uint) ((v & -v) * 0x077CB531U)) >> 27];
     }
 }

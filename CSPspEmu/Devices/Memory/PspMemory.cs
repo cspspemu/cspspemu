@@ -178,7 +178,18 @@ namespace CSPspEmu.Core.Memory
             ValidateRange(Address, Size);
             return PspAddressToPointerUnsafe(Address);
         }
-        
+
+        public virtual T* PspAddressToPointerSafe<T>(uint Address, int Count, bool CanBeNull = true,
+            bool InvalidAsNull = false) where T : unmanaged
+        {
+            return (T*)PspAddressToPointerSafe(Address, Count * sizeof(T), CanBeNull, InvalidAsNull);
+        }
+
+        public virtual Span<T> PspAddressToSpan<T>(uint Address, int Size, bool CanBeNull = true, bool InvalidAsNull = false) where T : unmanaged
+        {
+            return new Span<T>(PspAddressToPointerSafe(Address, sizeof(T) * Size, CanBeNull, InvalidAsNull), Size);
+        }
+
         unsafe public virtual Span<T> Range<T>(uint Address, int Size, bool CanBeNull = true) where T : unmanaged
         {
             if (Address == 0 && CanBeNull) return null;

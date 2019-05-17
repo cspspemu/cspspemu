@@ -31,6 +31,13 @@ namespace CSPspEmu.Core.Gpu.State
         /// </summary>
         internal void Reset(uint index = 0) => Index = index;
 
+        public GpuMatrix4X4Struct  ResetAndWriteAll(Span<float> data)
+        {
+            Reset();
+            for (int n = 0; n < 16; n++) Write(data[n]);
+            return this;
+        }
+
         public void Dump()
         {
             fixed (float* valuesPtr = Values)
@@ -146,6 +153,20 @@ namespace CSPspEmu.Core.Gpu.State
             }
             Index = index;
         }
+
+        public float this[int index]
+        {
+            get { return Values[index]; }
+            set { Values[index] = value; }
+        }
+
+        public GpuMatrix4X3Struct  ResetAndWriteAll(Span<float> data)
+        {
+            Reset();
+            for (int n = 0; n < 12; n++) Write(data[n]);
+            return this;
+        }
+
 
         public void Dump()
         {

@@ -48,26 +48,26 @@ namespace CSPspEmu.Core.Gpu
                                                Matrix4x4.CreateScale(.5f, .5f, 1f) *
                                                Matrix4x4.CreateScale(480, 272, 1f);
 
-        protected GpuStateStruct* GpuState;
+        protected GpuStateStruct GpuState;
         protected uint DrawAddress;
         protected GuPrimitiveType PrimitiveType;
 
 
-        public virtual void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState,
+        public virtual void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct gpuState,
             GuPrimitiveType primitiveType)
         {
             GpuState = gpuState;
-            VertexType = gpuState->VertexState.Type;
+            VertexType = gpuState.VertexState.Type;
             PrimitiveType = primitiveType;
-            var model = gpuState->VertexState.WorldMatrix.Matrix4x4;
-            var view = gpuState->VertexState.ViewMatrix.Matrix4x4;
-            var projection3D = gpuState->VertexState.ProjectionMatrix.Matrix4x4;
+            var model = gpuState.VertexState.WorldMatrix.Matrix4x4;
+            var view = gpuState.VertexState.ViewMatrix.Matrix4x4;
+            var projection3D = gpuState.VertexState.ProjectionMatrix.Matrix4x4;
             var projection2D = Matrix4x4.CreateOrthographic(512, 272, -1f, +1f);
             //Matrix4x4.Invert(projection2D, out unitToScreenCoords);
             modelView = model * view;
             worldViewProjection3D = modelView * projection3D;
             worldViewProjection2D = modelView * projection2D;
-            DrawAddress = GpuState->DrawBufferState.Address;
+            DrawAddress = GpuState.DrawBufferState.Address;
             //if (primitiveType == GuPrimitiveType.Triangles)
             //{
             //    Console.WriteLine($"primitiveType {primitiveType}");
@@ -105,7 +105,7 @@ namespace CSPspEmu.Core.Gpu
 
                     //Console.WriteLine($"VertexType.Transform2D: {VertexType.Transform2D} : {PrimitiveType} : {vinfo}");
                     vertices[n] = tvertex;
-                    var color = VertexType.HasColor ? vinfo.Color : GpuState->LightingState.AmbientModelColor.ToVector4();
+                    var color = VertexType.HasColor ? vinfo.Color : GpuState.LightingState.AmbientModelColor.ToVector4();
                     //Console.WriteLine(GpuState->LightingState.AmbientLightColor);
                     vP[n] = Vector4ToPoint(tvertex, vinfo.Normal, vinfo.Texture, color);
                 }
@@ -260,19 +260,19 @@ namespace CSPspEmu.Core.Gpu
         }
 
 
-        public virtual void Finish(GpuStateStruct* gpuState)
+        public virtual void Finish(GpuStateStruct gpuState)
         {
         }
 
-        public virtual void End(GpuStateStruct* gpuState)
+        public virtual void End(GpuStateStruct gpuState)
         {
         }
 
-        public virtual void Sync(GpuStateStruct* lastGpuState)
+        public virtual void Sync(GpuStateStruct lastGpuState)
         {
         }
 
-        public virtual void BeforeDraw(GpuStateStruct* gpuState)
+        public virtual void BeforeDraw(GpuStateStruct gpuState)
         {
         }
 
@@ -280,11 +280,11 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void TextureFlush(GpuStateStruct* gpuState)
+        public virtual void TextureFlush(GpuStateStruct gpuState)
         {
         }
 
-        public virtual void TextureSync(GpuStateStruct* gpuState)
+        public virtual void TextureSync(GpuStateStruct gpuState)
         {
         }
 
@@ -300,10 +300,10 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void Transfer(GpuStateStruct* gpuState)
+        public virtual void Transfer(GpuStateStruct gpuState)
         {
             Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}",
-                gpuState->TextureTransferState.ToStringDefault());
+                gpuState.TextureTransferState.ToStringDefault());
         }
 
         public virtual void SetCurrent()
@@ -314,7 +314,7 @@ namespace CSPspEmu.Core.Gpu
         {
         }
 
-        public virtual void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct,
+        public virtual void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct GpuStateStruct,
             VertexInfo[,] Patch, int UCount, int VCount)
         {
             Console.Error.WriteLine("GpuImpl.DrawCurvedSurface Not Implemented!!");
@@ -353,21 +353,21 @@ namespace CSPspEmu.Core.Gpu
 
         protected delegate void ReadVertexDelegate(int index, out VertexInfo vertexInfo);
         
-        protected void PreparePrim(GpuStateStruct* GpuState, out uint totalVerticesWithoutMorphing, uint vertexCount, out uint morpingVertexCount)
+        protected void PreparePrim(GpuStateStruct GpuState, out uint totalVerticesWithoutMorphing, uint vertexCount, out uint morpingVertexCount)
         {
             totalVerticesWithoutMorphing = vertexCount;
             morpingVertexCount = (uint)(VertexType.MorphingVertexCount + 1);
             readVertex = ReadVertex_Void_delegate;
             VertexReader.SetVertexTypeStruct(
                 VertexType,
-                (byte*) Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
+                (byte*) Memory.PspAddressToPointerSafe(GpuState.GetAddressRelativeToBaseOffset(GpuState.VertexAddress), 0)
             );
             
             void* indexPointer = null;
             if (VertexType.Index != VertexTypeStruct.IndexEnum.Void)
             {
                 indexPointer =
-                    Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->IndexAddress), 0);
+                    Memory.PspAddressToPointerSafe(GpuState.GetAddressRelativeToBaseOffset(GpuState.IndexAddress), 0);
             }
 
             //Console.Error.WriteLine(VertexType.Index);
@@ -414,7 +414,7 @@ namespace CSPspEmu.Core.Gpu
             // Fix missing geometry! At least!
             if (VertexType.Index == VertexTypeStruct.IndexEnum.Void)
             {
-                GpuState->VertexAddress += (uint) (VertexReader.VertexSize * vertexCount * morpingVertexCount);
+                GpuState.VertexAddress += (uint) (VertexReader.VertexSize * vertexCount * morpingVertexCount);
                 //GpuState->VertexAddress += (uint)(VertexReader.VertexSize * VertexCount);
             }
 

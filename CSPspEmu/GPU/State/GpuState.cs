@@ -6,6 +6,7 @@ using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -13,40 +14,52 @@ namespace CSPspEmu.Core.Gpu.State
     {
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]
-    public unsafe struct GpuStateStruct
+    public unsafe class GpuStateData
     {
-        public uint BaseAddress;
-        public uint BaseOffset;
+        public uint* Data;
+        public Span<uint> Span => new Span<uint>(Data, GpuStateStruct.StructSizeInWords);
 
-        public uint GetAddressRelativeToBase(uint relativeAddress) => BaseAddress | relativeAddress;
+        public GpuStateData(uint* data)
+        {
+            Data = data;
+        }
+        
+        public uint this[GpuOpCodes op]
+        {
+            get => Span[(int)op];
+            set => Span[(int)op] = value;
+        }
 
-        public uint GetAddressRelativeToBaseOffset(uint relativeAddress) =>
-            (BaseAddress | relativeAddress) + BaseOffset;
+        public uint Int(GpuOpCodes op) => (this[op] & 0xFFFFFF);
+        public uint Param8(GpuOpCodes op, int offset) => (Int(op) >> offset) & 0xFF;
+        public uint Param16(GpuOpCodes op, int offset) => (Int(op) >> offset) & 0xFFFF;
+        public uint Param24(GpuOpCodes op) => (this[op] & 0xFFFFFF);
+        public uint Extract(GpuOpCodes op, int offset, int bits) => (uint)(this[op] >> offset) & (uint)((1 << bits) - 1);
+        public int ExtractSigned(GpuOpCodes op, int offset, int bits)
+        {
+            var res = (int)Extract(op, offset, bits);
+            return res << (32 - bits) >> bits;
+        }
+        public bool Bool(GpuOpCodes op) => Int(op) != 0;
+        public float Float1(GpuOpCodes op) => MathFloat.ReinterpretUIntAsFloat(this[op] << 8);
 
-        public uint VertexAddress;
-        public uint IndexAddress;
-        public bool ToggleUpdateState;
+    }
 
-        /// <summary>When set, this will changes the Draw behaviour.</summary>
-        public bool ClearingMode;
-
+    //[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]
+    public class GpuStateStruct
+    {
+        public const int StructSizeInWords = 0x200;
+        public const int StructSizeInBytes = StructSizeInWords * 4;
+        
+        public GpuStateData data;
+        
         public ScreenBufferStateStruct DrawBufferState;
         public ScreenBufferStateStruct DepthBufferState;
         public TextureTransferStateStruct TextureTransferState;
-
         public ViewportStruct Viewport;
-        public PointS Offset;
-
-        /// <summary>A set of flags related to the clearing mode. Generally which buffers to clear.</summary>
-        public ClearBufferSet ClearFlags;
-
-        // Sub States.
         public VertexStateStruct VertexState;
-
         public BackfaceCullingStateStruct BackfaceCullingState;
-
-        public FogStateStruct FogState;
+        public FogState FogState;
         public BlendingStateStruct BlendingState;
         public StencilStateStruct StencilState;
         public AlphaTestStateStruct AlphaTestState;
@@ -60,192 +73,410 @@ namespace CSPspEmu.Core.Gpu.State
         public PatchCullingStateStruct PatchCullingState;
         public SkinningStateStruct SkinningState;
         public ColorTestStateStruct ColorTestState;
-
         public PatchStateStruct PatchState;
 
-        // State.
-        public ColorStruct FixColorSource;
+        public GpuStateStruct(GpuStateData data)
+        {
+            this.data = data;
+            
+        DrawBufferState = new ScreenBufferStateStruct(data);
+        DepthBufferState = new ScreenBufferStateStruct(data);
+        TextureTransferState = new TextureTransferStateStruct(data);
+        Viewport = new ViewportStruct(data);
+        VertexState = new VertexStateStruct(data);
+        BackfaceCullingState = new BackfaceCullingStateStruct(data);
+        FogState = new FogState(data);
+        BlendingState = new BlendingStateStruct();
+        StencilState = new StencilStateStruct(data);
+        AlphaTestState = new AlphaTestStateStruct();
+        LogicalOperationState = new LogicalOperationStateStruct();
+        DepthTestState = new DepthTestStateStruct(data);
+        LightingState = new LightingStateStruct(data);
+        MorphingState = new MorphingStateStruct(data);
+        DitheringState = new DitheringStateStruct(data);
+        LineSmoothState = new LineSmoothStateStruct(data);
+        ClipPlaneState = new ClipPlaneStateStruct(data);
+        PatchCullingState = new PatchCullingStateStruct(data);
+        SkinningState = new SkinningStateStruct();
+        ColorTestState = new ColorTestStateStruct(data);
+        PatchState = new PatchStateStruct(data);
+        }
 
+        public uint BaseAddress => ((data.Param24(GpuOpCodes.BASE) << 8) & 0xff000000);
+        public uint BaseOffset
+        {
+            get { return data[GpuOpCodes.OFFSET_ADDR]; }
+            set { data[GpuOpCodes.OFFSET_ADDR] = value; }
+        }
+
+        public uint GetAddressRelativeToBase(uint relativeAddress) => BaseAddress | relativeAddress;
+
+        public uint GetAddressRelativeToBaseOffset(uint relativeAddress) =>
+            (BaseAddress | relativeAddress) + BaseOffset;
+
+        public uint VertexAddress
+        {
+            get { return data.Int(GpuOpCodes.VADDR); }
+            set { data[GpuOpCodes.VADDR] = value; }
+        }
+
+        public uint IndexAddress => data.Int(GpuOpCodes.IADDR);
+        public bool ToggleUpdateState;
+
+        /// <summary>When set, this will changes the Draw behaviour.</summary>
+        public bool ClearingMode => (data.Param24(GpuOpCodes.CLEAR) & 1) != 0;
+        public PointS Offset => new PointS((short) data.Extract(GpuOpCodes.OFFSETX, 0, 4), (short) data.Extract(GpuOpCodes.OFFSETY, 0, 4));
+        public ClearBufferSet ClearFlags => (ClearBufferSet) data.Param8(GpuOpCodes.CLEAR, 8);
+        public ColorStruct FixColorSource;
         public ColorStruct FixColorDestination;
         public TextureMappingStateStruct TextureMappingState;
-        public ShadingModelEnum ShadeModel;
-        public fixed sbyte DitherMatrix[16];
+        public ShadingModelEnum ShadeModel => (ShadingModelEnum) data.Int(GpuOpCodes.SHADE);
+
+        private sbyte[] _DitherMatrix = new sbyte[16];
+        public sbyte[] DitherMatrix
+        {
+            get
+            {
+                for (var n = 0; n < 4; n++)
+                {
+                    _DitherMatrix[4 * n + 0] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 0, 4);
+                    _DitherMatrix[4 * n + 1] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 1, 4);
+                    _DitherMatrix[4 * n + 2] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 2, 4);
+                    _DitherMatrix[4 * n + 3] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + (byte)n, 4 * 3, 4);
+                }
+
+                var o = new sbyte[16];
+                return _DitherMatrix;
+            }
+        }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct PatchStateStruct
+    public class PatchStateStruct
     {
-        public byte DivS;
-        public byte DivT;
+        private GpuStateData data;
+
+        public PatchStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public byte DivS => (byte)data.Param8(GpuOpCodes.PSUB, 0);
+        public byte DivT => (byte)data.Param8(GpuOpCodes.PSUB, 8);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct AlphaTestStateStruct
     {
-        /// <summary>Alpha Test Enable (GL_ALPHA_TEST) glAlphaFunc(GL_GREATER, 0.03f);</summary>
-        public bool Enabled;
+        private GpuStateData data;
 
-        /// <summary>TestFunction.GU_ALWAYS</summary>
-        public TestFunctionEnum Function;
+        public AlphaTestStateStruct(GpuStateData data) : this()
+        {
+            this.data = data;
+        }
 
-        /// <summary />
-        public byte Value;
-
-        /// <summary>0xFF</summary>
-        public byte Mask;
+        public bool Enabled => data.Bool(GpuOpCodes.ATE);
+        public TestFunctionEnum Function => (TestFunctionEnum) data.Param8(GpuOpCodes.ATST, 0);
+        public byte Value => (byte)data.Param8(GpuOpCodes.ATST, 8);
+        public byte Mask => (byte)data.Param8(GpuOpCodes.ATST, 16);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct BackfaceCullingStateStruct
+    public class BackfaceCullingStateStruct
     {
-        /// <summary>Backface Culling Enable (GL_CULL_FACE)</summary>
-        public bool Enabled;
+        public GpuStateData data;
 
-        /// <summary />
-        public FrontFaceDirectionEnum FrontFaceDirection;
+        public BackfaceCullingStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.BCE);
+        public FrontFaceDirectionEnum FrontFaceDirection => (FrontFaceDirectionEnum) data.Int(GpuOpCodes.FFACE);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BlendingStateStruct
     {
-        public bool Enabled;
-        public BlendingOpEnum Equation;
-        public GuBlendingFactorSource FunctionSource;
-        public GuBlendingFactorDestination FunctionDestination;
-        public ColorfStruct FixColorSource;
-        public ColorfStruct FixColorDestination;
-        public OutputPixel ColorMask;
+        private GpuStateData data;
+
+        public BlendingStateStruct(GpuStateData data) : this()
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.ABE);
+        
+        public GuBlendingFactorSource FunctionSource => (GuBlendingFactorSource) ((data.Param24(GpuOpCodes.ALPHA) >> 0) & 0xF);
+
+        public GuBlendingFactorDestination FunctionDestination =>
+            (GuBlendingFactorDestination) ((data.Param24(GpuOpCodes.ALPHA) >> 4) & 0xF);
+
+        public BlendingOpEnum Equation => (BlendingOpEnum) ((data.Param24(GpuOpCodes.ALPHA) >> 8) & 0xF);
+        
+        public ColorfStruct FixColorSource => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.SFIX));
+        public ColorfStruct FixColorDestination => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.DFIX));
+        public OutputPixel ColorMask => OutputPixel.FromRgba(
+            (byte)data.Param8(GpuOpCodes.PMSKC, 0),
+            (byte)data.Param8(GpuOpCodes.PMSKC, 8),
+            (byte)data.Param8(GpuOpCodes.PMSKC, 16),
+            (byte)data.Param8(GpuOpCodes.PMSKA, 0)
+            );
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ClipPlaneStateStruct
+    public class ClipPlaneStateStruct
     {
-        public bool Enabled;
-        public GpuRectStruct Scissor;
+        private GpuStateData data;
+
+        public ClipPlaneStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+
+        public bool Enabled => data.Bool(GpuOpCodes.CPE);
+        public GpuRectStruct Scissor => new GpuRectStruct(
+            (short) data.Extract(GpuOpCodes.SCISSOR1, 0, 10),
+            (short) data.Extract(GpuOpCodes.SCISSOR1, 10, 10),
+            (short) data.Extract(GpuOpCodes.SCISSOR2, 0, 10),
+            (short) data.Extract(GpuOpCodes.SCISSOR2, 10, 10)
+            );
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct ClutStateStruct
+    unsafe public class ClutStateStruct
     {
-        public uint Address;
-        public int Shift;
-        public int Mask;
-        public int Start;
-        public GuPixelFormats PixelFormat;
-        public byte* Data;
-        public int NumberOfColors;
+        private GpuStateData data;
+
+        public ClutStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public uint Address => data.Int(GpuOpCodes.CBP) | (data.Int(GpuOpCodes.CBPH) << 24);
+        public int NumberOfColors
+        {
+            get { return (int) (data.Param8(GpuOpCodes.CLOAD, 0) * 8); }
+            set { data[GpuOpCodes.CLOAD] = (uint) (value / 8); }
+        }
+
+        public GuPixelFormats PixelFormat => (GuPixelFormats) data.Extract(GpuOpCodes.CMODE, 0, 2);
+        public int Shift => (int)data.Extract(GpuOpCodes.CMODE, 2, 5);
+        public int Mask => (int)data.Extract(GpuOpCodes.CMODE, 8, 8);
+        public int Start => (int)data.Extract(GpuOpCodes.CMODE, 16, 5);
+        public byte* Data => throw new NotImplementedException();
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ColorTestStateStruct
+    public class ColorTestStateStruct
     {
-        public bool Enabled;
-        public OutputPixel Ref;
-        public OutputPixel Mask;
-        public ColorTestFunctionEnum Function;
+        private GpuStateData data;
+
+        public ColorTestStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.CTE);
+        public OutputPixel Ref => OutputPixel.FromRgba(
+            (byte) data.Extract(GpuOpCodes.CREF, 8 * 0, 8),
+            (byte) data.Extract(GpuOpCodes.CREF, 8 * 1, 8),
+            (byte) data.Extract(GpuOpCodes.CREF, 8 * 2, 8),
+            0x00
+        );
+        public OutputPixel Mask => OutputPixel.FromRgba(
+            (byte) data.Extract(GpuOpCodes.CMSK, 8 * 0, 8),
+            (byte) data.Extract(GpuOpCodes.CMSK, 8 * 1, 8),
+            (byte) data.Extract(GpuOpCodes.CMSK, 8 * 2, 8),
+            0x00
+        );
+        public ColorTestFunctionEnum Function => (ColorTestFunctionEnum) data.Extract(GpuOpCodes.CTST, 0, 2);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct DepthTestStateStruct
+    public class DepthTestStateStruct
     {
-        public bool Enabled;
-        public TestFunctionEnum Function;
-        public float RangeNear;
-        public float RangeFar;
-        public ushort Mask;
+        private GpuStateData data;
+
+        public DepthTestStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.ZTE);
+        public TestFunctionEnum Function => (TestFunctionEnum) data.Param8(GpuOpCodes.ZTST, 0);
+        public float RangeNear => ((float) data.Param16(GpuOpCodes.FARZ, 0)) / ushort.MaxValue; // @TODO: CHECK INVERTED!
+        public float RangeFar => ((float) data.Param16(GpuOpCodes.NEARZ, 0)) / ushort.MaxValue; // @TODO: CHECK INVERTED!
+        public ushort Mask => (ushort)data.Param16(GpuOpCodes.ZMSK, 0);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct DitheringStateStruct
+    public class DitheringStateStruct
     {
-        public bool Enabled;
+        public GpuStateData data;
+
+        public DitheringStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.DTE);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct FogStateStruct
+    public class FogState
     {
-        public bool Enabled;
-        public ColorfStruct Color;
-        public float Dist;
-        public float End;
+        public GpuStateData data;
+
+        public FogState(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.FGE);
+        public ColorfStruct Color => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.FCOL));
+        public float Dist => data.Float1(GpuOpCodes.FDIST);
+        public float End => data.Float1(GpuOpCodes.FFAR);
         public float Density;
         public int Mode;
         public int Hint;
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct LightingStateStruct
+    public class LightingStateStruct
     {
-        public bool Enabled;
-        public ColorfStruct AmbientModelColor;
-        public ColorfStruct DiffuseModelColor;
-        public ColorfStruct SpecularModelColor;
-        public ColorfStruct EmissiveModelColor;
-        public ColorfStruct AmbientLightColor;
-        public float SpecularPower;
+        private GpuStateData data;
+
+        public LightingStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.LTE);
+        public ColorfStruct AmbientModelColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.AMC)).SetA(data.Param24(GpuOpCodes.AMA));
+        public ColorfStruct DiffuseModelColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.DMC));
+        public ColorfStruct SpecularModelColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.SMC));
+        public ColorfStruct EmissiveModelColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.EMC));
+        public ColorfStruct AmbientLightColor => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.ALC)).SetA(data.Param24(GpuOpCodes.ALA));
+        public float SpecularPower => data.Float1(GpuOpCodes.SPOW);
         public LightStateStruct Light0, Light1, Light2, Light3;
-        public LightComponentsSet MaterialColorComponents;
-        public LightModelEnum LightModel;
+        public LightComponentsSet MaterialColorComponents => (LightComponentsSet) data.Param8(GpuOpCodes.CMAT, 0);
+        public LightModelEnum LightModel => (LightModelEnum) data.Param8(GpuOpCodes.LMODE, 0);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct AttenuationStruct
+    public class AttenuationStruct
     {
-        public float Constant;
-        public float Linear;
-        public float Quadratic;
+        private GpuStateData data;
+        private byte index;
+
+        public AttenuationStruct(GpuStateData data, byte index)
+        {
+            this.data = data;
+            this.index = index;
+        }
+
+
+        public float Constant => data.Float1(GpuOpCodes.LCA0 + index);
+        public float Linear => data.Float1(GpuOpCodes.LLA0 + index);
+        public float Quadratic => data.Float1(GpuOpCodes.LQA0 + index);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct LightStateStruct
+    public class LightStateStruct
     {
-        public bool Enabled;
-        public LightTypeEnum Type;
-        public LightModelEnum Kind;
-        public Vector4 Position;
-        public Vector4 SpotDirection;
+        private GpuStateData data;
+        private byte index;
+
+        public LightStateStruct(GpuStateData data, byte index)
+        {
+            this.data = data;
+            this.index = index;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.LTE0 + index);
+        public LightTypeEnum Type => (LightTypeEnum) data.Param8(GpuOpCodes.LT0 + index, 8);
+        public LightModelEnum Kind => (LightModelEnum) data.Param8(GpuOpCodes.LT0 + index, 0);
+        public Vector4 Position => new Vector4(
+            data.Float1(GpuOpCodes.LXP0 + index),
+            data.Float1(GpuOpCodes.LYP0 + index),
+            data.Float1(GpuOpCodes.LZP0 + index),
+            (Type == LightTypeEnum.Directional) ? 0 : 1
+        );
+        public Vector4 SpotDirection=> new Vector4(
+            data.Float1(GpuOpCodes.LXD0 + index),
+            data.Float1(GpuOpCodes.LYD0 + index),
+            data.Float1(GpuOpCodes.LZD0 + index),
+            1
+        );
         public AttenuationStruct Attenuation;
-        public float SpotExponent;
-        public float SpotCutoff;
-        public ColorfStruct AmbientColor;
-        public ColorfStruct DiffuseColor;
-        public ColorfStruct SpecularColor;
+        public float SpotExponent => data.Float1(GpuOpCodes.SPOTEXP0 + index);
+        public float SpotCutoff => (Type == LightTypeEnum.PointLight) ? 180 : data.Float1(GpuOpCodes.SPOTCUT0 + index);
+        public ColorfStruct AmbientColor => new ColorfStruct().SetRGB_A1(data.Int(GpuOpCodes.ALC0 + index));
+        public ColorfStruct DiffuseColor => new ColorfStruct().SetRGB_A1(data.Int(GpuOpCodes.DLC0 + index));
+        public ColorfStruct SpecularColor => new ColorfStruct().SetRGB_A1(data.Int(GpuOpCodes.SLC0 + index));
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct LineSmoothStateStruct
+    public class LineSmoothStateStruct
     {
-        public bool Enabled;
+        private GpuStateData data;
+
+        public LineSmoothStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.AAE);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct LogicalOperationStateStruct
     {
-        public bool Enabled;
-        public LogicalOperationEnum Operation;
+        private GpuStateData data;
+
+        public LogicalOperationStateStruct(GpuStateData data) : this()
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.LOE);
+        public LogicalOperationEnum Operation => (LogicalOperationEnum) data.Param8(GpuOpCodes.LOP, 0);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct MorphingStateStruct
+    public class MorphingStateStruct
     {
-        public fixed float MorphWeight[8];
+        private GpuStateData data;
+
+        public MorphingStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public float MorphWeight(int index) => data.Float1(GpuOpCodes.MW0 + (byte) index);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct PatchCullingStateStruct
+    public class PatchCullingStateStruct
     {
-        public bool Enabled;
-        public bool FaceFlag;
+        private GpuStateData data;
+
+        public PatchCullingStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.PCE);
+        public bool FaceFlag => (data.Param24(GpuOpCodes.PFACE) != 0);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ScreenBufferStateStruct
+    public class ScreenBufferStateStruct
     {
-        public uint Width;
-        public GuPixelFormats Format;
+        private GpuStateData data;
 
-        public byte HighAddress;
-        public uint LowAddress;
+        public ScreenBufferStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        
+        //public uint Width => data.Param16(GpuOpCodes.ZBW, 0); // @TODO: This overlaps!
+        public uint Width => data.Param16(GpuOpCodes.FBW, 0);
+        public GuPixelFormats Format => (GuPixelFormats) data.Param8(GpuOpCodes.PSM, 0);
+
+        //public byte HighAddress => (byte)data.Param8(GpuOpCodes.ZBW, 16); // @TODO: This overlaps!
+        //public uint LowAddress => data.Param24(GpuOpCodes.ZBP); // @TODO: This overlaps!
+        
+        public byte HighAddress => (byte)data.Param8(GpuOpCodes.FBW, 16);
+        public uint LowAddress => data.Param24(GpuOpCodes.FBP);
 
         public uint LoadAddress;
         public uint StoreAddress;
@@ -285,35 +516,47 @@ namespace CSPspEmu.Core.Gpu.State
             BoneMatrix7;
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct StencilStateStruct
+    public class StencilStateStruct
     {
-        public bool Enabled;
-        public TestFunctionEnum Function;
-        public byte FunctionRef;
-        public byte FunctionMask;
-        public StencilOperationEnum OperationFail;
-        public StencilOperationEnum OperationZFail;
-        public StencilOperationEnum OperationZPass;
+        private GpuStateData data;
+
+        public StencilStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.STE);
+        public TestFunctionEnum Function => (TestFunctionEnum) data.Param8(GpuOpCodes.STST, 0);
+        public byte FunctionRef => (byte)data.Param8(GpuOpCodes.STST, 8);
+        public byte FunctionMask => (byte)data.Param8(GpuOpCodes.STST, 16);
+        public StencilOperationEnum OperationFail =>(StencilOperationEnum) data.Param8(GpuOpCodes.SOP, 0);
+        public StencilOperationEnum OperationZFail => (StencilOperationEnum) data.Param8(GpuOpCodes.SOP, 8);
+        public StencilOperationEnum OperationZPass =>(StencilOperationEnum) data.Param8(GpuOpCodes.SOP, 16);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct TextureMappingStateStruct
+    public class TextureMappingStateStruct
     {
-        public bool Enabled;
+        public GpuStateData data;
+
+        public TextureMappingStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public bool Enabled => data.Bool(GpuOpCodes.TME);
         public GpuMatrix4X4Struct Matrix;
-        public ColorbStruct TextureEnviromentColor;
+        public ColorbStruct TextureEnviromentColor => new ColorbStruct().SetRGB_A1(data.Param24(GpuOpCodes.TEC));
         public TextureStateStruct TextureState;
         public ClutStateStruct UploadedClutState;
         public ClutStateStruct ClutState;
-        public TextureMapMode TextureMapMode;
-        public TextureProjectionMapMode TextureProjectionMapMode;
+        public TextureMapMode TextureMapMode => (TextureMapMode) data.Param8(GpuOpCodes.TMAP, 0);
+        public TextureProjectionMapMode TextureProjectionMapMode => (TextureProjectionMapMode) data.Param8(GpuOpCodes.TMAP, 8);
 
-        public short ShadeU;
-        public short ShadeV;
-        public TextureLevelMode LevelMode;
-        public float MipmapBias;
-        public float SlopeLevel;
+        public short ShadeU => (short) data.Extract(GpuOpCodes.TEXTURE_ENV_MAP_MATRIX, 0, 2);
+        public short ShadeV => (short) data.Extract(GpuOpCodes.TEXTURE_ENV_MAP_MATRIX, 8, 2); 
+        public TextureLevelMode LevelMode => (TextureLevelMode) data.Param8(GpuOpCodes.TBIAS, 0);
+        public float MipmapBias => data.Param8(GpuOpCodes.TBIAS, 16) / 16.0f;
+        public float SlopeLevel => data.Float1(GpuOpCodes.TSLOPE);
 
         public byte GetTextureComponentsCount()
         {
@@ -346,16 +589,31 @@ namespace CSPspEmu.Core.Gpu.State
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct TextureStateStruct
+    public class TextureStateStruct
     {
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct MipmapState
+        public GpuStateData data;
+
+        public TextureStateStruct(GpuStateData data)
         {
+            this.data = data;
+        }
+
+        public class MipmapState
+        {
+            private GpuStateData data;
+            private byte index;
+
+            public MipmapState(GpuStateData data, byte index)
+            {
+                this.data = data;
+                this.index = index;
+            }
+
             /// <summary>
             /// Pointer 
             /// </summary>
-            public uint Address;
+            public uint Address => (data.Int(GpuOpCodes.TBP0 + index) & 0xFFFFFF) |
+                                   (data.Param8(GpuOpCodes.TBW0 + index, 16) << 24);
 
             /// <summary>
             /// Data width of the image.
@@ -363,39 +621,42 @@ namespace CSPspEmu.Core.Gpu.State
             /// Bufferwidth = 480, Width = 512, Height = 512
             /// Texture is 512x512 but there is data just for 480x512
             /// </summary>
-            public ushort BufferWidth;
+            public ushort BufferWidth => (ushort)data.Param16(GpuOpCodes.TBW0 + index, 0);
 
             /// <summary>
             /// Texture Width
             /// </summary>
-            public ushort TextureWidth;
+            public ushort TextureWidth =>
+                (ushort) (1 << Math.Min((int) data.Extract(GpuOpCodes.TSIZE0 + index, 0, 4), 9));
+
 
             /// <summary>
             /// Texture Height
             /// </summary>
-            public ushort TextureHeight;
+            public ushort TextureHeight =>
+                (ushort) (1 << Math.Min((int) data.Extract(GpuOpCodes.TSIZE0 + index, 8, 4), 9));
         }
 
         /// <summary>
         /// Is texture swizzled?
         /// </summary>
-        public bool Swizzled;
+        public bool Swizzled => (data.Param8(GpuOpCodes.TMODE, 0) != 0);
 
         /// <summary>
         /// Mipmaps share clut?
         /// </summary>
-        public bool MipmapShareClut;
+        public bool MipmapShareClut => (data.Param8(GpuOpCodes.TMODE, 8) != 0);
 
         /// <summary>
         /// Levels of mipmaps
         /// </summary>
-        public int MipmapMaxLevel;
+        public int MipmapMaxLevel => (int)data.Param8(GpuOpCodes.TMODE, 16);
 
         /// <summary>
         /// Format of the texture data.
         /// Texture Data mode
         /// </summary>
-        public GuPixelFormats PixelFormat;
+        public GuPixelFormats PixelFormat => (GuPixelFormats) data.Extract(GpuOpCodes.TPSM, 0, 4);
 
         /// <summary>
         /// MipmapState list
@@ -413,50 +674,42 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary>
         /// TextureFilter when drawing the texture scaled
         /// </summary>
-        public TextureFilter FilterMinification;
+        public TextureFilter FilterMinification => (TextureFilter) data.Param8(GpuOpCodes.TFLT, 0);
 
         /// <summary>
         /// TextureFilter when drawing the texture scaled
         /// </summary>
-        public TextureFilter FilterMagnification;
+        public TextureFilter FilterMagnification => (TextureFilter) data.Param8(GpuOpCodes.TFLT, 8);
 
         /// <summary>
         /// Wrap mode when specifying texture coordinates beyond texture size
         /// </summary>
-        public WrapMode WrapU;
+        public WrapMode WrapU => (WrapMode) data.Param8(GpuOpCodes.TWRAP, 0);
 
         /// <summary>
         /// Wrap mode when specifying texture coordinates beyond texture size
         /// </summary>
-        public WrapMode WrapV;
+        public WrapMode WrapV => (WrapMode) data.Param8(GpuOpCodes.TWRAP, 8);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public float ScaleU;
+        public float ScaleU => data.Float1(GpuOpCodes.USCALE);
+        public float ScaleV => data.Float1(GpuOpCodes.VSCALE);
+        public float OffsetU => data.Float1(GpuOpCodes.UOFFSET);
+        public float OffsetV => data.Float1(GpuOpCodes.VOFFSET);
 
-        /// <summary />
-        public float ScaleV;
-
-        /// <summary />
-        public float OffsetU;
-
-        /// <summary />
-        public float OffsetV;
-
-        /// <summary>Effects:</summary>
-        public bool Fragment2X;
-
-        /// <summary />
-        public TextureEffect Effect;
-
-        /// <summary />
-        public TextureColorComponent ColorComponent;
+        public bool Fragment2X => (data.Param8(GpuOpCodes.TFUNC, 16) != 0);
+        public TextureEffect Effect => (TextureEffect) data.Param8(GpuOpCodes.TFUNC, 0);
+        public TextureColorComponent ColorComponent => (TextureColorComponent) data.Param8(GpuOpCodes.TFUNC, 8);
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct TextureTransferStateStruct
+    public class TextureTransferStateStruct
     {
+        public GpuStateData data;
+
+        public TextureTransferStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
         public enum TexelSizeEnum : ushort
         {
             Bit16 = 0,
@@ -468,29 +721,39 @@ namespace CSPspEmu.Core.Gpu.State
         public int DestinationLineWidthInBytes => DestinationLineWidth * BytesPerPixel;
         public int WidthInBytes => Width * BytesPerPixel;
 
-        public PspPointer SourceAddress, DestinationAddress;
-        public ushort SourceLineWidth, DestinationLineWidth;
-        public ushort SourceX, SourceY, DestinationX, DestinationY;
-        public ushort Width, Height;
+        public PspPointer SourceAddress => data.Extract(GpuOpCodes.TRXSBP, 0, 24) | (data.Extract(GpuOpCodes.TRXSBW, 16, 8) << 24);
+        public PspPointer DestinationAddress => data.Extract(GpuOpCodes.TRXDBP, 0, 24) | (data.Extract(GpuOpCodes.TRXDBW, 16, 8) << 24);
+        public ushort SourceLineWidth => (ushort) data.Extract(GpuOpCodes.TRXSBW, 0, 16);
+        public ushort DestinationLineWidth => (ushort) data.Extract(GpuOpCodes.TRXDBW, 0, 16);
+        public ushort SourceX => (ushort) data.Extract(GpuOpCodes.TRXSPOS, 10 * 0, 10);
+        public ushort SourceY => (ushort) data.Extract(GpuOpCodes.TRXSPOS, 10 * 1, 10);
+        public ushort DestinationX => (ushort) data.Extract(GpuOpCodes.TRXDPOS, 10 * 0, 10);
+        public ushort DestinationY => (ushort) data.Extract(GpuOpCodes.TRXDPOS, 10 * 1, 10);
+        public ushort Width => (ushort) (data.Extract(GpuOpCodes.TRXSIZE, 10 * 0, 10) + 1);
+        public ushort Height => (ushort) (data.Extract(GpuOpCodes.TRXSIZE, 10 * 1, 10) + 1);
+        
         public TexelSizeEnum TexelSize;
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-#pragma warning disable 660,661
-    public struct VertexTypeStruct
-#pragma warning restore 660,661
+    public class VertexTypeStruct
     {
+        private GpuStateData data;
+
+        public VertexTypeStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
         public bool Equals(VertexTypeStruct other) => ReversedNormal == other.ReversedNormal &&
                                                       NormalCount == other.NormalCount && Value == other.Value;
 
-        /// <summary />
-        public bool ReversedNormal;
-
-        /// <summary />
-        public byte NormalCount;
-
-        /// <summary />
-        public uint Value;
+        public bool ReversedNormal => data.Bool(GpuOpCodes.RNORM);
+        public byte NormalCount; // => GpuState.TextureMappingState.GetTextureComponentsCount()
+        public uint Value
+        {
+            get { return data[GpuOpCodes.VTYPE]; }
+            set { data[GpuOpCodes.VTYPE] = value; }
+        }
 
         public static bool operator ==(VertexTypeStruct a, VertexTypeStruct b)
         {
@@ -538,7 +801,7 @@ namespace CSPspEmu.Core.Gpu.State
         public NumericEnum Weight
         {
             get => (NumericEnum) BitUtils.Extract(Value, 9, 2);
-            set => BitUtils.Insert(ref Value, 9, 2, (uint) value);
+            set => Value = BitUtils.Insert(Value, 9, 2, (uint) value);
         }
 
         public bool HasTexture => Texture != NumericEnum.Void;
@@ -546,7 +809,7 @@ namespace CSPspEmu.Core.Gpu.State
         public NumericEnum Texture
         {
             get => (NumericEnum) BitUtils.Extract(Value, 0, 2);
-            set => BitUtils.Insert(ref Value, 0, 2, (uint) value);
+            set => Value = BitUtils.Insert(Value, 0, 2, (uint) value);
         }
 
         public bool HasColor => Color != ColorEnum.Void;
@@ -554,7 +817,7 @@ namespace CSPspEmu.Core.Gpu.State
         public ColorEnum Color
         {
             get => (ColorEnum) BitUtils.Extract(Value, 2, 3);
-            set => BitUtils.Insert(ref Value, 2, 3, (uint) value);
+            set => Value = BitUtils.Insert(Value, 2, 3, (uint) value);
         }
 
         public bool HasNormal => Normal != NumericEnum.Void;
@@ -562,7 +825,7 @@ namespace CSPspEmu.Core.Gpu.State
         public NumericEnum Normal
         {
             get => (NumericEnum) BitUtils.Extract(Value, 5, 2);
-            set => BitUtils.Insert(ref Value, 5, 2, (uint) value);
+            set => Value = BitUtils.Insert(Value, 5, 2, (uint) value);
         }
 
         public bool HasPosition => Position != NumericEnum.Void;
@@ -570,7 +833,7 @@ namespace CSPspEmu.Core.Gpu.State
         public NumericEnum Position
         {
             get => (NumericEnum) BitUtils.Extract(Value, 7, 2);
-            set => BitUtils.Insert(ref Value, 7, 2, (uint) value);
+            set => Value = BitUtils.Insert(Value, 7, 2, (uint) value);
         }
 
         public bool HasIndex => Index != IndexEnum.Void;
@@ -578,25 +841,25 @@ namespace CSPspEmu.Core.Gpu.State
         public IndexEnum Index
         {
             get => (IndexEnum) BitUtils.Extract(Value, 11, 2);
-            set => BitUtils.Insert(ref Value, 11, 2, (uint) value);
+            set => Value = BitUtils.Insert(Value, 11, 2, (uint) value);
         }
 
         public int SkinningWeightCount
         {
             get => (int) BitUtils.Extract(Value, 14, 3);
-            set => BitUtils.Insert(ref Value, 14, 3, (uint) value);
+            set => Value = BitUtils.Insert(Value, 14, 3, (uint) value);
         }
 
         public int MorphingVertexCount
         {
             get => (int) BitUtils.Extract(Value, 18, 2);
-            set => BitUtils.Insert(ref Value, 18, 2, (uint) value);
+            set => Value = BitUtils.Insert(Value, 18, 2, (uint) value);
         }
 
         public bool Transform2D
         {
             get => BitUtils.Extract(Value, 23, 1) != 0;
-            set => BitUtils.Insert(ref Value, 23, 1, value ? 1U : 0U);
+            set => Value = BitUtils.Insert(Value, 23, 1, value ? 1U : 0U);
         }
 
         public int RealSkinningWeightCount => SkinSize == 0 ? 0 : SkinningWeightCount + 1;
@@ -646,14 +909,21 @@ namespace CSPspEmu.Core.Gpu.State
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct VertexStateStruct
+    public class VertexStateStruct
     {
-        public GpuMatrix4X4Struct ProjectionMatrix;
-        public GpuMatrix4X3Struct WorldMatrix;
-        public GpuMatrix4X3Struct ViewMatrix;
+        private GpuStateData data;
+
+        public VertexStateStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        
+        public GpuMatrix4X4Struct ProjectionMatrix => new GpuMatrix4X4Struct().ResetAndWriteAll(SpanExt.Reinterpret<float, uint>(data.Span.Slice((int)GpuOpCodes.PROJ_MATRIX_BASE)));
+        public GpuMatrix4X3Struct WorldMatrix => new GpuMatrix4X3Struct().ResetAndWriteAll(SpanExt.Reinterpret<float, uint>(data.Span.Slice((int)GpuOpCodes.WORLD_MATRIX_BASE)));
+        public GpuMatrix4X3Struct ViewMatrix => new GpuMatrix4X3Struct().ResetAndWriteAll(SpanExt.Reinterpret<float, uint>(data.Span.Slice((int)GpuOpCodes.VIEW_MATRIX_BASE)));
         public TransformModeEnum TransformMode;
-        public VertexTypeStruct Type;
+        public VertexTypeStruct Type => new VertexTypeStruct(data);
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -667,10 +937,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public uint X, Y;
 
-        public override string ToString()
-        {
-            return this.ToStringDefault();
-        }
+        public override string ToString() => this.ToStringDefault();
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -678,20 +945,28 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public short X, Y;
 
-        public override string ToString()
+        public PointS(short x, short y)
         {
-            return this.ToStringDefault();
+            X = x;
+            Y = y;
         }
+
+        public override string ToString() => this.ToStringDefault();
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ViewportStruct
+    public class ViewportStruct
     {
-        public Vector4 Position;
-        public Vector4 Scale;
-        public PointS RegionTopLeft;
-        public PointS RegionBottomRight;
+        private GpuStateData data;
 
+        public ViewportStruct(GpuStateData data)
+        {
+            this.data = data;
+        }
+
+        public Vector4 Position => new Vector4(data.Float1(GpuOpCodes.XPOS), data.Float1(GpuOpCodes.YPOS), BitUtils.ExtractUnsignedScaled(data.Int(GpuOpCodes.ZPOS), 0, 16, 1.0f), 1f);
+        public Vector4 Scale => new Vector4(data.Float1(GpuOpCodes.XSCALE) * 2, data.Float1(GpuOpCodes.YSCALE) * -2, data.Float1(GpuOpCodes.ZSCALE), 1f);
+        public PointS RegionTopLeft => new PointS((short) data.Extract(GpuOpCodes.REGION1, 0, 10), (short) data.Extract(GpuOpCodes.REGION1, 10, 10));
+        public PointS RegionBottomRight => new PointS((short) (data.Extract(GpuOpCodes.REGION2, 0, 10) + 1), (short) (data.Extract(GpuOpCodes.REGION2, 10, 10) + 1));
         public PointS RegionSize => new PointS()
         {
             X = (short) (RegionBottomRight.X - RegionTopLeft.X + 1),
@@ -712,13 +987,19 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public byte Red, Green, Blue, Alpha;
 
-        public void SetRGB_A1(uint params24) => Alpha = 0xFF;
+        public ColorbStruct SetRGB_A1(uint params24)
+        {
+            Alpha = 0xFF;
+            
+            return this;
+        }
 
-        public void SetRgb(uint params24)
+        public ColorbStruct SetRgb(uint params24)
         {
             Red = (byte) ((params24 >> 0) & 0xFF);
             Green = (byte) ((params24 >> 8) & 0xFF);
             Blue = (byte) ((params24 >> 16) & 0xFF);
+            return this;
         }
     }
 
@@ -727,21 +1008,27 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public float Red, Green, Blue, Alpha;
 
-        public void SetRGB_A1(uint params24)
+        public ColorfStruct SetRGB_A1(uint params24)
         {
             SetRgb(params24);
             Alpha = 1.0f;
+            return this;
         }
 
-        public void SetRgb(uint params24)
+        public ColorfStruct SetRgb(uint params24)
         {
             //Console.WriteLine(Params24);
             Red = ((params24 >> 0) & 0xFF) / 255.0f;
             Green = ((params24 >> 8) & 0xFF) / 255.0f;
             Blue = ((params24 >> 16) & 0xFF) / 255.0f;
+            return this;
         }
 
-        public void SetA(uint params24) => Alpha = ((params24 >> 0) & 0xFF) / 255.0f;
+        public ColorfStruct SetA(uint params24)
+        {
+            Alpha = ((params24 >> 0) & 0xFF) / 255.0f;
+            return this;
+        }
 
         public override string ToString() => $"Colorf(R={Red}, G={Green}, B={Blue}, A={Alpha})";
 
