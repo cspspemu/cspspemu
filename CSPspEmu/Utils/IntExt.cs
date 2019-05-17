@@ -1,25 +1,22 @@
+using System.Runtime.CompilerServices;
+
 namespace CSPspEmu.Utils
 {
-    static public class IntExt
+    public static class IntExt
     {
-        
-        static public int Clamp(this int value, int min, int max)
-        {
-            if (value < min) return min;
-            if (value > max) return max;
-            return value;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Clamp(this int value, int min, int max) => value < min ? min : value > max ? max : value;
 
-        static public float Clamp(this float value, float min, float max)
-        {
-            if (value < min) return min;
-            if (value > max) return max;
-            return value;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Clamp(this float value, float min, float max) => value < min ? min : value > max ? max : value;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Interpolate(this double ratio, int min, int max) => (int) (min + (max - min) * ratio);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Interpolate(this float ratio, int min, int max) => (int) (min + (max - min) * ratio);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float RatioInRange(this int value, int min, int max) => (float) (value - min) / (float) (max - min);
     }
 }

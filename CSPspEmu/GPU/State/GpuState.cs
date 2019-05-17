@@ -684,25 +684,6 @@ namespace CSPspEmu.Core.Gpu.State
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct PointIS
-    {
-        public int X, Y;
-
-        [Obsolete]
-        public int x => X;
-        [Obsolete]
-        public int y => Y;
-
-        public PointIS(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public override string ToString() => $"({X}, {Y})";
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct ViewportStruct
     {
         public Vector4f Position;

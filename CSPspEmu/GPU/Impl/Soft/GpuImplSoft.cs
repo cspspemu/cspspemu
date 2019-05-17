@@ -7,6 +7,7 @@ using CSharpUtils.Drawing;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Types;
+using CSPspEmu.Rasterizer;
 using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.Impl.Soft
@@ -35,11 +36,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
         private Matrix4x4 worldViewProjection3D = Matrix4x4.Identity;
         private Matrix4x4 worldViewProjection2D = Matrix4x4.Identity;
         private Matrix4x4 transform3d = Matrix4x4.Identity;
-        private Matrix4x4 unitToScreenCoords = Matrix4x4.CreateScale(1f, -1f, 1f) * Matrix4x4.CreateTranslation(+1f, +1f, 0f) * Matrix4x4.CreateScale(.5f, .5f, 1f) * Matrix4x4.CreateScale(480, 272, 1f);
+
+        private Matrix4x4 unitToScreenCoords = Matrix4x4.CreateScale(1f, -1f, 1f) *
+                                               Matrix4x4.CreateTranslation(+1f, +1f, 0f) *
+                                               Matrix4x4.CreateScale(.5f, .5f, 1f) *
+                                               Matrix4x4.CreateScale(480, 272, 1f);
 
         private GpuStateStruct* GpuState;
         private uint DrawAddress;
-        private GuPrimitiveType PrimitiveType; 
+        private GuPrimitiveType PrimitiveType;
 
         public override void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState,
             GuPrimitiveType primitiveType)
@@ -85,7 +90,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             {
                 var transform = VertexType.Transform2D ? Matrix4x4.Identity : worldViewProjection3D;
                 var rtransform = VertexType.Transform2D ? transform : transform * unitToScreenCoords;
-                    
+
                 for (var n = 0; n < vertexCount; n++)
                 {
                     var vinfo = VertexReader.ReadVertex(n);
@@ -105,7 +110,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
                         //{ for (var n = 0; n < vertexCount; n++) Console.WriteLine($"Triangle {VertexType.Transform2D}:{VertexReader.ReadVertex(n)} : {vertices[n]} : {Vector4ToPoint(vertices[n])}"); }
                         var m = 0;
                         for (var n = 0; n < vertexCount; n += 3)
-                        { 
+                        {
                             DrawTriangleFast((verticesP[n + 0]), (verticesP[n + 1]), (verticesP[n + 2]));
                         }
 
@@ -135,37 +140,20 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             //Console.WriteLine($"Prim {vertexCount}");
         }
 
-        private VPoint Vector4ToPoint(Vector4 v, Vector4 n, Vector4 color) => new VPoint(new PointIS((int) v.X, (int) v.Y), n, color);
-
-        //private void DrawTriangleSlow(PointIS a, PointIS b, PointIS c)
-        //{
-        //    //Console.WriteLine($"Triangle {a}, {b}, {c}");
-        //    var minX = Math.Min(Math.Min(a.X, b.X), c.X).Clamp(0, 512);
-        //    var maxX = Math.Max(Math.Max(a.X, b.X), c.X).Clamp(0, 512);
-        //    var minY = Math.Min(Math.Min(a.Y, b.Y), c.Y).Clamp(0, 272);
-        //    var maxY = Math.Max(Math.Max(a.Y, b.Y), c.Y).Clamp(0, 272);
-        //    for (int y = minY; y <= maxY; y++)
-        //    {
-        //        for (int x = minX; x <= maxX; x++)
-        //        {
-        //            if (PointInTriangle(new PointIS(x, y), a, b, c))
-        //            {
-        //                DrawPixel(x, y, 0xFFFFFFFF);
-        //            }
-        //        }
-        //    }
-        //}
+        private VPoint Vector4ToPoint(Vector4 v, Vector4 n, Vector4 color) =>
+            new VPoint(new RasterizerPoint((int) v.X, (int) v.Y), n, color);
 
         private uint[] colors = {0xFF0077FF, 0xFF00FFFF, 0xFF0000FF};
 
-        public struct VPoint {
-            public PointIS P;
+        public struct VPoint
+        {
+            public RasterizerPoint P;
             public Vector4 N;
             public Vector4 Color;
 
             public uint IColor => new RgbaFloat(Color).Int;
 
-            public VPoint(PointIS p, Vector4 n, Vector4 color)
+            public VPoint(RasterizerPoint p, Vector4 n, Vector4 color)
             {
                 P = p;
                 N = n;
@@ -182,9 +170,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             public Triangle(VPoint p0, VPoint p1, VPoint p2)
             {
                 // Sort the points so that y0 <= y1 <= y2
-                if (p1.P.y < p0.P.y) Swap(ref p1, ref p0);
-                if (p2.P.y < p0.P.y) Swap(ref p2, ref p0);
-                if (p2.P.y < p1.P.y) Swap(ref p2, ref p1);
+                if (p1.P.Y < p0.P.Y) Swap(ref p1, ref p0);
+                if (p2.P.Y < p0.P.Y) Swap(ref p2, ref p0);
+                if (p2.P.Y < p1.P.Y) Swap(ref p2, ref p1);
 
 
                 P0 = p0;
@@ -193,22 +181,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             }
         }
 
-        public struct Sprite
+        private void DrawTriangleFast(VPoint p0, VPoint p1, VPoint p2)
         {
-            public VPoint P0;
-            public VPoint P1;
-
-            public Sprite(VPoint p0, VPoint p1)
-            {
-                P0 = p0;
-                P1 = p1;
-            }
-        }
-
-        private void DrawTriangleFast(VPoint P0, VPoint P1, VPoint P2)
-        {
-            var triangle = new Triangle(P0, P1, P2);
-            RasterizeTriangle(triangle, triangle, DrawTriangleFastTest);
+            var triangle = new Triangle(p0, p1, p2);
+            Rasterizer.Rasterizer.RasterizeTriangle(triangle.P0.P, triangle.P1.P, triangle.P2.P, triangle,
+                DrawTriangleFastTest, 0, 272);
         }
 
         static public Vector4 LerpNotUsedIndex(Vector4 a, Vector4 b, Vector4 c, int notUsedIndex, float ratio)
@@ -223,72 +200,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             return a;
         }
 
-        private void DrawTriangleFastTest(int y, Result a, Result b, Triangle triangle)
-        {
-            //Console.WriteLine($"{a.Ratio} {b.Ratio} {triangle.P0.Color} : {triangle.P1.IColor}");
-            if (triangle.P0.Color == triangle.P1.Color && triangle.P0.Color == triangle.P2.Color)
-            {
-                DrawPixelsFast(y, a.X, b.X, triangle.P0.IColor);
-            }
-            else
-            {
-                var colorA = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, a.NotUsedIndex, a.Ratio);
-                var colorB = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, b.NotUsedIndex, b.Ratio);
-                DrawPixelsFast(y, a.X, b.X, colorA, colorB);
-            }
-        }
-        
-        private void DrawPixelsFastInterpolated(int y, Result r0, Result r1, int x0, int x1, uint color)
-        {
-            if (x0 < 0 || y < 0 || x0 > 512 || y > 272) return;
-            var ptr = (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512 + x0) * 4));
-            var count = x1 - x0;
-            for (var n = 0; n < count; n++) ptr[n] = color;
-        }
+        private RasterizeDelegate<Triangle> DrawTriangleFastTest;
 
-        static public void RasterizeTriangle<T>(Triangle Tri, T param, Action<int, Result, Result, T> DrawPixelsFast)
+        public GpuImplSoft()
         {
-            var P0 = Tri.P0.P;
-            var P1 = Tri.P1.P;
-            var P2 = Tri.P2.P;
-            //Console.WriteLine($"{P0}, {P1}, {P2}");
-
-            var y0 = P0.y.Clamp(0, 272);
-            var y2 = P2.y.Clamp(0, 272);
-
-            for (var y = y0; y <= y2; y++)
+            DrawTriangleFastTest = (y, a, b, triangle) =>
             {
-                var xa = InterpolateX(y, P0, P2, 1);
-                var xb = (y <= P1.y) ? InterpolateX(y, P0, P1, 2) : InterpolateX(y, P1, P2, 0);
-                if (xa.X < xb.X)
+                //Console.WriteLine($"{a.Ratio} {b.Ratio} {triangle.P0.Color} : {triangle.P1.IColor}");
+                if (triangle.P0.Color == triangle.P1.Color && triangle.P0.Color == triangle.P2.Color)
                 {
-                    DrawPixelsFast(y, xa, xb, param);
+                    DrawPixelsFast(y, a.X, b.X, triangle.P0.IColor);
                 }
                 else
                 {
-                    DrawPixelsFast(y, xb, xa, param);   
+                    var colorA = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, a.NotUsedIndex,
+                        a.Ratio);
+                    var colorB = LerpNotUsedIndex(triangle.P0.Color, triangle.P1.Color, triangle.P2.Color, b.NotUsedIndex,
+                        b.Ratio);
+                    DrawPixelsFast(y, a.X, b.X, colorA, colorB);
                 }
-                //Console.WriteLine($"{y}: {xa} - {xb}");
-                //for (var x = xmin; x <= xmax; x++) DrawPixel(x, y, 0xFFFFFFFF);
-            }
-        }
-
-        public struct Result
-        {
-            public int X;
-            public int NotUsedIndex;
-            public float Ratio;
-        }
-
-        public static Result InterpolateX(int y, PointIS a, PointIS b, int notUsedIndex)
-        {
-            var ratio = (float) (y - a.Y) / (float) (b.Y - a.Y);
-            var res = ratio.Interpolate(a.X, b.X);
-            return new Result()
-            {
-                X = res,
-                Ratio = ratio,
-                NotUsedIndex = notUsedIndex,
             };
         }
 
@@ -310,30 +240,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             {
                 DrawPixelsFast(y, minX, maxX, a.IColor);
             }
-        }
-
-        private static float sign(PointIS p1, PointIS p2, PointIS p3) =>
-            (p1.X - p3.X) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
-
-        private static bool PointInTriangle(PointIS pt, PointIS v1, PointIS v2, PointIS v3)
-        {
-            float d1, d2, d3;
-            bool has_neg, has_pos;
-
-            d1 = sign(pt, v1, v2);
-            d2 = sign(pt, v2, v3);
-            d3 = sign(pt, v3, v1);
-
-            has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
-            has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
-
-            return !(has_neg && has_pos);
-        }
-
-        private void DrawPixel(int x, int y, uint color)
-        {
-            if (x < 0 || y < 0 || x > 512 || y > 272) return;
-            Memory.Write4((uint) (DrawAddress + (y * 512 + x) * 4), color);
         }
 
         private void DrawPixelsFast(int y, int x0, int x1, uint color)

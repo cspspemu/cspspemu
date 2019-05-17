@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using CSharpPlatform.Library;
-using CSPspEmu.Core;
+using CSPspEmu.Core; 
 
 namespace CSharpPlatform.GL
 {
