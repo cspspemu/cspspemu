@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using CSharpPlatform;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {

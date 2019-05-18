@@ -2,6 +2,7 @@
 using System.Numerics;
 using CSPspEmu.Core.Gpu.State;
 using CSharpPlatform;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {
