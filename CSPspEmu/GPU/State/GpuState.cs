@@ -18,10 +18,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         public uint* Data;
 
-        public GpuStateData(uint* data)
-        {
-            Data = data;
-        }
+        public GpuStateData(uint* data) => Data = data;
 
         public Span<uint> Span => new Span<uint>(Data, GpuStateStruct.StructSizeInWords);
 
@@ -85,8 +82,8 @@ namespace CSPspEmu.Core.Gpu.State
         public FogState FogState => new FogState(data);
         public BlendingStateStruct BlendingState => new BlendingStateStruct(data);
         public StencilStateStruct StencilState => new StencilStateStruct(data);
-        public AlphaTestStateStruct AlphaTestState => new AlphaTestStateStruct();
-        public LogicalOperationStateStruct LogicalOperationState => new LogicalOperationStateStruct();
+        public AlphaTestStateStruct AlphaTestState => new AlphaTestStateStruct(data);
+        public LogicalOperationStateStruct LogicalOperationState => new LogicalOperationStateStruct(data);
         public DepthTestStateStruct DepthTestState => new DepthTestStateStruct(data);
         public LightingStateStruct LightingState => new LightingStateStruct(data);
         public MorphingStateStruct MorphingState => new MorphingStateStruct(data);
@@ -106,10 +103,7 @@ namespace CSPspEmu.Core.Gpu.State
         public LightStateStruct Light3 => Light(3);
 
 
-        public GpuStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public GpuStateStruct(GpuStateData data) => this.data = data;
 
         public uint BaseAddress => ((data.Param24(GpuOpCodes.BASE) << 8) & 0xff000000);
         public uint BaseOffset
@@ -136,8 +130,8 @@ namespace CSPspEmu.Core.Gpu.State
         public bool ClearingMode => (data.Param24(GpuOpCodes.CLEAR) & 1) != 0;
         public PointS Offset => new PointS((short) data.Extract(GpuOpCodes.OFFSETX, 0, 4), (short) data.Extract(GpuOpCodes.OFFSETY, 0, 4));
         public ClearBufferSet ClearFlags => (ClearBufferSet) data.Param8(GpuOpCodes.CLEAR, 8);
-        public ColorStruct FixColorSource => new ColorStruct();
-        public ColorStruct FixColorDestination => new ColorStruct();
+        public ColorbStruct FixColorSource => new ColorbStruct();
+        public ColorbStruct FixColorDestination => new ColorbStruct();
         public ShadingModelEnum ShadeModel => (ShadingModelEnum) data.Int(GpuOpCodes.SHADE);
 
         public sbyte[] DitherMatrix
@@ -163,10 +157,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public PatchStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public PatchStateStruct(GpuStateData data) => this.data = data;
 
         public byte DivS => (byte)data.Param8(GpuOpCodes.PSUB, 0);
         public byte DivT => (byte)data.Param8(GpuOpCodes.PSUB, 8);
@@ -176,10 +167,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public AlphaTestStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public AlphaTestStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.ATE);
         public TestFunctionEnum Function => (TestFunctionEnum) data.Param8(GpuOpCodes.ATST, 0);
@@ -189,12 +177,9 @@ namespace CSPspEmu.Core.Gpu.State
 
     public ref struct BackfaceCullingStateStruct
     {
-        public readonly GpuStateData data;
+        private readonly GpuStateData data;
 
-        public BackfaceCullingStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public BackfaceCullingStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.BCE);
         public FrontFaceDirectionEnum FrontFaceDirection => (FrontFaceDirectionEnum) data.Int(GpuOpCodes.FFACE);
@@ -204,10 +189,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private readonly GpuStateData data;
 
-        public BlendingStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public BlendingStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.ABE);
         
@@ -232,10 +214,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public ClipPlaneStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public ClipPlaneStateStruct(GpuStateData data) => this.data = data;
 
 
         public bool Enabled => data.Bool(GpuOpCodes.CPE);
@@ -251,10 +230,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public ClutStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public ClutStateStruct(GpuStateData data) => this.data = data;
 
         public uint Address => data.Int(GpuOpCodes.CBP) | (data.Int(GpuOpCodes.CBPH) << 24);
         public int NumberOfColors
@@ -274,10 +250,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public ColorTestStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public ColorTestStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.CTE);
         public OutputPixel Ref => OutputPixel.FromRgba(
@@ -299,10 +272,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public DepthTestStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public DepthTestStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.ZTE);
         public TestFunctionEnum Function => (TestFunctionEnum) data.Param8(GpuOpCodes.ZTST, 0);
@@ -313,25 +283,15 @@ namespace CSPspEmu.Core.Gpu.State
 
     public ref struct DitheringStateStruct
     {
-        public GpuStateData data;
-
-        public DitheringStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
-
+        private GpuStateData data;
+        public DitheringStateStruct(GpuStateData data) => this.data = data;
         public bool Enabled => data.Bool(GpuOpCodes.DTE);
     }
 
     public ref struct FogState
     {
-        public GpuStateData data;
-
-        public FogState(GpuStateData data)
-        {
-            this.data = data;
-        }
-
+        private GpuStateData data;
+        public FogState(GpuStateData data) => this.data = data;
         public bool Enabled => data.Bool(GpuOpCodes.FGE);
         public ColorfStruct Color => new ColorfStruct().SetRGB_A1(data.Param24(GpuOpCodes.FCOL));
         public float Dist => data.Float1(GpuOpCodes.FDIST);
@@ -345,10 +305,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public LightingStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public LightingStateStruct(GpuStateData data) => this.data = data;
 
         public LightStateStruct Light(byte index) => new LightStateStruct(data, (byte)index);
         public LightStateStruct Light0 => Light(0);
@@ -423,10 +380,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public LineSmoothStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public LineSmoothStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.AAE);
     }
@@ -435,10 +389,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public LogicalOperationStateStruct(GpuStateData data) : this()
-        {
-            this.data = data;
-        }
+        public LogicalOperationStateStruct(GpuStateData data) : this() => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.LOE);
         public LogicalOperationEnum Operation => (LogicalOperationEnum) data.Param8(GpuOpCodes.LOP, 0);
@@ -448,10 +399,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public MorphingStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public MorphingStateStruct(GpuStateData data) => this.data = data;
 
         public float MorphWeight(int index) => data.Float1(GpuOpCodes.MW0 + (byte) index);
     }
@@ -460,10 +408,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public PatchCullingStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public PatchCullingStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.PCE);
         public bool FaceFlag => (data.Param24(GpuOpCodes.PFACE) != 0);
@@ -514,14 +459,9 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private readonly GpuStateData data;
 
-        public SkinningStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
-
-        public int CurrentBoneIndex => (int)data[GpuOpCodes.BOFS];
-
-        public Matrix4x4 BoneMatrix(int index) => data.GetMatrix4X3(GpuOpCodes.VIEW_MATRIX_BASE, index);
+        public SkinningStateStruct(GpuStateData data) => this.data = data;
+        
+        public Matrix4x4 BoneMatrix(int index) => data.GetMatrix4X3(GpuOpCodes.BONE_MATRIX_BASE, index);
         public Matrix4x4 BoneMatrix0 => BoneMatrix(0);
         public Matrix4x4 BoneMatrix1 => BoneMatrix(1);
         public Matrix4x4 BoneMatrix2 => BoneMatrix(2);
@@ -536,10 +476,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public StencilStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public StencilStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.STE);
         public TestFunctionEnum Function => (TestFunctionEnum) data.Param8(GpuOpCodes.STST, 0);
@@ -552,12 +489,9 @@ namespace CSPspEmu.Core.Gpu.State
 
     public ref struct TextureMappingStateStruct
     {
-        public readonly GpuStateData data;
+        private readonly GpuStateData data;
 
-        public TextureMappingStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public TextureMappingStateStruct(GpuStateData data) => this.data = data;
 
         public TextureStateStruct TextureState => new TextureStateStruct(data);
         public ClutStateStruct UploadedClutState => new ClutStateStruct(data);
@@ -577,52 +511,31 @@ namespace CSPspEmu.Core.Gpu.State
 
         public byte GetTextureComponentsCount()
         {
-            byte components = 2;
-            switch (TextureMapMode)
-            {
-                case TextureMapMode.GuTextureCoords:
-                    break;
-                case TextureMapMode.GuTextureMatrix:
-                    switch (TextureProjectionMapMode)
-                    {
-                        case TextureProjectionMapMode.GuNormal:
-                            components = 3;
-                            break;
-                        case TextureProjectionMapMode.GuNormalizedNormal:
-                            components = 3;
-                            break;
-                        case TextureProjectionMapMode.GuPosition:
-                            components = 3;
-                            break;
-                        case TextureProjectionMapMode.GuUv:
-                            components = 2;
-                            break;
-                    }
-                    break;
-                case TextureMapMode.GuEnvironmentMap:
-                    break;
-            }
-            return components;
+            if (TextureMapMode == TextureMapMode.GuTextureMatrix)
+                switch (TextureProjectionMapMode)
+                {
+                    case TextureProjectionMapMode.GuNormal: return 3;
+                    case TextureProjectionMapMode.GuNormalizedNormal: return 3;
+                    case TextureProjectionMapMode.GuPosition: return 3;
+                    case TextureProjectionMapMode.GuUv: return 2;
+                }
+
+            return 2;
         }
     }
 
     public ref struct TextureStateStruct
     {
-        public GpuStateData data;
+        private GpuStateData data;
 
-        public TextureStateStruct(GpuStateData data)
-        {
-            this.data = data;
-            this.Mipmaps = new MipmapState[8];
-            for (var n = 0; n < 8; n++) this.Mipmaps[n] = new MipmapState(data, (byte)n); 
-        }
+        public TextureStateStruct(GpuStateData data) => this.data = data;
 
         /// <summary>
         /// MipmapState list
         /// </summary>
-        public MipmapState[] Mipmaps;
+        public MipmapState Mipmap(byte index) => new MipmapState(data, (byte)index);
 
-        public MipmapState Mipmap0 => Mipmaps[0]; 
+        public MipmapState Mipmap0 => Mipmap(0); 
 
 
         public class MipmapState
@@ -678,31 +591,10 @@ namespace CSPspEmu.Core.Gpu.State
         /// Levels of mipmaps
         /// </summary>
         public int MipmapMaxLevel => (int)data.Param8(GpuOpCodes.TMODE, 16);
-
-        /// <summary>
-        /// Format of the texture data.
-        /// Texture Data mode
-        /// </summary>
         public GuPixelFormats PixelFormat => (GuPixelFormats) data.Extract(GpuOpCodes.TPSM, 0, 4);
-
-        /// <summary>
-        /// TextureFilter when drawing the texture scaled
-        /// </summary>
         public TextureFilter FilterMinification => (TextureFilter) data.Param8(GpuOpCodes.TFLT, 0);
-
-        /// <summary>
-        /// TextureFilter when drawing the texture scaled
-        /// </summary>
         public TextureFilter FilterMagnification => (TextureFilter) data.Param8(GpuOpCodes.TFLT, 8);
-
-        /// <summary>
-        /// Wrap mode when specifying texture coordinates beyond texture size
-        /// </summary>
         public WrapMode WrapU => (WrapMode) data.Param8(GpuOpCodes.TWRAP, 0);
-
-        /// <summary>
-        /// Wrap mode when specifying texture coordinates beyond texture size
-        /// </summary>
         public WrapMode WrapV => (WrapMode) data.Param8(GpuOpCodes.TWRAP, 8);
 
         public float ScaleU => data.Float1(GpuOpCodes.USCALE);
@@ -719,10 +611,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public TextureTransferStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public TextureTransferStateStruct(GpuStateData data) => this.data = data;
 
         public enum TexelSizeEnum : ushort
         {
@@ -747,8 +636,8 @@ namespace CSPspEmu.Core.Gpu.State
         public ushort Height => (ushort) (data.Extract(GpuOpCodes.TRXSIZE, 10 * 1, 10) + 1);
         public TexelSizeEnum TexelSize
         {
-            get { return (TexelSizeEnum)data[GpuOpCodes.EX_TEXEL_SIZE]; }
-            set { data[GpuOpCodes.EX_TEXEL_SIZE] = (uint)value; }
+            get => (TexelSizeEnum)data[GpuOpCodes.EX_TEXEL_SIZE];
+            set => data[GpuOpCodes.EX_TEXEL_SIZE] = (uint)value;
         }
     }
 
@@ -756,10 +645,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public VertexTypeStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public VertexTypeStruct(GpuStateData data) => this.data = data;
 
         public bool Equals(VertexTypeStruct other) => ReversedNormal == other.ReversedNormal &&
                                                       NormalCount == other.NormalCount && Value == other.Value;
@@ -768,8 +654,8 @@ namespace CSPspEmu.Core.Gpu.State
         public byte NormalCount; // => GpuState.TextureMappingState.GetTextureComponentsCount()
         public uint Value
         {
-            get { return data[GpuOpCodes.VTYPE]; }
-            set { data[GpuOpCodes.VTYPE] = value; }
+            get => data[GpuOpCodes.VTYPE];
+            set => data[GpuOpCodes.VTYPE] = value;
         }
 
         public static bool operator ==(VertexTypeStruct a, VertexTypeStruct b)
@@ -817,66 +703,66 @@ namespace CSPspEmu.Core.Gpu.State
 
         public NumericEnum Weight
         {
-            get => (NumericEnum) BitUtils.Extract(Value, 9, 2);
-            set => Value = BitUtils.Insert(Value, 9, 2, (uint) value);
+            get => (NumericEnum) Value.Extract(9, 2);
+            set => Value = Value.Insert(9, 2, (uint) value);
         }
 
         public bool HasTexture => Texture != NumericEnum.Void;
 
         public NumericEnum Texture
         {
-            get => (NumericEnum) BitUtils.Extract(Value, 0, 2);
-            set => Value = BitUtils.Insert(Value, 0, 2, (uint) value);
+            get => (NumericEnum) Value.Extract(0, 2);
+            set => Value = Value.Insert(0, 2, (uint) value);
         }
 
         public bool HasColor => Color != ColorEnum.Void;
 
         public ColorEnum Color
         {
-            get => (ColorEnum) BitUtils.Extract(Value, 2, 3);
-            set => Value = BitUtils.Insert(Value, 2, 3, (uint) value);
+            get => (ColorEnum) Value.Extract(2, 3);
+            set => Value = Value.Insert(2, 3, (uint) value);
         }
 
         public bool HasNormal => Normal != NumericEnum.Void;
 
         public NumericEnum Normal
         {
-            get => (NumericEnum) BitUtils.Extract(Value, 5, 2);
-            set => Value = BitUtils.Insert(Value, 5, 2, (uint) value);
+            get => (NumericEnum) Value.Extract(5, 2);
+            set => Value = Value.Insert(5, 2, (uint) value);
         }
 
         public bool HasPosition => Position != NumericEnum.Void;
 
         public NumericEnum Position
         {
-            get => (NumericEnum) BitUtils.Extract(Value, 7, 2);
-            set => Value = BitUtils.Insert(Value, 7, 2, (uint) value);
+            get => (NumericEnum) Value.Extract(7, 2);
+            set => Value = Value.Insert(7, 2, (uint) value);
         }
 
         public bool HasIndex => Index != IndexEnum.Void;
 
         public IndexEnum Index
         {
-            get => (IndexEnum) BitUtils.Extract(Value, 11, 2);
-            set => Value = BitUtils.Insert(Value, 11, 2, (uint) value);
+            get => (IndexEnum) Value.Extract(11, 2);
+            set => Value = Value.Insert(11, 2, (uint) value);
         }
 
         public int SkinningWeightCount
         {
-            get => (int) BitUtils.Extract(Value, 14, 3);
-            set => Value = BitUtils.Insert(Value, 14, 3, (uint) value);
+            get => (int) Value.Extract(14, 3);
+            set => Value = Value.Insert(14, 3, (uint) value);
         }
 
         public int MorphingVertexCount
         {
-            get => (int) BitUtils.Extract(Value, 18, 2);
-            set => Value = BitUtils.Insert(Value, 18, 2, (uint) value);
+            get => (int) Value.Extract(18, 2);
+            set => Value = Value.Insert(18, 2, (uint) value);
         }
 
         public bool Transform2D
         {
-            get => BitUtils.Extract(Value, 23, 1) != 0;
-            set => Value = BitUtils.Insert(Value, 23, 1, value ? 1U : 0U);
+            get => Value.Extract(23, 1) != 0;
+            set => Value = Value.Insert(23, 1, value ? 1U : 0U);
         }
 
         public int RealSkinningWeightCount => SkinSize == 0 ? 0 : SkinningWeightCount + 1;
@@ -915,46 +801,22 @@ namespace CSPspEmu.Core.Gpu.State
             return size;
         }
 
-        public int GetVertexSetMorphSize()
-        {
-            return GetVertexSize() * MorphingVertexCount;
-        }
+        public int GetVertexSetMorphSize() => GetVertexSize() * MorphingVertexCount;
 
-        public override string ToString()
-        {
-            return this.ToStringDefault();
-        }
+        public override string ToString() => this.ToStringDefault();
     }
 
     public ref struct VertexStateStruct
     {
         private GpuStateData data;
 
-        public VertexStateStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
-
-
+        public VertexStateStruct(GpuStateData data) => this.data = data;
+        
         public Matrix4x4 ProjectionMatrix => data.GetMatrix4X4(GpuOpCodes.PROJ_MATRIX_BASE);
         public Matrix4x4 WorldMatrix => data.GetMatrix4X3(GpuOpCodes.WORLD_MATRIX_BASE);
         public Matrix4x4 ViewMatrix => data.GetMatrix4X3(GpuOpCodes.VIEW_MATRIX_BASE);
         public TransformModeEnum TransformMode => TransformModeEnum.Normal;
         public VertexTypeStruct Type => new VertexTypeStruct(data);
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class GpuState
-    {
-        public GpuStateStruct Value;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct PointI
-    {
-        public uint X, Y;
-
-        public override string ToString() => this.ToStringDefault();
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -975,10 +837,7 @@ namespace CSPspEmu.Core.Gpu.State
     {
         private GpuStateData data;
 
-        public ViewportStruct(GpuStateData data)
-        {
-            this.data = data;
-        }
+        public ViewportStruct(GpuStateData data) => this.data = data;
 
         public Vector4 Position => new Vector4(data.Float1(GpuOpCodes.XPOS), data.Float1(GpuOpCodes.YPOS), BitUtils.ExtractUnsignedScaled(data.Int(GpuOpCodes.ZPOS), 0, 16, 1.0f), 1f);
         public Vector4 Scale => new Vector4(data.Float1(GpuOpCodes.XSCALE) * 2, data.Float1(GpuOpCodes.YSCALE) * -2, data.Float1(GpuOpCodes.ZSCALE), 1f);
@@ -989,12 +848,6 @@ namespace CSPspEmu.Core.Gpu.State
             X = (short) (RegionBottomRight.X - RegionTopLeft.X + 1),
             Y = (short) (RegionBottomRight.Y - RegionTopLeft.Y + 1),
         };
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ColorStruct
-    {
-        public byte iRed, iGreen, iBlue, iAlpha;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1064,116 +917,74 @@ namespace CSPspEmu.Core.Gpu.State
 
     public enum TransformModeEnum : byte
     {
-        Normal = 0,
-        Raw = 1,
+        Normal = 0, Raw = 1,
     }
 
     public enum GuPrimitiveType : byte
     {
-        Points = 0,
-        Lines = 1,
-        LineStrip = 2,
-        Triangles = 3,
-        TriangleStrip = 4,
-        TriangleFan = 5,
-        Sprites = 6,
-        ContinuePreviousPrim = 7,
+        Points = 0, Lines = 1, LineStrip = 2, Triangles = 3,
+        TriangleStrip = 4, TriangleFan = 5, Sprites = 6, ContinuePreviousPrim = 7,
     }
 
     public enum TextureColorComponent : byte
     {
-        Rgb = 0, // GU_TCC_RGB
-        Rgba = 1, // GU_TCC_RGBA
+        // GU_TCC_RGB, GU_TCC_RGBA
+        Rgb = 0, Rgba = 1,
     }
 
     public enum TextureEffect : byte
     {
-        Modulate = 0, // GU_TFX_MODULATE
-        Decal = 1, // GU_TFX_DECAL
-        Blend = 2, // GU_TFX_BLEND
-        Replace = 3, // GU_TFX_REPLACE
-        Add = 4, // GU_TFX_ADD
+        // GU_TFX_MODULATE, GU_TFX_DECAL, GU_TFX_BLEND, GU_TFX_REPLACE, GU_TFX_ADD
+        Modulate = 0, Decal = 1, Blend = 2, Replace = 3, Add = 4,
     }
 
+    // TextureFilter when drawing the texture scaled
     public enum TextureFilter : byte
     {
-        Nearest = 0,
-        Linear = 1,
-
-        NearestMipmapNearest = 4,
-        LinearMipmapNearest = 5,
-        NearestMipmapLinear = 6,
-        LinearMipmapLinear = 7,
+        Nearest = 0, Linear = 1,
+        NearestMipmapNearest = 4, LinearMipmapNearest = 5,
+        NearestMipmapLinear = 6, LinearMipmapLinear = 7,
     }
 
+    // Wrap mode when specifying texture coordinates beyond texture size
     public enum WrapMode : byte
     {
-        Repeat = 0,
-        Clamp = 1,
+        Repeat = 0, Clamp = 1,
     }
 
     public enum LogicalOperationEnum : byte
     {
-        Clear = 0,
-        And = 1,
-        AndReverse = 2,
-        Copy = 3,
-        AndInverted = 4,
-        Noop = 5,
-        Xor = 6,
-        Or = 7,
-        NotOr = 8,
-        Equiv = 9,
-        Inverted = 10,
-        OrReverse = 11,
-        CopyInverted = 12,
-        OrInverted = 13,
-        NotAnd = 14,
-        Set = 15
+        Clear = 0, And = 1, AndReverse = 2, Copy = 3,
+        AndInverted = 4, Noop = 5, Xor = 6, Or = 7,
+        NotOr = 8, Equiv = 9, Inverted = 10, OrReverse = 11,
+        CopyInverted = 12, OrInverted = 13, NotAnd = 14, Set = 15
     }
 
     public enum StencilOperationEnum : byte
     {
-        Keep = 0,
-        Zero = 1,
-        Replace = 2,
-        Invert = 3,
-        Increment = 4,
-        Decrement = 5,
+        Keep = 0, Zero = 1, Replace = 2, Invert = 3, Increment = 4, Decrement = 5,
     }
 
     public enum ShadingModelEnum : byte
     {
-        Flat = 0,
-        Smooth = 1,
+        Flat = 0, Smooth = 1,
     }
 
     [Flags]
     public enum ClearBufferSet : byte
     {
-        ColorBuffer = 1,
-        StencilBuffer = 2,
-        DepthBuffer = 4,
-        FastClear = 16
+        ColorBuffer = 1, StencilBuffer = 2, DepthBuffer = 4, FastClear = 16
     }
 
     public enum BlendingOpEnum : byte
     {
-        Add = 0,
-        Substract = 1,
-        ReverseSubstract = 2,
-        Min = 3,
-        Max = 4,
-        Abs = 5,
+        Add = 0, Substract = 1, ReverseSubstract = 2, Min = 3, Max = 4, Abs = 5,
     }
 
     public enum GuBlendingFactorSource : byte
     {
         // Source
-        GuSrcColor = 0,
-        GuOneMinusSrcColor = 1,
-        GuSrcAlpha = 2,
-        GuOneMinusSrcAlpha = 3,
+        GuSrcColor = 0, GuOneMinusSrcColor = 1, GuSrcAlpha = 2, GuOneMinusSrcAlpha = 3,
 
         // Both?
         GuFix = 10
@@ -1182,47 +993,31 @@ namespace CSPspEmu.Core.Gpu.State
     public enum GuBlendingFactorDestination : byte
     {
         // Dest
-        GuDstColor = 0,
-        GuOneMinusDstColor = 1,
-        GuDstAlpha = 4,
-        GuOneMinusDstAlpha = 5,
-
+        GuDstColor = 0, GuOneMinusDstColor = 1, GuDstAlpha = 4, GuOneMinusDstAlpha = 5,
         // Both?
         GuFix = 10
     }
 
     public enum TestFunctionEnum : byte
     {
-        Never = 0,
-        Always = 1,
-        Equal = 2,
-        NotEqual = 3,
-        Less = 4,
-        LessOrEqual = 5,
-        Greater = 6,
-        GreaterOrEqual = 7,
+        Never = 0, Always = 1, Equal = 2, NotEqual = 3,
+        Less = 4, LessOrEqual = 5, Greater = 6, GreaterOrEqual = 7,
     }
 
     public enum FrontFaceDirectionEnum : byte
     {
-        CounterClockWise = 0,
-        ClockWise = 1
+        CounterClockWise = 0, ClockWise = 1
     }
 
     public enum ColorTestFunctionEnum : byte
     {
-        GuNever,
-        GuAlways,
-        GuEqual,
-        GuNotequal,
+        GuNever, GuAlways, GuEqual, GuNotequal,
     }
 
     [Flags]
     public enum LightComponentsSet : byte
     {
-        Ambient = 1,
-        Diffuse = 2,
-        Specular = 4,
+        Ambient = 1, Diffuse = 2, Specular = 4,
         AmbientAndDiffuse = Ambient | Diffuse,
         DiffuseAndSpecular = Diffuse | Specular,
         UnknownLightComponent = 8,
@@ -1230,22 +1025,17 @@ namespace CSPspEmu.Core.Gpu.State
 
     public enum LightTypeEnum : byte
     {
-        Directional = 0,
-        PointLight = 1,
-        SpotLight = 2,
+        Directional = 0, PointLight = 1, SpotLight = 2,
     }
 
     public enum LightModelEnum : byte
     {
-        SingleColor = 0,
-        SeparateSpecularColor = 1,
+        SingleColor = 0, SeparateSpecularColor = 1,
     }
 
     public enum TextureMapMode : byte
     {
-        GuTextureCoords = 0,
-        GuTextureMatrix = 1,
-        GuEnvironmentMap = 2,
+        GuTextureCoords = 0, GuTextureMatrix = 1, GuEnvironmentMap = 2,
     }
 
     public enum TextureProjectionMapMode : byte

@@ -1,5 +1,6 @@
 ﻿namespace CSPspEmu.Core.Types
 {
+    // Format of the texture data. Texture Data mode.
     public enum GuPixelFormats : uint
     {
         None = unchecked((uint) -1), // 0
