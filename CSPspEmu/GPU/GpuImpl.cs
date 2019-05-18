@@ -59,9 +59,9 @@ namespace CSPspEmu.Core.Gpu
             GpuState = gpuState;
             VertexType = gpuState.VertexState.Type;
             PrimitiveType = primitiveType;
-            var model = gpuState.VertexState.WorldMatrix.Matrix4x4;
-            var view = gpuState.VertexState.ViewMatrix.Matrix4x4;
-            var projection3D = gpuState.VertexState.ProjectionMatrix.Matrix4x4;
+            var model = gpuState.VertexState.WorldMatrix;
+            var view = gpuState.VertexState.ViewMatrix;
+            var projection3D = gpuState.VertexState.ProjectionMatrix;
             var projection2D = Matrix4x4.CreateOrthographic(512, 272, -1f, +1f);
             //Matrix4x4.Invert(projection2D, out unitToScreenCoords);
             modelView = model * view;

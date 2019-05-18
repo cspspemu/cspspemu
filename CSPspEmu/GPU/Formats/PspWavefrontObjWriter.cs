@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 using CSPspEmu.Core.Gpu.State;
 using CSharpPlatform;
 
@@ -13,7 +14,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 
         private GuPrimitiveType _currentPrimitiveType;
         private readonly List<int> _primitiveIndices = new List<int>();
-        private Matrix4F _modelMatrix = default(Matrix4F);
+        private Matrix4x4 _modelMatrix = Matrix4x4.Identity;
         private GpuStateStruct _gpuState;
         private VertexTypeStruct _vertexType;
 
@@ -22,10 +23,10 @@ namespace CSPspEmu.Core.Gpu.Formats
         {
             _gpuState = gpuState;
             _vertexType = vertexType;
-            var viewMatrix = gpuState.VertexState.ViewMatrix.Matrix4;
-            var worldMatrix = gpuState.VertexState.WorldMatrix.Matrix4;
-            _modelMatrix.Multiply(viewMatrix);
-            _modelMatrix.Multiply(worldMatrix);
+            var viewMatrix = gpuState.VertexState.ViewMatrix;
+            var worldMatrix = gpuState.VertexState.WorldMatrix;
+            _modelMatrix *= viewMatrix;
+            _modelMatrix *= worldMatrix;
 
             _currentPrimitiveType = primitiveType;
             _wavefrontObjWriter.StartComment(

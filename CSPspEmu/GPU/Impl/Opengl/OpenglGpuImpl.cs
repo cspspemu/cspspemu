@@ -83,8 +83,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
         private FastList<uint> _indicesList = new FastList<uint>();
 
-        private Matrix4F _worldViewProjectionMatrix = default(Matrix4F);
-        private Matrix4F _textureMatrix = default(Matrix4F);
+        private Matrix4x4 _worldViewProjectionMatrix = Matrix4x4.Identity;
+        private Matrix4x4 _textureMatrix = Matrix4x4.Identity;
 
         public RenderbufferManager RenderbufferManager { get; private set; }
         private GLShader _shader;
@@ -183,14 +183,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             {
                 ShaderInfo.matrixBones.Set(new[]
                 {
-                    GpuState.SkinningState.BoneMatrix0.Matrix4,
-                    GpuState.SkinningState.BoneMatrix1.Matrix4,
-                    GpuState.SkinningState.BoneMatrix2.Matrix4,
-                    GpuState.SkinningState.BoneMatrix3.Matrix4,
-                    GpuState.SkinningState.BoneMatrix4.Matrix4,
-                    GpuState.SkinningState.BoneMatrix5.Matrix4,
-                    GpuState.SkinningState.BoneMatrix6.Matrix4,
-                    GpuState.SkinningState.BoneMatrix7.Matrix4,
+                    GpuState.SkinningState.BoneMatrix0,
+                    GpuState.SkinningState.BoneMatrix1,
+                    GpuState.SkinningState.BoneMatrix2,
+                    GpuState.SkinningState.BoneMatrix3,
+                    GpuState.SkinningState.BoneMatrix4,
+                    GpuState.SkinningState.BoneMatrix5,
+                    GpuState.SkinningState.BoneMatrix6,
+                    GpuState.SkinningState.BoneMatrix7,
                 });
             }
 

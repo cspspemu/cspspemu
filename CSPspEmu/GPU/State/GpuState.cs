@@ -44,16 +44,26 @@ namespace CSPspEmu.Core.Gpu.State
         public bool Bool(GpuOpCodes op) => Int(op) != 0;
         public float Float1(GpuOpCodes op) => MathFloat.ReinterpretUIntAsFloat(this[op] << 8);
 
-        public GpuMatrix4X4Struct GetMatrix4x4(GpuOpCodes MATRIX_BASE, int index = 0)
+        public Matrix4x4 GetMatrix4X4(GpuOpCodes MATRIX_BASE, int index = 0)
         {
-            return new GpuMatrix4X4Struct().ResetAndWriteAll(
-                SpanExt.Reinterpret<float, uint>(Span.Slice((int) MATRIX_BASE + index * 16)));
+            var v = SpanExt.Reinterpret<float, uint>(Span.Slice((int) MATRIX_BASE + index * 16));
+            return new Matrix4x4(
+                v[0], v[1], v[2], v[3],
+                v[4], v[5], v[6], v[7],
+                v[8], v[9], v[10], v[11],
+                v[12], v[13], v[14], v[15]
+            );
         }
 
-        public GpuMatrix4X3Struct GetMatrix4x3(GpuOpCodes MATRIX_BASE, int index = 0)
+        public Matrix4x4 GetMatrix4X3(GpuOpCodes MATRIX_BASE, int index = 0)
         {
-            return new GpuMatrix4X3Struct().ResetAndWriteAll(
-                SpanExt.Reinterpret<float, uint>(Span.Slice((int) MATRIX_BASE + index * 12)));
+            var v = SpanExt.Reinterpret<float, uint>(Span.Slice((int) MATRIX_BASE + index * 12));
+            return new Matrix4x4(
+                v[0], v[1], v[2], 0,
+                v[3], v[4], v[5], 0,
+                v[6], v[7], v[8], 0,
+                v[9], v[10], v[11], 1
+            );
         }
 
     }
@@ -120,21 +130,21 @@ namespace CSPspEmu.Core.Gpu.State
         }
 
         public uint IndexAddress => data.Int(GpuOpCodes.IADDR);
-        public bool ToggleUpdateState;
+        public bool ToggleUpdateState => false;
 
         /// <summary>When set, this will changes the Draw behaviour.</summary>
         public bool ClearingMode => (data.Param24(GpuOpCodes.CLEAR) & 1) != 0;
         public PointS Offset => new PointS((short) data.Extract(GpuOpCodes.OFFSETX, 0, 4), (short) data.Extract(GpuOpCodes.OFFSETY, 0, 4));
         public ClearBufferSet ClearFlags => (ClearBufferSet) data.Param8(GpuOpCodes.CLEAR, 8);
-        public ColorStruct FixColorSource;
-        public ColorStruct FixColorDestination;
+        public ColorStruct FixColorSource => new ColorStruct();
+        public ColorStruct FixColorDestination => new ColorStruct();
         public ShadingModelEnum ShadeModel => (ShadingModelEnum) data.Int(GpuOpCodes.SHADE);
 
-        private sbyte[] _DitherMatrix = new sbyte[16];
         public sbyte[] DitherMatrix
         {
             get
             {
+                var _DitherMatrix = new sbyte[16];
                 for (byte n = 0; n < 4; n++)
                 {
                     _DitherMatrix[4 * n + 0] = (sbyte) data.ExtractSigned(GpuOpCodes.DTH0 + n, 4 * 0, 4);
@@ -511,15 +521,15 @@ namespace CSPspEmu.Core.Gpu.State
 
         public int CurrentBoneIndex => (int)data[GpuOpCodes.BOFS];
 
-        public GpuMatrix4X3Struct BoneMatrix(int index) => data.GetMatrix4x3(GpuOpCodes.VIEW_MATRIX_BASE, index);
-        public GpuMatrix4X3Struct BoneMatrix0 => BoneMatrix(0);
-        public GpuMatrix4X3Struct BoneMatrix1 => BoneMatrix(1);
-        public GpuMatrix4X3Struct BoneMatrix2 => BoneMatrix(2);
-        public GpuMatrix4X3Struct BoneMatrix3 => BoneMatrix(3);
-        public GpuMatrix4X3Struct BoneMatrix4 => BoneMatrix(4);
-        public GpuMatrix4X3Struct BoneMatrix5 => BoneMatrix(5);
-        public GpuMatrix4X3Struct BoneMatrix6 => BoneMatrix(6);
-        public GpuMatrix4X3Struct BoneMatrix7 => BoneMatrix(7);
+        public Matrix4x4 BoneMatrix(int index) => data.GetMatrix4X3(GpuOpCodes.VIEW_MATRIX_BASE, index);
+        public Matrix4x4 BoneMatrix0 => BoneMatrix(0);
+        public Matrix4x4 BoneMatrix1 => BoneMatrix(1);
+        public Matrix4x4 BoneMatrix2 => BoneMatrix(2);
+        public Matrix4x4 BoneMatrix3 => BoneMatrix(3);
+        public Matrix4x4 BoneMatrix4 => BoneMatrix(4);
+        public Matrix4x4 BoneMatrix5 => BoneMatrix(5);
+        public Matrix4x4 BoneMatrix6 => BoneMatrix(6);
+        public Matrix4x4 BoneMatrix7 => BoneMatrix(7);
     }
 
     public ref struct StencilStateStruct
@@ -554,7 +564,7 @@ namespace CSPspEmu.Core.Gpu.State
         public ClutStateStruct ClutState => new ClutStateStruct(data);
 
         public bool Enabled => data.Bool(GpuOpCodes.TME);
-        public GpuMatrix4X4Struct Matrix => new GpuMatrix4X4Struct(); 
+        public Matrix4x4 Matrix => new Matrix4x4(); 
         public ColorbStruct TextureEnviromentColor => new ColorbStruct().SetRGB_A1(data.Param24(GpuOpCodes.TEC));
         public TextureMapMode TextureMapMode => (TextureMapMode) data.Param8(GpuOpCodes.TMAP, 0);
         public TextureProjectionMapMode TextureProjectionMapMode => (TextureProjectionMapMode) data.Param8(GpuOpCodes.TMAP, 8);
@@ -926,9 +936,9 @@ namespace CSPspEmu.Core.Gpu.State
         }
 
 
-        public GpuMatrix4X4Struct ProjectionMatrix => data.GetMatrix4x4(GpuOpCodes.PROJ_MATRIX_BASE);
-        public GpuMatrix4X3Struct WorldMatrix => data.GetMatrix4x3(GpuOpCodes.WORLD_MATRIX_BASE);
-        public GpuMatrix4X3Struct ViewMatrix => data.GetMatrix4x3(GpuOpCodes.VIEW_MATRIX_BASE);
+        public Matrix4x4 ProjectionMatrix => data.GetMatrix4X4(GpuOpCodes.PROJ_MATRIX_BASE);
+        public Matrix4x4 WorldMatrix => data.GetMatrix4X3(GpuOpCodes.WORLD_MATRIX_BASE);
+        public Matrix4x4 ViewMatrix => data.GetMatrix4X3(GpuOpCodes.VIEW_MATRIX_BASE);
         public TransformModeEnum TransformMode => TransformModeEnum.Normal;
         public VertexTypeStruct Type => new VertexTypeStruct(data);
     }

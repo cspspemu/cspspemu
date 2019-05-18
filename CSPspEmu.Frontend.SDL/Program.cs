@@ -62,7 +62,7 @@ class Program
         {
             using (var pspEmulator = new PspEmulator())
             {
-                //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
+                pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/compilerPerf.pbp", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cubevfpu.prx", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cwd.elf", GuiRunner: (emulator) =>
@@ -74,7 +74,7 @@ class Program
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/pspctrl.PBP", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/text.pbp", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/vfputest.pbp", GuiRunner: (emulator) =>
-                    pspEmulator.StartAndLoad("../deploy/cspspemu/demos/lines.pbp", GuiRunner: (emulator) =>
+                    //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/lines.pbp", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/morph.pbp", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cavestory.iso", GuiRunner: (emulator) =>
                     //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cavestory.zip", GuiRunner: (emulator) =>

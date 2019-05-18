@@ -1,6 +1,7 @@
 ﻿#define ENABLE_TEXTURES
 
 using System;
+using System.Numerics;
 using CSPspEmu.Core.Gpu.State;
 using CSharpPlatform.GL;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Utils;
@@ -329,12 +330,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             if (textureMappingState.Enabled)
             {
-                _textureMatrix = Matrix4F.Identity
-                        .Scale(
-                            1.0f / mipmap0.BufferWidth,
-                            1.0f / mipmap0.TextureHeight,
-                            1.0f
-                        )
+                _textureMatrix = Matrix4x4.CreateScale(
+                        1.0f / mipmap0.BufferWidth,
+                        1.0f / mipmap0.TextureHeight,
+                        1.0f
+                )
                     ;
                 //GL.ActiveTexture(TextureUnit.Texture0);
                 //GL.MatrixMode(MatrixMode.Texture);
@@ -355,15 +355,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             if (textureMappingState.Enabled)
             {
-                _textureMatrix = Matrix4F.Identity;
+                _textureMatrix = Matrix4x4.Identity;
 
                 switch (textureMappingState.TextureMapMode)
                 {
                     case TextureMapMode.GuTextureCoords:
-                        _textureMatrix = _textureMatrix
-                                .Translate(textureState.OffsetU, textureState.OffsetV, 0)
-                                .Scale(textureState.ScaleU, textureState.ScaleV, 1)
-                            ;
+
+                        _textureMatrix = _textureMatrix *
+                                         Matrix4x4.CreateTranslation(textureState.OffsetU, textureState.OffsetV, 0) *
+                                         Matrix4x4.CreateScale(textureState.ScaleU, textureState.ScaleV, 1);
                         break;
                     case TextureMapMode.GuTextureMatrix:
                         switch (gpuState.TextureMappingState.TextureProjectionMapMode)

@@ -107,14 +107,14 @@ namespace CSharpPlatform.GL.Utils
         }
 
         [DebuggerHidden]
-        public void Set(Matrix4F matrix)
+        public void Set(Matrix4x4 matrix)
         {
             if (!CheckValid()) return;
             Set(new[] {matrix});
         }
 
         [DebuggerHidden]
-        public void Set(Matrix4F[] matrices)
+        unsafe public void Set(Matrix4x4[] matrices)
         {
             if (!CheckValid()) return;
             if (ValueType != GLValueType.GL_FLOAT_MAT4)
@@ -122,7 +122,10 @@ namespace CSharpPlatform.GL.Utils
             if (ArrayLength != matrices.Length)
                 throw (new InvalidOperationException("this.ArrayLength != Matrices.Length"));
             PrepareUsing();
-            matrices[0].FixValues(pointer => { GL.glUniformMatrix4fv(Location, matrices.Length, false, pointer); });
+            fixed (Matrix4x4* ptr = &matrices[0])
+            {
+                GL.glUniformMatrix4fv(Location, matrices.Length, false, (float *)ptr);
+            }
         }
 
         public override string ToString() => $"GLUniform('{Name}'({Location}), {ValueType}[{ArrayLength}])";
