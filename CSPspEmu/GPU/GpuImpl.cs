@@ -303,8 +303,7 @@ namespace CSPspEmu.Core.Gpu
 
         public virtual void Transfer(GpuStateStruct gpuState)
         {
-            Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}",
-                gpuState.TextureTransferState.ToStringDefault());
+            Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!!");
         }
 
         public virtual void SetCurrent()

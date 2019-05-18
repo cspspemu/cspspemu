@@ -225,7 +225,8 @@ namespace CSPspEmu.Core.Gpu
 
                 case GpuOpCodes.TRXKICK:
                 {
-                    GpuStateStructPointer.TextureTransferState.TexelSize =
+                    var transfer = GpuStateStructPointer.TextureTransferState;
+                    transfer.TexelSize =
                         (TextureTransferStateStruct.TexelSizeEnum) Params24.Extract(0, 1);
                     GpuProcessor.GpuImpl.Transfer(GpuStateStructPointer);
                     break;

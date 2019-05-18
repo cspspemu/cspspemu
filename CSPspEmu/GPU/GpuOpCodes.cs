@@ -1286,6 +1286,8 @@ namespace CSPspEmu.Core.Gpu
         WORLD_MATRIX_BASE = 0x120,
         PROJ_MATRIX_BASE = 0x130,
         BONE_MATRIX_BASE = 0x140,
+        
+        EX_TEXEL_SIZE = 0x1b0,
 
         UNKNOWN = unchecked((byte) -1),
     }

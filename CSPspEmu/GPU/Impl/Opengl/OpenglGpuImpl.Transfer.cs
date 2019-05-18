@@ -134,8 +134,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 PrepareRead(GpuStateStruct);
                 */
             }
-            Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}",
-                gpuState.TextureTransferState.ToStringDefault());
         }
 
         /*
