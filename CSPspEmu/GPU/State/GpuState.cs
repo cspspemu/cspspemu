@@ -6,6 +6,7 @@ using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
+using CSPspEmu.GPU;
 using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.State
@@ -437,22 +438,7 @@ namespace CSPspEmu.Core.Gpu.State
 
         public uint Address => 0x04000000 | ((uint) HighAddress << 24) | LowAddress;
 
-        public int BytesPerPixel
-        {
-            get
-            {
-                switch (Format)
-                {
-                    case GuPixelFormats.Rgba5650:
-                    case GuPixelFormats.Rgba5551:
-                    case GuPixelFormats.Rgba4444: return 2;
-                    case GuPixelFormats.Rgba8888: return 4;
-                    default:
-                        throw (new InvalidOperationException(
-                            "ScreenBufferStateStruct.BytesPerPixel : Invalid Format : " + Format));
-                }
-            }
-        }
+        public int BytesPerPixel => Format.BytesPerPixel();
     }
 
     public ref struct SkinningStateStruct
