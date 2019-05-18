@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using CSharpPlatform;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
-using CSPspEmu.GPU;
 using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.State

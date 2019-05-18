@@ -1,6 +1,7 @@
 ﻿using System;
 using CSharpUtils;
 using CSharpUtils.Drawing;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Utils.Utils
@@ -456,12 +457,17 @@ namespace CSPspEmu.Utils.Utils
             }
         }
 
-        private void Decode_RGBA_8888() => _Decode_RGBA_XXXX_uint(Decode_RGBA_8888_Pixel);
-        private void Decode_RGBA_4444() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_4444_Pixel);
-        private void Decode_RGBA_5551() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_5551_Pixel);
-        private void Decode_RGBA_5650() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_5650_Pixel);
+        private void Decode_RGBA_8888() => _Decode_RGBA_XXXX_uint(Decode_RGBA_8888_Pixel_delegate);
+        private void Decode_RGBA_4444() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_4444_Pixel_delegate);
+        private void Decode_RGBA_5551() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_5551_Pixel_delegate);
+        private void Decode_RGBA_5650() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_5650_Pixel_delegate);
 
-        public static ushort Encode_RGBA_4444_Pixel(OutputPixel pixel)
+        private static Func<uint, OutputPixel> Decode_RGBA_8888_Pixel_delegate = Decode_RGBA_8888_Pixel;
+        private static Func<ushort, OutputPixel> Decode_RGBA_4444_Pixel_delegate = Decode_RGBA_4444_Pixel;
+        private static Func<ushort, OutputPixel> Decode_RGBA_5551_Pixel_delegate = Decode_RGBA_5551_Pixel;
+        private static Func<ushort, OutputPixel> Decode_RGBA_5650_Pixel_delegate = Decode_RGBA_5650_Pixel;
+
+        private static ushort Encode_RGBA_4444_Pixel(OutputPixel pixel)
         {
             uint Out = 0;
             BitUtils.InsertScaled(ref Out, 0, 4, pixel.R, 255);
@@ -471,7 +477,7 @@ namespace CSPspEmu.Utils.Utils
             return (ushort) Out;
         }
 
-        public static ushort Encode_RGBA_5551_Pixel(OutputPixel pixel)
+        private static ushort Encode_RGBA_5551_Pixel(OutputPixel pixel)
         {
             uint Out = 0;
             BitUtils.InsertScaled(ref Out, 0, 5, pixel.R, 255);
@@ -481,7 +487,7 @@ namespace CSPspEmu.Utils.Utils
             return (ushort) Out;
         }
 
-        public static ushort Encode_RGBA_5650_Pixel(OutputPixel pixel)
+        private static ushort Encode_RGBA_5650_Pixel(OutputPixel pixel)
         {
             uint Out = 0;
             BitUtils.InsertScaled(ref Out, 0, 5, pixel.R, 255);
@@ -490,48 +496,33 @@ namespace CSPspEmu.Utils.Utils
             return (ushort) Out;
         }
 
-        public static uint Encode_RGBA_8888_Pixel(OutputPixel pixel)
-        {
-            return *(uint*) &pixel;
-        }
+        private static uint Encode_RGBA_8888_Pixel(OutputPixel pixel) => *(uint*) &pixel;
 
-        public static OutputPixel Decode_RGBA_4444_Pixel(ushort value)
-        {
-            return new OutputPixel
-            {
-                R = (byte) BitUtils.ExtractScaled(value, 0, 4, 255),
-                G = (byte) BitUtils.ExtractScaled(value, 4, 4, 255),
-                B = (byte) BitUtils.ExtractScaled(value, 8, 4, 255),
-                A = (byte) BitUtils.ExtractScaled(value, 12, 4, 255),
-            };
-        }
+        public static OutputPixel Decode_RGBA_4444_Pixel(ushort value) =>
+            new OutputPixel(
+                (byte) value.ExtractScaled(0, 4, 255),
+                (byte) value.ExtractScaled(4, 4, 255),
+                (byte) value.ExtractScaled(8, 4, 255),
+                (byte) value.ExtractScaled(12, 4, 255)
+            );
 
-        public static OutputPixel Decode_RGBA_5551_Pixel(ushort value)
-        {
-            return new OutputPixel
-            {
-                R = (byte) BitUtils.ExtractScaled(value, 0, 5, 255),
-                G = (byte) BitUtils.ExtractScaled(value, 5, 5, 255),
-                B = (byte) BitUtils.ExtractScaled(value, 10, 5, 255),
-                A = (byte) BitUtils.ExtractScaled(value, 15, 1, 255),
-            };
-        }
+        public static OutputPixel Decode_RGBA_5551_Pixel(ushort value) =>
+            new OutputPixel(
+                (byte) value.ExtractScaled(0, 5, 255),
+                (byte) value.ExtractScaled(5, 5, 255),
+                (byte) value.ExtractScaled(10, 5, 255),
+                (byte) value.ExtractScaled(15, 1, 255)
+            );
 
-        public static OutputPixel Decode_RGBA_5650_Pixel(ushort value)
-        {
-            return new OutputPixel
-            {
-                R = (byte) BitUtils.ExtractScaled(value, 0, 5, 255),
-                G = (byte) BitUtils.ExtractScaled(value, 5, 6, 255),
-                B = (byte) BitUtils.ExtractScaled(value, 11, 5, 255),
-                A = 0xFF,
-            };
-        }
+        public static OutputPixel Decode_RGBA_5650_Pixel(ushort value) =>
+            new OutputPixel(
+                (byte) value.ExtractScaled(0, 5, 255),
+                (byte) value.ExtractScaled(5, 6, 255),
+                (byte) value.ExtractScaled(11, 5, 255),
+                0xFF
+            );
 
-        public static OutputPixel Decode_RGBA_8888_Pixel(uint value)
-        {
-            return *(OutputPixel*) &value;
-        }
+        public static OutputPixel Decode_RGBA_8888_Pixel(uint value) => *(OutputPixel*) &value;
 
         /// <summary>
         /// 
@@ -576,7 +567,7 @@ namespace CSPspEmu.Utils.Utils
             }
         }
 
-        public static void UnswizzleInline(void* data, int rowWidth, int textureHeight)
+        private static void UnswizzleInline(void* data, int rowWidth, int textureHeight)
         {
             var temp = new byte[rowWidth * textureHeight];
             fixed (void* tempPointer = temp)

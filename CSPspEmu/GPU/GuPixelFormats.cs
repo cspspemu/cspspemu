@@ -1,4 +1,6 @@
-﻿namespace CSPspEmu.Core.Types
+﻿using System;
+
+namespace CSPspEmu.Core.Types
 {
     // Format of the texture data. Texture Data mode.
     public enum GuPixelFormats : uint
@@ -15,5 +17,28 @@
         CompressedDxt1 = 8, // GU_PSM_DXT1
         CompressedDxt3 = 9, // GU_PSM_DXT3
         CompressedDxt5 = 10, // GU_PSM_DXT5
+    }
+    
+    public static class GuPixelFormatsExt
+    {
+        public static int BytesPerPixel(this GuPixelFormats that, int numberOfPixels = 1)
+        {
+            switch (that)
+            {
+                case GuPixelFormats.None: return 0;
+                case GuPixelFormats.Rgba5650:
+                case GuPixelFormats.Rgba5551:
+                case GuPixelFormats.Rgba4444: return 2 * numberOfPixels;
+                case GuPixelFormats.Rgba8888: return 4 * numberOfPixels;
+                case GuPixelFormats.PaletteT4: return (int) (0.5 * numberOfPixels);
+                case GuPixelFormats.PaletteT8: return numberOfPixels;
+                case GuPixelFormats.PaletteT16: return 2 * numberOfPixels;
+                case GuPixelFormats.PaletteT32: return 4 * numberOfPixels;
+                case GuPixelFormats.CompressedDxt1: return (int) ((0.5 * numberOfPixels) / 16);
+                case GuPixelFormats.CompressedDxt3: return (1 * numberOfPixels) / 16;
+                case GuPixelFormats.CompressedDxt5: return (1 * numberOfPixels) / 16;
+                default: throw new InvalidOperationException($"ScreenBufferStateStruct.BytesPerPixel : Invalid Format : {that} : {numberOfPixels}");
+            }
+        }
     }
 }

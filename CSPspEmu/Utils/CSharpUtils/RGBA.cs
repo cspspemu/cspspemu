@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using CSPspEmu.Utils;
 
 namespace CSharpUtils.Drawing
@@ -166,6 +167,7 @@ namespace CSharpUtils.Drawing
     /// <summary>
     /// 
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct RgbaFloat
     {
         /// <summary>

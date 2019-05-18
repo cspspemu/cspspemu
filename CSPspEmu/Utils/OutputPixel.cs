@@ -10,6 +10,14 @@ namespace CSPspEmu.Core.Types
         public byte R, G, B, A;
         //public byte B, G, R, A;
 
+        public OutputPixel(byte r, byte g, byte b, byte a)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
+
         public OutputPixel(Color color)
         {
             R = color.R;

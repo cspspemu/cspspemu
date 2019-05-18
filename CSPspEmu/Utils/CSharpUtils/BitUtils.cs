@@ -112,6 +112,9 @@ namespace CSharpUtils
         public static uint ExtractScaled(this uint initialValue, int offset, int count, int scale) =>
             (uint) ((Extract(initialValue, offset, count) * scale) / CreateMask(count));
 
+        public static uint ExtractScaled(this ushort initialValue, int offset, int count, int scale) =>
+            ExtractScaled((uint) initialValue, offset, count, scale);
+
         /// <summary>
         /// 
         /// </summary>
