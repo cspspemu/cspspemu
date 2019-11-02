@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Text;
 using CSharpPlatform.Library;
 using EGLBoolean = System.Boolean;
 using EGLenum = System.Int32;
@@ -469,7 +470,7 @@ namespace CSharpPlatform.GL
         }
 
         //public static string GetString(int Name) => Marshal.PtrToStringAnsi(new GLintptr(glGetString(Name)));
-        public static string GetString(int Name) => glGetString(Name);
+        public static string GetString(int Name) => Marshal.PtrToStringAnsi(glGetString(Name));
 
         public static readonly glGenTextures glGenTextures;
         public static readonly glGetActiveAttrib glGetActiveAttrib;
@@ -832,9 +833,11 @@ namespace CSharpPlatform.GL
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public unsafe delegate void glGetShaderSource(uint shader, int bufsize, int* length, byte* source);
 
-    //[System.CLSCompliant(false)]
+    [System.CLSCompliant(false)]
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-    public unsafe delegate string glGetString(int name);
+    //public unsafe delegate string glGetString(int name);
+    //public unsafe delegate byte* glGetString(int name);
+    public unsafe delegate IntPtr glGetString(int name);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
     public unsafe delegate void glGetTexParameterfv(int target, int pname, float* @params);

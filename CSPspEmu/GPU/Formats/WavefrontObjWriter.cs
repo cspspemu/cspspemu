@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using CSharpPlatform;
 using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.Formats
@@ -94,7 +93,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 
         public void AddFace(params int[] indices) => WriteLine($"f {string.Join(" ", indices)}");
         public void StartComment(string text) => WriteLine($"# {text}");
-        public void StartObject(string name) => WriteLine("o " + name);
+        public void StartObject(string name) => WriteLine($"o {name}");
 
         public void AddTriangleStrip(VertexInfo[] vertices)
         {

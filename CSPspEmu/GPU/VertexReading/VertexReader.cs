@@ -42,6 +42,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
         public VertexReader()
         {
+            // ReSharper disable HeapView.DelegateAllocation
             ReadWeightsList = new Action[] {Void, ReadWeightByte, ReadWeightShort, ReadWeightFloat};
             ReadTextureCoordinatesList = new Action[]
                 {Void, ReadTextureCoordinatesByte, ReadTextureCoordinatesShort, ReadTextureCoordinatesFloat};

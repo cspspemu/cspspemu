@@ -40,9 +40,6 @@ namespace CSPspEmu.Core.Gpu
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return this.ToStringDefault();
-        }
+        public override string ToString() => this.ToStringDefault();
     }
 }

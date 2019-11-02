@@ -1,15 +1,31 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
-using CSPspEmu.Hle.Modules.emulator;
 
 namespace CSPspEmu.Frontend.HelloWorld
 {
-    class Program
+    class Program 
     {
+        /*
+        protected override void OnLoad(EventArgs e)
+        {
+            Console.WriteLine(GL.GetString(StringName.Version));
+        }
+
+        static void Main()
+        {
+            using (var game = new Program())
+            {
+                game.Run(60);
+            }
+        }
+        */
+
         static void Main(string[] args)
         {
+            //GL.InitNames();
+            //Console.WriteLine(GL.GetString(StringName.Version));
             Console.WriteLine("Hello World!");
+            /*
             using (var pspEmulator = new PspEmulator())
             {
                 pspEmulator.StartAndLoad("minifire.pbp", GuiRunner: (emulator) =>
@@ -17,6 +33,8 @@ namespace CSPspEmu.Frontend.HelloWorld
                     Thread.Sleep(TimeSpan.FromMilliseconds(10_000));
                 });
             }
+            */
         }
     }
 }
+    

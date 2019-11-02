@@ -56,7 +56,6 @@ namespace CSharpPlatform.Library
                 if (!field.FieldType.IsSubclassOf(typeof(Delegate))) continue;
                 if (field.GetValue(null) != null) continue;
                 var method = dynamicLibrary.GetMethod(field.Name);
-                Console.WriteLine($"{field.Name} : {method}");
                 if (method != IntPtr.Zero)
                 {
                     field.SetValue(
@@ -66,6 +65,7 @@ namespace CSharpPlatform.Library
                 }
                 else
                 {
+                    Console.WriteLine($"{field.Name} : {method}");
                     //Console.WriteLine(Field.Name);
                 }
             }

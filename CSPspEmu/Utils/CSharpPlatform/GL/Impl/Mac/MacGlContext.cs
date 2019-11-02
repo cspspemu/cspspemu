@@ -1,43 +1,69 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using CSharpPlatform.GL.Impl.Windows;
+using SDL2;
 
 namespace CSharpPlatform.GL.Impl.Mac
 {
     public class MacGLContext : IGlContext
     {
-        public MacGLContext(IntPtr windowHandle)
+        private IntPtr window;
+        private IntPtr context;
+        private bool releaseWindow;
+        
+        public MacGLContext(IntPtr window, bool releaseWindow)
         {
+            this.window = window;
+            this.context = SDL.SDL_GL_CreateContext(context);
+            this.releaseWindow = releaseWindow;
         }
 
         public static MacGLContext FromWindowHandle(IntPtr windowHandle)
         {
-            //System.Diagnostics.Debugger.Launch();
-            return new MacGLContext(windowHandle);
+            if (windowHandle == IntPtr.Zero)
+            {
+                windowHandle = SDL.SDL_CreateWindow("OpenGL", 0, 0, 16, 16, SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL);
+                return new MacGLContext(windowHandle, true);
+            }
+            else
+            {
+                return new MacGLContext(windowHandle, false);
+            }
         }
 
-        public GlContextSize Size => throw new NotImplementedException();
+        public GlContextSize Size {
+            get
+            {
+                int w, h;
+                SDL.SDL_GetWindowSize(window, out w, out h);
+                return new GlContextSize {Width = w, Height = h};
+            }
+        }
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
+            SDL.SDL_GL_DeleteContext(context);
+            if (releaseWindow)
+            {
+                SDL.SDL_DestroyWindow(window);
+            }
         }
 
         public IGlContext MakeCurrent()
         {
-            //throw new NotImplementedException();
+            SDL.SDL_GL_MakeCurrent(window, context);
             return this;
         }
 
         public IGlContext ReleaseCurrent()
         {
-            //throw new NotImplementedException();
+            SDL.SDL_GL_MakeCurrent(window, IntPtr.Zero);
             return this;
         }
 
         public IGlContext SwapBuffers()
         {
-            //throw new NotImplementedException();
+            SDL.SDL_GL_SwapWindow(window);
             return this;
         }
 

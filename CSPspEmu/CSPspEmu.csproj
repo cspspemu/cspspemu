@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8</LangVersion>
     <NullableContextOptions>disable</NullableContextOptions>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -17,6 +17,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!--
+    <PackageReference Include="OpenTK" Version="3.0.1" />
+    -->
     <PackageReference Include="sdl2.nuget" Version="2.0.9" />
     <PackageReference Include="System.Reflection.Emit" Version="4.6.0-preview5.19224.8" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.6.0-preview6.19259.10" />

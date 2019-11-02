@@ -35,10 +35,11 @@ class Program
             "",
             SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED,
             PspDisplay.MaxVisibleWidth * 2, PspDisplay.MaxVisibleHeight * 2,
-            SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE
+            SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL
         );
         SDL.SDL_SetWindowTitle(window, "C# PSP Emulator");
-        var renderer = SDL.SDL_CreateRenderer(window, -1, SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC);
+        var renderer = SDL.SDL_CreateRenderer(window, -1, SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC | SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+        
         /*
             var surface = SDL.SDL_CreateRGBSurface(0, 480, 272, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
 
@@ -58,6 +59,16 @@ class Program
             PspDisplay.MaxVisibleHeight);
         //var texture = SDL.SDL_CreateTextureFromSurface(renderer, surface);
 
+        //using (var glContext = GlContextFactory.CreateWindowless())
+        //{
+        //    glContext.MakeCurrent();
+        //    Console.WriteLine(GL.GetString(GL.GL_VERSION));
+        //}
+
+        
+        //var context = SDL.SDL_GL_CreateContext(window);
+        //SDL.SDL_GL_MakeCurrent(window, context);
+        
         try
         {
             using (var pspEmulator = new PspEmulator())
