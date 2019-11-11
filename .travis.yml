@@ -1,5 +1,0 @@
-dist: bionic
-services:
-  - docker
-script:
-  - docker run -v $PWD:/project mcr.microsoft.com/dotnet/core/sdk:2.2 bash -c "cd /project; dotnet test"
