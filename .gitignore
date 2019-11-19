@@ -7,3 +7,4 @@ BenchmarkDotNet.Artifacts
 /.gradle
 /ms
 /packages
+/deploy
