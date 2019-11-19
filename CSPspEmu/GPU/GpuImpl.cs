@@ -15,6 +15,7 @@ namespace CSPspEmu.Core.Gpu
     {
         [Inject] protected PspMemory Memory;
         [Inject] protected PspStoredConfig PspStoredConfig;
+        
 
         protected int _ScaleViewport = 2;
 

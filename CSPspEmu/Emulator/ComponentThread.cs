@@ -39,6 +39,10 @@ namespace CSPspEmu.Runner.Components
                     {
                         Main();
                     }
+                    catch (Exception e)
+                    {
+                        Console.Error.WriteLine(e);
+                    }
                     finally
                     {
                         Running = false;
@@ -73,7 +77,7 @@ namespace CSPspEmu.Runner.Components
                     if (!StopCompleteEvent.WaitOne(1000))
                     {
                         Logger.Error("Error stopping {0}", this);
-                        ComponentThreadThread.Abort();
+                        ComponentThreadThread?.Abort();
                     }
                 }
             });

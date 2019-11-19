@@ -7,13 +7,20 @@ using System.Globalization;
 using System.Threading;
 using CSharpPlatform.GL;
 using System.Runtime.InteropServices;
+using CSPspEmu.Utils;
+using OpenTK;
+using OpenTK.Graphics;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    public sealed unsafe partial class OpenglGpuImpl
+    public unsafe partial class OpenglGpuImpl
     {
+        static public GraphicsContext MyContext;
+        
         //Thread CThread;
         AutoResetEvent StopEvent = new AutoResetEvent(false);
+        
+        
 
         bool Running = true;
 
@@ -60,6 +67,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             {
                 AlreadyInitialized = true;
                 var completedEvent = new AutoResetEvent(false);
+
                 new Thread(() =>
                 {
                     Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
@@ -69,8 +77,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
                     try
                     {
-                        Console.Out.WriteLineColored(ConsoleColor.White, "## OpenGL Context Version: {0}",
-                            GlGetString(GL.GL_VERSION));
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## OpenGL Context Version: {0}, {1}",
+                            GlGetString(GL.GL_VERSION), GlGetString(GL.GL_RENDERER));
                         Console.Out.WriteLineColored(ConsoleColor.White, "## Depth Bits: {0}",
                             GL.glGetInteger(GL.GL_DEPTH_BITS));
                         Console.Out.WriteLineColored(ConsoleColor.White, "## Stencil Bits: {0}",
@@ -82,6 +90,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                         if (GL.glGetInteger(GL.GL_STENCIL_BITS) <= 0)
                         {
                             Console.Error.WriteLineColored(ConsoleColor.Red, "No stencil bits available!");
+                            //throw new Exception("Couldn't initialize opengl");
                         }
 
                         OpenglContext.ReleaseCurrent();

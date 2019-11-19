@@ -159,10 +159,8 @@ namespace CSPspEmu.AutoTests
                         pspRunner.StopSynchronized();
                         GC.Collect();
 
-                        using (var testOutput = hostDriver.OpenRead("/__testoutput.txt"))
-                        {
-                            outputString = testOutput.ReadAllContentsAsString();
-                        }
+                        using var testOutput = hostDriver.OpenRead("/__testoutput.txt");
+                        outputString = testOutput.ReadAllContentsAsString();
                     },
                     capture: capture
                 );

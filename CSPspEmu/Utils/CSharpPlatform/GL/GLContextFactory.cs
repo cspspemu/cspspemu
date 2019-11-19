@@ -11,21 +11,16 @@ namespace CSharpPlatform.GL
     {
         [ThreadStatic] public static IGlContext Current;
 
-        public static IGlContext CreateWindowless()
-        {
-            return CreateFromWindowHandle(IntPtr.Zero);
-        }
+        public static IGlContext CreateWindowless() => CreateFromWindowHandle(IntPtr.Zero);
 
-        public static IGlContext CreateFromWindowHandle(IntPtr windowHandle)
-        {
-            switch (Platform.OS)
+        public static IGlContext CreateFromWindowHandle(IntPtr windowHandle) =>
+            Platform.OS switch
             {
-                case OS.Windows: return WinGlContext.FromWindowHandle(windowHandle);
-                case OS.Mac: return MacGLContext.FromWindowHandle(windowHandle);
-                case OS.Linux: return LinuxGlContext.FromWindowHandle(windowHandle);
-                case OS.Android: return AndroidGLContext.FromWindowHandle(windowHandle);
-                default: throw (new NotImplementedException($"Not implemented OS: {Platform.OS}"));
-            }
-        }
+                OS.Windows => WinGlContext.FromWindowHandle(windowHandle),
+                OS.Mac => MacGLContext.FromWindowHandle(windowHandle),
+                OS.Linux => LinuxGlContext.FromWindowHandle(windowHandle),
+                OS.Android => AndroidGLContext.FromWindowHandle(windowHandle),
+                _ => throw (new NotImplementedException($"Not implemented OS: {Platform.OS}"))
+            };
     }
 }

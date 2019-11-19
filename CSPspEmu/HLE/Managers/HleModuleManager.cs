@@ -39,7 +39,7 @@ namespace CSPspEmu.Hle.Managers
         {
             if (HleConfig.HleModulesDll == null)
             {
-                throw (new ArgumentNullException("PspEmulatorContext.PspConfig.HleModulesDll Can't be null"));
+                throw new NullReferenceException("HleConfig.HleModulesDll");
             }
 
             HleModuleTypes = GetAllHleModules(HleConfig.HleModulesDll).ToDictionary(Type => Type.Name);

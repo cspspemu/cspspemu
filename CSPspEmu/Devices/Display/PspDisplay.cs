@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Components.Display
             get => _vblankCount;
         }
 
-        public unsafe Bitmap TakeScreenshot()
+        public unsafe PspBitmap TakePspScreenshot()
         {
             return new PspBitmap(
                 CurrentInfo.PixelFormat,
@@ -136,8 +136,10 @@ namespace CSPspEmu.Core.Components.Display
                     PixelFormatDecoder.GetPixelsSize(CurrentInfo.PixelFormat,
                         CurrentInfo.BufferWidth * CurrentInfo.Height)
                 )
-            ).ToBitmap();
+            );
         }
+
+        public unsafe Bitmap TakeScreenshot() => TakePspScreenshot().ToBitmap();
 
         public bool IsVblank { get; protected set; }
     }

@@ -283,9 +283,9 @@ namespace CSPspEmu.Gui
             Smaa = new Smaa();
 
             var prefix = @"
-				#ifndef GL_ES
-				#version 330
-				#endif
+				//#ifndef GL_ES
+				//#version 330
+				//#endif
 			";
 
             Shader = new GLShader(

@@ -9,13 +9,15 @@ namespace CSPspEmu.Utils.Utils
 {
     public unsafe class PspBitmap
     {
-        protected GuPixelFormats GuPixelFormat;
+        public GuPixelFormats GuPixelFormat;
         public int Width;
         public int BitsPerPixel;
         public int Height;
         public int BytesPerLine;
         public byte* Address;
         public ColorFormat ColorFormat;
+
+        public int Area => Width * Height;
 
         public PspBitmap(GuPixelFormats pixelFormat, int width, int height, byte* address, int bytesPerLine = -1)
         {
@@ -35,15 +37,8 @@ namespace CSPspEmu.Utils.Utils
             }
         }
 
-        public bool IsValidPosition(int x, int y)
-        {
-            return ((x >= 0) && (y >= 0) && (x < Width) && (y < Height));
-        }
-
-        private int GetOffset(int x, int y)
-        {
-            return y * BytesPerLine + PixelFormatDecoder.GetPixelsSize(GuPixelFormat, x);
-        }
+        public bool IsValidPosition(int x, int y) => ((x >= 0) && (y >= 0) && (x < Width) && (y < Height));
+        private int GetOffset(int x, int y) => y * BytesPerLine + PixelFormatDecoder.GetPixelsSize(GuPixelFormat, x);
 
         public void SetPixel(int x, int y, OutputPixel color)
         {
@@ -61,6 +56,21 @@ namespace CSPspEmu.Utils.Utils
                     break;
                 default: throw(new NotImplementedException());
             }
+        }
+
+        public OutputPixel[] GetPixels()
+        {
+            var o = new OutputPixel[Width * Height];
+            var length = Width * Height;
+            var n = 0;
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    o[n++] = this.GetPixel(x, y);
+                }
+            }
+            return o;
         }
 
         public OutputPixel GetPixel(int x, int y)

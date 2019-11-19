@@ -18,6 +18,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="sdl2.nuget" Version="2.0.9" />
       <ProjectReference Include="..\CSPspEmu\CSPspEmu.csproj" />
     </ItemGroup>
 

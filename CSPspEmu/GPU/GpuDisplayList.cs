@@ -259,7 +259,7 @@ namespace CSPspEmu.Core.Gpu
                     }
 
                     if (nextInstruction.OpCode == GpuOpCodes.PRIM &&
-                        ((GuPrimitiveType) BitUtils.Extract(nextInstruction.Params, 16, 3) == primitiveType))
+                        ((GuPrimitiveType) nextInstruction.Params.Extract(16, 3) == primitiveType))
                     {
                         //Console.WriteLine();
                         _primCount++;

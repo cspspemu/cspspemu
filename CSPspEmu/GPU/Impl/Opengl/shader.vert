@@ -1,6 +1,6 @@
-﻿#ifndef GL_ES
-#version 330
-#endif
+﻿//#ifndef GL_ES
+//#version 330
+//#endif
 
 uniform mat4 matrixWorldViewProjection;
 uniform mat4 matrixTexture;

@@ -1,6 +1,6 @@
-﻿#ifndef GL_ES
-#version 330
-#endif
+﻿//#ifndef GL_ES
+//#version 330
+//#endif
 
 #extension GL_EXT_gpu_shader4 : enable
 

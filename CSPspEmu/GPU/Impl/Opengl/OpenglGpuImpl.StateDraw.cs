@@ -9,7 +9,7 @@ using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    public sealed unsafe partial class OpenglGpuImpl
+    public unsafe partial class OpenglGpuImpl
     {
         private void PrepareStateDraw(GpuStateStruct gpuState)
         {

@@ -24,10 +24,7 @@ namespace CSPspEmu.Runner.Components.Gpu
             {
                 while (true)
                 {
-                    WaitHandle.WaitAny(
-                        new WaitHandle[]
-                            {GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent},
-                        200.Milliseconds());
+                    WaitHandle.WaitAny(new WaitHandle[] {GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent}, 200.Milliseconds());
 
                     // TODO: Should wait until the Form has created its context.
 

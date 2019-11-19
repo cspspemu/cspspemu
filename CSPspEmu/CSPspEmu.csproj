@@ -17,10 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--
-    <PackageReference Include="OpenTK" Version="3.0.1" />
-    -->
-    <PackageReference Include="sdl2.nuget" Version="2.0.9" />
+    <PackageReference Include="OpenTK" Version="3.1.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.6.0-preview5.19224.8" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.6.0-preview6.19259.10" />
   </ItemGroup>
@@ -58,6 +55,10 @@
     <EmbeddedResource Include="Resources\flash0.zip" />
     <None Remove="Resources\Translations.xml" />
     <EmbeddedResource Include="Resources\Translations.xml" />
+    <None Remove="GPU\Impl\Opengl\shader.frag" />
+    <EmbeddedResource Include="GPU\Impl\Opengl\shader.frag" />
+    <None Remove="GPU\Impl\Opengl\shader.vert" />
+    <EmbeddedResource Include="GPU\Impl\Opengl\shader.vert" />
   </ItemGroup>
 
 </Project>

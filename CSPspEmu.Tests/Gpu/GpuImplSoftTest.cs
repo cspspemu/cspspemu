@@ -9,6 +9,7 @@ namespace CSPspEmu.Tests.Gpu
         [Fact]
         void Test()
         {
+            //Assert.True(false);
             //var a = new PointIS(100, 0);
             //var b = new PointIS(150, 50);
             //var c = new PointIS(50, 100);

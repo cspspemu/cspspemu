@@ -29,7 +29,7 @@ using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    public sealed unsafe partial class OpenglGpuImpl : GpuImpl, IInjectInitialize
+    public unsafe partial class OpenglGpuImpl : GpuImpl, IInjectInitialize
     {
 
         /// <summary>
@@ -154,10 +154,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             _verticesTexcoordsBuffer = GLBuffer.Create();
             _verticesColorsBuffer = GLBuffer.Create();
             _verticesWeightsBuffer = GLBuffer.Create();
+            //Console.WriteLine(typeof(OpenglGpuImpl).Assembly.GetManifestResourceNames().ToStringList());
             _shader = new GLShader(
-                typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.vert")
+                typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.GPU.Impl.Opengl.shader.vert")
                     .ReadAllContentsAsString(),
-                typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.frag")
+                typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.GPU.Impl.Opengl.shader.frag")
                     .ReadAllContentsAsString()
             );
             Console.WriteLine("###################################");
@@ -619,20 +620,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 });
         }
 
-        private static GLGeometry ConvertGLGeometry(GuPrimitiveType primitiveType)
-        {
-            switch (primitiveType)
+        private static GLGeometry ConvertGLGeometry(GuPrimitiveType primitiveType) =>
+            primitiveType switch
             {
-                case GuPrimitiveType.Lines: return GLGeometry.GL_LINES;
-                case GuPrimitiveType.LineStrip: return GLGeometry.GL_LINE_STRIP;
-                case GuPrimitiveType.Triangles: return GLGeometry.GL_TRIANGLES;
-                case GuPrimitiveType.Points: return GLGeometry.GL_POINTS;
-                case GuPrimitiveType.TriangleFan: return GLGeometry.GL_TRIANGLE_FAN;
-                case GuPrimitiveType.TriangleStrip: return GLGeometry.GL_TRIANGLE_STRIP;
-                case GuPrimitiveType.Sprites: return GLGeometry.GL_TRIANGLE_STRIP;
-                default: throw (new NotImplementedException("Not implemented PrimitiveType:'" + primitiveType + "'"));
-            }
-        }
+                GuPrimitiveType.Lines => GLGeometry.GL_LINES,
+                GuPrimitiveType.LineStrip => GLGeometry.GL_LINE_STRIP,
+                GuPrimitiveType.Triangles => GLGeometry.GL_TRIANGLES,
+                GuPrimitiveType.Points => GLGeometry.GL_POINTS,
+                GuPrimitiveType.TriangleFan => GLGeometry.GL_TRIANGLE_FAN,
+                GuPrimitiveType.TriangleStrip => GLGeometry.GL_TRIANGLE_STRIP,
+                GuPrimitiveType.Sprites => GLGeometry.GL_TRIANGLE_STRIP,
+                _ => throw (new NotImplementedException("Not implemented PrimitiveType:'" + primitiveType + "'"))
+            };
 
         public override void BeforeDraw(GpuStateStruct gpuState)
         {

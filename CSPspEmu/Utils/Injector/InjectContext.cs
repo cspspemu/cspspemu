@@ -144,7 +144,7 @@ public sealed class InjectContext : IDisposable
     /// </summary>
     /// <typeparam name="TType1"></typeparam>
     /// <typeparam name="TType2"></typeparam>
-    public void SetInstanceType<TType1, TType2>() // where TType1 : IInjectComponent
+    public void SetInstanceType<TType1, TType2>() where TType2 : TType1
     {
         SetInstanceType<TType1>(typeof(TType2));
     }

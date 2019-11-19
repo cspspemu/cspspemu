@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Threading;
 
 namespace CSharpUtils.Threading
@@ -253,7 +254,7 @@ namespace CSharpUtils.Threading
             if (Kill || !ParentThread.IsAlive)
             {
                 //throw(new StopException());
-                Thread.CurrentThread.Abort();
+                Thread.CurrentThread.Abort2();
                 //throw (new StopException());
             }
         }
@@ -327,7 +328,7 @@ namespace CSharpUtils.Threading
             ThisSemaphore.Release();
             if (Kill)
             {
-                Thread.CurrentThread.Abort();
+                Thread.CurrentThread.Abort2();
             }
             //ThisSemaphoreWaitOrParentThreadStopped();
             ParentSemaphore.WaitOne();
@@ -417,4 +418,21 @@ namespace CSharpUtils.Threading
         }
     }
 #endif
+
+	static class ThreadExt
+	{
+		static public void Abort2(this Thread thread)
+		{
+			thread.Interrupt();
+			
+			if (thread == Thread.CurrentThread)
+			{
+				//throw new ThreadInterruptedException();
+			}
+			else
+			{
+				//thread.Abort();
+			}
+		}
+	}
 }

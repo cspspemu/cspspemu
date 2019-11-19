@@ -14,15 +14,24 @@ namespace CSharpPlatform.GL.Impl.Mac
         public MacGLContext(IntPtr window, bool releaseWindow)
         {
             this.window = window;
-            this.context = SDL.SDL_GL_CreateContext(context);
+            this.context = SDL.SDL_GL_CreateContext(window);
             this.releaseWindow = releaseWindow;
         }
 
         public static MacGLContext FromWindowHandle(IntPtr windowHandle)
         {
+            SDL.SDL_Init(SDL.SDL_INIT_VIDEO);
             if (windowHandle == IntPtr.Zero)
             {
-                windowHandle = SDL.SDL_CreateWindow("OpenGL", 0, 0, 16, 16, SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL);
+                SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_RED_SIZE, 8);
+                SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_GREEN_SIZE, 8);
+                SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_BLUE_SIZE, 8);
+                SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_STENCIL_SIZE, 8);
+                SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DEPTH_SIZE, 16);
+                SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DOUBLEBUFFER, 1);
+                SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, SDL.SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+
+                windowHandle = SDL.SDL_CreateWindow("OpenGL", 0, 0, 512, 512, SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
                 return new MacGLContext(windowHandle, true);
             }
             else
@@ -51,6 +60,7 @@ namespace CSharpPlatform.GL.Impl.Mac
 
         public IGlContext MakeCurrent()
         {
+            //Console.WriteLine($"Window window={window} context={context}");
             SDL.SDL_GL_MakeCurrent(window, context);
             return this;
         }

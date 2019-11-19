@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Tests.Integration"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Benchmark", "CSPspEmu.Benchmark\CSPspEmu.Benchmark.csproj", "{1400A75B-9726-4D34-8576-9CDB12E34950}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Frontend.OpenTK", "CSPspEmu.Frontend.OpenTK\CSPspEmu.Frontend.OpenTK.csproj", "{5F185BF2-E1D4-42E5-9C00-B4175F00834C}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu-2012.vsmdi
@@ -110,6 +112,18 @@ Global
 		{1400A75B-9726-4D34-8576-9CDB12E34950}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1400A75B-9726-4D34-8576-9CDB12E34950}.Release|x86.ActiveCfg = Release|Any CPU
 		{1400A75B-9726-4D34-8576-9CDB12E34950}.Release|x86.Build.0 = Release|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F185BF2-E1D4-42E5-9C00-B4175F00834C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

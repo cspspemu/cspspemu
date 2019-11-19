@@ -86,6 +86,7 @@ namespace System.Drawing
 
         public void Save(string outputFile, ImageFormat? format = null)
         {
+            //File.WriteAllBytes(outputFile);
             throw new NotImplementedException();
         }
     }

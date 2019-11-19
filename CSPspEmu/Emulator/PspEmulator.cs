@@ -21,7 +21,7 @@ namespace CSPspEmu
 {
     public class PspEmulator : IGuiExternalInterface, IDisposable
     {
-        [Inject] CpuConfig CpuConfig;
+        [Inject] public CpuConfig CpuConfig;
 
         [Inject] GpuConfig GpuConfig;
 
@@ -53,7 +53,7 @@ namespace CSPspEmu
 
         [Inject] private InjectContext _InjectContext;
 
-        [Inject] PspRunner PspRunner;
+        [Inject] public PspRunner PspRunner;
 
         PspStoredConfig StoredConfig;
 
@@ -120,22 +120,26 @@ namespace CSPspEmu
         /// <summary>
         /// 
         /// </summary>
-        public void StartAndLoad(string File, Action<PspEmulator> GuiRunner = null, bool TraceSyscalls = false, bool ShowMenus = true,
-            bool TrackCallStack = true, bool? EnableMpeg = null)
+        public void StartAndLoad(
+            string File, Action<PspEmulator> GuiRunner = null,
+            bool TraceSyscalls = false, bool ShowMenus = true,
+            bool TrackCallStack = true, bool? EnableMpeg = null
+        )
         {
             Start(() =>
-            {
-                CpuConfig.DebugSyscalls = TraceSyscalls;
-                CpuConfig.TrackCallStack = TrackCallStack;
-                LoadFile(File);
-            }, GuiRunner,
-            ShowMenus: ShowMenus, AutoLoad: true);
+                {
+                    CpuConfig.DebugSyscalls = TraceSyscalls;
+                    CpuConfig.TrackCallStack = TrackCallStack;
+                    LoadFile(File);
+                }, GuiRunner,
+                ShowMenus: ShowMenus, AutoLoad: true);
         }
 
         /// <summary>
         /// Start.
         /// </summary>
-        public void Start(Action CallbackOnInit = null, Action<PspEmulator> GuiRunner = null, bool ShowMenus = true, bool AutoLoad = false,
+        public void Start(Action CallbackOnInit = null, Action<PspEmulator> GuiRunner = null, bool ShowMenus = true,
+            bool AutoLoad = false,
             bool TrackCallStack = true)
         {
             try
@@ -193,7 +197,7 @@ namespace CSPspEmu
             });
         }
 
-        void CreateNewContextAndRemoveOldOne()
+        public void CreateNewContextAndRemoveOldOne()
         {
             Console.WriteLine("----------------------------------------------");
             // Stops the current context if it has one already.
@@ -261,6 +265,7 @@ namespace CSPspEmu
             {
                 Console.Error.WriteLine(Exception);
             }
+
             Console.WriteLine("-----------------------------------------------------------------");
             try
             {
@@ -270,6 +275,7 @@ namespace CSPspEmu
             {
                 Console.Error.WriteLine(Exception);
             }
+
             Console.WriteLine("-----------------------------------------------------------------");
 
             //foreach (var Instruction in CpuProcessor.GlobalInstructionStats.OrderBy(Item => Item.Key))
@@ -282,6 +288,7 @@ namespace CSPspEmu
 
         public PluginInfo GetAudioPluginInfo() => InjectContext.GetInstance<PspAudioImpl>().PluginInfo;
         public PluginInfo GetGpuPluginInfo() => InjectContext.GetInstance<GpuImpl>().PluginInfo;
+
         public void CaptureGpuFrame()
         {
             InjectContext.GetInstance<GpuProcessor>().CaptureFrame();
@@ -294,7 +301,7 @@ namespace CSPspEmu
 
         void IDisposable.Dispose()
         {
-            Console.WriteLine("PspEmulator.Dispose()");
+            //Console.WriteLine("PspEmulator.Dispose()");
             InjectContext.Dispose();
             _InjectContext = null;
         }

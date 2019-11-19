@@ -628,7 +628,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                     if (!_cpuProcessor.CpuConfig.ShowInstructionStatsJustNew || hasNew)
                     {
-                        Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", _minPc, _maxPc);
+                        //Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", _minPc, _maxPc);
                         ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.White, () =>
                         {
                             foreach (var pair in _instructionStats.OrderByDescending(item => item.Value))
@@ -636,9 +636,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                                 var isNew = _newInstruction.ContainsKey(pair.Key);
                                 if (!_cpuProcessor.CpuConfig.ShowInstructionStatsJustNew || isNew)
                                 {
-                                    Console.Error.Write("{0} : {1}", pair.Key, pair.Value);
-                                    if (isNew) Console.Error.Write(" <-- NEW!");
-                                    Console.Error.WriteLine("");
+                                    //Console.Error.Write("{0} : {1}", pair.Key, pair.Value);
+                                    //if (isNew) Console.Error.Write(" <-- NEW!");
+                                    //Console.Error.WriteLine("");
                                 }
                             }
                         });

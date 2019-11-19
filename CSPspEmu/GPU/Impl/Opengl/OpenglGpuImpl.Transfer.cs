@@ -5,7 +5,7 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    public sealed unsafe partial class OpenglGpuImpl
+    public unsafe partial class OpenglGpuImpl
     {
         private void TransferToFrameBuffer(GpuStateStruct gpuState)
         {
