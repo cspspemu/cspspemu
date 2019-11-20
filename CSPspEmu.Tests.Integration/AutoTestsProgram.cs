@@ -38,16 +38,13 @@ namespace CSPspEmu.AutoTests
             }
         }
 
-        //[Inject]
-        //CpuConfig CpuConfig;
-        //
-        [Inject] public HleConfig HleConfig;
+        public HleConfig HleConfig;
+        public PspStoredConfig StoredConfig;
 
-        [Inject] public PspStoredConfig StoredConfig;
-
-        public AutoTestsProgram()
+        public AutoTestsProgram(HleConfig hleConfig, PspStoredConfig storedConfig)
         {
-            InjectContext.Bootstrap(this);
+            HleConfig = hleConfig;
+            StoredConfig = storedConfig;
         }
 
         public void Init()
@@ -422,8 +419,8 @@ namespace CSPspEmu.AutoTests
 
         public static void Main(bool runTestsViewOut, string[] arguments, int timeout)
         {
-            AutoTestsProgram._timeoutTime = TimeSpan.FromSeconds(timeout);
-            new AutoTestsProgram().InternalMain(runTestsViewOut, arguments);
+            _timeoutTime = timeout.Seconds();
+            new InjectContext().GetInstance<AutoTestsProgram>().InternalMain(runTestsViewOut, arguments);
         }
     }
 }

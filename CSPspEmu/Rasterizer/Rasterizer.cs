@@ -76,7 +76,7 @@ namespace CSPspEmu.Rasterizer
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         private static void InterpolateX(
             int y,
             RasterizerPoint a, RasterizerPoint b,

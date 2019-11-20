@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Cpu.Table
 
         private static InstructionInfo[] _alu;
 
-        public static InstructionInfo[] Alu => _alu ?? (_alu = new[]
+        public static InstructionInfo[] Alu => _alu ??= new[]
         {
             // Arithmetic operations.
             Id(InstructionNames.Add, Vm("000000:rs:rt:rd:00000:100000"), "%d, %s, %t", AddrTypeNone, 0),
@@ -137,11 +137,11 @@ namespace CSPspEmu.Core.Cpu.Table
             // Word Swap Bytes Within Halfwords/Words.
             Id(InstructionNames.Wsbh, Vm("011111:00000:rt:rd:00010:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
             Id(InstructionNames.Wsbw, Vm("011111:00000:rt:rd:00011:100000"), "%d, %t", AddrTypeNone, InstrTypePsp),
-        });
+        };
 
         private static InstructionInfo[] _bcu;
 
-        public static InstructionInfo[] Bcu => _bcu ?? (_bcu = new[]
+        public static InstructionInfo[] Bcu => _bcu ??= new[]
         {
             // Branch on EQuals (Likely).
             Id(InstructionNames.Beq, Vm("000100:rs:rt:imm16"), "%s, %t, %O", AddrType16, InstrTypeB),
@@ -190,11 +190,11 @@ namespace CSPspEmu.Core.Cpu.Table
             Id(InstructionNames.Bc1T, Vm("010001:01000:00001:imm16"), "%O", AddrType16, InstrTypeB),
             Id(InstructionNames.Bc1Fl, Vm("010001:01000:00010:imm16"), "%O", AddrType16, InstrTypeB),
             Id(InstructionNames.Bc1Tl, Vm("010001:01000:00011:imm16"), "%O", AddrType16, InstrTypeB),
-        });
+        };
 
         private static InstructionInfo[] _lsu;
 
-        public static InstructionInfo[] Lsu => _lsu ?? (_lsu = new[]
+        public static InstructionInfo[] Lsu => _lsu ??= new[]
         {
             // Load Byte/Half word/Word (Left/Right/Unsigned).
             Id(InstructionNames.Lb, Vm("100000:rs:rt:imm16"), "%t, %i(%s)", AddrTypeNone, 0),
@@ -221,11 +221,11 @@ namespace CSPspEmu.Core.Cpu.Table
             // Store Word from Cop1 floating point.
             Id(InstructionNames.Lwc1, Vm("110001:rs:ft:imm16"), "%T, %i(%s)", AddrTypeNone, 0),
             Id(InstructionNames.Swc1, Vm("111001:rs:ft:imm16"), "%T, %i(%s)", AddrTypeNone, 0),
-        });
+        };
 
         private static InstructionInfo[] _fpu;
 
-        public static InstructionInfo[] Fpu => _fpu ?? (_fpu = new[]
+        public static InstructionInfo[] Fpu => _fpu ??= new[]
         {
             // Binary Floating Point Unit Operations
             Id(InstructionNames.AddS, Vm("010001:10000:ft:fs:fd:000000"), "%D, %S, %T", AddrTypeNone, 0),
@@ -271,11 +271,11 @@ namespace CSPspEmu.Core.Cpu.Table
             Id(InstructionNames.CNgeS, Vm("010001:10000:ft:fs:00000:11:1101"), "%S, %T", AddrTypeNone, 0),
             Id(InstructionNames.CLeS, Vm("010001:10000:ft:fs:00000:11:1110"), "%S, %T", AddrTypeNone, 0),
             Id(InstructionNames.CNgtS, Vm("010001:10000:ft:fs:00000:11:1111"), "%S, %T", AddrTypeNone, 0),
-        });
+        };
 
         private static InstructionInfo[] _special;
 
-        public static InstructionInfo[] Special => _special ?? (_special = new[]
+        public static InstructionInfo[] Special => _special ??= new[]
         {
             // Syscall
             Id(InstructionNames.Syscall, Vm("000000:imm20:001100"), "%C", AddrTypeNone, InstrTypeSyscall),
@@ -300,11 +300,11 @@ namespace CSPspEmu.Core.Cpu.Table
                 InstrTypePsp),
             Id(InstructionNames.Mtdr, Vm("011100:00100:----------:00000:111101"), "%t, %r", AddrTypeNone,
                 InstrTypePsp),
-        });
+        };
 
         private static InstructionInfo[] _cop0;
 
-        public static InstructionInfo[] Cop0 => _cop0 ?? (_cop0 = new[]
+        public static InstructionInfo[] Cop0 => _cop0 ??= new[]
         {
             // C? (From/To) Cop0
             Id(InstructionNames.Cfc0, Vm("010000:00010:----------:00000:000000"), "%t, %p", AddrTypeNone,
@@ -317,11 +317,11 @@ namespace CSPspEmu.Core.Cpu.Table
                 0), // MFC0(010000:00000:rt:c0dr:00000:000000)
             Id(InstructionNames.Mtc0, Vm("010000:00100:----------:00000:000000"), "%t, %0", AddrTypeNone,
                 0), // MTC0(010000:00100:rt:c0dr:00000:000000)
-        });
+        };
 
         private static InstructionInfo[] _vfpu;
 
-        public static InstructionInfo[] Vfpu => _vfpu ?? (_vfpu = new[]
+        public static InstructionInfo[] Vfpu => _vfpu ??= new[]
         {
             // Move From/to Vfpu (C?).
             Id(InstructionNames.Mfv, Vm("010010:00:011:rt:0:0000000:0:vd"), "%t, %zs", AddrTypeNone, InstrTypePsp),
@@ -568,11 +568,11 @@ namespace CSPspEmu.Core.Cpu.Table
 
             Id(InstructionNames.Vwbn, Vm("110100:11:imm8:two:vs:one:vd"), "%zs, %xs, %I", AddrTypeNone, InstrTypePsp),
             //Id(InstructionNames.vwb.q,       VM("111110------------------------1-"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
-        });
+        };
 
         private static InstructionInfo[] _vfpuBranch;
 
-        public static InstructionInfo[] VfpuBranch => _vfpuBranch ?? (_vfpuBranch = new[]
+        public static InstructionInfo[] VfpuBranch => _vfpuBranch ??= new[]
         {
             Id(InstructionNames.Bvf, Vm("010010:01:000:imm3:00:imm16"), "%Zc, %O", AddrType16,
                 InstrTypePsp | InstrTypeB),
@@ -582,6 +582,6 @@ namespace CSPspEmu.Core.Cpu.Table
                 InstrTypePsp | InstrTypeB | InstrTypeLikely),
             Id(InstructionNames.Bvtl, Vm("010010:01:000:imm3:11:imm16"), "%Zc, %O", AddrType16,
                 InstrTypePsp | InstrTypeB | InstrTypeLikely),
-        });
+        };
     }
 }

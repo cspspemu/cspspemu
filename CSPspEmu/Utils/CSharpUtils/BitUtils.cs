@@ -15,7 +15,7 @@ namespace CSharpUtils
         /// </summary>
         /// <param name="size"></param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         
         //public static uint CreateMask(int size) => (size == 0) ? 0 : (uint) ((1 << size) - 1);
         public static uint CreateMask(this int size) => (uint) ((1 << size) - 1);
@@ -28,7 +28,7 @@ namespace CSharpUtils
         /// <param name="count"> </param>
         /// <param name="valueToInsert"> </param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         
         public static void Insert(ref uint value, int offset, int count, uint valueToInsert) =>
             value = Insert(value, offset, count, valueToInsert);
@@ -94,7 +94,7 @@ namespace CSharpUtils
         /// <param name="offset"> </param>
         /// <param name="count"> </param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         
         public static uint Extract(this uint initialValue, int offset, int count) =>
             (initialValue >> offset) & CreateMask(count);
