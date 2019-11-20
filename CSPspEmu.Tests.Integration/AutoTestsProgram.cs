@@ -51,7 +51,7 @@ namespace CSPspEmu.AutoTests
         {
             foreach (var fileName in new[]
             {
-                Path.GetDirectoryName(typeof(AutoTestsProgram).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
+                Path.GetDirectoryName(typeof(AutoTestsProgram).Assembly.Location) + @"\V",
                 Application.ExecutablePath,
             })
             {

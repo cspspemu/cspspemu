@@ -177,19 +177,19 @@ namespace CSPspEmu.Runner.Components.Cpu
 
             RegisterModuleSyscall<sceCtrl>(0x2150, "sceCtrlPeekBufferPositive");
 
-            RegisterModuleSyscall<Emulator>(0x1010, "emitInt");
-            RegisterModuleSyscall<Emulator>(0x1011, "emitFloat");
-            RegisterModuleSyscall<Emulator>(0x1012, "emitString");
-            RegisterModuleSyscall<Emulator>(0x1013, "emitMemoryBlock");
-            RegisterModuleSyscall<Emulator>(0x1014, "emitHex");
-            RegisterModuleSyscall<Emulator>(0x1015, "emitUInt");
-            RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
-            RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1010, "emitInt");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1011, "emitFloat");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1012, "emitString");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1013, "emitMemoryBlock");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1014, "emitHex");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1015, "emitUInt");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1016, "emitLong");
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(0x1017, "testArguments");
             //RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
             RegisterModuleSyscall<ThreadManForUser>(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL,
                 (Func<CpuThreadState, int>) new ThreadManForUser()._hle_sceKernelExitDeleteThread);
-            RegisterModuleSyscall<Emulator>(HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL,
-                (Action<CpuThreadState>) new Emulator().finalizeCallback);
+            RegisterModuleSyscall<Hle.Modules.emulator.Emulator>(HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL,
+                (Action<CpuThreadState>) new Hle.Modules.emulator.Emulator().finalizeCallback);
         }
 
         void RegisterModuleSyscall<TType>(int syscallCode, Delegate Delegate) where TType : HleModuleHost
