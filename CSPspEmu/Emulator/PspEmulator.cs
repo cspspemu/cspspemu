@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using CSPspEmu.Core;
@@ -77,19 +78,8 @@ namespace CSPspEmu
             }
         }
 
-        public bool IsPaused()
-        {
-            return Paused;
-        }
-
-        public bool Paused
-        {
-            get
-            {
-                if (PspRunner == null) return false;
-                return PspRunner.Paused;
-            }
-        }
+        public bool IsPaused() => Paused;
+        public bool Paused => PspRunner?.Paused ?? false;
 
         public void Pause()
         {
@@ -187,6 +177,10 @@ namespace CSPspEmu
         public void LoadFile(string FileName)
         {
             Console.WriteLine("LoadFile...{0}", FileName);
+            if (!File.Exists(FileName))
+            {
+                throw new Exception($"File '{FileName}' doesn't exists");
+            }
             CreateNewContextAndRemoveOldOne();
 
             MessageBus.Dispatch(new LoadFileMessage() {FileName = FileName});

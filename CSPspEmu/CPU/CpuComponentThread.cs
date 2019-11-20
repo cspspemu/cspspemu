@@ -261,8 +261,7 @@ namespace CSPspEmu.Runner.Components.Cpu
                             title = (string) paramSfo.EntryDictionary["TITLE"];
                         });
 
-                        var filesToTry = new[]
-                        {
+                        string[] filesToTry = {
                             "/PSP_GAME/SYSDIR/BOOT.BIN",
                             "/PSP_GAME/SYSDIR/EBOOT.BIN",
                             "/PSP_GAME/SYSDIR/EBOOT.OLD",

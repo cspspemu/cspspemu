@@ -1,3 +1,4 @@
+using System;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Components.Controller;
 using CSPspEmu.Core.Components.Display;
@@ -8,7 +9,7 @@ using CSPspEmu.Runner.Components.Display;
 
 namespace CSPspEmu.Emulator.Simple
 {
-    public class SimplifiedPspEmulator
+    public class SimplifiedPspEmulator : IDisposable
     {
         public InjectContext injector;
         public PspEmulator Emulator;
@@ -36,7 +37,17 @@ namespace CSPspEmu.Emulator.Simple
 
         public void LoadAndStart(string File)
         {
-            Emulator.LoadFile("../../../../deploy/cspspemu/demos/compilerPerf.pbp");
-        } 
+            Emulator.LoadFile(File);
+        }
+
+        public void Stop()
+        {
+            Emulator.PspRunner.StopSynchronized();
+        }
+
+        void IDisposable.Dispose()
+        {
+            Stop();
+        }
     }
 }

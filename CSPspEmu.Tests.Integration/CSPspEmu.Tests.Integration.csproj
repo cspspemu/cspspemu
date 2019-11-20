@@ -18,4 +18,9 @@
       <ProjectReference Include="..\CSPspEmu\CSPspEmu.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="xunit.runner.json" />
+      <EmbeddedResource Include="xunit.runner.json" />
+    </ItemGroup>
+
 </Project>
