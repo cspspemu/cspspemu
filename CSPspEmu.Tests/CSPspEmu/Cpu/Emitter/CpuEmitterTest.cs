@@ -16,7 +16,7 @@ using Xunit;
 namespace Tests.CSPspEmu.Core.Cpu.Emitter
 {
     
-    public unsafe partial class CpuEmitterTest
+    public unsafe class CpuEmitterTest
     {
         [Fact(Skip = "Check")]
         public void SimplestTest()
@@ -1916,43 +1916,41 @@ namespace Tests.CSPspEmu.Core.Cpu.Emitter
             Assert.Equal(14, CpuThreadState.FprI[23]);
             Assert.Equal(14, CpuThreadState.FprI[24]);
         }
-    }
-
-    public partial class CpuEmitterTest
-    {
+        
+        /////////////////////////////////
         protected CpuProcessor CpuProcessor;
         protected CpuThreadState CpuThreadState;
 
         protected PspMemory Memory => CpuProcessor.Memory;
 
-	    public CpuEmitterTest()
+        public CpuEmitterTest()
         {
-            CpuProcessor = CpuUtils.CreateCpuProcessor();
-            CpuThreadState = new CpuThreadState(CpuProcessor);
+	        CpuProcessor = CpuUtils.CreateCpuProcessor();
+	        CpuThreadState = new CpuThreadState(CpuProcessor);
         }
 
         protected void ExecuteAssembly(string assembly, bool doDebug = false, bool doLog = false)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
-            CpuProcessor.MethodCache.FlushAll();
+	        Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
+	        CpuProcessor.MethodCache.FlushAll();
 
-            var startOffset = PspMemory.ScratchPadOffset;
-            assembly =
-	            $".code 0x{startOffset:X8}\r\n" +
-                assembly +
-                "\r\nbreak 0\r\n"
-                ;
-            var assemblerStream = new PspMemoryStream(Memory);
-            new MipsAssembler(assemblerStream).Assemble(assembly);
+	        var startOffset = PspMemory.ScratchPadOffset;
+	        assembly =
+		        $".code 0x{startOffset:X8}\r\n" +
+		        assembly +
+		        "\r\nbreak 0\r\n"
+		        ;
+	        var assemblerStream = new PspMemoryStream(Memory);
+	        new MipsAssembler(assemblerStream).Assemble(assembly);
 
-            try
-            {
-                CpuThreadState.Sp = PspMemory.MainSegment.High - 0x10;
-                CpuThreadState.ExecuteAt(startOffset);
-            }
-            catch (PspBreakException)
-            {
-            }
+	        try
+	        {
+		        CpuThreadState.Sp = PspMemory.MainSegment.High - 0x10;
+		        CpuThreadState.ExecuteAt(startOffset);
+	        }
+	        catch (PspBreakException)
+	        {
+	        }
         }
     }
 }

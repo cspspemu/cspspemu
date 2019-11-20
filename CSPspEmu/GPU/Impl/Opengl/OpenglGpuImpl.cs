@@ -8,8 +8,10 @@
 #endif
 
 using System;
+using System.Globalization;
 using System.Numerics;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using System.Transactions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
@@ -20,16 +22,18 @@ using CSPspEmu.Core.Types;
 using CSharpPlatform;
 using CSharpPlatform.GL;
 using CSharpPlatform.GL.Utils;
+using CSharpUtils;
 using CSharpUtils.Drawing;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Utils;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;
 using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Utils;
+using OpenTK.Graphics;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    public unsafe partial class OpenglGpuImpl : GpuImpl, IInjectInitialize
+    public unsafe class OpenglGpuImpl : GpuImpl, IInjectInitialize
     {
 
         /// <summary>
@@ -678,5 +682,862 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         };
 
         public override bool IsWorking => true;
+        
+        static public GraphicsContext MyContext;
+        
+        //Thread CThread;
+        AutoResetEvent StopEvent = new AutoResetEvent(false);
+        
+        
+
+        bool Running = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IGlContext OpenglContext;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static bool AlreadyInitialized;
+
+        public bool IsCurrentWindow;
+
+        public override void SetCurrent()
+        {
+            if (!IsCurrentWindow)
+            {
+                OpenglContext.MakeCurrent();
+                IsCurrentWindow = true;
+            }
+        }
+
+        public override void UnsetCurrent()
+        {
+            OpenglContext.ReleaseCurrent();
+            IsCurrentWindow = false;
+        }
+
+        public static string GlGetString(int name) => GL.GetString(name);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <see cref="http://www.opentk.com/doc/graphics/graphicscontext"/>
+        //[HandleProcessCorruptedStateExceptions]
+        public override void InitSynchronizedOnce()
+        {
+            //Memory.WriteBytesHook += OnMemoryWrite;
+            ScaleViewport = PspStoredConfig.RenderScale;
+
+            if (!AlreadyInitialized)
+            {
+                AlreadyInitialized = true;
+                var completedEvent = new AutoResetEvent(false);
+
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
+
+                    OpenglContext = GlContextFactory.CreateWindowless();
+                    OpenglContext.MakeCurrent();
+
+                    try
+                    {
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## OpenGL Context Version: {0}, {1}",
+                            GlGetString(GL.GL_VERSION), GlGetString(GL.GL_RENDERER));
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## Depth Bits: {0}",
+                            GL.glGetInteger(GL.GL_DEPTH_BITS));
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## Stencil Bits: {0}",
+                            GL.glGetInteger(GL.GL_STENCIL_BITS));
+                        Console.Out.WriteLineColored(ConsoleColor.White, "## Color Bits: {0},{1},{2},{3}",
+                            GL.glGetInteger(GL.GL_RED_BITS), GL.glGetInteger(GL.GL_GREEN_BITS),
+                            GL.glGetInteger(GL.GL_BLUE_BITS), GL.glGetInteger(GL.GL_ALPHA_BITS));
+
+                        if (GL.glGetInteger(GL.GL_STENCIL_BITS) <= 0)
+                        {
+                            Console.Error.WriteLineColored(ConsoleColor.Red, "No stencil bits available!");
+                            //throw new Exception("Couldn't initialize opengl");
+                        }
+
+                        OpenglContext.ReleaseCurrent();
+
+                        completedEvent.Set();
+                        Console.WriteLine("OpenglGpuImpl.Init.Start()");
+                        try
+                        {
+                            while (Running)
+                            {
+                                Thread.Sleep(10);
+                            }
+                            StopEvent.Set();
+                        }
+                        finally
+                        {
+                            Console.WriteLine("OpenglGpuImpl.Init.End()");
+                        }
+                    } catch (Exception e) {
+                        Console.WriteLine("OpenglGpuImpl.Init.Error: {0}", e);
+                    }
+                })
+                {
+                    Name = "GpuImplEventHandling",
+                    IsBackground = true
+                }.Start();
+
+                completedEvent.WaitOne();
+            }
+        }
+
+        public override void StopSynchronized()
+        {
+            //Running = false;
+            //StopEvent.WaitOne();
+
+            //GraphicsContext.Dispose();
+            //NativeWindow.Dispose();
+        }
+        
+        private void PrepareStateDraw(GpuStateStruct gpuState)
+        {
+            GL.glColorMask(true, true, true, true);
+
+#if ENABLE_TEXTURES
+            PrepareState_Texture_Common(gpuState);
+#endif
+            PrepareState_Blend(gpuState);
+            PrepareState_Clip(gpuState);
+
+            if (gpuState.VertexState.Type.Transform2D)
+            {
+                PrepareState_Colors_2D(gpuState);
+                GL.glDisable(GL.GL_STENCIL_TEST);
+                GL.glDisable(GL.GL_CULL_FACE);
+                GL.DepthRange(0, 1);
+                GL.glDisable(GL.GL_DEPTH_TEST);
+                //GL.glDisable(EnableCap.Lighting);
+            }
+            else
+            {
+                PrepareState_Colors_3D(gpuState);
+                PrepareState_CullFace(gpuState);
+                PrepareState_Lighting(gpuState);
+                PrepareState_Depth(gpuState);
+                PrepareState_DepthTest(gpuState);
+                PrepareState_Stencil(gpuState);
+            }
+            //GL.ShadeModel((GpuState->ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
+            PrepareState_AlphaTest(gpuState);
+        }
+
+        private void PrepareState_Clip(GpuStateStruct gpuState)
+        {
+            if (!GL.EnableDisable(GL.GL_SCISSOR_TEST, gpuState.ClipPlaneState.Enabled))
+            {
+                return;
+            }
+            var scissor = gpuState.ClipPlaneState.Scissor;
+            GL.glScissor(
+                scissor.Left * ScaleViewport,
+                scissor.Top * ScaleViewport,
+                scissor.Width * ScaleViewport,
+                scissor.Height * ScaleViewport
+            );
+        }
+
+        private void PrepareState_AlphaTest(GpuStateStruct gpuState)
+        {
+            //if (!GL.EnableDisable(EnableCap.AlphaTest, GpuState->AlphaTestState.Enabled))
+            //{
+            //	return;
+            //}
+            //
+            //GL.glAlphaFunc(
+            //	(AlphaFunction)DepthFunctionTranslate[(int)GpuState->AlphaTestState.Function],
+            //	GpuState->AlphaTestState.Value
+            //);
+        }
+
+        private void PrepareState_Stencil(GpuStateStruct gpuState)
+        {
+            if (!GL.EnableDisable(GL.GL_STENCIL_TEST, gpuState.StencilState.Enabled))
+            {
+                return;
+            }
+
+            //Console.Error.WriteLine("aaaaaa!");
+
+            //if (state.stencilFuncFunc == 2) { outputDepthAndStencil(); assert(0); }
+
+#if false
+			Console.Error.WriteLine(
+				"{0}:{1}:{2} - {3}, {4}, {5}",
+				StencilFunctionTranslate[(int)GpuState->StencilState.Function],
+				GpuState->StencilState.FunctionRef,
+				GpuState->StencilState.FunctionMask,
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationFail],
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationZFail],
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationZPass]
+			);
+#endif
+            GL.glStencilFunc(
+                OpenglGpuImplConversionTables.StencilFunctionTranslate[(int) gpuState.StencilState.Function],
+                gpuState.StencilState.FunctionRef,
+                gpuState.StencilState.FunctionMask
+            );
+
+            GL.glStencilOp(
+                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState.StencilState.OperationFail],
+                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState.StencilState.OperationZFail],
+                OpenglGpuImplConversionTables.StencilOperationTranslate[(int) gpuState.StencilState.OperationZPass]
+            );
+        }
+
+        private void PrepareState_CullFace(GpuStateStruct gpuState)
+        {
+            if (!GL.EnableDisable(GL.GL_CULL_FACE, gpuState.BackfaceCullingState.Enabled))
+            {
+                return;
+            }
+
+            //GL.EnableDisable(EnableCap.CullFace, false);
+
+            GL.glCullFace((gpuState.BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise)
+                ? GL.GL_FRONT
+                : GL.GL_BACK);
+        }
+
+        private void PrepareState_Depth(GpuStateStruct gpuState)
+        {
+            GL.DepthRange(gpuState.DepthTestState.RangeNear, gpuState.DepthTestState.RangeFar);
+        }
+
+        private void PrepareState_DepthTest(GpuStateStruct gpuState)
+        {
+            if (gpuState.DepthTestState.Mask != 0 && gpuState.DepthTestState.Mask != 1)
+            {
+                Console.Error.WriteLine("WARNING! DepthTestState.Mask: {0}", gpuState.DepthTestState.Mask);
+            }
+            GL.glDepthMask(gpuState.DepthTestState.Mask == 0);
+            if (!GL.EnableDisable(GL.GL_DEPTH_TEST, gpuState.DepthTestState.Enabled))
+            {
+                return;
+            }
+            GL.glDepthFunc(
+                OpenglGpuImplConversionTables.DepthFunctionTranslate[(int) gpuState.DepthTestState.Function]);
+        }
+
+        private void PrepareState_Colors_2D(GpuStateStruct gpuState)
+        {
+            PrepareState_Colors_3D(gpuState);
+        }
+
+        private void PrepareState_Colors_3D(GpuStateStruct gpuState)
+        {
+            //GL.EnableDisable(EnableCap.ColorMaterial, VertexType.Color != VertexTypeStruct.ColorEnum.Void);
+            //
+            //var Color = GpuState->LightingState.AmbientModelColor;
+            //var LightingState = &GpuState->LightingState;
+            //GL.Color4(&Color.Red);
+            //
+            //if (VertexType.Color != VertexTypeStruct.ColorEnum.Void && LightingState->Enabled)
+            //{
+            //	var Flags = (ColorMaterialParameter)0;
+            //	/*
+            //	glMaterialfv(faces, GL_AMBIENT , [0.0f, 0.0f, 0.0f, 0.0f].ptr);
+            //	glMaterialfv(faces, GL_DIFFUSE , [0.0f, 0.0f, 0.0f, 0.0f].ptr);
+            //	glMaterialfv(faces, GL_SPECULAR, [0.0f, 0.0f, 0.0f, 0.0f].ptr);
+            //	*/
+            //
+            //	var MaterialColorComponents = LightingState->MaterialColorComponents;
+            //
+            //	if (MaterialColorComponents.HasFlag(LightComponentsSet.Ambient))
+            //	{
+            //		GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &LightingState->AmbientModelColor.Red);
+            //	}
+            //
+            //	if (MaterialColorComponents.HasFlag(LightComponentsSet.Diffuse))
+            //	{
+            //		GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, &LightingState->DiffuseModelColor.Red);
+            //	}
+            //
+            //	if (MaterialColorComponents.HasFlag(LightComponentsSet.Specular))
+            //	{
+            //		GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, &LightingState->SpecularModelColor.Red);
+            //	}
+            //
+            //	if (MaterialColorComponents.HasFlag(LightComponentsSet.AmbientAndDiffuse))
+            //	{
+            //		Flags = ColorMaterialParameter.AmbientAndDiffuse;
+            //	}
+            //	else if (MaterialColorComponents.HasFlag(LightComponentsSet.Ambient))
+            //	{
+            //		Flags = ColorMaterialParameter.Ambient;
+            //	}
+            //	else if (MaterialColorComponents.HasFlag(LightComponentsSet.Diffuse))
+            //	{
+            //		Flags = ColorMaterialParameter.Diffuse;
+            //	}
+            //	else if (MaterialColorComponents.HasFlag(LightComponentsSet.Specular))
+            //	{
+            //		Flags = ColorMaterialParameter.Specular;
+            //	}
+            //	else
+            //	{
+            //		//throw (new NotImplementedException("Error! : " + MaterialColorComponents));
+            //	}
+            //	//flags = GL_SPECULAR;
+            //	if (Flags != 0)
+            //	{
+            //		GL.ColorMaterial(MaterialFace.FrontAndBack, Flags);
+            //	}
+            //	//glEnable(GL_COLOR_MATERIAL);
+            //}
+            //
+            //GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, &GpuState->LightingState.EmissiveModelColor.Red);
+        }
+
+        private void PrepareState_Lighting(GpuStateStruct gpuState)
+        {
+            //var LightingState = &GpuState->LightingState;
+            //
+            //if (!GL.EnableDisable(EnableCap.Lighting, LightingState->Enabled))
+            //{
+            //	return;
+            //}
+            //
+            //GL.LightModel(
+            //	LightModelParameter.LightModelColorControl,
+            //	(int)((LightingState->LightModel == LightModelEnum.SeparateSpecularColor) ? LightModelColorControl.SeparateSpecularColor : LightModelColorControl.SingleColor)
+            //);
+            //GL.LightModel(LightModelParameter.LightModelAmbient, &LightingState->AmbientLightColor.Red);
+            //
+            //for (int n = 0; n < 4; n++)
+            //{
+            //	var LightState = &(&LightingState->Light0)[n];
+            //	LightName LightName = (LightName)(LightName.Light0 + n);
+            //
+            //	if (!GL.EnableDisable((EnableCap)(EnableCap.Light0 + n), LightState->Enabled))
+            //	{
+            //		continue;
+            //	}
+            //
+            //	GL.Light(LightName, LightParameter.Specular, &LightState->SpecularColor.Red);
+            //	GL.Light(LightName, LightParameter.Ambient, &LightState->AmbientColor.Red);
+            //	GL.Light(LightName, LightParameter.Diffuse, &LightState->DiffuseColor.Red);
+            //
+            //	LightState->Position.W = 1.0f;
+            //	GL.Light(LightName, LightParameter.Position, &LightState->Position.X);
+            //
+            //	GL.Light(LightName, LightParameter.ConstantAttenuation, &LightState->Attenuation.Constant);
+            //	GL.Light(LightName, LightParameter.LinearAttenuation, &LightState->Attenuation.Linear);
+            //	GL.Light(LightName, LightParameter.QuadraticAttenuation, &LightState->Attenuation.Quadratic);
+            //
+            //	if (LightState->Type == LightTypeEnum.SpotLight)
+            //	{
+            //		GL.Light(LightName, LightParameter.SpotDirection, &LightState->SpotDirection.X);
+            //		GL.Light(LightName, LightParameter.SpotExponent, &LightState->SpotExponent);
+            //		GL.Light(LightName, LightParameter.SpotCutoff, &LightState->SpotCutoff);
+            //	}
+            //	else
+            //	{
+            //		GL.Light(LightName, LightParameter.SpotExponent, 0);
+            //		GL.Light(LightName, LightParameter.SpotCutoff, 180);
+            //	}
+            //}
+        }
+
+        private void PrepareState_Blend(GpuStateStruct gpuState)
+        {
+            var blendingState = gpuState.BlendingState;
+            if (!GL.EnableDisable(GL.GL_BLEND, blendingState.Enabled))
+            {
+                return;
+            }
+
+            //Console.WriteLine("Blend!");
+
+            var openglFunctionSource =
+                OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int) blendingState.FunctionSource];
+            //var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState->FunctionDestination];
+            var openglFunctionDestination =
+                OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int) blendingState.FunctionDestination];
+
+            Func<ColorfStruct, int> getBlendFix = (color) =>
+            {
+                if (color.IsColorf(0, 0, 0)) return GL.GL_ZERO;
+                if (color.IsColorf(1, 1, 1)) return GL.GL_ONE;
+                return GL.GL_CONSTANT_COLOR;
+            };
+
+            if (blendingState.FunctionSource == GuBlendingFactorSource.GuFix)
+            {
+                openglFunctionSource = getBlendFix(blendingState.FixColorSource);
+            }
+
+            if (blendingState.FunctionDestination == GuBlendingFactorDestination.GuFix)
+            {
+                if (((int) openglFunctionSource == GL.GL_CONSTANT_COLOR) &&
+                    (blendingState.FixColorSource + blendingState.FixColorDestination).IsColorf(1, 1, 1))
+                {
+                    openglFunctionDestination = GL.GL_ONE_MINUS_CONSTANT_COLOR;
+                }
+                else
+                {
+                    openglFunctionDestination = getBlendFix(blendingState.FixColorDestination);
+                }
+            }
+            //Console.WriteLine("{0}, {1}", OpenglFunctionSource, OpenglFunctionDestination);
+
+            var openglBlendEquation =
+                OpenglGpuImplConversionTables.BlendEquationTranslate[(int) blendingState.Equation];
+
+            /*
+            Console.WriteLine(
+                "{0} : {1} -> {2}",
+                OpenglBlendEquation, OpenglFunctionSource, OpenglFunctionDestination
+            );
+            */
+
+            GL.glBlendEquation(openglBlendEquation);
+            GL.glBlendFunc(openglFunctionSource, openglFunctionDestination);
+
+            GL.glBlendColor(
+                blendingState.FixColorDestination.Red,
+                blendingState.FixColorDestination.Green,
+                blendingState.FixColorDestination.Blue,
+                blendingState.FixColorDestination.Alpha
+            );
+        }
+
+        private void PrepareState_Texture_2D(GpuStateStruct gpuState)
+        {
+            var textureMappingState = gpuState.TextureMappingState;
+            var mipmap0 = textureMappingState.TextureState.Mipmap0;
+
+            if (textureMappingState.Enabled)
+            {
+                _textureMatrix = Matrix4x4.CreateScale(
+                        1.0f / mipmap0.BufferWidth,
+                        1.0f / mipmap0.TextureHeight,
+                        1.0f
+                )
+                    ;
+                //GL.ActiveTexture(TextureUnit.Texture0);
+                //GL.MatrixMode(MatrixMode.Texture);
+                //GL.LoadIdentity();
+                //
+                //GL.Scale(
+                //	1.0f / Mipmap0->BufferWidth,
+                //	1.0f / Mipmap0->TextureHeight,
+                //	1.0f
+                //);
+            }
+        }
+
+        private void PrepareState_Texture_3D(GpuStateStruct gpuState)
+        {
+            var textureMappingState = gpuState.TextureMappingState;
+            var textureState = textureMappingState.TextureState;
+
+            if (textureMappingState.Enabled)
+            {
+                _textureMatrix = Matrix4x4.Identity;
+
+                switch (textureMappingState.TextureMapMode)
+                {
+                    case TextureMapMode.GuTextureCoords:
+
+                        _textureMatrix = _textureMatrix *
+                                         Matrix4x4.CreateTranslation(textureState.OffsetU, textureState.OffsetV, 0) *
+                                         Matrix4x4.CreateScale(textureState.ScaleU, textureState.ScaleV, 1);
+                        break;
+                    case TextureMapMode.GuTextureMatrix:
+                        switch (gpuState.TextureMappingState.TextureProjectionMapMode)
+                        {
+                            default:
+                                Console.Error.WriteLine("NotImplemented: GU_TEXTURE_MATRIX: {0}",
+                                    gpuState.TextureMappingState.TextureProjectionMapMode);
+                                break;
+                        }
+                        break;
+                    case TextureMapMode.GuEnvironmentMap:
+                        Console.Error.WriteLine("NotImplemented: GU_ENVIRONMENT_MAP");
+                        break;
+                    default:
+                        Console.Error.WriteLine("NotImplemented TextureMappingState->TextureMapMode: " +
+                                                textureMappingState.TextureMapMode);
+                        break;
+                }
+            }
+        }
+
+        private void PrepareState_Texture_Common(GpuStateStruct gpuState)
+        {
+            var textureMappingState = gpuState.TextureMappingState;
+            //var ClutState = &TextureMappingState->ClutState;
+            var textureState = textureMappingState.TextureState;
+
+            if (!GL.EnableDisable(GL.GL_TEXTURE_2D, textureMappingState.Enabled)) return;
+
+            if (VertexType.Transform2D)
+            {
+                PrepareState_Texture_2D(gpuState);
+            }
+            else
+            {
+                PrepareState_Texture_3D(gpuState);
+            }
+
+            //GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+            //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+            RenderbufferManager.TextureCacheGetAndBind(gpuState);
+            //CurrentTexture.Save("test.png");
+
+            //GL.glTexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState->Effect]);
+        }
+        
+        private void TransferToFrameBuffer(GpuStateStruct gpuState)
+        {
+            Console.WriteLine("TransferToFrameBuffer Not Implemented");
+            //var TextureTransferState = GpuState->TextureTransferState;
+            //
+            //var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
+            //
+            //GL.PixelZoom(1, -1);
+            //GL.WindowPos2(TextureTransferState.DestinationX, 272 - TextureTransferState.DestinationY);
+            ////GL.PixelZoom(1, -1);
+            ////GL.PixelZoom(1, 1);
+            //GL.PixelStore(PixelStoreParameter.UnpackAlignment, TextureTransferState.BytesPerPixel);
+            //GL.PixelStore(PixelStoreParameter.UnpackRowLength, TextureTransferState.SourceLineWidth);
+            //GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, TextureTransferState.SourceX);
+            //GL.PixelStore(PixelStoreParameter.UnpackSkipRows, TextureTransferState.SourceY);
+            //
+            //{
+            //	GL.DrawPixels(
+            //		TextureTransferState.Width,
+            //		TextureTransferState.Height,
+            //		PixelFormat.Rgba,
+            //		GlPixelFormat.OpenglPixelType,
+            //		new IntPtr(Memory.PspAddressToPointerSafe(
+            //			TextureTransferState.SourceAddress,
+            //			TextureTransferState.Width * TextureTransferState.Height * 4
+            //		))
+            //	);
+            //}
+            //
+            //GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+            //GL.PixelStore(PixelStoreParameter.UnpackRowLength, 0);
+            //GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, 0);
+            //GL.PixelStore(PixelStoreParameter.UnpackSkipRows, 0);
+        }
+
+        private void TransferGeneric(GpuStateStruct gpuState)
+        {
+            Console.WriteLine("TransferGeneric Not Implemented");
+            var textureTransferState = gpuState.TextureTransferState;
+
+            var sourceX = textureTransferState.SourceX;
+            var sourceY = textureTransferState.SourceY;
+            var destinationX = textureTransferState.DestinationX;
+            var destinationY = textureTransferState.DestinationY;
+            var bytesPerPixel = textureTransferState.BytesPerPixel;
+
+            var sourceTotalBytes = textureTransferState.SourceLineWidth * textureTransferState.Height * bytesPerPixel;
+            var destinationTotalBytes =
+                textureTransferState.DestinationLineWidth * textureTransferState.Height * bytesPerPixel;
+
+            var sourcePointer =
+                (byte*) Memory.PspAddressToPointerSafe(textureTransferState.SourceAddress.Address, sourceTotalBytes);
+            var destinationPointer =
+                (byte*) Memory.PspAddressToPointerSafe(textureTransferState.DestinationAddress.Address,
+                    destinationTotalBytes);
+
+            for (uint y = 0; y < textureTransferState.Height; y++)
+            {
+                var rowSourceOffset = (uint) (
+                    (textureTransferState.SourceLineWidth * (y + sourceY)) + sourceX
+                );
+                var rowDestinationOffset = (uint) (
+                    (textureTransferState.DestinationLineWidth * (y + destinationY)) + destinationX
+                );
+                PointerUtils.Memcpy(
+                    destinationPointer + rowDestinationOffset * bytesPerPixel,
+                    sourcePointer + rowSourceOffset * bytesPerPixel,
+                    textureTransferState.Width * bytesPerPixel
+                );
+            }
+
+            /*
+            // Generic implementation.
+            with (gpu.state.textureTransfer) {
+                auto srcAddressHost = cast(ubyte*)gpu.memory.getPointer(srcAddress);
+                auto dstAddressHost = cast(ubyte*)gpu.memory.getPointer(dstAddress);
+
+                if (gpu.state.drawBuffer.isAnyAddressInBuffer([srcAddress, dstAddress])) {
+                    gpu.performBufferOp(BufferOperation.STORE, BufferType.COLOR);
+                }
+
+                for (int n = 0; n < height; n++) {
+                    int srcOffset = ((n + srcY) * srcLineWidth + srcX) * bpp;
+                    int dstOffset = ((n + dstY) * dstLineWidth + dstX) * bpp;
+                    (dstAddressHost + dstOffset)[0.. width * bpp] = (srcAddressHost + srcOffset)[0.. width * bpp];
+                    //writefln("%08X <- %08X :: [%d]", dstOffset, srcOffset, width * bpp);
+                }
+                //std.file.write("buffer", dstAddressHost[0..512 * 272 * 4]);
+            
+                if (gpu.state.drawBuffer.isAnyAddressInBuffer([dstAddress])) {
+                    //gpu.impl.test();
+                    //gpu.impl.test("trxkick");
+                    gpu.markBufferOp(BufferOperation.LOAD, BufferType.COLOR);
+                }
+                //gpu.impl.test();
+            }
+            */
+        }
+
+        public override void Transfer(GpuStateStruct gpuState)
+        {
+            Console.WriteLine("Transfer Not Implemented");
+            //return;
+            var textureTransferState = gpuState.TextureTransferState;
+
+            if (
+                (textureTransferState.DestinationAddress.Address == gpuState.DrawBufferState.Address) &&
+                (textureTransferState.DestinationLineWidth == gpuState.DrawBufferState.Width) &&
+                (textureTransferState.BytesPerPixel == gpuState.DrawBufferState.BytesPerPixel)
+            )
+            {
+                //Console.Error.WriteLine("Writting to DrawBuffer");
+                TransferToFrameBuffer(gpuState);
+            }
+            else
+            {
+                Console.Error.WriteLine("NOT Writting to DrawBuffer");
+                TransferGeneric(gpuState);
+                /*
+                base.Transfer(GpuStateStruct);
+                PrepareWrite(GpuStateStruct);
+                {
+
+                }
+                PrepareRead(GpuStateStruct);
+                */
+            }
+        }
+
+        /*
+        readonly byte[] TempBuffer = new byte[512 * 512 * 4];
+
+        struct GlPixelFormat {
+            PixelFormats pspFormat;
+            float size;
+            uint  internal;
+            uint  external;
+            uint  opengl;
+            uint  isize() { return cast(uint)size; }
+        }
+
+        static const auto GlPixelFormats = [
+            GlPixelFormat(PixelFormats.GU_PSM_5650,   2, 3, GL_RGB,  GL_UNSIGNED_SHORT_5_6_5_REV),
+            GlPixelFormat(PixelFormats.GU_PSM_5551,   2, 4, GL_RGBA, GL_UNSIGNED_SHORT_1_5_5_5_REV),
+            GlPixelFormat(PixelFormats.GU_PSM_4444,   2, 4, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4_REV),
+            GlPixelFormat(PixelFormats.GU_PSM_8888,   4, 4, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV),
+            GlPixelFormat(PixelFormats.GU_PSM_T4  , 0.5, 1, GL_COLOR_INDEX, GL_COLOR_INDEX4_EXT),
+            GlPixelFormat(PixelFormats.GU_PSM_T8  ,   1, 1, GL_COLOR_INDEX, GL_COLOR_INDEX8_EXT),
+            GlPixelFormat(PixelFormats.GU_PSM_T16 ,   2, 4, GL_COLOR_INDEX, GL_COLOR_INDEX16_EXT),
+            GlPixelFormat(PixelFormats.GU_PSM_T32 ,   4, 4, GL_RGBA, GL_UNSIGNED_INT ), // COLOR_INDEX, GL_COLOR_INDEX32_EXT Not defined.
+            GlPixelFormat(PixelFormats.GU_PSM_DXT1,   4, 4, GL_RGBA, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT),
+            GlPixelFormat(PixelFormats.GU_PSM_DXT3,   4, 4, GL_RGBA, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT),
+            GlPixelFormat(PixelFormats.GU_PSM_DXT5,   4, 4, GL_RGBA, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT),
+        ];
+        */
+
+        //[HandleProcessCorruptedStateExceptions]
+        //private void PrepareRead(GpuStateStruct* GpuState)
+        //{
+        //	if (true)
+        //	{
+        //		var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
+        //		int Width = (int)GpuState->DrawBufferState.Width;
+        //		if (Width == 0) Width = 512;
+        //		int Height = 272;
+        //		int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
+        //		int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
+        //		//GpuState->DrawBufferState.Format
+        //		var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address, 0);
+        //		GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
+        //		//Console.WriteLine("PrepareRead: {0:X}", Address);
+        //
+        //		try
+        //		{
+        //			GL.WindowPos2(0, 272);
+        //			GL.PixelZoom(1, -1);
+        //
+        //			GL.DrawPixels(Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(Address));
+        //			//GL.DrawPixels(512, 272, PixelFormat.AbgrExt, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
+        //
+        //			//GL.WindowPos2(0, 0);
+        //			//GL.PixelZoom(1, 1);
+        //		}
+        //		catch (Exception Exception)
+        //		{
+        //			Console.WriteLine(Exception);
+        //		}
+        //	}
+        //}
+
+        //int[] pboIds = { -1 };
+        //
+        //static bool UsePbo = false;
+        //
+        //private void PreParePbos()
+        //{
+        //	if (UsePbo)
+        //	{
+        //		if (pboIds[0] == -1)
+        //		{
+        //			GL.GenBuffers(1, pboIds);
+        //			GL.BindBuffer(BufferTarget.PixelUnpackBuffer, pboIds[0]);
+        //			GL.BufferData(BufferTarget.PixelUnpackBuffer, new IntPtr(512 * 272 * 4), IntPtr.Zero, BufferUsageHint.StreamRead);
+        //			GL.BindBuffer(BufferTarget.PixelUnpackBuffer, 0);
+        //		}
+        //		GL.BindBuffer(BufferTarget.PixelPackBuffer, pboIds[0]);
+        //	}
+        //}
+        //
+        //private void UnPreParePbos()
+        //{
+        //	if (UsePbo)
+        //	{
+        //		GL.BindBuffer(BufferTarget.PixelPackBuffer, 0);
+        //	}
+        //}
+
+        //private void SaveFrameBuffer(GpuStateStruct* GpuState, string FileName)
+        //{
+        //	var GlPixelFormat = GlPixelFormatList[(int)GuPixelFormats.RGBA_8888];
+        //	int Width = (int)GpuState->DrawBufferState.Width;
+        //	if (Width == 0) Width = 512;
+        //	int Height = 272;
+        //	int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
+        //	int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
+        //
+        //	if (Width == 0) Width = 512;
+        //
+        //	GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
+        //
+        //	var FB = new Bitmap(Width, Height);
+        //	var Data = new byte[Width * Height * 4];
+        //
+        //	fixed (byte* DataPtr = Data)
+        //	{
+        //		//glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB, pboIds[index]);
+        //		GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(DataPtr));
+        //
+        //		BitmapUtils.TransferChannelsDataInterleaved(
+        //			FB.GetFullRectangle(),
+        //			FB,
+        //			DataPtr,
+        //			BitmapUtils.Direction.FromDataToBitmap,
+        //			BitmapChannel.Red,
+        //			BitmapChannel.Green,
+        //			BitmapChannel.Blue,
+        //			BitmapChannel.Alpha
+        //		);
+        //	}
+        //
+        //	FB.Save(FileName);
+        //}
+
+        //[HandleProcessCorruptedStateExceptions]
+        //private void PrepareWrite(GpuStateStruct* GpuState)
+        //{
+        //	//GL.Flush();
+        //	//return;
+        //
+        //#if true
+        //	//if (SwapBuffers)
+        //	//{
+        //	//	RenderGraphicsContext.SwapBuffers();
+        //	//}
+        //	//
+        //	//GL.PushAttrib(AttribMask.EnableBit);
+        //	//GL.PushAttrib(AttribMask.TextureBit);
+        //	//{
+        //	//	GL.Enable(EnableCap.Texture2D);
+        //	//	GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexture);
+        //	//	{
+        //	//		//GL.CopyTexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, 0, 0, 512, 272);
+        //	//		GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 0, 0, 512, 272, 0);
+        //	//		//GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, 1, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new uint[] { 0xFFFF00FF });
+        //	//	}
+        //	//	GL.BindTexture(TextureTarget.Texture2D, 0);
+        //	//}
+        //	//GL.PopAttrib();
+        //	//GL.PopAttrib();
+        //#else
+        //
+        //	//Console.WriteLine("PrepareWrite");
+        //	try
+        //	{
+        //		var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
+        //		int Width = (int)GpuState->DrawBufferState.Width;
+        //		if (Width == 0) Width = 512;
+        //		int Height = 272;
+        //		int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
+        //		int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
+        //		//GpuState->DrawBufferState.Format
+        //		var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address);
+        //
+        //		//Console.WriteLine("{0}", GlPixelFormat.GuPixelFormat);
+        //
+        //		//Console.WriteLine("{0:X}", GpuState->DrawBufferState.Address);
+        //		GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
+        //
+        //		fixed (void* _TempBufferPtr = &TempBuffer[0])
+        //		{
+        //			var Input = (byte*)_TempBufferPtr;
+        //			var Output = (byte*)Address;
+        //
+        //			PreParePbos();
+        //			if (this.pboIds[0] > 0)
+        //			{
+        //				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, IntPtr.Zero);
+        //				Input = (byte*)GL.MapBuffer(BufferTarget.PixelPackBuffer, BufferAccess.ReadOnly).ToPointer();
+        //				GL.UnmapBuffer(BufferTarget.PixelPackBuffer);
+        //				if (Input == null)
+        //				{
+        //					Console.WriteLine("PBO ERROR!");
+        //				}
+        //			}
+        //			else
+        //			{
+        //				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(_TempBufferPtr));
+        //			}
+        //			UnPreParePbos();
+        //
+        //			for (int Row = 0; Row < Height; Row++)
+        //			{
+        //				var ScanIn = (byte*)&Input[ScanWidth * Row];
+        //				var ScanOut = (byte*)&Output[ScanWidth * (Height - Row - 1)];
+        //				//Console.WriteLine("{0}:{1},{2},{3}", Row, PixelSize, Width, ScanWidth);
+        //				PointerUtils.Memcpy(ScanOut, ScanIn, ScanWidth);
+        //			}
+        //		}
+        //	}
+        //	catch (Exception Exception)
+        //	{
+        //		Console.WriteLine(Exception);
+        //	}
+        //
+        //	if (SwapBuffers)
+        //	{
+        //		RenderGraphicsContext.SwapBuffers();
+        //	}
+        // #endif
+        //}
     }
 }

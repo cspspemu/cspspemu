@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmuLLETest
@@ -20,7 +21,7 @@ namespace CSPspEmuLLETest
         {
             this.CpuThreadState = cpuThreadState;
         }
-
+        
         bool LogDMAReads = true;
 
         private string GetRegisterName(uint address)

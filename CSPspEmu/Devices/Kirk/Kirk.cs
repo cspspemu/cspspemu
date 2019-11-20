@@ -1,6 +1,8 @@
 ﻿//#define USE_DOTNET_CRYPTO
 
 using System;
+using System.IO;
+using System.Security.Cryptography;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 
@@ -8,7 +10,7 @@ namespace CSPspEmu.Core.Components.Crypto
 {
     public unsafe delegate void PointerAction(byte* address);
 
-    public unsafe partial class Kirk
+    public unsafe class Kirk
     {
         static Logger Logger = Logger.GetLogger("Kirk");
 
@@ -609,5 +611,677 @@ namespace CSPspEmu.Core.Components.Crypto
                 return kirkException.Result;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        /// <returns></returns>
+        public static byte[] DecryptAes(byte[] input, byte[] key, byte[] iv = null)
+        {
+            if (iv == null) iv = new byte[16];
+
+            Logger.Notice("DecryptAes({0}, {1}, {2})", input.Length, key.Length, iv.Length);
+
+            using (var aes = CreateAes())
+            {
+                aes.Padding = PaddingMode.Zeros;
+                var decryptor = aes.CreateDecryptor(key, iv);
+
+                var dataSize = input.Length;
+
+                if ((dataSize % 16) != 0)
+                {
+                    var input2 = new byte[MathUtils.NextAligned(input.Length, 16)];
+                    Array.Copy(input, input2, input.Length);
+                    input = input2;
+                }
+
+                return new CryptoStream(new MemoryStream(input), decryptor, CryptoStreamMode.Read).ReadBytes(dataSize);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        /// <returns></returns>
+        public static byte[] EncryptAes(byte[] input, byte[] key, byte[] iv = null)
+        {
+            if (iv == null) iv = new byte[16];
+
+            using (var aes = CreateAes())
+            {
+                aes.Padding = PaddingMode.Zeros;
+                var encryptor = aes.CreateEncryptor(key, iv);
+
+                return new CryptoStream(new MemoryStream(input), encryptor, CryptoStreamMode.Read).ReadAll(
+                    dispose: true);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="size"></param>
+        public static void DecryptAes(byte[] key, byte* input, byte* output, int size)
+        {
+            var inputArray = PointerUtils.PointerToByteArray(input, size);
+            var outputArray = DecryptAes(inputArray, key);
+            PointerUtils.ByteArrayToPointer(outputArray, output);
+        }
+        
+        /// <summary>
+        /// PSP_KIRK_CMD_ECDSA_GEN_KEYS
+        /// 
+        /// Command: 12, 0xC
+        /// </summary>
+        /// <param name="Out"></param>
+        /// <param name="outsize"></param>
+        /// <returns></returns>
+        public void ExecuteKirkCmd12(byte* Out, int outsize)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// PSP_KIRK_CMD_ECDSA_MULTIPLY_POINT
+        /// 
+        /// Command: 13, 0xD
+        /// </summary>
+        /// <param name="Out"></param>
+        /// <param name="outsize"></param>
+        /// <param name="In"></param>
+        /// <param name="insize"></param>
+        /// <returns></returns>
+        public void ExecuteKirkCmd13(byte* Out, int outsize, byte* In, int insize)
+        {
+            //var ecdsa = ECDsa.Create();
+            //ecdsa.
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// PSP_KIRK_CMD_ECDSA_SIGN
+        /// 
+        /// Command: 16, 0x10
+        /// </summary>
+        /// <param name="Out"></param>
+        /// <param name="outsize"></param>
+        /// <param name="In"></param>
+        /// <param name="insize"></param>
+        /// <returns></returns>
+        public void ExecuteKirkCmd16(byte* Out, int outsize, byte* In, int insize)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// PSP_KIRK_CMD_ECDSA_VERIFY
+        /// 
+        /// Command: 17, 0x11
+        /// </summary>
+        /// <param name="In"></param>
+        /// <param name="insize"></param>
+        /// <returns></returns>
+        public void ExecuteKirkCmd17(byte* In, int insize)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// SIZE: 0004
+        /// </summary>
+        public struct KirkSha1Header
+        {
+            /// <summary>
+            /// 0000 - Size of the input data source where will be generated the hash from.
+            /// </summary>
+            public int DataSize;
+        }
+
+        /// <summary>
+        /// Creates a SHA1 Hash
+        /// 
+        /// Command: 11, 0xB
+        /// </summary>
+        /// <param name="outputBuffer"></param>
+        /// <param name="inputBuffer"></param>
+        /// <param name="inputSize"></param>
+        /// <returns></returns>
+        public void KirkSha1(byte* outputBuffer, byte* inputBuffer, int inputSize)
+        {
+            //CheckInitialized();
+
+            var header = (KirkSha1Header*) inputBuffer;
+            if (inputSize == 0 || header->DataSize == 0)
+            {
+                throw(new KirkException(ResultEnum.PspKirkDataSizeIsZero));
+            }
+
+            //Size <<= 4;
+            //Size >>= 4;
+            inputSize &= 0x0FFFFFFF;
+            inputSize = (inputSize < header->DataSize) ? inputSize : header->DataSize;
+
+            var sha1Hash = Sha1(
+                PointerUtils.PointerToByteArray(inputBuffer + 4, inputSize)
+            );
+
+            PointerUtils.Memcpy(outputBuffer, sha1Hash, sha1Hash.Length);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static byte[] Sha1(byte[] input)
+        {
+            return (new SHA1CryptoServiceProvider()).ComputeHash(input);
+        }
+        
+        // kirk1
+        public byte[] Kirk1Key =
+            {0x98, 0xC9, 0x40, 0x97, 0x5C, 0x1D, 0x10, 0xE8, 0x7F, 0xE6, 0x0E, 0xA3, 0xFD, 0x03, 0xA8, 0xBA};
+
+        public byte[] Kirk7Key03 =
+            {0x98, 0x02, 0xC4, 0xE6, 0xEC, 0x9E, 0x9E, 0x2F, 0xFC, 0x63, 0x4C, 0xE4, 0x2F, 0xBB, 0x46, 0x68};
+
+        public byte[] Kirk7Key04 =
+            {0x99, 0x24, 0x4C, 0xD2, 0x58, 0xF5, 0x1B, 0xCB, 0xB0, 0x61, 0x9C, 0xA7, 0x38, 0x30, 0x07, 0x5F};
+
+        public byte[] Kirk7Key05 =
+            {0x02, 0x25, 0xD7, 0xBA, 0x63, 0xEC, 0xB9, 0x4A, 0x9D, 0x23, 0x76, 0x01, 0xB3, 0xF6, 0xAC, 0x17};
+
+        public byte[] Kirk7Key0C =
+            {0x84, 0x85, 0xC8, 0x48, 0x75, 0x08, 0x43, 0xBC, 0x9B, 0x9A, 0xEC, 0xA7, 0x9C, 0x7F, 0x60, 0x18};
+
+        public byte[] Kirk7Key0D =
+            {0xB5, 0xB1, 0x6E, 0xDE, 0x23, 0xA9, 0x7B, 0x0E, 0xA1, 0x7C, 0xDB, 0xA2, 0xDC, 0xDE, 0xC4, 0x6E};
+
+        public byte[] Kirk7Key0E =
+            {0xC8, 0x71, 0xFD, 0xB3, 0xBC, 0xC5, 0xD2, 0xF2, 0xE2, 0xD7, 0x72, 0x9D, 0xDF, 0x82, 0x68, 0x82};
+
+        public byte[] Kirk7Key0F =
+            {0x0A, 0xBB, 0x33, 0x6C, 0x96, 0xD4, 0xCD, 0xD8, 0xCB, 0x5F, 0x4B, 0xE0, 0xBA, 0xDB, 0x9E, 0x03};
+
+        public byte[] Kirk7Key10 =
+            {0x32, 0x29, 0x5B, 0xD5, 0xEA, 0xF7, 0xA3, 0x42, 0x16, 0xC8, 0x8E, 0x48, 0xFF, 0x50, 0xD3, 0x71};
+
+        public byte[] Kirk7Key11 =
+            {0x46, 0xF2, 0x5E, 0x8E, 0x4D, 0x2A, 0xA5, 0x40, 0x73, 0x0B, 0xC4, 0x6E, 0x47, 0xEE, 0x6F, 0x0A};
+
+        public byte[] Kirk7Key12 =
+            {0x5D, 0xC7, 0x11, 0x39, 0xD0, 0x19, 0x38, 0xBC, 0x02, 0x7F, 0xDD, 0xDC, 0xB0, 0x83, 0x7D, 0x9D};
+
+        public byte[] Kirk7Key38 =
+            {0x12, 0x46, 0x8D, 0x7E, 0x1C, 0x42, 0x20, 0x9B, 0xBA, 0x54, 0x26, 0x83, 0x5E, 0xB0, 0x33, 0x03};
+
+        public byte[] Kirk7Key39 =
+            {0xC4, 0x3B, 0xB6, 0xD6, 0x53, 0xEE, 0x67, 0x49, 0x3E, 0xA9, 0x5F, 0xBC, 0x0C, 0xED, 0x6F, 0x8A};
+
+        public byte[] Kirk7Key3A =
+            {0x2C, 0xC3, 0xCF, 0x8C, 0x28, 0x78, 0xA5, 0xA6, 0x63, 0xE2, 0xAF, 0x2D, 0x71, 0x5E, 0x86, 0xBA};
+
+        // For 1.xx games eboot.bin
+        public byte[] Kirk7Key4B =
+            {0x0C, 0xFD, 0x67, 0x9A, 0xF9, 0xB4, 0x72, 0x4F, 0xD7, 0x8D, 0xD6, 0xE9, 0x96, 0x42, 0x28, 0x8B};
+
+        public byte[] Kirk7Key53 =
+            {0xAF, 0xFE, 0x8E, 0xB1, 0x3D, 0xD1, 0x7E, 0xD8, 0x0A, 0x61, 0x24, 0x1C, 0x95, 0x92, 0x56, 0xB6};
+
+        public byte[] Kirk7Key57 =
+            {0x1C, 0x9B, 0xC4, 0x90, 0xE3, 0x06, 0x64, 0x81, 0xFA, 0x59, 0xFD, 0xB6, 0x00, 0xBB, 0x28, 0x70};
+
+        public byte[] Kirk7Key5D =
+            {0x11, 0x5A, 0x5D, 0x20, 0xD5, 0x3A, 0x8D, 0xD3, 0x9C, 0xC5, 0xAF, 0x41, 0x0F, 0x0F, 0x18, 0x6F};
+
+        public byte[] Kirk7Key63 =
+            {0x9C, 0x9B, 0x13, 0x72, 0xF8, 0xC6, 0x40, 0xCF, 0x1C, 0x62, 0xF5, 0xD5, 0x92, 0xDD, 0xB5, 0x82};
+
+        public byte[] Kirk7Key64 =
+            {0x03, 0xB3, 0x02, 0xE8, 0x5F, 0xF3, 0x81, 0xB1, 0x3B, 0x8D, 0xAA, 0x2A, 0x90, 0xFF, 0x5E, 0x61};
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public class KirkException : Exception
+        {
+            public ResultEnum Result;
+
+            public KirkException(ResultEnum result, string message = "")
+                : base($"KirkException: {result} : {message}")
+            {
+                Result = result;
+            }
+        }
+
+        /// <summary>
+        /// SIZE: 0014
+        /// </summary>
+        public struct KirkAes128CbcHeader
+        {
+            /// <summary>
+            /// 0000 - 
+            /// </summary>
+            public KirkMode Mode;
+
+            /// <summary>
+            /// 0004 - 
+            /// </summary>
+            public int Unknown4;
+
+            /// <summary>
+            /// 0008 - 
+            /// </summary>
+            public int Unknown8;
+
+            /// <summary>
+            /// 000C - 
+            /// </summary>
+            public int KeySeed;
+
+            /// <summary>
+            /// 0010 - 
+            /// </summary>
+            public int Datasize;
+        }
+
+        /// <summary>
+        /// SIZE: 0090
+        /// </summary>
+        public struct Aes128CmacHeader
+        {
+            /// <summary>
+            /// 0000 -
+            /// </summary>
+            public fixed byte AesKey[16];
+
+            /// <summary>
+            /// 0010 -
+            /// </summary>
+            public fixed byte CmacKey[16];
+
+            /// <summary>
+            /// 0020 -
+            /// </summary>
+            public fixed byte CmacHeaderHash[16];
+
+            /// <summary>
+            /// 0030 -
+            /// </summary>
+            public fixed byte CmacDataHash[16];
+
+            /// <summary>
+            /// 0040 -
+            /// </summary>
+            public fixed byte Unknown1[32];
+
+            /// <summary>
+            /// 0060 -
+            /// </summary>
+            public KirkMode Mode;
+
+            /// <summary>
+            /// 0061 -
+            /// </summary>
+            public byte UseEcdsAhash;
+
+            /// <summary>
+            /// 0064 -
+            /// </summary>
+            public fixed byte Unknown2[11];
+
+            /// <summary>
+            /// 0070 -
+            /// </summary>
+            public int DataSize;
+
+            /// <summary>
+            /// 0074 -
+            /// </summary>
+            public int DataOffset;
+
+            /// <summary>
+            /// 0078 -
+            /// </summary>
+            public fixed byte Unknown3[8];
+
+            /// <summary>
+            /// 0080 -
+            /// </summary>
+            public fixed byte Unknown4[16];
+        }
+
+        /// <summary>
+        /// "mode" in header
+        /// </summary>
+        public enum KirkMode
+        {
+            /// <summary>
+            /// KIRK_MODE_CMD1 = 1
+            /// </summary>
+            Cmd1 = 1,
+
+            /// <summary>
+            /// KIRK_MODE_CMD2 = 2
+            /// </summary>
+            Cmd2 = 2,
+
+            /// <summary>
+            /// KIRK_MODE_CMD3 = 3
+            /// </summary>
+            Cmd3 = 3,
+
+            /// <summary>
+            /// KIRK_MODE_ENCRYPT_CBC = 4
+            /// </summary>
+            EncryptCbc = 4,
+
+            /// <summary>
+            /// KIRK_MODE_DECRYPT_CBC = 5
+            /// </summary>
+            DecryptCbc = 5,
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum CommandEnum : uint
+        {
+            /// <summary>
+            /// Master decryption command, used by firmware modules. Applies CMAC checking.
+            /// Super-Duper decryption (no inverse)
+            /// Private Sig + Cipher
+            /// 
+            /// KIRK_CMD_DECRYPT_PRIVATE
+            /// 
+            /// Code: 1, 0x01
+            /// </summary>
+            PspKirkCmdDecryptPrivate = 0x1,
+
+            /// <summary>
+            /// Used for key type 3 (blacklisting), encrypts and signs data with a ECDSA signature.
+            /// Encrypt Operation (inverse of 0x03)
+            /// Private Sig + Cipher
+            /// 
+            /// Code: 2, 0x02
+            /// </summary>
+            PspKirkCmdEncryptSign = 0x2,
+
+            /// <summary>
+            /// Used for key type 3 (blacklisting), decrypts and signs data with a ECDSA signature.
+            /// Decrypt Operation (inverse of 0x02)
+            /// Private Sig + Cipher
+            /// 
+            /// Code: 3, 0x03
+            /// </summary>
+            PspKirkCmdDecryptSign = 0x3,
+
+            /// <summary>
+            /// Key table based encryption used for general purposes by several modules.
+            /// Encrypt Operation (inverse of 0x07) (IV=0)
+            /// Cipher
+            /// 
+            /// KIRK_CMD_ENCRYPT_IV_0
+            /// 
+            /// Code: 4, 0x04
+            /// </summary>
+            PspKirkCmdEncrypt = 0x4,
+
+            /// <summary>
+            /// Fuse ID based encryption used for general purposes by several modules.
+            /// Encrypt Operation (inverse of 0x08) (IV=FuseID)
+            /// Cipher
+            /// 
+            /// KIRK_CMD_ENCRYPT_IV_FUSE
+            /// 
+            /// Code: 5, 0x05
+            /// </summary>
+            PspKirkCmdEncryptFuse = 0x5,
+
+            /// <summary>
+            /// User specified ID based encryption used for general purposes by several modules.
+            /// Encrypt Operation (inverse of 0x09) (IV=UserDefined)
+            /// Cipher
+            /// 
+            /// KIRK_CMD_ENCRYPT_IV_USER
+            /// 
+            /// Code: 6, 0x06
+            /// </summary>
+            PspKirkCmdEncryptUser = 0x6,
+
+            /// <summary>
+            /// Key table based decryption used for general purposes by several modules.
+            /// Decrypt Operation (inverse of 0x04)
+            /// Cipher
+            /// 
+            /// KIRK_CMD_DECRYPT_IV_0
+            /// 
+            /// Code: 7, 0x07
+            /// </summary>
+            PspKirkCmdDecrypt = 0x7,
+
+            /// <summary>
+            /// Fuse ID based decryption used for general purposes by several modules.
+            /// Decrypt Operation (inverse of 0x05)
+            /// Cipher
+            /// 
+            /// KIRK_CMD_DECRYPT_IV_FUSE
+            /// 
+            /// Code: 8, 0x08
+            /// </summary>
+            PspKirkCmdDecryptFuse = 0x8,
+
+            /// <summary>
+            /// User specified ID based decryption used for general purposes by several modules.
+            /// Decrypt Operation (inverse of 0x06)
+            /// Cipher
+            /// 
+            /// KIRK_CMD_DECRYPT_IV_USER
+            /// 
+            /// Code: 9, 0x09
+            /// </summary>
+            PspKirkCmdDecryptUser = 0x9,
+
+            /// <summary>
+            /// Private signature (SCE) checking command.
+            /// Private Signature Check (checks for private SCE sig)
+            /// Sig Gens
+            /// 
+            /// KIRK_CMD_PRIV_SIG_CHECK
+            /// 
+            /// Code: 10, 0x0A
+            /// </summary>
+            PspKirkCmdPrivSigCheck = 0xA,
+
+            /// <summary>
+            /// SHA1 hash generating command.
+            /// SHA1 Hash
+            /// Sig Gens
+            /// 
+            /// KIRK_CMD_SHA1_HASH
+            /// 
+            /// Code: 11, 0x0B
+            /// </summary>
+            PspKirkCmdSha1Hash = 0xB,
+
+            /// <summary>
+            /// ECDSA key generating mul1 command. 
+            /// Mul1
+            /// Sig Gens
+            /// 
+            /// Code: 12, 0x0C
+            /// </summary>
+            PspKirkCmdEcdsaGenKeys = 0xC,
+
+            /// <summary>
+            /// ECDSA key generating mul2 command. 
+            /// Mul2
+            /// Sig Gens
+            /// 
+            /// Code: 13, 0x0D
+            /// </summary>
+            PspKirkCmdEcdsaMultiplyPoint = 0xD,
+
+            /// <summary>
+            /// Random number generating command. 
+            /// Random Number Gen
+            /// Sig Gens
+            /// 
+            /// Code: 14, 0x0E
+            /// </summary>
+            PspKirkCmdPrng = 0xE,
+
+            /// <summary>
+            /// KIRK initialization command.
+            /// (absolutely no idea? could be KIRK initialization)
+            /// Sig Gens
+            /// 
+            /// Code: 15, 0x0F
+            /// </summary>
+            PspKirkCmdInit = 0xF,
+
+            /// <summary>
+            /// ECDSA signing command.
+            /// Signature Gen
+            /// 
+            /// Code: 16, 0x10
+            /// </summary>
+            PspKirkCmdEcdsaSign = 0x10,
+
+            /// <summary>
+            /// ECDSA checking command.
+            /// Signature Check (checks for generated sigs)
+            /// Sig Checks
+            /// 
+            /// Code: 17, 0x11
+            /// </summary>
+            PspKirkCmdEcdsaVerify = 0x11,
+
+            /// <summary>
+            /// Certificate checking command.
+            /// Certificate Check (idstorage signatures)
+            /// Sig Checks
+            /// 
+            /// Code: 18, 0x12
+            /// </summary>
+            PspKirkCmdCertVerify = 0x12,
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum ResultEnum
+        {
+            /// <summary>
+            /// KIRK_OPERATION_SUCCESS
+            /// </summary>
+            Ok = 0,
+
+            /// <summary>
+            /// KIRK_NOT_ENABLED
+            /// </summary>
+            PspKirkNotEnabled = 0x1,
+
+            /// <summary>
+            /// KIRK_INVALID_MODE
+            /// </summary>
+            PspKirkInvalidMode = 0x2,
+
+            /// <summary>
+            /// KIRK_HEADER_HASH_INVALID
+            /// </summary>
+            PspKirkInvalidHeaderHash = 0x3,
+
+            /// <summary>
+            /// KIRK_DATA_HASH_INVALID
+            /// </summary>
+            PspKirkInvalidDataHash = 0x4,
+
+            /// <summary>
+            /// KIRK_SIG_CHECK_INVALID
+            /// </summary>
+            PspKirkInvalidSigCheck = 0x5,
+
+            /// <summary>
+            /// KIRK_UNK_1
+            /// </summary>
+            PspKirkUnk1 = 0x6,
+
+            /// <summary>
+            /// KIRK_UNK_2
+            /// </summary>
+            PspKirkUnk2 = 0x7,
+
+            /// <summary>
+            /// KIRK_UNK_3
+            /// </summary>
+            PspKirkUnk3 = 0x8,
+
+            /// <summary>
+            /// KIRK_UNK_4
+            /// </summary>
+            PspKirkUnk4 = 0x9,
+
+            /// <summary>
+            /// KIRK_UNK_5
+            /// </summary>
+            PspKirkUnk5 = 0xA,
+
+            /// <summary>
+            /// KIRK_UNK_6
+            /// </summary>
+            PspKirkUnk6 = 0xB,
+
+            /// <summary>
+            /// KIRK_NOT_INITIALIZED
+            /// </summary>
+            PspKirkNotInit = 0xC,
+
+            /// <summary>
+            /// KIRK_INVALID_OPERATION
+            /// </summary>
+            PspKirkInvalidOperation = 0xD,
+
+            /// <summary>
+            /// KIRK_INVALID_SEED_CODE
+            /// </summary>
+            PspKirkInvalidSeed = 0xE,
+
+            /// <summary>
+            /// KIRK_INVALID_SIZE
+            /// </summary>
+            PspKirkInvalidSize = 0xF,
+
+            /// <summary>
+            /// KIRK_DATA_SIZE_ZERO
+            /// </summary>
+            PspKirkDataSizeIsZero = 0x10,
+
+            /// <summary>
+            /// SUBCWR_NOT_16_ALGINED
+            /// </summary>
+            PspSubcwrNot16Algined = 0x90A,
+
+            /// <summary>
+            /// SUBCWR_HEADER_HASH_INVALID
+            /// </summary>
+            PspSubcwrHeaderHashInvalid = 0x920,
+
+            /// <summary>
+            /// SUBCWR_BUFFER_TOO_SMALL
+            /// </summary>
+            PspSubcwrBufferTooSmall = 0x1000,
+        }
+
+        private static Aes CreateAes() => Aes.Create() ?? throw new Exception("Can't find AES");
     }
 }

@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <LangVersion>8</LangVersion>
-    <NullableContextOptions>disable</NullableContextOptions>
+    <NullableContextOptions>enable</NullableContextOptions>
+    <Nullable>enable</Nullable>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
