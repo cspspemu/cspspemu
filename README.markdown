@@ -1,14 +1,11 @@
 # CSharp Psp Emulator
 
-[![Build Status](https://travis-ci.org/cspspemu/cspspemu.svg?branch=master)](https://travis-ci.org/cspspemu/cspspemu)
-[![Build status](https://ci.appveyor.com/api/projects/status/5ma7k3s7s0q8khjw?svg=true)](https://ci.appveyor.com/project/soywiz/cspspemu)
-[![gitter](https://img.shields.io/gitter/room/cspspemu/Lobby.svg)](https://gitter.im/cspspemu/Lobby)
-
-Cleanups by Project Rider
+[![Actions Status](https://github.com/cspspemu/cspspemu/workflows/.NET%20Core/badge.svg)](https://github.com/cspspemu/cspspemu/actions?query=workflow%3A%22.NET+Core%22)
+[![Slack](https://img.shields.io/badge/chat-on%20slack-green?style=flat&logo=slack)](https://slack.soywiz.com/)
 
 ![Kaiten Patissier PSP](http://soywiz.github.com/cspspemu/screenshoots/kaiten_patissier.png)
 
-A PSP Emulator for >= .NET 4.5 made in C# by soywiz - Carlos Ballesteros Velasco
+A PSP Emulator for >= .NET Core 3.0 made in C# by soywiz - Carlos Ballesteros Velasco
 
 Work In Progress emulator
 
