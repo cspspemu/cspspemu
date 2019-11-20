@@ -14,7 +14,7 @@ public sealed class InjectContext : IDisposable
     public InjectContext()
     {
         SetInstance<InjectContext>(this);
-        Console.WriteLine("new InjectContext()");
+        //Console.WriteLine("new InjectContext()");
     }
 
     static Logger Logger = Logger.GetLogger("InjectContext");

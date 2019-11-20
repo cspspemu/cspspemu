@@ -157,7 +157,7 @@ namespace CSPspEmu.Hle
                 }
                 else
                 {
-                    this.GreenThread.Name = value;
+                    //this.GreenThread.Name = value;
                 }
             }
         }

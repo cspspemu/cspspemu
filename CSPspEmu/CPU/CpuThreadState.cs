@@ -568,12 +568,6 @@ namespace CSPspEmu.Core.Cpu
             }
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="indexes"></param>
-        /// <returns></returns>
         public IEnumerable<int> GprItems(params int[] indexes) => indexes.Select(index => Gpr[index]);
 
         private CpuThreadState()
@@ -582,10 +576,6 @@ namespace CSPspEmu.Core.Cpu
 
         static public CpuThreadState Dummy;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="processor"></param>
         public CpuThreadState(CpuProcessor processor)
         {
             CpuProcessor = processor;
@@ -751,10 +741,6 @@ namespace CSPspEmu.Core.Cpu
             textWriter.WriteLine();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="textWriter"></param>
         public void DumpRegisters(TextWriter textWriter)
         {
             DumpRegistersCpu(textWriter);
@@ -762,10 +748,6 @@ namespace CSPspEmu.Core.Cpu
             DumpRegistersVFpu(textWriter);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="textWriter"></param>
         public void DumpVfpuRegisters(TextWriter textWriter)
         {
             for (var matrix = 0; matrix < 8; matrix++)
@@ -784,10 +766,6 @@ namespace CSPspEmu.Core.Cpu
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="that"></param>
         public void CopyRegistersFrom(CpuThreadState that)
         {
             Pc = that.Pc;
@@ -833,25 +811,11 @@ namespace CSPspEmu.Core.Cpu
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="methodCacheInfo"></param>
-        /// <param name="pc"></param>
         public void _MethodCacheInfo_SetInternal(MethodCacheInfo methodCacheInfo, uint pc) =>
             MethodCache._MethodCacheInfo_SetInternal(this, methodCacheInfo, pc);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="address"></param>
-        /// <param name="pc"></param>
         public void SetPcWriteAddress(uint address, uint pc) => Memory.SetPCWriteAddress(address, pc);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public Action<CpuThreadState> GetFuncAtPc(uint pc) => CpuProcessor.MethodCache.GetForPc(pc).CallDelegate;
 
         public struct Fcr31Struct

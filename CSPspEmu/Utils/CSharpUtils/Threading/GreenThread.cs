@@ -278,42 +278,49 @@ namespace CSharpUtils.Threading
 
             CurrentThread = new Thread(() =>
             {
-                Console.WriteLine("GreenThread.Start()");
-                ThisGreenThreadList.Value = This;
-                ThisSemaphoreWaitOrParentThreadStopped();
-                try
-                {
-                    Running = true;
-                    action();
-                }
-                catch (StopException)
-                {
-                }
+	            Console.WriteLine("GreenThread.Start()");
+	            ThisGreenThreadList.Value = This;
+	            ThisSemaphoreWaitOrParentThreadStopped();
+	            try
+	            {
+		            Running = true;
+		            action();
+	            }
+	            catch (StackOverflowException e)
+	            {
+		            Console.Error.WriteLine(e);
+	            }
+	            catch (StopException)
+	            {
+	            }
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
-                catch (Exception e)
-                {
-                    Console.Error.WriteLine(e);
-                    _rethrowException = e;
-                }
+	            catch (Exception e)
+	            {
+		            Console.Error.WriteLine(e);
+		            _rethrowException = e;
+	            }
 #endif
-                finally
-                {
-                    Running = false;
-                    try
-                    {
-                        ParentSemaphore.Release();
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                    Console.WriteLine("GreenThread.End()");
-                }
+	            finally
+	            {
+		            Running = false;
+		            try
+		            {
+			            ParentSemaphore.Release();
+		            }
+		            catch
+		            {
+			            // ignored
+		            }
 
-                //Console.WriteLine("GreenThread.Running: {0}", Running);
-            });
+		            Console.WriteLine("GreenThread.End()");
+	            }
 
-            CurrentThread.Name = "GreenThread-" + GreenThreadLastId++;
+	            //Console.WriteLine("GreenThread.Running: {0}", Running);
+            })
+            {
+	            Name = $"GreenThread-{GreenThreadLastId++}"
+            };
+
 
             CurrentThread.Start();
         }
@@ -377,18 +384,11 @@ namespace CSharpUtils.Threading
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
         public static void StopAll()
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void Stop()
         {
             Kill = true;
@@ -396,26 +396,9 @@ namespace CSharpUtils.Threading
             //CurrentThread.Abort();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-            Stop();
-            //Stop();
-        }
+        public void Dispose() => Stop();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Name
-        {
-            set
-            {
-                //CurrentThread.Name = value;
-            }
-            get => CurrentThread.Name;
-        }
+        public string Name => CurrentThread.Name;
     }
 #endif
 

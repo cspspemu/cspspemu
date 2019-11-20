@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
@@ -25,7 +26,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
         private int _mRPos;
         private int _mWPos;
         private readonly Stack _mUsedBlocks = new Stack();
-        private readonly ArrayList _mBlocks = new ArrayList();
+        private readonly List<byte[]> _mBlocks = new List<byte[]>();
 
         private byte[] AllocBlock() => _mUsedBlocks.Count > 0 ? (byte[]) _mUsedBlocks.Pop() : new byte[BlockSize];
 

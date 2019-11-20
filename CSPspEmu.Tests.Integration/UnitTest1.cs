@@ -14,12 +14,16 @@ namespace CSPspEmu.Tests.Integration
 {
     public class UnitTest1
     {
-        private readonly ITestOutputHelper output;
+        private readonly ITestOutputHelper _output;
+        public UnitTest1(ITestOutputHelper output) => _output = output;
 
-        public UnitTest1(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
+        [Fact(Timeout = 30_000)]
+        public void TestCpuAlu() => TestPrx("cpu/cpu_alu/cpu_alu");
+
+        //[Fact(Timeout = 30_000)]
+        //public void TestFpu() => TestPrx("cpu/fpu/fpu");
+
+        #region Internal
 
         private class HleOutputHandlerMock : HleOutputHandler
         {
@@ -29,29 +33,26 @@ namespace CSPspEmu.Tests.Integration
             public override void Output(string outputString) => sb.Append(outputString);
         }
 
-        [Fact(Timeout = 30_000)]
-        public void Test1()
+        private void TestPrx(string Base)
         {
-            //output.WriteLine("hello");
-            //output.WriteLine(Directory.GetCurrentDirectory());
-            //output.WriteLine("hello");
-            //Console.WriteLine("test");
-            output.CaptureToTest(() =>
+            _output.CaptureToTest(() =>
             {
                 using var emulator = new SimplifiedPspEmulator(
                     test: true,
                     configure: injector => { injector.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>(); }
                 );
                 var houtput = (HleOutputHandlerMock) emulator.injector.GetInstance<HleOutputHandler>();
-                emulator.LoadAndStart("../../../../pspautotests/tests/cpu/cpu_alu/cpu_alu.prx");
+                emulator.LoadAndStart($"../../../../pspautotests/tests/{Base}.prx");
                 if (!emulator.Emulator.PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(30.Seconds())) ;
                 var actual = houtput.OutputString;
-                var expected = File.ReadAllText("../../../../pspautotests/tests/cpu/cpu_alu/cpu_alu.expected");
-                File.WriteAllText("/tmp/actual.txt", actual);
-                File.WriteAllText("/tmp/expected.txt", expected);
+                var expected = File.ReadAllText($"../../../../pspautotests/tests/{Base}.expected");
+                //File.WriteAllText("/tmp/actual.txt", actual);
+                //File.WriteAllText("/tmp/expected.txt", expected);
                 Assert.Equal(expected, actual);
             });
         }
+
+        #endregion
     }
 
     static class ITestOutputHelperExt
