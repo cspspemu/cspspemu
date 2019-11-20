@@ -5,6 +5,7 @@ using CSPspEmu.Core.Cpu.Table;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
+    // ReSharper disable UnusedMember.Global
     public sealed partial class CpuEmitter
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////

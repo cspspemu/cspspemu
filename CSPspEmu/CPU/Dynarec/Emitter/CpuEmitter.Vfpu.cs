@@ -108,6 +108,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
     //
     //  So Q_C010 specifies the Quad Column starting at S010, T_C011 the triple Column starting at S011.
     //
+    // ReSharper disable UnusedMember.Global
     public sealed unsafe partial class CpuEmitter
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////

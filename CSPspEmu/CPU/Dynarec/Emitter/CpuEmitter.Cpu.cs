@@ -5,6 +5,7 @@ using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
+    // ReSharper disable UnusedMember.Global
     public sealed partial class CpuEmitter
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -409,59 +410,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
             _ast.Unimplemented(
                     $"UNKNOWN INSTRUCTION: 0x{_instruction.Value:X8} : 0x{_instruction.Value:X8} at 0x{_pc:X8}")
                 .Statement();
-        
-        public AstNodeStm _branch_likely(AstNodeStm code) => _ast.If(BranchFlag(), code);
-
-        // Code executed after the delayed slot.
-        public AstNodeStm _branch_post(AstLabel branchLabel, uint branchPc)
-        {
-            if (_andLink)
-            {
-                return _ast.If(
-                    BranchFlag(),
-                    _ast.StatementsInline(
-                        _ast.AssignGpr(31, branchPc + 8),
-                        CallFixedAddress(branchPc)
-                    )
-                );
-            }
-            else
-            {
-                return _ast.Statements(
-                    //ast.AssignPC(PC),
-                    //ast.GetTickCall(),
-                    _ast.GotoIfTrue(branchLabel, BranchFlag())
-                );
-            }
-        }
-
-        bool _andLink = false;
-        uint _branchPc = 0;
-
-        private AstLocal _branchFlagLocal = null;
-
-        private AstNodeExprLValue BranchFlag()
-        {
-            if (DynarecConfig.BranchFlagAsLocal)
-            {
-                if (_branchFlagLocal == null)
-                {
-                    _branchFlagLocal = AstLocal.Create<bool>("BranchFlag");
-                }
-                return _ast.Local(_branchFlagLocal);
-            }
-            else
-            {
-                return _ast.BranchFlag();
-            }
-        }
-
-        private AstNodeStm AssignBranchFlag(AstNodeExpr expr, bool andLink = false)
-        {
-            _andLink = andLink;
-            _branchPc = _pc;
-            return _ast.Assign(BranchFlag(), _ast.Cast<bool>(expr, Explicit: false));
-        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // beq(l)     : Branch on EQuals (Likely).
@@ -615,5 +563,61 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Jalr)]
         public AstNodeStm Jalr() => CallDynamicAddress(_ast.GPR_u(Rs));
+
+        ///////////
+
+        public AstNodeStm _branch_likely(AstNodeStm code) => _ast.If(BranchFlag(), code);
+
+        // Code executed after the delayed slot.
+        public AstNodeStm _branch_post(AstLabel branchLabel, uint branchPc)
+        {
+            if (_andLink)
+            {
+                return _ast.If(
+                    BranchFlag(),
+                    _ast.StatementsInline(
+                        _ast.AssignGpr(31, branchPc + 8),
+                        CallFixedAddress(branchPc)
+                    )
+                );
+            }
+            else
+            {
+                return _ast.Statements(
+                    //ast.AssignPC(PC),
+                    //ast.GetTickCall(),
+                    _ast.GotoIfTrue(branchLabel, BranchFlag())
+                );
+            }
+        }
+
+        bool _andLink = false;
+        uint _branchPc = 0;
+
+        private AstLocal _branchFlagLocal = null;
+
+        private AstNodeExprLValue BranchFlag()
+        {
+            if (DynarecConfig.BranchFlagAsLocal)
+            {
+                if (_branchFlagLocal == null)
+                {
+                    _branchFlagLocal = AstLocal.Create<bool>("BranchFlag");
+                }
+
+                return _ast.Local(_branchFlagLocal);
+            }
+            else
+            {
+                return _ast.BranchFlag();
+            }
+        }
+
+        private AstNodeStm AssignBranchFlag(AstNodeExpr expr, bool andLink = false)
+        {
+            _andLink = andLink;
+            _branchPc = _pc;
+            return _ast.Assign(BranchFlag(), _ast.Cast<bool>(expr, Explicit: false));
+        }
     }
 }

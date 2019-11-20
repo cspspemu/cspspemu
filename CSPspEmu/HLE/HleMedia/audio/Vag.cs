@@ -18,7 +18,7 @@ namespace CSPspEmu.Hle.Formats.audio
     /// Based on jpcsp. gid15 work.
     /// http://code.google.com/p/jpcsp/source/browse/trunk/src/jpcsp/sound/SampleSourceVAG.java?r=1995
     /// </summary>
-    public sealed unsafe partial class Vag : ISoundDecoder
+    public sealed unsafe class Vag : ISoundDecoder
     {
         //public byte[] Data;
         //public StereoShortSoundSample[] DecodedSamples = new StereoShortSoundSample[0];

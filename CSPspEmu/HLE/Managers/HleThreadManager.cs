@@ -15,7 +15,7 @@ using CSPspEmu.Hle.Interop;
 
 namespace CSPspEmu.Hle.Managers
 {
-    public partial class HleThreadManager : IInjectInitialize, ICpuConnector, IGpuConnector
+    public class HleThreadManager : IInjectInitialize, ICpuConnector, IGpuConnector
     {
         private static readonly Logger Logger = Logger.GetLogger("HleThreadManager");
 

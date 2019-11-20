@@ -9,7 +9,7 @@ namespace CSharpUtils.Streams
     /// <summary>
     /// 
     /// </summary>
-    public sealed partial class MapStream : Stream
+    public sealed class MapStream : Stream
     {
         /// <summary>
         /// 
@@ -284,11 +284,8 @@ namespace CSharpUtils.Streams
         {
             throw new NotImplementedException();
         }
-    }
-
-    public sealed partial class MapStream
-    {
-        /// <summary>
+        
+         /// <summary>
         /// 
         /// </summary>
         /// <param name="targetStream"></param>
