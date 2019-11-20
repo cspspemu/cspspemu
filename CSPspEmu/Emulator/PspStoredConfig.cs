@@ -36,54 +36,15 @@ namespace CSPspEmu.Core
 
         public bool EnableSmaa = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public DateTime LastCheckedTime;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public bool LimitVerticalSync = true;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public int DisplayScale = 2;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public int RenderScale = 2;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public bool UseFastMemory = true;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public bool EnableAstOptimizations = true;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ControllerConfig ControllerConfig = new ControllerConfig();
-
-        /// <summary>
-        /// 
-        /// </summary>
         public List<string> RecentFiles = new List<string>();
-
-        /// <summary>
-        /// 
-        /// </summary>
         public string IsosPath = null;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public bool ScaleTextures = false;
 
         #region Serializing

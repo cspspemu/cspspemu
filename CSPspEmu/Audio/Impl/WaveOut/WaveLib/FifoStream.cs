@@ -37,16 +37,15 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
 
         private byte[] GetWBlock()
         {
-            byte[] result;
             if (_mWPos < BlockSize && _mBlocks.Count > 0)
-                result = (byte[]) _mBlocks[_mBlocks.Count - 1];
+                return (byte[]) _mBlocks[^1];
             else
             {
-                result = AllocBlock();
+                var result = AllocBlock();
                 _mBlocks.Add(result);
                 _mWPos = 0;
+                return result;
             }
-            return result;
         }
 
         // Stream members
@@ -69,10 +68,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
             set => throw new InvalidOperationException();
         }
 
-        public override void Close()
-        {
-            Flush();
-        }
+        public override void Close() => Flush();
 
         public override void Flush()
         {
@@ -87,21 +83,15 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
             }
         }
 
-        public override void SetLength(long len)
-        {
-            throw new InvalidOperationException();
-        }
+        public override void SetLength(long len) => throw new InvalidOperationException();
 
-        public override long Seek(long pos, SeekOrigin o)
-        {
-            throw new InvalidOperationException();
-        }
+        public override long Seek(long pos, SeekOrigin o) => throw new InvalidOperationException();
 
         public override int Read(byte[] buf, int ofs, int count)
         {
             lock (this)
             {
-                int result = Peek(buf, ofs, count);
+                var result = Peek(buf, ofs, count);
                 Advance(result);
                 return result;
             }

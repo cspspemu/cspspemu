@@ -199,7 +199,7 @@ namespace CSPspEmu
 
         public void CreateNewContextAndRemoveOldOne()
         {
-            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine("----- CreateNewContextAndRemoveOldOne -----------------------------------------");
             // Stops the current context if it has one already.
             if (PspRunner != null)
             {
