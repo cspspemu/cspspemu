@@ -14,11 +14,11 @@ namespace SafeILGenerator.Utils
 
         public TType Value
         {
-            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+            
+            
             set { _item.Value = value; }
-            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+            
+            
             get { return (TType) _item.Value; }
         }
 

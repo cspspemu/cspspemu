@@ -89,7 +89,7 @@ namespace CSPspEmu.Hle.Media.audio.At3.SUB
             }
         }
 
-        ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //
         public int GetWithI32Buffer(int bnum, bool getThenDelInBuf = true)
         {
             var value = _getWithI32Buffer(bnum, getThenDelInBuf);
@@ -99,7 +99,7 @@ namespace CSPspEmu.Hle.Media.audio.At3.SUB
             return value;
         }
 
-        ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //
         private int _getWithI32Buffer(int bnum, bool getThenDelInBuf = true)
         {
 #if BIT_READER_THREAD_SAFE

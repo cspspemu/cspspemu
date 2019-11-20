@@ -12,13 +12,13 @@ namespace CSharpPlatform
     {
         public static readonly ByteSwap ByteSwap;
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+        
         public static ushort Portable_ByteSwap_ushort(ushort Value)
         {
             return (ushort) ((Value >> 8) | (Value << 8));
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+        
         public static uint Portable_ByteSwap_uint(uint Value)
         {
             return (

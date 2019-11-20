@@ -69,7 +69,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
         /// <summary>Ast for this function.</summary>
         public AstNodeStm AstTree => DynarecFunction?.AstNode;
 
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         public void CallDelegate(CpuThreadState cpuThreadState) => _functionDelegate(cpuThreadState);
 
         public void Free() => MethodCache.Free(this);

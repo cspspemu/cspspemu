@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Memory
         public static byte* StaticFrameBufferPtr;
         public static byte* StaticMainPtr;
 
-        ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //
         //public byte* Base { get { return _Base; } }
 
         /*

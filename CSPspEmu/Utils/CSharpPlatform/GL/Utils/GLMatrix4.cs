@@ -29,49 +29,49 @@
     //
     //	public float this[int Column, int Row]
     //	{
-    //		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //		
     //		get
     //		{
     //			return Get(Column, Row);
     //		}
-    //		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //		
     //		set
     //		{
     //			Set(Column, Row, value);
     //		}
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public float Get(int Column, int Row)
     //	{
     //		fixed (GLVector4* RowPtr = &this.Row0) return RowPtr[Row][Column];
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public void Set(int Column, int Row, float Value)
     //	{
     //		fixed (GLVector4* RowPtr = &this.Row0) RowPtr[Row][Column] = Value;
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public void SetRow(int Row, GLVector4 Value)
     //	{
     //		fixed (GLVector4* RowPtr = &this.Row0) RowPtr[Row] = Value;
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public GLVector4 GetRow(int Row)
     //	{
     //		fixed (GLVector4* RowPtr = &this.Row0) return RowPtr[Row];
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public void SetColumn(int Column, GLVector4 Value)
     //	{
     //		for (int n = 0; n < 4; n++) this[Column, n] = Value[n];
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public GLVector4 GetColumn(int Column)
     //	{
     //		var Out = default(GLVector4);
@@ -79,7 +79,7 @@
     //		return Out;
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public void LoadIdentity()
     //	{
     //		this.Row0.Set(1, 0, 0, 0);
@@ -88,7 +88,7 @@
     //		this.Row3.Set(0, 0, 0, 1);
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public void Multiply(GLMatrix4 that)
     //	{
     //		for (int Row = 0; Row < 4; Row++)
@@ -102,7 +102,7 @@
     //		}
     //	}
     //
-    //	[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+    //	
     //	public void Scale(float Value)
     //	{
     //		for (int Row = 0; Row < 4; Row++)
