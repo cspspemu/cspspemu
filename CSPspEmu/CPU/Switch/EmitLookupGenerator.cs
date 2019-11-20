@@ -18,16 +18,20 @@ namespace CSPspEmu.Core.Cpu.Switch
         public static Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> callback,
             TType instance) => value => callback(value, instance);
 
-        public static Action<uint, TType> GenerateSwitchDelegate<TType>(string name,
-            IEnumerable<InstructionInfo> instructionInfoList)
-        {
+        public static Action<uint, TType> GenerateSwitchDelegate<TType>(
+            string name,
+            IEnumerable<InstructionInfo> instructionInfoList
+        ) {
             return GenerateSwitch<Action<uint, TType>>(name, instructionInfoList, instructionInfo =>
             {
                 var instructionInfoName = instructionInfo != null ? instructionInfo.Name : "Default";
                 var methodInfo = typeof(TType).GetMethod(instructionInfoName);
                 if (methodInfo == null)
+                {
                     throw new Exception(
-                        $"Cannot find method \'{instructionInfoName}\' on type \'{typeof(TType).Name}\' {name}, {instructionInfo?.Name} ");
+                        $"Cannot find method \'{instructionInfoName}\' on type \'{typeof(TType).Name}\' {name}, '{instructionInfo?.Name}' "
+                    );
+                }
 
                 //Console.WriteLine("MethodInfo: {0}", MethodInfo);
                 //Console.WriteLine("Argument(1): {0}", typeof(TType));

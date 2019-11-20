@@ -517,6 +517,17 @@ namespace CSPspEmu.Core.Cpu
             set => Gpr2 = value;
         }
 
+        public void SetGpr(int index, int value)
+        {
+            if (index == 0) return;
+            fixed (uint* ptr = &Gpr0) ptr[index] = (uint)value;            
+        }
+
+        public int GetGpr(int index)
+        {
+            fixed (uint* ptr = &Gpr0) return (int)ptr[index];            
+        }
+
         public GprList Gpr;
         public C0RList C0R;
         public FprList Fpr;
@@ -867,15 +878,8 @@ namespace CSPspEmu.Core.Cpu
 
             public int this[int index]
             {
-                get
-                {
-                    fixed (uint* ptr = &CpuThreadState.Gpr0) return (int) ptr[index];
-                }
-                set
-                {
-                    if (index == 0) return;
-                    fixed (uint* ptr = &CpuThreadState.Gpr0) ptr[index] = (uint) value;
-                }
+                get => CpuThreadState.GetGpr(index);
+                set => CpuThreadState.SetGpr(index, value);
             }
         }
 
