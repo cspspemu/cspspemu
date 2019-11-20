@@ -19,11 +19,11 @@ namespace CSPspEmu.Emulator.Simple
         public PspMemory Memory;
         public PspController Controller;
 
-        public SimplifiedPspEmulator()
+        public SimplifiedPspEmulator(bool test = false, Action<InjectContext>? configure = null)
         {
-            injector = PspInjectContext.CreateInjectContext(PspStoredConfig.Load(), false);
+            injector = PspInjectContext.CreateInjectContext(PspStoredConfig.Load(), test, configure);
             Emulator = injector.GetInstance<PspEmulator>();
-            Emulator.PspRunner = null;
+            //Emulator.PspRunner = null;
             Emulator.CpuConfig.DebugSyscalls = true;
             Emulator.CpuConfig.TrackCallStack = true;
             
@@ -42,7 +42,7 @@ namespace CSPspEmu.Emulator.Simple
 
         public void Stop()
         {
-            Emulator.PspRunner.StopSynchronized();
+            Emulator.PspRunner?.StopSynchronized();
         }
 
         void IDisposable.Dispose()

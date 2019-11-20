@@ -76,7 +76,7 @@ namespace CSPspEmu.Frontend
                 }
             } 
             
-            Console.WriteLine(button);
+            //Console.WriteLine(button);
 
             if (button != 0)
             {

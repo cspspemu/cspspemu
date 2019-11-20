@@ -195,6 +195,7 @@ namespace CSPspEmu
         {
             Console.WriteLine("----- CreateNewContextAndRemoveOldOne -----------------------------------------");
             // Stops the current context if it has one already.
+            /*
             if (PspRunner != null)
             {
                 PspRunner.StopSynchronized();
@@ -208,13 +209,15 @@ namespace CSPspEmu
                 _InjectContext = null;
                 GC.Collect();
             }
+            */
 
             lock (this)
             {
-                _InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, test: false);
-                _InjectContext.SetInstanceType<IGuiExternalInterface, PspEmulator>();
+                //PspRunner.StopSynchronized();
+                //_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, test: false);
+                //_InjectContext.SetInstanceType<IGuiExternalInterface, PspEmulator>();
 
-                _InjectContext.InjectDependencesTo(this);
+                //_InjectContext.InjectDependencesTo(this);
 
                 PspRunner.StartSynchronized();
             }

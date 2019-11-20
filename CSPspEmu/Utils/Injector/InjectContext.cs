@@ -11,7 +11,11 @@ using CSharpUtils.Extensions;
 /// </summary>
 public sealed class InjectContext : IDisposable
 {
-    public InjectContext() => SetInstance<InjectContext>(this);
+    public InjectContext()
+    {
+        SetInstance<InjectContext>(this);
+        Console.WriteLine("new InjectContext()");
+    }
 
     static Logger Logger = Logger.GetLogger("InjectContext");
     private readonly ConcurrentDictionary<Type, object> ObjectsByType = new ConcurrentDictionary<Type, object>();
@@ -73,7 +77,7 @@ public sealed class InjectContext : IDisposable
 
     private object _SetInstance(Type Type, object Instance)
     {
-        if (ObjectsByType.ContainsKey(Type)) throw new InvalidOperationException();
+        if (ObjectsByType.ContainsKey(Type)) throw new InvalidOperationException("Already set");
         ObjectsByType[Type] = Instance;
         return Instance;
     }

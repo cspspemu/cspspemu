@@ -20,41 +20,24 @@ namespace CSPspEmu.Runner
 {
     public class PspInjectContext
     {
-        public static InjectContext CreateInjectContext(PspStoredConfig storedConfig, bool test)
+        public static InjectContext CreateInjectContext(PspStoredConfig storedConfig, bool test, Action<InjectContext>? configure = null)
         {
             var injectContext = new InjectContext();
+            configure?.Invoke(injectContext);
             injectContext.SetInstance<PspStoredConfig>(storedConfig);
             injectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
             injectContext.SetInstanceType<ICpuConnector, HleThreadManager>();
             injectContext.SetInstanceType<IGpuConnector, HleThreadManager>();
             injectContext.SetInstanceType<IInterruptManager, HleInterruptManager>();
-
-            // Memory
-#if true // Disabled because crashes on x86
-            if (storedConfig.UseFastMemory)
-            {
-                injectContext.SetInstanceType<PspMemory, FastPspMemory>();
-            }
-            else
-#endif
-            {
-                injectContext.SetInstanceType<PspMemory, NormalPspMemory>();
-            }
+            injectContext.SetInstanceType<PspMemory, FastPspMemory>();
 
             if (!test)
             {
                 // GPU
                 PspPluginImpl.SelectWorkingPlugin<GpuImpl>(injectContext,
-#if true
-					//typeof(GpuImplNull)
                     typeof(OpenglGpuImpl),
-                    typeof(GpuImplSoft)
-#else
-                    typeof(OpenglGpuImpl),
-                    //typeof(GpuImplOpenglEs),
-                    //typeof(GpuImplSoft),
+                    typeof(GpuImplSoft),
                     typeof(GpuImplNull)
-#endif
                 );
 
                 // AUDIO
