@@ -218,14 +218,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
                 ShaderInfo.texture0.Set(GLTextureUnit.CreateAtIndex(0)
                     .SetWrap(
-                        (GLWrap) ((textureState.WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE),
-                        (GLWrap) ((textureState.WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE)
+                        (GLWrap) (textureState.WrapU == WrapMode.Repeat ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE),
+                        (GLWrap) (textureState.WrapV == WrapMode.Repeat ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE)
                     )
                     .SetFiltering(
-                        (GLScaleFilter) ((textureState.FilterMinification == TextureFilter.Linear)
+                        (GLScaleFilter) (textureState.FilterMinification == TextureFilter.Linear
                             ? GL.GL_LINEAR
                             : GL.GL_NEAREST),
-                        (GLScaleFilter) ((textureState.FilterMagnification == TextureFilter.Linear)
+                        (GLScaleFilter) (textureState.FilterMagnification == TextureFilter.Linear
                             ? GL.GL_LINEAR
                             : GL.GL_NEAREST)
                     )
@@ -510,7 +510,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         {
             VertexType = GpuState.VertexState.Type;
 
-            if (_doPrimStart || (VertexType != _cachedVertexType))
+            if (_doPrimStart || VertexType != _cachedVertexType)
             {
                 _cachedVertexType = VertexType;
                 _doPrimStart = false;
@@ -540,7 +540,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //for (int n = 0; n < MorpingVertexCount; n++) Console.Write("{0}, ", Morphs[n]); Console.WriteLine("");
 
             //int VertexInfoFloatCount = (sizeof(Color4F) + sizeof(Vector3F) * 3) / sizeof(float);
-            var vertexInfoFloatCount = (sizeof(VertexInfo)) / sizeof(float);
+            var vertexInfoFloatCount = sizeof(VertexInfo) / sizeof(float);
             fixed (VertexInfo* verticesPtr = Vertices)
             {
                 if (morpingVertexCount == 1)
@@ -634,7 +634,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 GuPrimitiveType.TriangleFan => GLGeometry.GL_TRIANGLE_FAN,
                 GuPrimitiveType.TriangleStrip => GLGeometry.GL_TRIANGLE_STRIP,
                 GuPrimitiveType.Sprites => GLGeometry.GL_TRIANGLE_STRIP,
-                _ => throw (new NotImplementedException("Not implemented PrimitiveType:'" + primitiveType + "'"))
+                _ => throw new NotImplementedException("Not implemented PrimitiveType:'" + primitiveType + "'")
             };
 
         public override void BeforeDraw(GpuStateStruct gpuState)
@@ -903,7 +903,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             //GL.EnableDisable(EnableCap.CullFace, false);
 
-            GL.glCullFace((gpuState.BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise)
+            GL.glCullFace(gpuState.BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise
                 ? GL.GL_FRONT
                 : GL.GL_BACK);
         }
@@ -1078,7 +1078,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
             if (blendingState.FunctionDestination == GuBlendingFactorDestination.GuFix)
             {
-                if (((int) openglFunctionSource == GL.GL_CONSTANT_COLOR) &&
+                if ((int) openglFunctionSource == GL.GL_CONSTANT_COLOR &&
                     (blendingState.FixColorSource + blendingState.FixColorDestination).IsColorf(1, 1, 1))
                 {
                     openglFunctionDestination = GL.GL_ONE_MINUS_CONSTANT_COLOR;
@@ -1258,10 +1258,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             for (uint y = 0; y < textureTransferState.Height; y++)
             {
                 var rowSourceOffset = (uint) (
-                    (textureTransferState.SourceLineWidth * (y + sourceY)) + sourceX
+                    textureTransferState.SourceLineWidth * (y + sourceY) + sourceX
                 );
                 var rowDestinationOffset = (uint) (
-                    (textureTransferState.DestinationLineWidth * (y + destinationY)) + destinationX
+                    textureTransferState.DestinationLineWidth * (y + destinationY) + destinationX
                 );
                 PointerUtils.Memcpy(
                     destinationPointer + rowDestinationOffset * bytesPerPixel,
@@ -1305,9 +1305,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             var textureTransferState = gpuState.TextureTransferState;
 
             if (
-                (textureTransferState.DestinationAddress.Address == gpuState.DrawBufferState.Address) &&
-                (textureTransferState.DestinationLineWidth == gpuState.DrawBufferState.Width) &&
-                (textureTransferState.BytesPerPixel == gpuState.DrawBufferState.BytesPerPixel)
+                textureTransferState.DestinationAddress.Address == gpuState.DrawBufferState.Address &&
+                textureTransferState.DestinationLineWidth == gpuState.DrawBufferState.Width &&
+                textureTransferState.BytesPerPixel == gpuState.DrawBufferState.BytesPerPixel
             )
             {
                 //Console.Error.WriteLine("Writting to DrawBuffer");

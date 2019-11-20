@@ -84,7 +84,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
 
         private uint* ScreenRow(int y)
         {
-            return (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + (y * 512) * 4));
+            return (uint*) Memory.PspAddressToPointerSafe((uint) (DrawAddress + y * 512 * 4));
         }
 
         private void DrawRowFastSingleColor(int y, int x0, int x1, Rgba color)
@@ -116,7 +116,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Soft
             var textureMappingStateStruct = GpuState.TextureMappingState;
             var textureStateStruct = textureMappingStateStruct.TextureState;
             var mipmap = textureStateStruct.Mipmap0;
-            return (uint*) Memory.PspAddressToPointerSafe((uint)(mipmap.Address + (((y * mipmap.BufferWidth) + x) * 4)));
+            return (uint*) Memory.PspAddressToPointerSafe((uint)(mipmap.Address + (y * mipmap.BufferWidth + x) * 4));
         }
 
     }
