@@ -221,7 +221,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
         public int sceIoWriteAsync(SceUID FileId, void* data, SceSize size)
         {
             _DelayIo(IoDelayType.Write, (long) size);
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
             /*
             unimplemented();
             return -1;
@@ -237,14 +237,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
         [HlePspNotImplemented]
         public int sceIoCancel(SceUID FileId)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         [HlePspFunction(NID = 0x6D08A871, FirmwareVersion = 150)]
         [HlePspNotImplemented]
         public int sceIoUnassign()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
         [HlePspNotImplemented]
         public int sceIoSetAsyncCallback(SceUID FileId, int CallbackId, int NotifyArgument)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
 #if false
 			var File = GetFileArgFromHandle(FileId); 
 			var Callback = CallbackManager.Callbacks.Get(CallbackId);

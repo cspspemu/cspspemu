@@ -45,7 +45,7 @@ namespace CSPspEmu.Utils
 
             while (count >= 8)
             {
-                hash += (*(ulong*) pointer) + (ulong) (count << 31);
+                hash += *(ulong*) pointer + (ulong) (count << 31);
                 pointer += 8;
                 count -= 8;
             }

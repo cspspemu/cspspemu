@@ -49,21 +49,19 @@ namespace SafeILGenerator.Ast
 
         public static bool IsTypeFloat(Type type)
         {
-            return (type == typeof(float)) || (type == typeof(double));
+            return type == typeof(float) || type == typeof(double);
         }
 
         public static bool IsTypeSigned(Type type)
         {
             if (!type.IsPrimitive) return false;
-            return (
-                type == typeof(sbyte) ||
-                type == typeof(short) ||
-                type == typeof(int) ||
-                type == typeof(long) ||
-                type == typeof(float) ||
-                type == typeof(double) ||
-                type == typeof(decimal)
-            );
+            return type == typeof(sbyte) ||
+                   type == typeof(short) ||
+                   type == typeof(int) ||
+                   type == typeof(long) ||
+                   type == typeof(float) ||
+                   type == typeof(double) ||
+                   type == typeof(decimal);
         }
 
         public static TType CastType<TType>(object value) => (TType) CastType(value, typeof(TType));
@@ -98,7 +96,7 @@ namespace SafeILGenerator.Ast
             if (valueType == typeof(float)) return -(float) value;
             if (valueType == typeof(double)) return -(double) value;
 
-            throw (new NotImplementedException("Negate for type '" + valueType + "'"));
+            throw new NotImplementedException("Negate for type '" + valueType + "'");
         }
     }
 }

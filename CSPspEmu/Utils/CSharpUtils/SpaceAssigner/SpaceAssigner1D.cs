@@ -43,7 +43,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
                 Min = min;
                 Max = max;
                 if (min > max)
-                    throw(new Exception($"Space(Min={min}, Max={max}). Min is bigger than Max!!"));
+                    throw new Exception($"Space(Min={min}, Max={max}). Min is bigger than Max!!");
                 //Debug.Assert(Min <= Max);
             }
 
@@ -52,7 +52,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
             /// </summary>
             /// <param name="value"></param>
             /// <returns></returns>
-            public bool Contains(long value) => (value >= Min) && (value < Max);
+            public bool Contains(long value) => value >= Min && value < Max;
 
             /// <summary>
             /// 
@@ -60,7 +60,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static bool Intersects(Space a, Space b) => (a.Max > b.Min) && (b.Max > a.Min);
+            public static bool Intersects(Space a, Space b) => a.Max > b.Min && b.Max > a.Min;
 
             /// <summary>
             /// 
@@ -132,7 +132,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
                     left = baseSpace;
                 }
 
-                return new[] {left, right}.Where(space => (space != null) && (space.Length > 0)).ToArray();
+                return new[] {left, right}.Where(space => space != null && space.Length > 0).ToArray();
             }
 
             /// <summary>
@@ -146,7 +146,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
             /// </summary>
             /// <param name="that"></param>
             /// <returns></returns>
-            public int CompareTo(Space that) => (Min.CompareTo(that.Min) != 0) ? Max.CompareTo(that.Max) : 0;
+            public int CompareTo(Space that) => Min.CompareTo(that.Min) != 0 ? Max.CompareTo(that.Max) : 0;
 
             /// <summary>
             /// 
@@ -157,8 +157,8 @@ namespace CSharpUtils.Ext.SpaceAssigner
             public static bool operator ==(Space space1, Space space2)
             {
                 //return (Space1.Min == Space2.Min) && (Space1.Max == Space2.Max);
-                if ((space1 as object) == null) return ((space2 as object) == null);
-                if ((space2 as object) == null) return false;
+                if (space1 as object == null) return space2 as object == null;
+                if (space2 as object == null) return false;
                 return space1.CompareTo(space2) == 0;
             }
 
@@ -190,7 +190,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
             /// </summary>
             /// <param name="that"></param>
             /// <returns></returns>
-            public bool Equals(Space that) => (CompareTo(that) == 0);
+            public bool Equals(Space that) => CompareTo(that) == 0;
 
             /// <summary>
             /// 
@@ -272,7 +272,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
             {
                 found = false;
                 // Remove empty spaces.
-                foreach (var space in AvailableSpaces.Where(space => (space.Length == 0)))
+                foreach (var space in AvailableSpaces.Where(space => space.Length == 0))
                 {
                     AvailableSpaces.Remove(space);
                     found = true;
@@ -311,7 +311,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
                         break;
                     }
                 }
-                if (maxSteps-- <= 0) throw(new Exception("Infinite loop detected"));
+                if (maxSteps-- <= 0) throw new Exception("Infinite loop detected");
             } while (Continue);
 
             PerformCombine();
@@ -404,7 +404,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
 
             if (foundSpace == null)
             {
-                throw(new Exception("Can't allocate a space of length " + requiredLength + "."));
+                throw new Exception("Can't allocate a space of length " + requiredLength + ".");
             }
 
             AvailableSpaces.Remove(foundSpace);

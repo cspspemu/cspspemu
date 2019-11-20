@@ -114,9 +114,9 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspFunction(NID = 0x8125221D, FirmwareVersion = 150)]
         public MessageBox sceKernelCreateMbx(string Name, MbxAttributesEnum Attributes, SceKernelMbxOptParam* Options)
         {
-            if (Options != null) throw(new NotImplementedException());
-            if (Attributes.HasFlag(MbxAttributesEnum.RecvPriority)) throw(new NotImplementedException());
-            if (Attributes.HasFlag(MbxAttributesEnum.SendPriority)) throw (new NotImplementedException());
+            if (Options != null) throw new NotImplementedException();
+            if (Attributes.HasFlag(MbxAttributesEnum.RecvPriority)) throw new NotImplementedException();
+            if (Attributes.HasFlag(MbxAttributesEnum.SendPriority)) throw new NotImplementedException();
 
             var Mbx = new MessageBox()
             {
@@ -225,7 +225,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         {
             if (!MessageBox.Poll(PointerToMessage))
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGEBOX_NO_MESSAGE));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGEBOX_NO_MESSAGE);
             }
 
             return 0;

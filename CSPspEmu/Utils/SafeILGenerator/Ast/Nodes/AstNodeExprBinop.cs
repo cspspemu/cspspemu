@@ -21,16 +21,15 @@ namespace SafeILGenerator.Ast.Nodes
         {
             var compatible = !(AstUtils.GetTypeSize(LeftNode.Type) < AstUtils.GetTypeSize(RightNode.Type));
 
-            if (OperatorRequireBoolOperands(Operator) && (LeftNode.Type != typeof(bool)) &&
-                (RightNode.Type != typeof(bool)))
+            if (OperatorRequireBoolOperands(Operator) && LeftNode.Type != typeof(bool) &&
+                RightNode.Type != typeof(bool))
             {
                 compatible = false;
             }
 
             if (!compatible)
-                throw (new Exception(
-                    $"Left.Type({LeftNode.Type}) Right.Type({RightNode.Type}) are not compatibles Operator: {Operator}")
-                );
+                throw new Exception(
+                    $"Left.Type({LeftNode.Type}) Right.Type({RightNode.Type}) are not compatibles Operator: {Operator}");
         }
 
         public override void TransformNodes(TransformNodesDelegate transformer)

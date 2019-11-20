@@ -72,7 +72,7 @@ namespace CSPspEmu.Core.Memory
 
             public bool Contains(uint Address)
             {
-                return (Address >= Low && Address < High);
+                return Address >= Low && Address < High;
             }
         }
 
@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Memory
         public void* PspAddressToPointerNotNull(uint _Address)
         {
             var Pointer = PspAddressToPointerUnsafe(_Address);
-            if (Pointer == null) throw (new InvalidAddressException(_Address));
+            if (Pointer == null) throw new InvalidAddressException(_Address);
             return Pointer;
         }
 
@@ -137,16 +137,16 @@ namespace CSPspEmu.Core.Memory
         {
             if (Pointer == null) return 0;
             //if (Pointer == NullPtr) return 0;
-            if ((Pointer >= ScratchPadPtr) && (Pointer < ScratchPadPtr + ScratchPadSize))
+            if (Pointer >= ScratchPadPtr && Pointer < ScratchPadPtr + ScratchPadSize)
                 return (uint) (ScratchPadOffset + (Pointer - ScratchPadPtr));
-            if ((Pointer >= FrameBufferPtr) && (Pointer < FrameBufferPtr + FrameBufferSize))
+            if (Pointer >= FrameBufferPtr && Pointer < FrameBufferPtr + FrameBufferSize)
                 return (uint) (FrameBufferOffset + (Pointer - FrameBufferPtr));
-            if ((Pointer >= MainPtr) && (Pointer < MainPtr + MainSize))
+            if (Pointer >= MainPtr && Pointer < MainPtr + MainSize)
                 return (uint) (MainOffset + (Pointer - MainPtr));
-            if ((Pointer >= VectorsPtr) && (Pointer < VectorsPtr + VectorsSize))
+            if (Pointer >= VectorsPtr && Pointer < VectorsPtr + VectorsSize)
                 return (uint) (VectorsOffset + (Pointer - VectorsPtr));
-            throw (new InvalidAddressException(
-                $"Pointer 0x{(ulong) Pointer:X} doesn't belong to PSP Memory. Main: 0x{(ulong) MainPtr:X}-0x{(ulong) MainSize:X}"));
+            throw new InvalidAddressException(
+                $"Pointer 0x{(ulong) Pointer:X} doesn't belong to PSP Memory. Main: 0x{(ulong) MainPtr:X}-0x{(ulong) MainSize:X}");
         }
 
         public virtual void SetPCWriteAddress(uint Address, uint PC)
@@ -164,10 +164,10 @@ namespace CSPspEmu.Core.Memory
 
         public static void ValidateRange(uint Address, int Size)
         {
-            if (!IsAddressValid((uint) (Address + 0))) throw (new InvalidAddressException(Address));
+            if (!IsAddressValid((uint) (Address + 0))) throw new InvalidAddressException(Address);
             if (Size > 1)
             {
-                if (!IsAddressValid((uint) (Address + Size - 1))) throw (new InvalidAddressException(Address));
+                if (!IsAddressValid((uint) (Address + Size - 1))) throw new InvalidAddressException(Address);
             }
         }
 

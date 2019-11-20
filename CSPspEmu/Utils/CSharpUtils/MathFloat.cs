@@ -19,7 +19,7 @@ namespace CSharpUtils
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (value == -0f) return 0f;
-            return (value >= 0) ? value : -value;
+            return value >= 0 ? value : -value;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace CSharpUtils
         
         public static uint ReinterpretFloatAsUInt(float value)
         {
-            return *((uint*) &value);
+            return *(uint*) &value;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace CSharpUtils
         
         public static float ReinterpretUIntAsFloat(uint value)
         {
-            return *((float*) &value);
+            return *(float*) &value;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace CSharpUtils
         
         public static int ReinterpretFloatAsInt(float value)
         {
-            return *((int*) &value);
+            return *(int*) &value;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace CSharpUtils
         
         public static float ReinterpretIntAsFloat(int value)
         {
-            return *((float*) &value);
+            return *(float*) &value;
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace CSharpUtils
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (value == 0) return 0f;
             var iValue = ReinterpretFloatAsUInt(value);
-            return ((iValue & 0x80000000) != 0) ? -1f : +1f;
+            return (iValue & 0x80000000) != 0 ? -1f : +1f;
             //if (float.IsNaN(Value)) return +1f;
             //if (float.IsNaN(-Value)) return -1f;
             //if (Value > 0) return +1.0f;
@@ -546,7 +546,7 @@ namespace CSharpUtils
         public static float Sign2(float left, float right)
         {
             var a = left - right;
-            return ((0.0 < a) ? 1 : 0) - ((a < 0.0) ? 1 : 0);
+            return (0.0 < a ? 1 : 0) - (a < 0.0 ? 1 : 0);
         }
     }
 }

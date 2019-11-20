@@ -95,7 +95,7 @@ namespace CSharpUtils.Streams
                 case SeekOrigin.End:
                     Position = Length + offset;
                     break;
-                default: throw(new NotImplementedException());
+                default: throw new NotImplementedException();
             }
             return Position;
         }

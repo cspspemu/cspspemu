@@ -1416,11 +1416,11 @@ namespace cscodec.h264.decoder
             src[src_offset + 3 + 1 * stride] =
                 src[src_offset + 1 + 2 * stride] = (byte) ((t6 + 3 * t7 + l2 + 3 * l3 + 4) >> 3);
             src[src_offset + 3 + 2 * stride] =
-                src[src_offset + 1 + 3 * stride] = (byte) (l3);
+                src[src_offset + 1 + 3 * stride] = (byte) l3;
             src[src_offset + 0 + 3 * stride] =
                 src[src_offset + 2 + 2 * stride] = (byte) ((t6 + t7 + 2 * l3 + 2) >> 2);
             src[src_offset + 2 + 3 * stride] =
-                src[src_offset + 3 + 3 * stride] = (byte) (l3);
+                src[src_offset + 3 + 3 * stride] = (byte) l3;
         }
 
         public static void pred4x4_horizontal_down_c(byte[] src, int src_offset, byte[] topright, int topright_offset,
@@ -1555,7 +1555,7 @@ namespace cscodec.h264.decoder
                 dc += src[src_offset + i - stride];
             }
 
-            dc = ((dc + 16) >> 5);
+            dc = (dc + 16) >> 5;
 
             for (int i = 0; i < 16; i++)
             {
@@ -1589,7 +1589,7 @@ namespace cscodec.h264.decoder
                 dc += src[src_offset - 1 + i * stride];
             }
 
-            dc = ((dc + 8) >> 4);
+            dc = (dc + 8) >> 4;
             // DebugTool.printDebugString("    **** avg dc = "+dc+"\n");
 
             for (i = 0; i < 16; i++)
@@ -1622,7 +1622,7 @@ namespace cscodec.h264.decoder
             {
                 dc += src[src_offset + i - stride];
             }
-            dc = ((dc + 8) >> 4);
+            dc = (dc + 8) >> 4;
 
             for (i = 0; i < 16; i++)
             {
@@ -1736,8 +1736,8 @@ namespace cscodec.h264.decoder
             }
             if (svq3 != 0)
             {
-                H = (5 * (H / 4)) / 16;
-                V = (5 * (V / 4)) / 16;
+                H = 5 * (H / 4) / 16;
+                V = 5 * (V / 4) / 16;
 
                 /* required for 100% accuracy */
                 i = H;
@@ -1762,7 +1762,7 @@ namespace cscodec.h264.decoder
                 a += V;
                 for (i = -16; i < 0; i += 4)
                 {
-                    src[src_offset + 16 + i] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b) >> 5)];
+                    src[src_offset + 16 + i] = (byte) H264DSPContext.ff_cropTbl[cm_offset + (b >> 5)];
                     src[src_offset + 17 + i] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b + H) >> 5)];
                     src[src_offset + 18 + i] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b + 2 * H) >> 5)];
                     src[src_offset + 19 + i] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b + 3 * H) >> 5)];
@@ -1913,8 +1913,8 @@ namespace cscodec.h264.decoder
                 dc0 += src[src_offset - 1 + i * stride];
                 dc2 += src[src_offset - 1 + (i + 4) * stride];
             }
-            dc0 = ((dc0 + 2) >> 2);
-            dc2 = ((dc2 + 2) >> 2);
+            dc0 = (dc0 + 2) >> 2;
+            dc2 = (dc2 + 2) >> 2;
 
             for (i = 0; i < 4; i++)
             {
@@ -1948,7 +1948,7 @@ namespace cscodec.h264.decoder
             dc0 = 0;
             for (i = 0; i < 8; i++)
                 dc0 += src[src_offset - 1 + i * stride];
-            dc0 = ((dc0 + 4) >> 3);
+            dc0 = (dc0 + 4) >> 3;
 
             for (i = 0; i < 8; i++)
             {
@@ -1974,8 +1974,8 @@ namespace cscodec.h264.decoder
                 dc0 += src[src_offset + i - stride];
                 dc1 += src[src_offset + 4 + i - stride];
             }
-            dc0 = ((dc0 + 2) >> 2);
-            dc1 = ((dc1 + 2) >> 2);
+            dc0 = (dc0 + 2) >> 2;
+            dc1 = (dc1 + 2) >> 2;
 
             for (i = 0; i < 4; i++)
             {
@@ -2010,7 +2010,7 @@ namespace cscodec.h264.decoder
 
             dc0 = 0;
             for (i = 0; i < 8; i++) dc0 += src[src_offset + i - stride];
-            dc0 = ((dc0 + 4) >> 3);
+            dc0 = (dc0 + 4) >> 3;
 
             for (i = 0; i < 8; i++)
             {
@@ -2038,10 +2038,10 @@ namespace cscodec.h264.decoder
                 dc1 += src[src_offset + 4 + i - stride];
                 dc2 += src[src_offset - 1 + (i + 4) * stride];
             }
-            dc3 = ((dc1 + dc2 + 4) >> 3);
-            dc0 = ((dc0 + 4) >> 3);
-            dc1 = ((dc1 + 2) >> 2);
-            dc2 = ((dc2 + 2) >> 2);
+            dc3 = (dc1 + dc2 + 4) >> 3;
+            dc0 = (dc0 + 4) >> 3;
+            dc1 = (dc1 + 2) >> 2;
+            dc2 = (dc2 + 2) >> 2;
 
             for (i = 0; i < 4; i++)
             {
@@ -2107,7 +2107,7 @@ namespace cscodec.h264.decoder
                 dc0 += src[src_offset + 4 + i - stride];
                 dc0 += src[src_offset - 1 + (i + 4) * stride];
             }
-            dc0 = ((dc0 + 8) >> 4);
+            dc0 = (dc0 + 8) >> 4;
 
             for (i = 0; i < 4; i++)
             {
@@ -2160,7 +2160,7 @@ namespace cscodec.h264.decoder
             {
                 int b = a;
                 a += V;
-                src[src_offset + 0] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b) >> 5)];
+                src[src_offset + 0] = (byte) H264DSPContext.ff_cropTbl[cm_offset + (b >> 5)];
                 src[src_offset + 1] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b + H) >> 5)];
                 src[src_offset + 2] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b + 2 * H) >> 5)];
                 src[src_offset + 3] = (byte) H264DSPContext.ff_cropTbl[cm_offset + ((b + 3 * H) >> 5)];
@@ -2318,7 +2318,7 @@ namespace cscodec.h264.decoder
                       + 2 * src[src_offset + 7 - 1 * stride] + src[src_offset + 6 - 1 * stride] + 2) >> 2;
 
             byte dc =
-                (byte) (((l0 + l1 + l2 + l3 + l4 + l5 + l6 + l7 + t0 + t1 + t2 + t3 + t4 + t5 + t6 + t7 + 8) >> 4));
+                (byte) ((l0 + l1 + l2 + l3 + l4 + l5 + l6 + l7 + t0 + t1 + t2 + t3 + t4 + t5 + t6 + t7 + 8) >> 4);
             for (int y = 0; y < 8; y++)
             {
                 src[src_offset + 0] =
@@ -2547,34 +2547,34 @@ namespace cscodec.h264.decoder
                                     src[src_offset + 6 + 1 * stride] =
                                         src[src_offset + 7 + 0 * stride] = (byte) ((t7 + 2 * t8 + t9 + 2) >> 2);
 
-            src[src_offset + (1) + (7) * stride] =
-                src[src_offset + (2) + (6) * stride] =
-                    src[src_offset + (3) + (5) * stride] =
-                        src[src_offset + (4) + (4) * stride] =
-                            src[src_offset + (5) + (3) * stride] =
-                                src[src_offset + (6) + (2) * stride] =
-                                    src[src_offset + (7) + (1) * stride] = (byte) ((t8 + 2 * t9 + t10 + 2) >> 2);
-            src[src_offset + (2) + (7) * stride] =
-                src[src_offset + (3) + (6) * stride] =
-                    src[src_offset + (4) + (5) * stride] =
-                        src[src_offset + (5) + (4) * stride] =
-                            src[src_offset + (6) + (3) * stride] =
-                                src[src_offset + (7) + (2) * stride] = (byte) ((t9 + 2 * t10 + t11 + 2) >> 2);
-            src[src_offset + (3) + (7) * stride] =
-                src[src_offset + (4) + (6) * stride] =
-                    src[src_offset + (5) + (5) * stride] =
-                        src[src_offset + (6) + (4) * stride] =
-                            src[src_offset + (7) + (3) * stride] = (byte) ((t10 + 2 * t11 + t12 + 2) >> 2);
-            src[src_offset + (4) + (7) * stride] =
-                src[src_offset + (5) + (6) * stride] =
-                    src[src_offset + (6) + (5) * stride] =
-                        src[src_offset + (7) + (4) * stride] = (byte) ((t11 + 2 * t12 + t13 + 2) >> 2);
-            src[src_offset + (5) + (7) * stride] =
-                src[src_offset + (6) + (6) * stride] =
-                    src[src_offset + (7) + (5) * stride] = (byte) ((t12 + 2 * t13 + t14 + 2) >> 2);
-            src[src_offset + (6) + (7) * stride] =
-                src[src_offset + (7) + (6) * stride] = (byte) ((t13 + 2 * t14 + t15 + 2) >> 2);
-            src[src_offset + (7) + (7) * stride] = (byte) ((t14 + 3 * t15 + 2) >> 2);
+            src[src_offset + 1 + 7 * stride] =
+                src[src_offset + 2 + 6 * stride] =
+                    src[src_offset + 3 + 5 * stride] =
+                        src[src_offset + 4 + 4 * stride] =
+                            src[src_offset + 5 + 3 * stride] =
+                                src[src_offset + 6 + 2 * stride] =
+                                    src[src_offset + 7 + 1 * stride] = (byte) ((t8 + 2 * t9 + t10 + 2) >> 2);
+            src[src_offset + 2 + 7 * stride] =
+                src[src_offset + 3 + 6 * stride] =
+                    src[src_offset + 4 + 5 * stride] =
+                        src[src_offset + 5 + 4 * stride] =
+                            src[src_offset + 6 + 3 * stride] =
+                                src[src_offset + 7 + 2 * stride] = (byte) ((t9 + 2 * t10 + t11 + 2) >> 2);
+            src[src_offset + 3 + 7 * stride] =
+                src[src_offset + 4 + 6 * stride] =
+                    src[src_offset + 5 + 5 * stride] =
+                        src[src_offset + 6 + 4 * stride] =
+                            src[src_offset + 7 + 3 * stride] = (byte) ((t10 + 2 * t11 + t12 + 2) >> 2);
+            src[src_offset + 4 + 7 * stride] =
+                src[src_offset + 5 + 6 * stride] =
+                    src[src_offset + 6 + 5 * stride] =
+                        src[src_offset + 7 + 4 * stride] = (byte) ((t11 + 2 * t12 + t13 + 2) >> 2);
+            src[src_offset + 5 + 7 * stride] =
+                src[src_offset + 6 + 6 * stride] =
+                    src[src_offset + 7 + 5 * stride] = (byte) ((t12 + 2 * t13 + t14 + 2) >> 2);
+            src[src_offset + 6 + 7 * stride] =
+                src[src_offset + 7 + 6 * stride] = (byte) ((t13 + 2 * t14 + t15 + 2) >> 2);
+            src[src_offset + 7 + 7 * stride] = (byte) ((t14 + 3 * t15 + 2) >> 2);
         }
 
         public static void pred8x8l_down_right_c(byte[] src, int src_offset, int has_topleft, int has_topright,
@@ -2616,70 +2616,70 @@ namespace cscodec.h264.decoder
             int lt = (src[src_offset - 1 + 0 * stride] + 2 * src[src_offset - 1 - 1 * stride] +
                       src[src_offset + 0 - 1 * stride] + 2) >> 2;
 
-            src[src_offset + (0) + (7) * stride] = (byte) ((l7 + 2 * l6 + l5 + 2) >> 2);
-            src[src_offset + (0) + (6) * stride] =
-                src[src_offset + (1) + (7) * stride] = (byte) ((l6 + 2 * l5 + l4 + 2) >> 2);
-            src[src_offset + (0) + (5) * stride] =
-                src[src_offset + (1) + (6) * stride] =
-                    src[src_offset + (2) + (7) * stride] = (byte) ((l5 + 2 * l4 + l3 + 2) >> 2);
-            src[src_offset + (0) + (4) * stride] =
-                src[src_offset + (1) + (5) * stride] =
-                    src[src_offset + (2) + (6) * stride] =
-                        src[src_offset + (3) + (7) * stride] = (byte) ((l4 + 2 * l3 + l2 + 2) >> 2);
-            src[src_offset + (0) + (3) * stride] =
-                src[src_offset + (1) + (4) * stride] =
-                    src[src_offset + (2) + (5) * stride] =
-                        src[src_offset + (3) + (6) * stride] =
-                            src[src_offset + (4) + (7) * stride] = (byte) ((l3 + 2 * l2 + l1 + 2) >> 2);
-            src[src_offset + (0) + (2) * stride] =
-                src[src_offset + (1) + (3) * stride] =
-                    src[src_offset + (2) + (4) * stride] =
-                        src[src_offset + (3) + (5) * stride] =
-                            src[src_offset + (4) + (6) * stride] =
-                                src[src_offset + (5) + (7) * stride] = (byte) ((l2 + 2 * l1 + l0 + 2) >> 2);
-            src[src_offset + (0) + (1) * stride] =
-                src[src_offset + (1) + (2) * stride] =
-                    src[src_offset + (2) + (3) * stride] =
-                        src[src_offset + (3) + (4) * stride] =
-                            src[src_offset + (4) + (5) * stride] =
-                                src[src_offset + (5) + (6) * stride] =
-                                    src[src_offset + (6) + (7) * stride] = (byte) ((l1 + 2 * l0 + lt + 2) >> 2);
-            src[src_offset + (0) + (0) * stride] =
-                src[src_offset + (1) + (1) * stride] =
-                    src[src_offset + (2) + (2) * stride] =
-                        src[src_offset + (3) + (3) * stride] =
-                            src[src_offset + (4) + (4) * stride] =
-                                src[src_offset + (5) + (5) * stride] =
-                                    src[src_offset + (6) + (6) * stride] =
-                                        src[src_offset + (7) + (7) * stride] = (byte) ((l0 + 2 * lt + t0 + 2) >> 2);
-            src[src_offset + (1) + (0) * stride] =
-                src[src_offset + (2) + (1) * stride] =
-                    src[src_offset + (3) + (2) * stride] =
-                        src[src_offset + (4) + (3) * stride] =
-                            src[src_offset + (5) + (4) * stride] =
-                                src[src_offset + (6) + (5) * stride] =
-                                    src[src_offset + (7) + (6) * stride] = (byte) ((lt + 2 * t0 + t1 + 2) >> 2);
-            src[src_offset + (2) + (0) * stride] =
-                src[src_offset + (3) + (1) * stride] =
-                    src[src_offset + (4) + (2) * stride] =
-                        src[src_offset + (5) + (3) * stride] =
-                            src[src_offset + (6) + (4) * stride] =
-                                src[src_offset + (7) + (5) * stride] = (byte) ((t0 + 2 * t1 + t2 + 2) >> 2);
-            src[src_offset + (3) + (0) * stride] =
-                src[src_offset + (4) + (1) * stride] =
-                    src[src_offset + (5) + (2) * stride] =
-                        src[src_offset + (6) + (3) * stride] =
-                            src[src_offset + (7) + (4) * stride] = (byte) ((t1 + 2 * t2 + t3 + 2) >> 2);
-            src[src_offset + (4) + (0) * stride] =
-                src[src_offset + (5) + (1) * stride] =
-                    src[src_offset + (6) + (2) * stride] =
-                        src[src_offset + (7) + (3) * stride] = (byte) ((t2 + 2 * t3 + t4 + 2) >> 2);
-            src[src_offset + (5) + (0) * stride] =
-                src[src_offset + (6) + (1) * stride] =
-                    src[src_offset + (7) + (2) * stride] = (byte) ((t3 + 2 * t4 + t5 + 2) >> 2);
-            src[src_offset + (6) + (0) * stride] =
-                src[src_offset + (7) + (1) * stride] = (byte) ((t4 + 2 * t5 + t6 + 2) >> 2);
-            src[src_offset + (7) + (0) * stride] = (byte) ((t5 + 2 * t6 + t7 + 2) >> 2);
+            src[src_offset + 0 + 7 * stride] = (byte) ((l7 + 2 * l6 + l5 + 2) >> 2);
+            src[src_offset + 0 + 6 * stride] =
+                src[src_offset + 1 + 7 * stride] = (byte) ((l6 + 2 * l5 + l4 + 2) >> 2);
+            src[src_offset + 0 + 5 * stride] =
+                src[src_offset + 1 + 6 * stride] =
+                    src[src_offset + 2 + 7 * stride] = (byte) ((l5 + 2 * l4 + l3 + 2) >> 2);
+            src[src_offset + 0 + 4 * stride] =
+                src[src_offset + 1 + 5 * stride] =
+                    src[src_offset + 2 + 6 * stride] =
+                        src[src_offset + 3 + 7 * stride] = (byte) ((l4 + 2 * l3 + l2 + 2) >> 2);
+            src[src_offset + 0 + 3 * stride] =
+                src[src_offset + 1 + 4 * stride] =
+                    src[src_offset + 2 + 5 * stride] =
+                        src[src_offset + 3 + 6 * stride] =
+                            src[src_offset + 4 + 7 * stride] = (byte) ((l3 + 2 * l2 + l1 + 2) >> 2);
+            src[src_offset + 0 + 2 * stride] =
+                src[src_offset + 1 + 3 * stride] =
+                    src[src_offset + 2 + 4 * stride] =
+                        src[src_offset + 3 + 5 * stride] =
+                            src[src_offset + 4 + 6 * stride] =
+                                src[src_offset + 5 + 7 * stride] = (byte) ((l2 + 2 * l1 + l0 + 2) >> 2);
+            src[src_offset + 0 + 1 * stride] =
+                src[src_offset + 1 + 2 * stride] =
+                    src[src_offset + 2 + 3 * stride] =
+                        src[src_offset + 3 + 4 * stride] =
+                            src[src_offset + 4 + 5 * stride] =
+                                src[src_offset + 5 + 6 * stride] =
+                                    src[src_offset + 6 + 7 * stride] = (byte) ((l1 + 2 * l0 + lt + 2) >> 2);
+            src[src_offset + 0 + 0 * stride] =
+                src[src_offset + 1 + 1 * stride] =
+                    src[src_offset + 2 + 2 * stride] =
+                        src[src_offset + 3 + 3 * stride] =
+                            src[src_offset + 4 + 4 * stride] =
+                                src[src_offset + 5 + 5 * stride] =
+                                    src[src_offset + 6 + 6 * stride] =
+                                        src[src_offset + 7 + 7 * stride] = (byte) ((l0 + 2 * lt + t0 + 2) >> 2);
+            src[src_offset + 1 + 0 * stride] =
+                src[src_offset + 2 + 1 * stride] =
+                    src[src_offset + 3 + 2 * stride] =
+                        src[src_offset + 4 + 3 * stride] =
+                            src[src_offset + 5 + 4 * stride] =
+                                src[src_offset + 6 + 5 * stride] =
+                                    src[src_offset + 7 + 6 * stride] = (byte) ((lt + 2 * t0 + t1 + 2) >> 2);
+            src[src_offset + 2 + 0 * stride] =
+                src[src_offset + 3 + 1 * stride] =
+                    src[src_offset + 4 + 2 * stride] =
+                        src[src_offset + 5 + 3 * stride] =
+                            src[src_offset + 6 + 4 * stride] =
+                                src[src_offset + 7 + 5 * stride] = (byte) ((t0 + 2 * t1 + t2 + 2) >> 2);
+            src[src_offset + 3 + 0 * stride] =
+                src[src_offset + 4 + 1 * stride] =
+                    src[src_offset + 5 + 2 * stride] =
+                        src[src_offset + 6 + 3 * stride] =
+                            src[src_offset + 7 + 4 * stride] = (byte) ((t1 + 2 * t2 + t3 + 2) >> 2);
+            src[src_offset + 4 + 0 * stride] =
+                src[src_offset + 5 + 1 * stride] =
+                    src[src_offset + 6 + 2 * stride] =
+                        src[src_offset + 7 + 3 * stride] = (byte) ((t2 + 2 * t3 + t4 + 2) >> 2);
+            src[src_offset + 5 + 0 * stride] =
+                src[src_offset + 6 + 1 * stride] =
+                    src[src_offset + 7 + 2 * stride] = (byte) ((t3 + 2 * t4 + t5 + 2) >> 2);
+            src[src_offset + 6 + 0 * stride] =
+                src[src_offset + 7 + 1 * stride] = (byte) ((t4 + 2 * t5 + t6 + 2) >> 2);
+            src[src_offset + 7 + 0 * stride] = (byte) ((t5 + 2 * t6 + t7 + 2) >> 2);
         }
 
         public static void pred8x8l_vertical_right_c(byte[] src, int src_offset, int has_topleft, int has_topright,
@@ -2721,70 +2721,70 @@ namespace cscodec.h264.decoder
             int lt = (src[src_offset - 1 + 0 * stride] + 2 * src[src_offset - 1 - 1 * stride] +
                       src[src_offset + 0 - 1 * stride] + 2) >> 2;
 
-            src[src_offset + (0) + (6) * stride] = (byte) ((l5 + 2 * l4 + l3 + 2) >> 2);
-            src[src_offset + (0) + (7) * stride] = (byte) ((l6 + 2 * l5 + l4 + 2) >> 2);
-            src[src_offset + (0) + (4) * stride] =
-                src[src_offset + (1) + (6) * stride] = (byte) ((l3 + 2 * l2 + l1 + 2) >> 2);
-            src[src_offset + (0) + (5) * stride] =
-                src[src_offset + (1) + (7) * stride] = (byte) ((l4 + 2 * l3 + l2 + 2) >> 2);
-            src[src_offset + (0) + (2) * stride] =
-                src[src_offset + (1) + (4) * stride] =
-                    src[src_offset + (2) + (6) * stride] = (byte) ((l1 + 2 * l0 + lt + 2) >> 2);
-            src[src_offset + (0) + (3) * stride] =
-                src[src_offset + (1) + (5) * stride] =
-                    src[src_offset + (2) + (7) * stride] = (byte) ((l2 + 2 * l1 + l0 + 2) >> 2);
-            src[src_offset + (0) + (1) * stride] =
-                src[src_offset + (1) + (3) * stride] =
-                    src[src_offset + (2) + (5) * stride] =
-                        src[src_offset + (3) + (7) * stride] = (byte) ((l0 + 2 * lt + t0 + 2) >> 2);
-            src[src_offset + (0) + (0) * stride] =
-                src[src_offset + (1) + (2) * stride] =
-                    src[src_offset + (2) + (4) * stride] =
-                        src[src_offset + (3) + (6) * stride] = (byte) ((lt + t0 + 1) >> 1);
-            src[src_offset + (1) + (1) * stride] =
-                src[src_offset + (2) + (3) * stride] =
-                    src[src_offset + (3) + (5) * stride] =
-                        src[src_offset + (4) + (7) * stride] = (byte) ((lt + 2 * t0 + t1 + 2) >> 2);
-            src[src_offset + (1) + (0) * stride] =
-                src[src_offset + (2) + (2) * stride] =
-                    src[src_offset + (3) + (4) * stride] =
-                        src[src_offset + (4) + (6) * stride] = (byte) ((t0 + t1 + 1) >> 1);
-            src[src_offset + (2) + (1) * stride] =
-                src[src_offset + (3) + (3) * stride] =
-                    src[src_offset + (4) + (5) * stride] =
-                        src[src_offset + (5) + (7) * stride] = (byte) ((t0 + 2 * t1 + t2 + 2) >> 2);
-            src[src_offset + (2) + (0) * stride] =
-                src[src_offset + (3) + (2) * stride] =
-                    src[src_offset + (4) + (4) * stride] =
-                        src[src_offset + (5) + (6) * stride] = (byte) ((t1 + t2 + 1) >> 1);
-            src[src_offset + (3) + (1) * stride] =
-                src[src_offset + (4) + (3) * stride] =
-                    src[src_offset + (5) + (5) * stride] =
-                        src[src_offset + (6) + (7) * stride] = (byte) ((t1 + 2 * t2 + t3 + 2) >> 2);
-            src[src_offset + (3) + (0) * stride] =
-                src[src_offset + (4) + (2) * stride] =
-                    src[src_offset + (5) + (4) * stride] =
-                        src[src_offset + (6) + (6) * stride] = (byte) ((t2 + t3 + 1) >> 1);
-            src[src_offset + (4) + (1) * stride] =
-                src[src_offset + (5) + (3) * stride] =
-                    src[src_offset + (6) + (5) * stride] =
-                        src[src_offset + (7) + (7) * stride] = (byte) ((t2 + 2 * t3 + t4 + 2) >> 2);
-            src[src_offset + (4) + (0) * stride] =
-                src[src_offset + (5) + (2) * stride] =
-                    src[src_offset + (6) + (4) * stride] =
-                        src[src_offset + (7) + (6) * stride] = (byte) ((t3 + t4 + 1) >> 1);
-            src[src_offset + (5) + (1) * stride] =
-                src[src_offset + (6) + (3) * stride] =
-                    src[src_offset + (7) + (5) * stride] = (byte) ((t3 + 2 * t4 + t5 + 2) >> 2);
-            src[src_offset + (5) + (0) * stride] =
-                src[src_offset + (6) + (2) * stride] =
-                    src[src_offset + (7) + (4) * stride] = (byte) ((t4 + t5 + 1) >> 1);
-            src[src_offset + (6) + (1) * stride] =
-                src[src_offset + (7) + (3) * stride] = (byte) ((t4 + 2 * t5 + t6 + 2) >> 2);
-            src[src_offset + (6) + (0) * stride] =
-                src[src_offset + (7) + (2) * stride] = (byte) ((t5 + t6 + 1) >> 1);
-            src[src_offset + (7) + (1) * stride] = (byte) ((t5 + 2 * t6 + t7 + 2) >> 2);
-            src[src_offset + (7) + (0) * stride] = (byte) ((t6 + t7 + 1) >> 1);
+            src[src_offset + 0 + 6 * stride] = (byte) ((l5 + 2 * l4 + l3 + 2) >> 2);
+            src[src_offset + 0 + 7 * stride] = (byte) ((l6 + 2 * l5 + l4 + 2) >> 2);
+            src[src_offset + 0 + 4 * stride] =
+                src[src_offset + 1 + 6 * stride] = (byte) ((l3 + 2 * l2 + l1 + 2) >> 2);
+            src[src_offset + 0 + 5 * stride] =
+                src[src_offset + 1 + 7 * stride] = (byte) ((l4 + 2 * l3 + l2 + 2) >> 2);
+            src[src_offset + 0 + 2 * stride] =
+                src[src_offset + 1 + 4 * stride] =
+                    src[src_offset + 2 + 6 * stride] = (byte) ((l1 + 2 * l0 + lt + 2) >> 2);
+            src[src_offset + 0 + 3 * stride] =
+                src[src_offset + 1 + 5 * stride] =
+                    src[src_offset + 2 + 7 * stride] = (byte) ((l2 + 2 * l1 + l0 + 2) >> 2);
+            src[src_offset + 0 + 1 * stride] =
+                src[src_offset + 1 + 3 * stride] =
+                    src[src_offset + 2 + 5 * stride] =
+                        src[src_offset + 3 + 7 * stride] = (byte) ((l0 + 2 * lt + t0 + 2) >> 2);
+            src[src_offset + 0 + 0 * stride] =
+                src[src_offset + 1 + 2 * stride] =
+                    src[src_offset + 2 + 4 * stride] =
+                        src[src_offset + 3 + 6 * stride] = (byte) ((lt + t0 + 1) >> 1);
+            src[src_offset + 1 + 1 * stride] =
+                src[src_offset + 2 + 3 * stride] =
+                    src[src_offset + 3 + 5 * stride] =
+                        src[src_offset + 4 + 7 * stride] = (byte) ((lt + 2 * t0 + t1 + 2) >> 2);
+            src[src_offset + 1 + 0 * stride] =
+                src[src_offset + 2 + 2 * stride] =
+                    src[src_offset + 3 + 4 * stride] =
+                        src[src_offset + 4 + 6 * stride] = (byte) ((t0 + t1 + 1) >> 1);
+            src[src_offset + 2 + 1 * stride] =
+                src[src_offset + 3 + 3 * stride] =
+                    src[src_offset + 4 + 5 * stride] =
+                        src[src_offset + 5 + 7 * stride] = (byte) ((t0 + 2 * t1 + t2 + 2) >> 2);
+            src[src_offset + 2 + 0 * stride] =
+                src[src_offset + 3 + 2 * stride] =
+                    src[src_offset + 4 + 4 * stride] =
+                        src[src_offset + 5 + 6 * stride] = (byte) ((t1 + t2 + 1) >> 1);
+            src[src_offset + 3 + 1 * stride] =
+                src[src_offset + 4 + 3 * stride] =
+                    src[src_offset + 5 + 5 * stride] =
+                        src[src_offset + 6 + 7 * stride] = (byte) ((t1 + 2 * t2 + t3 + 2) >> 2);
+            src[src_offset + 3 + 0 * stride] =
+                src[src_offset + 4 + 2 * stride] =
+                    src[src_offset + 5 + 4 * stride] =
+                        src[src_offset + 6 + 6 * stride] = (byte) ((t2 + t3 + 1) >> 1);
+            src[src_offset + 4 + 1 * stride] =
+                src[src_offset + 5 + 3 * stride] =
+                    src[src_offset + 6 + 5 * stride] =
+                        src[src_offset + 7 + 7 * stride] = (byte) ((t2 + 2 * t3 + t4 + 2) >> 2);
+            src[src_offset + 4 + 0 * stride] =
+                src[src_offset + 5 + 2 * stride] =
+                    src[src_offset + 6 + 4 * stride] =
+                        src[src_offset + 7 + 6 * stride] = (byte) ((t3 + t4 + 1) >> 1);
+            src[src_offset + 5 + 1 * stride] =
+                src[src_offset + 6 + 3 * stride] =
+                    src[src_offset + 7 + 5 * stride] = (byte) ((t3 + 2 * t4 + t5 + 2) >> 2);
+            src[src_offset + 5 + 0 * stride] =
+                src[src_offset + 6 + 2 * stride] =
+                    src[src_offset + 7 + 4 * stride] = (byte) ((t4 + t5 + 1) >> 1);
+            src[src_offset + 6 + 1 * stride] =
+                src[src_offset + 7 + 3 * stride] = (byte) ((t4 + 2 * t5 + t6 + 2) >> 2);
+            src[src_offset + 6 + 0 * stride] =
+                src[src_offset + 7 + 2 * stride] = (byte) ((t5 + t6 + 1) >> 1);
+            src[src_offset + 7 + 1 * stride] = (byte) ((t5 + 2 * t6 + t7 + 2) >> 2);
+            src[src_offset + 7 + 0 * stride] = (byte) ((t6 + t7 + 1) >> 1);
         }
 
         public static void pred8x8l_horizontal_down_c(byte[] src, int src_offset, int has_topleft, int has_topright,
@@ -2826,70 +2826,70 @@ namespace cscodec.h264.decoder
             int lt = (src[src_offset - 1 + 0 * stride] + 2 * src[src_offset - 1 - 1 * stride] +
                       src[src_offset + 0 - 1 * stride] + 2) >> 2;
 
-            src[src_offset + (0) + (7) * stride] = (byte) ((l6 + l7 + 1) >> 1);
-            src[src_offset + (1) + (7) * stride] = (byte) ((l5 + 2 * l6 + l7 + 2) >> 2);
-            src[src_offset + (0) + (6) * stride] =
-                src[src_offset + (2) + (7) * stride] = (byte) ((l5 + l6 + 1) >> 1);
-            src[src_offset + (1) + (6) * stride] =
-                src[src_offset + (3) + (7) * stride] = (byte) ((l4 + 2 * l5 + l6 + 2) >> 2);
-            src[src_offset + (0) + (5) * stride] =
-                src[src_offset + (2) + (6) * stride] =
-                    src[src_offset + (4) + (7) * stride] = (byte) ((l4 + l5 + 1) >> 1);
-            src[src_offset + (1) + (5) * stride] =
-                src[src_offset + (3) + (6) * stride] =
-                    src[src_offset + (5) + (7) * stride] = (byte) ((l3 + 2 * l4 + l5 + 2) >> 2);
-            src[src_offset + (0) + (4) * stride] =
-                src[src_offset + (2) + (5) * stride] =
-                    src[src_offset + (4) + (6) * stride] =
-                        src[src_offset + (6) + (7) * stride] = (byte) ((l3 + l4 + 1) >> 1);
-            src[src_offset + (1) + (4) * stride] =
-                src[src_offset + (3) + (5) * stride] =
-                    src[src_offset + (5) + (6) * stride] =
-                        src[src_offset + (7) + (7) * stride] = (byte) ((l2 + 2 * l3 + l4 + 2) >> 2);
-            src[src_offset + (0) + (3) * stride] =
-                src[src_offset + (2) + (4) * stride] =
-                    src[src_offset + (4) + (5) * stride] =
-                        src[src_offset + (6) + (6) * stride] = (byte) ((l2 + l3 + 1) >> 1);
-            src[src_offset + (1) + (3) * stride] =
-                src[src_offset + (3) + (4) * stride] =
-                    src[src_offset + (5) + (5) * stride] =
-                        src[src_offset + (7) + (6) * stride] = (byte) ((l1 + 2 * l2 + l3 + 2) >> 2);
-            src[src_offset + (0) + (2) * stride] =
-                src[src_offset + (2) + (3) * stride] =
-                    src[src_offset + (4) + (4) * stride] =
-                        src[src_offset + (6) + (5) * stride] = (byte) ((l1 + l2 + 1) >> 1);
-            src[src_offset + (1) + (2) * stride] =
-                src[src_offset + (3) + (3) * stride] =
-                    src[src_offset + (5) + (4) * stride] =
-                        src[src_offset + (7) + (5) * stride] = (byte) ((l0 + 2 * l1 + l2 + 2) >> 2);
-            src[src_offset + (0) + (1) * stride] =
-                src[src_offset + (2) + (2) * stride] =
-                    src[src_offset + (4) + (3) * stride] =
-                        src[src_offset + (6) + (4) * stride] = (byte) ((l0 + l1 + 1) >> 1);
-            src[src_offset + (1) + (1) * stride] =
-                src[src_offset + (3) + (2) * stride] =
-                    src[src_offset + (5) + (3) * stride] =
-                        src[src_offset + (7) + (4) * stride] = (byte) ((lt + 2 * l0 + l1 + 2) >> 2);
-            src[src_offset + (0) + (0) * stride] =
-                src[src_offset + (2) + (1) * stride] =
-                    src[src_offset + (4) + (2) * stride] =
-                        src[src_offset + (6) + (3) * stride] = (byte) ((lt + l0 + 1) >> 1);
-            src[src_offset + (1) + (0) * stride] =
-                src[src_offset + (3) + (1) * stride] =
-                    src[src_offset + (5) + (2) * stride] =
-                        src[src_offset + (7) + (3) * stride] = (byte) ((l0 + 2 * lt + t0 + 2) >> 2);
-            src[src_offset + (2) + (0) * stride] =
-                src[src_offset + (4) + (1) * stride] =
-                    src[src_offset + (6) + (2) * stride] = (byte) ((t1 + 2 * t0 + lt + 2) >> 2);
-            src[src_offset + (3) + (0) * stride] =
-                src[src_offset + (5) + (1) * stride] =
-                    src[src_offset + (7) + (2) * stride] = (byte) ((t2 + 2 * t1 + t0 + 2) >> 2);
-            src[src_offset + (4) + (0) * stride] =
-                src[src_offset + (6) + (1) * stride] = (byte) ((t3 + 2 * t2 + t1 + 2) >> 2);
-            src[src_offset + (5) + (0) * stride] =
-                src[src_offset + (7) + (1) * stride] = (byte) ((t4 + 2 * t3 + t2 + 2) >> 2);
-            src[src_offset + (6) + (0) * stride] = (byte) ((t5 + 2 * t4 + t3 + 2) >> 2);
-            src[src_offset + (7) + (0) * stride] = (byte) ((t6 + 2 * t5 + t4 + 2) >> 2);
+            src[src_offset + 0 + 7 * stride] = (byte) ((l6 + l7 + 1) >> 1);
+            src[src_offset + 1 + 7 * stride] = (byte) ((l5 + 2 * l6 + l7 + 2) >> 2);
+            src[src_offset + 0 + 6 * stride] =
+                src[src_offset + 2 + 7 * stride] = (byte) ((l5 + l6 + 1) >> 1);
+            src[src_offset + 1 + 6 * stride] =
+                src[src_offset + 3 + 7 * stride] = (byte) ((l4 + 2 * l5 + l6 + 2) >> 2);
+            src[src_offset + 0 + 5 * stride] =
+                src[src_offset + 2 + 6 * stride] =
+                    src[src_offset + 4 + 7 * stride] = (byte) ((l4 + l5 + 1) >> 1);
+            src[src_offset + 1 + 5 * stride] =
+                src[src_offset + 3 + 6 * stride] =
+                    src[src_offset + 5 + 7 * stride] = (byte) ((l3 + 2 * l4 + l5 + 2) >> 2);
+            src[src_offset + 0 + 4 * stride] =
+                src[src_offset + 2 + 5 * stride] =
+                    src[src_offset + 4 + 6 * stride] =
+                        src[src_offset + 6 + 7 * stride] = (byte) ((l3 + l4 + 1) >> 1);
+            src[src_offset + 1 + 4 * stride] =
+                src[src_offset + 3 + 5 * stride] =
+                    src[src_offset + 5 + 6 * stride] =
+                        src[src_offset + 7 + 7 * stride] = (byte) ((l2 + 2 * l3 + l4 + 2) >> 2);
+            src[src_offset + 0 + 3 * stride] =
+                src[src_offset + 2 + 4 * stride] =
+                    src[src_offset + 4 + 5 * stride] =
+                        src[src_offset + 6 + 6 * stride] = (byte) ((l2 + l3 + 1) >> 1);
+            src[src_offset + 1 + 3 * stride] =
+                src[src_offset + 3 + 4 * stride] =
+                    src[src_offset + 5 + 5 * stride] =
+                        src[src_offset + 7 + 6 * stride] = (byte) ((l1 + 2 * l2 + l3 + 2) >> 2);
+            src[src_offset + 0 + 2 * stride] =
+                src[src_offset + 2 + 3 * stride] =
+                    src[src_offset + 4 + 4 * stride] =
+                        src[src_offset + 6 + 5 * stride] = (byte) ((l1 + l2 + 1) >> 1);
+            src[src_offset + 1 + 2 * stride] =
+                src[src_offset + 3 + 3 * stride] =
+                    src[src_offset + 5 + 4 * stride] =
+                        src[src_offset + 7 + 5 * stride] = (byte) ((l0 + 2 * l1 + l2 + 2) >> 2);
+            src[src_offset + 0 + 1 * stride] =
+                src[src_offset + 2 + 2 * stride] =
+                    src[src_offset + 4 + 3 * stride] =
+                        src[src_offset + 6 + 4 * stride] = (byte) ((l0 + l1 + 1) >> 1);
+            src[src_offset + 1 + 1 * stride] =
+                src[src_offset + 3 + 2 * stride] =
+                    src[src_offset + 5 + 3 * stride] =
+                        src[src_offset + 7 + 4 * stride] = (byte) ((lt + 2 * l0 + l1 + 2) >> 2);
+            src[src_offset + 0 + 0 * stride] =
+                src[src_offset + 2 + 1 * stride] =
+                    src[src_offset + 4 + 2 * stride] =
+                        src[src_offset + 6 + 3 * stride] = (byte) ((lt + l0 + 1) >> 1);
+            src[src_offset + 1 + 0 * stride] =
+                src[src_offset + 3 + 1 * stride] =
+                    src[src_offset + 5 + 2 * stride] =
+                        src[src_offset + 7 + 3 * stride] = (byte) ((l0 + 2 * lt + t0 + 2) >> 2);
+            src[src_offset + 2 + 0 * stride] =
+                src[src_offset + 4 + 1 * stride] =
+                    src[src_offset + 6 + 2 * stride] = (byte) ((t1 + 2 * t0 + lt + 2) >> 2);
+            src[src_offset + 3 + 0 * stride] =
+                src[src_offset + 5 + 1 * stride] =
+                    src[src_offset + 7 + 2 * stride] = (byte) ((t2 + 2 * t1 + t0 + 2) >> 2);
+            src[src_offset + 4 + 0 * stride] =
+                src[src_offset + 6 + 1 * stride] = (byte) ((t3 + 2 * t2 + t1 + 2) >> 2);
+            src[src_offset + 5 + 0 * stride] =
+                src[src_offset + 7 + 1 * stride] = (byte) ((t4 + 2 * t3 + t2 + 2) >> 2);
+            src[src_offset + 6 + 0 * stride] = (byte) ((t5 + 2 * t4 + t3 + 2) >> 2);
+            src[src_offset + 7 + 0 * stride] = (byte) ((t6 + 2 * t5 + t4 + 2) >> 2);
         }
 
         public static void pred8x8l_vertical_left_c(byte[] src, int src_offset, int has_topleft, int has_topright,
@@ -2931,70 +2931,70 @@ namespace cscodec.h264.decoder
             }
             else t8 = t9 = t10 = t11 = t12 /*=t13=t14=t15*/ = src[src_offset + 7 - 1 * stride];
 
-            src[src_offset + (0) + (0) * stride] = (byte) ((t0 + t1 + 1) >> 1);
-            src[src_offset + (0) + (1) * stride] = (byte) ((t0 + 2 * t1 + t2 + 2) >> 2);
-            src[src_offset + (0) + (2) * stride] =
-                src[src_offset + (1) + (0) * stride] = (byte) ((t1 + t2 + 1) >> 1);
-            src[src_offset + (0) + (3) * stride] =
-                src[src_offset + (1) + (1) * stride] = (byte) ((t1 + 2 * t2 + t3 + 2) >> 2);
-            src[src_offset + (0) + (4) * stride] =
-                src[src_offset + (1) + (2) * stride] =
-                    src[src_offset + (2) + (0) * stride] = (byte) ((t2 + t3 + 1) >> 1);
-            src[src_offset + (0) + (5) * stride] =
-                src[src_offset + (1) + (3) * stride] =
-                    src[src_offset + (2) + (1) * stride] = (byte) ((t2 + 2 * t3 + t4 + 2) >> 2);
-            src[src_offset + (0) + (6) * stride] =
-                src[src_offset + (1) + (4) * stride] =
-                    src[src_offset + (2) + (2) * stride] =
-                        src[src_offset + (3) + (0) * stride] = (byte) ((t3 + t4 + 1) >> 1);
-            src[src_offset + (0) + (7) * stride] =
-                src[src_offset + (1) + (5) * stride] =
-                    src[src_offset + (2) + (3) * stride] =
-                        src[src_offset + (3) + (1) * stride] = (byte) ((t3 + 2 * t4 + t5 + 2) >> 2);
-            src[src_offset + (1) + (6) * stride] =
-                src[src_offset + (2) + (4) * stride] =
-                    src[src_offset + (3) + (2) * stride] =
-                        src[src_offset + (4) + (0) * stride] = (byte) ((t4 + t5 + 1) >> 1);
-            src[src_offset + (1) + (7) * stride] =
-                src[src_offset + (2) + (5) * stride] =
-                    src[src_offset + (3) + (3) * stride] =
-                        src[src_offset + (4) + (1) * stride] = (byte) ((t4 + 2 * t5 + t6 + 2) >> 2);
-            src[src_offset + (2) + (6) * stride] =
-                src[src_offset + (3) + (4) * stride] =
-                    src[src_offset + (4) + (2) * stride] =
-                        src[src_offset + (5) + (0) * stride] = (byte) ((t5 + t6 + 1) >> 1);
-            src[src_offset + (2) + (7) * stride] =
-                src[src_offset + (3) + (5) * stride] =
-                    src[src_offset + (4) + (3) * stride] =
-                        src[src_offset + (5) + (1) * stride] = (byte) ((t5 + 2 * t6 + t7 + 2) >> 2);
-            src[src_offset + (3) + (6) * stride] =
-                src[src_offset + (4) + (4) * stride] =
-                    src[src_offset + (5) + (2) * stride] =
-                        src[src_offset + (6) + (0) * stride] = (byte) ((t6 + t7 + 1) >> 1);
-            src[src_offset + (3) + (7) * stride] =
-                src[src_offset + (4) + (5) * stride] =
-                    src[src_offset + (5) + (3) * stride] =
-                        src[src_offset + (6) + (1) * stride] = (byte) ((t6 + 2 * t7 + t8 + 2) >> 2);
-            src[src_offset + (4) + (6) * stride] =
-                src[src_offset + (5) + (4) * stride] =
-                    src[src_offset + (6) + (2) * stride] =
-                        src[src_offset + (7) + (0) * stride] = (byte) ((t7 + t8 + 1) >> 1);
-            src[src_offset + (4) + (7) * stride] =
-                src[src_offset + (5) + (5) * stride] =
-                    src[src_offset + (6) + (3) * stride] =
-                        src[src_offset + (7) + (1) * stride] = (byte) ((t7 + 2 * t8 + t9 + 2) >> 2);
-            src[src_offset + (5) + (6) * stride] =
-                src[src_offset + (6) + (4) * stride] =
-                    src[src_offset + (7) + (2) * stride] = (byte) ((t8 + t9 + 1) >> 1);
-            src[src_offset + (5) + (7) * stride] =
-                src[src_offset + (6) + (5) * stride] =
-                    src[src_offset + (7) + (3) * stride] = (byte) ((t8 + 2 * t9 + t10 + 2) >> 2);
-            src[src_offset + (6) + (6) * stride] =
-                src[src_offset + (7) + (4) * stride] = (byte) ((t9 + t10 + 1) >> 1);
-            src[src_offset + (6) + (7) * stride] =
-                src[src_offset + (7) + (5) * stride] = (byte) ((t9 + 2 * t10 + t11 + 2) >> 2);
-            src[src_offset + (7) + (6) * stride] = (byte) ((t10 + t11 + 1) >> 1);
-            src[src_offset + (7) + (7) * stride] = (byte) ((t10 + 2 * t11 + t12 + 2) >> 2);
+            src[src_offset + 0 + 0 * stride] = (byte) ((t0 + t1 + 1) >> 1);
+            src[src_offset + 0 + 1 * stride] = (byte) ((t0 + 2 * t1 + t2 + 2) >> 2);
+            src[src_offset + 0 + 2 * stride] =
+                src[src_offset + 1 + 0 * stride] = (byte) ((t1 + t2 + 1) >> 1);
+            src[src_offset + 0 + 3 * stride] =
+                src[src_offset + 1 + 1 * stride] = (byte) ((t1 + 2 * t2 + t3 + 2) >> 2);
+            src[src_offset + 0 + 4 * stride] =
+                src[src_offset + 1 + 2 * stride] =
+                    src[src_offset + 2 + 0 * stride] = (byte) ((t2 + t3 + 1) >> 1);
+            src[src_offset + 0 + 5 * stride] =
+                src[src_offset + 1 + 3 * stride] =
+                    src[src_offset + 2 + 1 * stride] = (byte) ((t2 + 2 * t3 + t4 + 2) >> 2);
+            src[src_offset + 0 + 6 * stride] =
+                src[src_offset + 1 + 4 * stride] =
+                    src[src_offset + 2 + 2 * stride] =
+                        src[src_offset + 3 + 0 * stride] = (byte) ((t3 + t4 + 1) >> 1);
+            src[src_offset + 0 + 7 * stride] =
+                src[src_offset + 1 + 5 * stride] =
+                    src[src_offset + 2 + 3 * stride] =
+                        src[src_offset + 3 + 1 * stride] = (byte) ((t3 + 2 * t4 + t5 + 2) >> 2);
+            src[src_offset + 1 + 6 * stride] =
+                src[src_offset + 2 + 4 * stride] =
+                    src[src_offset + 3 + 2 * stride] =
+                        src[src_offset + 4 + 0 * stride] = (byte) ((t4 + t5 + 1) >> 1);
+            src[src_offset + 1 + 7 * stride] =
+                src[src_offset + 2 + 5 * stride] =
+                    src[src_offset + 3 + 3 * stride] =
+                        src[src_offset + 4 + 1 * stride] = (byte) ((t4 + 2 * t5 + t6 + 2) >> 2);
+            src[src_offset + 2 + 6 * stride] =
+                src[src_offset + 3 + 4 * stride] =
+                    src[src_offset + 4 + 2 * stride] =
+                        src[src_offset + 5 + 0 * stride] = (byte) ((t5 + t6 + 1) >> 1);
+            src[src_offset + 2 + 7 * stride] =
+                src[src_offset + 3 + 5 * stride] =
+                    src[src_offset + 4 + 3 * stride] =
+                        src[src_offset + 5 + 1 * stride] = (byte) ((t5 + 2 * t6 + t7 + 2) >> 2);
+            src[src_offset + 3 + 6 * stride] =
+                src[src_offset + 4 + 4 * stride] =
+                    src[src_offset + 5 + 2 * stride] =
+                        src[src_offset + 6 + 0 * stride] = (byte) ((t6 + t7 + 1) >> 1);
+            src[src_offset + 3 + 7 * stride] =
+                src[src_offset + 4 + 5 * stride] =
+                    src[src_offset + 5 + 3 * stride] =
+                        src[src_offset + 6 + 1 * stride] = (byte) ((t6 + 2 * t7 + t8 + 2) >> 2);
+            src[src_offset + 4 + 6 * stride] =
+                src[src_offset + 5 + 4 * stride] =
+                    src[src_offset + 6 + 2 * stride] =
+                        src[src_offset + 7 + 0 * stride] = (byte) ((t7 + t8 + 1) >> 1);
+            src[src_offset + 4 + 7 * stride] =
+                src[src_offset + 5 + 5 * stride] =
+                    src[src_offset + 6 + 3 * stride] =
+                        src[src_offset + 7 + 1 * stride] = (byte) ((t7 + 2 * t8 + t9 + 2) >> 2);
+            src[src_offset + 5 + 6 * stride] =
+                src[src_offset + 6 + 4 * stride] =
+                    src[src_offset + 7 + 2 * stride] = (byte) ((t8 + t9 + 1) >> 1);
+            src[src_offset + 5 + 7 * stride] =
+                src[src_offset + 6 + 5 * stride] =
+                    src[src_offset + 7 + 3 * stride] = (byte) ((t8 + 2 * t9 + t10 + 2) >> 2);
+            src[src_offset + 6 + 6 * stride] =
+                src[src_offset + 7 + 4 * stride] = (byte) ((t9 + t10 + 1) >> 1);
+            src[src_offset + 6 + 7 * stride] =
+                src[src_offset + 7 + 5 * stride] = (byte) ((t9 + 2 * t10 + t11 + 2) >> 2);
+            src[src_offset + 7 + 6 * stride] = (byte) ((t10 + t11 + 1) >> 1);
+            src[src_offset + 7 + 7 * stride] = (byte) ((t10 + 2 * t11 + t12 + 2) >> 2);
         }
 
         public static void pred8x8l_horizontal_up_c(byte[] src, int src_offset, int has_topleft, int has_topright,
@@ -3016,73 +3016,73 @@ namespace cscodec.h264.decoder
                       src[src_offset - 1 + 7 * stride] + 2) >> 2;
             int l7 = (src[src_offset - 1 + 6 * stride] + 3 * src[src_offset - 1 + 7 * stride] + 2) >> 2;
 
-            src[src_offset + (0) + (0) * stride] = (byte) ((l0 + l1 + 1) >> 1);
-            src[src_offset + (1) + (0) * stride] = (byte) ((l0 + 2 * l1 + l2 + 2) >> 2);
-            src[src_offset + (0) + (1) * stride] =
-                src[src_offset + (2) + (0) * stride] = (byte) ((l1 + l2 + 1) >> 1);
-            src[src_offset + (1) + (1) * stride] =
-                src[src_offset + (3) + (0) * stride] = (byte) ((l1 + 2 * l2 + l3 + 2) >> 2);
-            src[src_offset + (0) + (2) * stride] =
-                src[src_offset + (2) + (1) * stride] =
-                    src[src_offset + (4) + (0) * stride] = (byte) ((l2 + l3 + 1) >> 1);
-            src[src_offset + (1) + (2) * stride] =
-                src[src_offset + (3) + (1) * stride] =
-                    src[src_offset + (5) + (0) * stride] = (byte) ((l2 + 2 * l3 + l4 + 2) >> 2);
-            src[src_offset + (0) + (3) * stride] =
-                src[src_offset + (2) + (2) * stride] =
-                    src[src_offset + (4) + (1) * stride] =
-                        src[src_offset + (6) + (0) * stride] = (byte) ((l3 + l4 + 1) >> 1);
-            src[src_offset + (1) + (3) * stride] =
-                src[src_offset + (3) + (2) * stride] =
-                    src[src_offset + (5) + (1) * stride] =
-                        src[src_offset + (7) + (0) * stride] = (byte) ((l3 + 2 * l4 + l5 + 2) >> 2);
-            src[src_offset + (0) + (4) * stride] =
-                src[src_offset + (2) + (3) * stride] =
-                    src[src_offset + (4) + (2) * stride] =
-                        src[src_offset + (6) + (1) * stride] = (byte) ((l4 + l5 + 1) >> 1);
-            src[src_offset + (1) + (4) * stride] =
-                src[src_offset + (3) + (3) * stride] =
-                    src[src_offset + (5) + (2) * stride] =
-                        src[src_offset + (7) + (1) * stride] = (byte) ((l4 + 2 * l5 + l6 + 2) >> 2);
-            src[src_offset + (0) + (5) * stride] =
-                src[src_offset + (2) + (4) * stride] =
-                    src[src_offset + (4) + (3) * stride] =
-                        src[src_offset + (6) + (2) * stride] = (byte) ((l5 + l6 + 1) >> 1);
-            src[src_offset + (1) + (5) * stride] =
-                src[src_offset + (3) + (4) * stride] =
-                    src[src_offset + (5) + (3) * stride] =
-                        src[src_offset + (7) + (2) * stride] = (byte) ((l5 + 2 * l6 + l7 + 2) >> 2);
-            src[src_offset + (0) + (6) * stride] =
-                src[src_offset + (2) + (5) * stride] =
-                    src[src_offset + (4) + (4) * stride] =
-                        src[src_offset + (6) + (3) * stride] = (byte) ((l6 + l7 + 1) >> 1);
-            src[src_offset + (1) + (6) * stride] =
-                src[src_offset + (3) + (5) * stride] =
-                    src[src_offset + (5) + (4) * stride] =
-                        src[src_offset + (7) + (3) * stride] = (byte) ((l6 + 3 * l7 + 2) >> 2);
-            src[src_offset + (0) + (7) * stride] =
-                src[src_offset + (1) + (7) * stride] =
-                    src[src_offset + (2) + (6) * stride] =
-                        src[src_offset + (2) + (7) * stride] =
-                            src[src_offset + (3) + (6) * stride] =
-                                src[src_offset + (3) + (7) * stride] =
-                                    src[src_offset + (4) + (5) * stride] =
-                                        src[src_offset + (4) + (6) * stride] =
-                                            src[src_offset + (4) + (7) * stride] =
-                                                src[src_offset + (5) + (5) * stride] =
-                                                    src[src_offset + (5) + (6) * stride] =
-                                                        src[src_offset + (5) + (7) * stride] =
-                                                            src[src_offset + (6) + (4) * stride] =
-                                                                src[src_offset + (6) + (5) * stride] =
-                                                                    src[src_offset + (6) + (6) * stride] =
-                                                                        src[src_offset + (6) + (7) * stride] =
-                                                                            src[src_offset + (7) + (4) * stride] =
-                                                                                src[src_offset + (7) + (5) * stride] =
-                                                                                    src[src_offset + (7) + (6) * stride]
+            src[src_offset + 0 + 0 * stride] = (byte) ((l0 + l1 + 1) >> 1);
+            src[src_offset + 1 + 0 * stride] = (byte) ((l0 + 2 * l1 + l2 + 2) >> 2);
+            src[src_offset + 0 + 1 * stride] =
+                src[src_offset + 2 + 0 * stride] = (byte) ((l1 + l2 + 1) >> 1);
+            src[src_offset + 1 + 1 * stride] =
+                src[src_offset + 3 + 0 * stride] = (byte) ((l1 + 2 * l2 + l3 + 2) >> 2);
+            src[src_offset + 0 + 2 * stride] =
+                src[src_offset + 2 + 1 * stride] =
+                    src[src_offset + 4 + 0 * stride] = (byte) ((l2 + l3 + 1) >> 1);
+            src[src_offset + 1 + 2 * stride] =
+                src[src_offset + 3 + 1 * stride] =
+                    src[src_offset + 5 + 0 * stride] = (byte) ((l2 + 2 * l3 + l4 + 2) >> 2);
+            src[src_offset + 0 + 3 * stride] =
+                src[src_offset + 2 + 2 * stride] =
+                    src[src_offset + 4 + 1 * stride] =
+                        src[src_offset + 6 + 0 * stride] = (byte) ((l3 + l4 + 1) >> 1);
+            src[src_offset + 1 + 3 * stride] =
+                src[src_offset + 3 + 2 * stride] =
+                    src[src_offset + 5 + 1 * stride] =
+                        src[src_offset + 7 + 0 * stride] = (byte) ((l3 + 2 * l4 + l5 + 2) >> 2);
+            src[src_offset + 0 + 4 * stride] =
+                src[src_offset + 2 + 3 * stride] =
+                    src[src_offset + 4 + 2 * stride] =
+                        src[src_offset + 6 + 1 * stride] = (byte) ((l4 + l5 + 1) >> 1);
+            src[src_offset + 1 + 4 * stride] =
+                src[src_offset + 3 + 3 * stride] =
+                    src[src_offset + 5 + 2 * stride] =
+                        src[src_offset + 7 + 1 * stride] = (byte) ((l4 + 2 * l5 + l6 + 2) >> 2);
+            src[src_offset + 0 + 5 * stride] =
+                src[src_offset + 2 + 4 * stride] =
+                    src[src_offset + 4 + 3 * stride] =
+                        src[src_offset + 6 + 2 * stride] = (byte) ((l5 + l6 + 1) >> 1);
+            src[src_offset + 1 + 5 * stride] =
+                src[src_offset + 3 + 4 * stride] =
+                    src[src_offset + 5 + 3 * stride] =
+                        src[src_offset + 7 + 2 * stride] = (byte) ((l5 + 2 * l6 + l7 + 2) >> 2);
+            src[src_offset + 0 + 6 * stride] =
+                src[src_offset + 2 + 5 * stride] =
+                    src[src_offset + 4 + 4 * stride] =
+                        src[src_offset + 6 + 3 * stride] = (byte) ((l6 + l7 + 1) >> 1);
+            src[src_offset + 1 + 6 * stride] =
+                src[src_offset + 3 + 5 * stride] =
+                    src[src_offset + 5 + 4 * stride] =
+                        src[src_offset + 7 + 3 * stride] = (byte) ((l6 + 3 * l7 + 2) >> 2);
+            src[src_offset + 0 + 7 * stride] =
+                src[src_offset + 1 + 7 * stride] =
+                    src[src_offset + 2 + 6 * stride] =
+                        src[src_offset + 2 + 7 * stride] =
+                            src[src_offset + 3 + 6 * stride] =
+                                src[src_offset + 3 + 7 * stride] =
+                                    src[src_offset + 4 + 5 * stride] =
+                                        src[src_offset + 4 + 6 * stride] =
+                                            src[src_offset + 4 + 7 * stride] =
+                                                src[src_offset + 5 + 5 * stride] =
+                                                    src[src_offset + 5 + 6 * stride] =
+                                                        src[src_offset + 5 + 7 * stride] =
+                                                            src[src_offset + 6 + 4 * stride] =
+                                                                src[src_offset + 6 + 5 * stride] =
+                                                                    src[src_offset + 6 + 6 * stride] =
+                                                                        src[src_offset + 6 + 7 * stride] =
+                                                                            src[src_offset + 7 + 4 * stride] =
+                                                                                src[src_offset + 7 + 5 * stride] =
+                                                                                    src[src_offset + 7 + 6 * stride]
                                                                                         =
                                                                                         src[
-                                                                                            src_offset + (7) +
-                                                                                            (7) * stride] = (byte) l7;
+                                                                                            src_offset + 7 +
+                                                                                            7 * stride] = (byte) l7;
         }
 
         public static void pred4x4_vertical_add_c(byte[] pix, int pix_offset, short[] block, int block_offset,

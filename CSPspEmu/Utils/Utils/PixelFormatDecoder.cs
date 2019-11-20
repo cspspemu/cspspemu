@@ -78,7 +78,7 @@ namespace CSPspEmu.Utils.Utils
                 case GuPixelFormats.Rgba5551: return ColorFormats.Rgba5551;
                 case GuPixelFormats.Rgba5650: return ColorFormats.Rgba5650;
                 case GuPixelFormats.Rgba4444: return ColorFormats.Rgba4444;
-                default: throw(new NotImplementedException("Not implemented " + pixelFormat));
+                default: throw new NotImplementedException("Not implemented " + pixelFormat);
             }
         }
 
@@ -154,7 +154,7 @@ namespace CSPspEmu.Utils.Utils
                 case GuPixelFormats.CompressedDxt5:
                     pixelFormatDecoder.Decode_COMPRESSED_DXT5();
                     break;
-                default: throw(new InvalidOperationException());
+                default: throw new InvalidOperationException();
             }
             if (ignoreAlpha)
             {
@@ -171,7 +171,7 @@ namespace CSPspEmu.Utils.Utils
                 {
                     OutputPixel outputPixel;
                     outputPixel.R = 0xFF;
-                    outputPixel.G = (byte) (((n & 1) == 0) ? 0xFF : 0x00);
+                    outputPixel.G = (byte) ((n & 1) == 0 ? 0xFF : 0x00);
                     outputPixel.B = 0x00;
                     outputPixel.A = 0xFF;
                     _output[n] = outputPixel;
@@ -199,9 +199,9 @@ namespace CSPspEmu.Utils.Utils
                     colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
                         .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
                     colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
-                        (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
+                        (a, b) => (byte) (a * 2 / 3 + b * 1 / 3));
                     colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
-                        (a, b) => (byte) (((a * 1) / 3) + ((b * 2) / 3)));
+                        (a, b) => (byte) (a * 1 / 3 + b * 2 / 3));
 
                     // Create Alpha Lookup
                     var alphaLookup = new byte[8];
@@ -226,8 +226,8 @@ namespace CSPspEmu.Utils.Utils
                         alphaLookup[3] = (byte) ((3 * alpha0 + 2 * alpha1) / 5);
                         alphaLookup[4] = (byte) ((2 * alpha0 + 3 * alpha1) / 5);
                         alphaLookup[5] = (byte) ((alpha0 + 4 * alpha1) / 5);
-                        alphaLookup[6] = (byte) (0x00);
-                        alphaLookup[7] = (byte) (0xFF);
+                        alphaLookup[6] = (byte) 0x00;
+                        alphaLookup[7] = (byte) 0xFF;
                     }
 
                     var no = 0;
@@ -235,8 +235,8 @@ namespace CSPspEmu.Utils.Utils
                     {
                         for (var x2 = 0; x2 < 4; x2++, no++)
                         {
-                            var alpha = alphaLookup[((block.Alpha >> (3 * no)) & 0x7)];
-                            var color = ((block.ColorLookup >> (2 * no)) & 0x3);
+                            var alpha = alphaLookup[(block.Alpha >> (3 * no)) & 0x7];
+                            var color = (block.ColorLookup >> (2 * no)) & 0x3;
 
                             var rx = x + x2;
                             var ry = y + y2;
@@ -274,9 +274,9 @@ namespace CSPspEmu.Utils.Utils
                     colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
                         .Transform((r, g, b, a) => OutputPixel.FromRgba(b, g, r, a));
                     colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
-                        (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
+                        (a, b) => (byte) (a * 2 / 3 + b * 1 / 3));
                     colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
-                        (a, b) => (byte) (((a * 1) / 3) + ((b * 2) / 3)));
+                        (a, b) => (byte) (a * 1 / 3 + b * 2 / 3));
 
                     var no = 0;
                     for (var y2 = 0; y2 < 4; y2++)
@@ -286,12 +286,12 @@ namespace CSPspEmu.Utils.Utils
                             var alpha = (block.Alpha >> (4 * no)) & 0xF;
                             var color = (block.ColorLookup >> (2 * no)) & 0x3;
 
-                            var rx = (x + x2);
-                            var ry = (y + y2);
+                            var rx = x + x2;
+                            var ry = y + y2;
                             var n = ry * _width + rx;
 
                             _output[n] = colors[color];
-                            _output[n].A = (byte) ((alpha * 0xFF) / 0xF);
+                            _output[n].A = (byte) (alpha * 0xFF / 0xF);
                         }
                     }
                 }
@@ -316,14 +316,14 @@ namespace CSPspEmu.Utils.Utils
                     if (block.Color0 > block.Color1)
                     {
                         colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
-                            (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
+                            (a, b) => (byte) (a * 2 / 3 + b * 1 / 3));
                         colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
-                            (a, b) => (byte) (((a * 1) / 3) + ((b * 2) / 3)));
+                            (a, b) => (byte) (a * 1 / 3 + b * 2 / 3));
                     }
                     else
                     {
                         colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
-                            (a, b) => (byte) (((a * 1) / 2) + ((b * 1) / 2)));
+                            (a, b) => (byte) (a * 1 / 2 + b * 1 / 2));
                         colors[3] = OutputPixel.FromRgba(0, 0, 0, 0);
                     }
 
@@ -332,10 +332,10 @@ namespace CSPspEmu.Utils.Utils
                     {
                         for (var x2 = 0; x2 < 4; x2++, no++)
                         {
-                            var color = ((block.ColorLookup >> (2 * no)) & 0x3);
+                            var color = (block.ColorLookup >> (2 * no)) & 0x3;
 
-                            var rx = (x + x2);
-                            var ry = (y + y2);
+                            var rx = x + x2;
+                            var ry = y + y2;
                             var n = ry * _width + rx;
 
                             _output[n] = colors[color];
@@ -556,10 +556,10 @@ namespace CSPspEmu.Utils.Utils
                     var dest = (uint*) xdest;
                     for (var n = 0; n < 8; n++, dest += pitch)
                     {
-                        *(dest++) = *(src++);
-                        *(dest++) = *(src++);
-                        *(dest++) = *(src++);
-                        *(dest++) = *(src++);
+                        *dest++ = *src++;
+                        *dest++ = *src++;
+                        *dest++ = *src++;
+                        *dest++ = *src++;
                     }
                     xdest += 16;
                 }

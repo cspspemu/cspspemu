@@ -21,10 +21,8 @@ namespace CSharpPlatform
         
         public static uint Portable_ByteSwap_uint(uint Value)
         {
-            return (
-                ((uint) Portable_ByteSwap_ushort((ushort) (Value >> 0)) << 16) |
-                ((uint) Portable_ByteSwap_ushort((ushort) (Value >> 16)) << 0)
-            );
+            return ((uint) Portable_ByteSwap_ushort((ushort) (Value >> 0)) << 16) |
+                   ((uint) Portable_ByteSwap_ushort((ushort) (Value >> 16)) << 0);
         }
 
         [DllImport("Kernel32.dll")]

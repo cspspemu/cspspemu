@@ -57,7 +57,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
             {
                 this.Magic = 0x45413301;
                 this.StructSize = (ushort) sizeof(OMAHeader);
-                this.Unknown0 = unchecked((ushort) (-1));
+                this.Unknown0 = unchecked((ushort) -1);
                 this.Unknown1 = 0x00000000;
                 this.Unknown2 = 0x010f5000;
                 this.Unknown3 = 0x00040000;
@@ -96,7 +96,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
                     {
                         case sceAtrac3plus.CodecType.PSP_MODE_AT_3_PLUS: return 0x800;
                         case sceAtrac3plus.CodecType.PSP_MODE_AT_3: return 0x400;
-                        default: throw(new NotImplementedException());
+                        default: throw new NotImplementedException();
                     }
                 }
             }
@@ -199,8 +199,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
 #endif
                                 break;
                             default:
-                                throw (new NotImplementedException($"Can't handle chunk '{ChunkType}'")
-                                );
+                                throw new NotImplementedException($"Can't handle chunk '{ChunkType}'");
                         }
                     };
                     RiffWaveReader.Parse(Stream);
@@ -396,7 +395,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                             this.DataStream = ChunkStream;
                             break;
                         default:
-                            throw (new NotImplementedException($"Can't handle chunk '{ChunkType}'"));
+                            throw new NotImplementedException($"Can't handle chunk '{ChunkType}'");
                     }
                 };
                 RiffWaveReader.Parse(Stream);
@@ -546,7 +545,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         public int sceAtracGetBitrate(Atrac Atrac, out uint Bitrate)
         {
             //Bitrate = Atrac.Format.Bitrate;
-            uint _AtracBitrate = (uint) ((Atrac.Format.BytesPerFrame * 352800) / 1000);
+            uint _AtracBitrate = (uint) (Atrac.Format.BytesPerFrame * 352800 / 1000);
             if (Atrac.CodecType == CodecType.PSP_MODE_AT_3_PLUS)
             {
                 _AtracBitrate = ((_AtracBitrate >> 11) + 8) & 0xFFFFFFF0;
@@ -617,7 +616,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         [HlePspNotImplemented]
         public int sceAtracSetLoopNum(Atrac Atrac, int NumberOfLoops)
         {
-            if (Atrac.Smpl.LoopCount == 0) throw(new SceKernelException(SceKernelErrors.ATRAC_ERROR_UNSET_PARAM));
+            if (Atrac.Smpl.LoopCount == 0) throw new SceKernelException(SceKernelErrors.ATRAC_ERROR_UNSET_PARAM);
             Atrac.NumberOfLoops = NumberOfLoops;
             return 0;
         }
@@ -680,11 +679,11 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                     ReachedEnd = 1;
                     RemainingFramesToDecode = 0;
                     Console.WriteLine("SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED)");
-                    throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
+                    throw new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED);
                 }
                 if (Atrac.NumberOfLoops > 0) Atrac.NumberOfLoops--;
 
-                Atrac.DecodingOffset = (Atrac.LoopInfoList.Length > 0) ? Atrac.LoopInfoList[0].StartSample : 0;
+                Atrac.DecodingOffset = Atrac.LoopInfoList.Length > 0 ? Atrac.LoopInfoList[0].StartSample : 0;
             }
 
             //return Atrac.GetUidIndex(InjectContext);
@@ -715,7 +714,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         {
             if (CodecType != CodecType.PSP_MODE_AT_3 && CodecType != CodecType.PSP_MODE_AT_3_PLUS)
             {
-                throw(new SceKernelException(SceKernelErrors.ATRAC_ERROR_INVALID_CODECTYPE));
+                throw new SceKernelException(SceKernelErrors.ATRAC_ERROR_INVALID_CODECTYPE);
             }
 
             return TryToAlloc(new Atrac(InjectContext, CodecType));
@@ -730,14 +729,14 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
             {
                 if (Count >= MaxAtrac3Plus)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID));
+                    throw new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID);
                 }
             }
             else if (CodecType == CodecType.PSP_MODE_AT_3)
             {
                 if (Count >= MaxAtrac3)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID));
+                    throw new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID);
                 }
             }
             return Atrac;
@@ -841,7 +840,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
             puiPosition = 0;
             puiDataByte = 0;
 
-            throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_SECOND_BUFFER_NOT_NEEDED));
+            throw new SceKernelException(SceKernelErrors.ERROR_ATRAC_SECOND_BUFFER_NOT_NEEDED);
         }
 
         /// <summary>
@@ -867,7 +866,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         [HlePspNotImplemented]
         public int sceAtracSetSecondBuffer(Atrac Atrac, out byte pucSecondBufferAddr, uint uiSecondBufferByte)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
             /*
             unimplemented();
             //unimplemented();
@@ -885,7 +884,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         //[HlePspNotImplemented]
         public int sceAtracGetNextDecodePosition(Atrac Atrac, out int SamplePosition)
         {
-            if (Atrac.DecodingReachedEnd) throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
+            if (Atrac.DecodingReachedEnd) throw new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED);
             SamplePosition = Atrac.DecodingOffset;
             //Console.WriteLine("  {0}", SamplePosition);
             return 0;
@@ -904,7 +903,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         public int sceAtracGetSoundSample(Atrac Atrac, int* EndSamplePointer, int* LoopStartSamplePointer,
             int* LoopEndSamplePointer)
         {
-            var HasLoops = (Atrac.LoopInfoList != null) && (Atrac.LoopInfoList.Length > 0);
+            var HasLoops = Atrac.LoopInfoList != null && Atrac.LoopInfoList.Length > 0;
             if (EndSamplePointer != null) *EndSamplePointer = Atrac.Fact.EndSample;
             if (LoopStartSamplePointer != null)
                 *LoopStartSamplePointer = HasLoops ? Atrac.LoopInfoList[0].StartSample : -1;
@@ -923,7 +922,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         [HlePspNotImplemented]
         public int sceAtracGetBufferInfoForReseting(Atrac Atrac, uint uiSample, PspBufferInfo* pBufferInfo)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
             /*
             unimplemented();
             return 0;
@@ -1011,7 +1010,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                 }
                 else
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY));
+                    throw new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY);
                 }
             }
             for (int n = 0; n < at3Count; n++)
@@ -1023,7 +1022,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                 }
                 else
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY));
+                    throw new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY);
                 }
             }
             return 0;
@@ -1037,7 +1036,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         [HlePspNotImplemented]
         public int sceAtracSetMOutHalfwayBuffer()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -1085,7 +1084,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         [HlePspNotImplemented]
         public int sceAtracSetMOutHalfwayBufferAndGetID(void* halfBuffer, uint readSize, uint halfBufferSize)
         {
-            throw (new SceKernelException((SceKernelErrors) (-1)));
+            throw new SceKernelException((SceKernelErrors) (-1));
         }
 
         /// <summary>
@@ -1099,7 +1098,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         [HlePspNotImplemented]
         public int sceAtracSetAA3HalfwayBufferAndGetID(void* halfBuffer, uint readSize, uint halfBufferSize)
         {
-            throw (new SceKernelException((SceKernelErrors) (-1)));
+            throw new SceKernelException((SceKernelErrors) (-1));
         }
 
         /// <summary>
@@ -1114,7 +1113,7 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
         [HlePspNotImplemented]
         public Atrac sceAtracSetAA3DataAndGetID(void* buffer, int bufferSize, int fileSize, uint metadataSizeAddr)
         {
-            throw (new SceKernelException((SceKernelErrors) (-1)));
+            throw new SceKernelException((SceKernelErrors) (-1));
         }
 
         /// <summary>

@@ -83,7 +83,7 @@ namespace CSPspEmu.Hle.Managers
                 }
                 else
                 {
-                    throw(new NotImplementedException("Unknown type '" + value.GetType() + "'"));
+                    throw new NotImplementedException("Unknown type '" + value.GetType() + "'");
                 }
             }
             get => _Value;
@@ -95,7 +95,7 @@ namespace CSPspEmu.Hle.Managers
             {
                 switch (Type)
                 {
-                    case RegKeyTypes.Binary: throw(new NotImplementedException());
+                    case RegKeyTypes.Binary: throw new NotImplementedException();
                     case RegKeyTypes.Directory: return (uint) ((string) Value).Length;
                     case RegKeyTypes.Integer: return sizeof(uint);
                     case RegKeyTypes.String: return (uint) ((string) Value).Length;
@@ -108,13 +108,13 @@ namespace CSPspEmu.Hle.Managers
         {
             switch (Type)
             {
-                case RegKeyTypes.Binary: throw (new NotImplementedException());
-                case RegKeyTypes.Directory: throw (new NotImplementedException());
+                case RegKeyTypes.Binary: throw new NotImplementedException();
+                case RegKeyTypes.Directory: throw new NotImplementedException();
                 case RegKeyTypes.Integer:
                     *(uint*) Buffer = (uint) Value;
                     break;
-                case RegKeyTypes.String: throw (new NotImplementedException());
-                default: throw (new NotImplementedException());
+                case RegKeyTypes.String: throw new NotImplementedException();
+                default: throw new NotImplementedException();
             }
         }
     }
@@ -156,7 +156,7 @@ namespace CSPspEmu.Hle.Managers
             }
             catch (InvalidOperationException)
             {
-                throw(new KeyNotFoundException("Can't find key '" + Name + "'"));
+                throw new KeyNotFoundException("Can't find key '" + Name + "'");
             }
         }
 

@@ -78,7 +78,7 @@ namespace SafeILGenerator.Ast.Optimizers
             {
                 var currentNode = newContainer.Nodes[n];
                 var nextNode = newContainer.Nodes[n + 1];
-                if ((!(currentNode is AstNodeStmGotoAlways)) || (!(nextNode is AstNodeStmLabel))) continue;
+                if (!(currentNode is AstNodeStmGotoAlways) || !(nextNode is AstNodeStmLabel)) continue;
                 if ((currentNode as AstNodeStmGotoAlways).AstLabel != (nextNode as AstNodeStmLabel).AstLabel) continue;
                 newContainer.Nodes[n] = null;
                 //NewContainer.Nodes[n + 1] = null;
@@ -144,19 +144,19 @@ namespace SafeILGenerator.Ast.Optimizers
         protected virtual AstNode _Optimize(AstNodeExprBinop binary)
         {
             //Console.WriteLine("Optimize.AstNodeExprBinop: {0} {1} {2}", Binary.LeftNode, Binary.Operator, Binary.RightNode);
-            var leftImm = (binary.LeftNode as AstNodeExprImm);
-            var rightImm = (binary.RightNode as AstNodeExprImm);
+            var leftImm = binary.LeftNode as AstNodeExprImm;
+            var rightImm = binary.RightNode as AstNodeExprImm;
             var leftType = binary.LeftNode.Type;
             var rightType = binary.RightNode.Type;
             var Operator = binary.Operator;
 
-            if ((leftType == rightType))
+            if (leftType == rightType)
             {
                 if (AstUtils.IsTypeFloat(leftType))
                 {
                     var type = leftType;
 
-                    if ((leftImm != null) && (rightImm != null))
+                    if (leftImm != null && rightImm != null)
                     {
                         var leftValue = Convert.ToDouble(leftImm.Value);
                         var rightValue = Convert.ToDouble(rightImm.Value);
@@ -225,7 +225,7 @@ namespace SafeILGenerator.Ast.Optimizers
                         {
                             if (rightUnary.Operator == "-")
                             {
-                                return new AstNodeExprBinop(binary.LeftNode, (Operator == "+") ? "-" : "+",
+                                return new AstNodeExprBinop(binary.LeftNode, Operator == "+" ? "-" : "+",
                                     rightUnary.RightNode);
                             }
                         }
@@ -233,7 +233,7 @@ namespace SafeILGenerator.Ast.Optimizers
 
                     var type = leftType;
                     // Can optimize just literal values.
-                    if ((leftImm != null) && (rightImm != null))
+                    if (leftImm != null && rightImm != null)
                     {
                         if (AstUtils.IsTypeSigned(leftType))
                         {
@@ -333,7 +333,7 @@ namespace SafeILGenerator.Ast.Optimizers
             if ((leftType == typeof(uint) || leftType == typeof(int)) && rightType == typeof(int) && rightImm != null)
             {
                 var rightValue = Convert.ToInt64(rightImm.Value);
-                if (Operator == ">>" && (rightValue == 0)) return binary.LeftNode;
+                if (Operator == ">>" && rightValue == 0) return binary.LeftNode;
             }
 
             return binary;

@@ -84,7 +84,7 @@ namespace CSPspEmu.Rasterizer
             out RasterizerResult result
         )
         {
-            int dY = (b.Y - a.Y);
+            int dY = b.Y - a.Y;
             var ratio = (y - a.Y) / (float) (dY != 0 ? dY : 1);
             var iratio = 1 - ratio;
             var x = ratio.Interpolate(a.X, b.X);

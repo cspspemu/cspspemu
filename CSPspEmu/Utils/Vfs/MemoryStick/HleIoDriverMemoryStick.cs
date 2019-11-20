@@ -82,7 +82,7 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
                 case CommandType.GetMemoryStickCapacity:
                 {
                     var SizeInfo = (SizeInfoStruct*) Memory.PspAddressToPointerSafe(ReinterpretSpan<uint>(Input)[0]);
-                    var MemoryStickSectorSize = (32 * 1024);
+                    var MemoryStickSectorSize = 32 * 1024;
                     //var TotalSpaceInBytes = 2L * 1024 * 1024 * 1024;
                     var FreeSpaceInBytes = 1L * 1024 * 1024 * 1024;
                     SizeInfo->SectorSize = 0x200;

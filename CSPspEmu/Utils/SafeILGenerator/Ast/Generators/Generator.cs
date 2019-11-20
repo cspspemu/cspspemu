@@ -119,7 +119,7 @@ namespace SafeILGenerator.Ast.Generators
                 {
                     Console.WriteLine(generateMapping);
                 }
-                throw (new NotImplementedException($"Don't know how to generate {astNodeType} for {GetType()}"));
+                throw new NotImplementedException($"Don't know how to generate {astNodeType} for {GetType()}");
             }
 
             GenerateMappings[astNodeType].Call(this, astNode);

@@ -51,7 +51,7 @@ namespace CSPspEmu.Hle.Formats
 
             if (Header.Magic != HeaderStruct.MagicEnum.ExpectedValue)
             {
-                throw(new Exception("Not a PBP file"));
+                throw new Exception("Not a PBP file");
             }
 
             var offsets = Header.Offsets.Concat(new[] {(uint) stream.Length}).ToArray();

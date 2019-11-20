@@ -264,15 +264,15 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
             if (chns == 2)
             {
-                while ((0 != chnInfos[0].JointChnInfo.NumBandSplitedUsed) &&
-                       (0 == chnInfos[0].Table0[chnInfos[0].JointChnInfo.NumBandSplitedUsed - 1]) &&
-                       (0 == chnInfos[1].Table0[chnInfos[0].JointChnInfo.NumBandSplitedUsed - 1]))
+                while (0 != chnInfos[0].JointChnInfo.NumBandSplitedUsed &&
+                       0 == chnInfos[0].Table0[chnInfos[0].JointChnInfo.NumBandSplitedUsed - 1] &&
+                       0 == chnInfos[1].Table0[chnInfos[0].JointChnInfo.NumBandSplitedUsed - 1])
                     chnInfos[0].JointChnInfo.NumBandSplitedUsed--;
             }
             else
             {
-                while ((0 != chnInfos[0].JointChnInfo.NumBandSplitedUsed) &&
-                       (0 == chnInfos[0].Table0[chnInfos[0].JointChnInfo.NumBandSplitedUsed - 1]))
+                while (0 != chnInfos[0].JointChnInfo.NumBandSplitedUsed &&
+                       0 == chnInfos[0].Table0[chnInfos[0].JointChnInfo.NumBandSplitedUsed - 1])
                     chnInfos[0].JointChnInfo.NumBandSplitedUsed--;
             }
 
@@ -285,7 +285,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             {
                 for (uint a1 = 0; a1 < 0x20; a1++)
                 {
-                    if ((chnInfos[a0].Table0[a1] < 0) || (chnInfos[a0].Table0[a1] >= 8)) return -0x10B;
+                    if (chnInfos[a0].Table0[a1] < 0 || chnInfos[a0].Table0[a1] >= 8) return -0x10B;
                 }
             }
 
@@ -316,8 +316,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             {
                 for (uint a1 = 0; a1 < 0x20; a1++)
                 {
-                    if ((chnInfos[a0].Table1[a1] < 0) ||
-                        (chnInfos[a0].Table1[a1] >= 0x40)
+                    if (chnInfos[a0].Table1[a1] < 0 ||
+                        chnInfos[a0].Table1[a1] >= 0x40
                     )
                         return -0x110;
                 }
@@ -408,9 +408,9 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
             if (chns == 2)
             {
-                MAPCDSF_readPackTable0(mbr0, (chnInfos[0].JointChnInfo.Table48),
+                MAPCDSF_readPackTable0(mbr0, chnInfos[0].JointChnInfo.Table48,
                     chnInfos[0].JointChnInfo.NumBandUsed);
-                MAPCDSF_readPackTable0(mbr0, (chnInfos[0].JointChnInfo.Table00),
+                MAPCDSF_readPackTable0(mbr0, chnInfos[0].JointChnInfo.Table00,
                     chnInfos[0].JointChnInfo.NumBandUsed);
             }
 
@@ -424,7 +424,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
             for (uint a0 = 0; a0 < chns; a0++)
             {
-                MAPCDSF_readPackTable0(mbr0, (chnInfos[a0].AccDataNow.Acc),
+                MAPCDSF_readPackTable0(mbr0, chnInfos[a0].AccDataNow.Acc,
                     chnInfos[0].JointChnInfo.NumBandDeclared);
             }
 

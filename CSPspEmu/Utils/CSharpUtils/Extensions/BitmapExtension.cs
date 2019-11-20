@@ -178,7 +178,7 @@ namespace CSharpUtils.Drawing.Extensions
             var buffer = new byte[bufferSize];
             bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, bitmapData =>
             {
-                var startPtr = ((byte*) bitmapData.Scan0.ToPointer());
+                var startPtr = (byte*) bitmapData.Scan0.ToPointer();
                 fixed (byte* startBufferPtr = &buffer[0])
                 {
                     var currentChannel = 0;
@@ -212,7 +212,7 @@ namespace CSharpUtils.Drawing.Extensions
             var bufferSize = pixelCount * nChannels;
             bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, bitmapData =>
             {
-                var startPtr = ((byte*) bitmapData.Scan0.ToPointer());
+                var startPtr = (byte*) bitmapData.Scan0.ToPointer();
                 fixed (byte* startBufferPtr = &buffer[0])
                 {
                     var currentChannel = 0;
@@ -295,7 +295,7 @@ namespace CSharpUtils.Drawing.Extensions
             {
                 for (var y = 0; y < height; y++)
                 {
-                    var ptr = (ArgbRev*) (((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y);
+                    var ptr = (ArgbRev*) ((byte*) bitmapData.Scan0.ToPointer() + bitmapData.Stride * y);
                     for (var x = 0; x < width; x++)
                     {
                         *ptr = Delegate(*ptr, x, y);

@@ -153,7 +153,7 @@ namespace CSharpUtils.Streams
             {
                 foreach (var streamEntry in _StreamEntries)
                 {
-                    if ((Position >= streamEntry.Position) && (Position < streamEntry.Position + streamEntry.Length))
+                    if (Position >= streamEntry.Position && Position < streamEntry.Position + streamEntry.Length)
                     {
                         _currentStream = streamEntry.Stream;
                         _currentStreamLow = streamEntry.Position;
@@ -332,7 +332,7 @@ namespace CSharpUtils.Streams
         public static MapStream Unserialize(Stream targetStream)
         {
             if (targetStream.ReadString(4) != "MAPS")
-                throw (new InvalidDataException("Not a MapStream serialized stream"));
+                throw new InvalidDataException("Not a MapStream serialized stream");
 
             var version = targetStream.ReadVariableUlongBit8Extends();
             var mapStream = new MapStream();
@@ -360,7 +360,7 @@ namespace CSharpUtils.Streams
 
                     break;
                 default:
-                    throw (new InvalidDataException("Unsupported MapStream serialized stream version " + version));
+                    throw new InvalidDataException("Unsupported MapStream serialized stream version " + version);
             }
 
             return mapStream;

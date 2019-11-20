@@ -105,7 +105,7 @@ namespace CSPspEmu.Hle.Managers
                 {
                     Console.WriteLine("Available Driver: '{0}'", driver.Key);
                 }
-                throw(new KeyNotFoundException("Can't find HleIoDriver '" + driverName + "'"));
+                throw new KeyNotFoundException("Can't find HleIoDriver '" + driverName + "'");
             }
 
             return new ParsePathInfo
@@ -173,7 +173,7 @@ namespace CSPspEmu.Hle.Managers
             //Drivers[
             if (!Drivers.ContainsKey(baseDeviceName))
             {
-                throw(new NotImplementedException($"Unknown device '{baseDeviceName}'"));
+                throw new NotImplementedException($"Unknown device '{baseDeviceName}'");
             }
 
             return new ParsePathInfo

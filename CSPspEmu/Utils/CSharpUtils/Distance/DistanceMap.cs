@@ -26,11 +26,11 @@ namespace CSharpUtils.Drawing.Distance
             {
                 for (var y = 0; y < height; y++)
                 {
-                    var ptr = ((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y;
+                    var ptr = (byte*) bitmapData.Scan0.ToPointer() + bitmapData.Stride * y;
                     ptr += 3;
                     for (var x = 0; x < width; x++)
                     {
-                        mask[x, y] = (*ptr >= alphaThresold);
+                        mask[x, y] = *ptr >= alphaThresold;
                         ptr += 4;
                         //Console.Write(Mask[x, y] ? 1 : 0);
                     }
@@ -192,7 +192,7 @@ namespace CSharpUtils.Drawing.Distance
                 if (dist > glowDistance) return new ArgbRev(0, 0, 0, 0);
                 var genColor = ArgbRev.Interpolate(glowColor, transparentColor, 1 - function(dist / glowDistance));
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                return (dist == 0) ? ArgbRev.Mix(color, genColor) : genColor;
+                return dist == 0 ? ArgbRev.Mix(color, genColor) : genColor;
             });
         }
 
@@ -210,7 +210,7 @@ namespace CSharpUtils.Drawing.Distance
             {
                 for (var y = 0; y < height; y++)
                 {
-                    var ptr = ((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y;
+                    var ptr = (byte*) bitmapData.Scan0.ToPointer() + bitmapData.Stride * y;
                     for (var x = 0; x < width; x++)
                     {
                         var distance = (byte) MathUtils.FastClamp((int) (distanceMap[x, y].Distance * 4), 0, 255);

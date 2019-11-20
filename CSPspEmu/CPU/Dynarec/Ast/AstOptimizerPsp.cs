@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
         {
             if (processor == null || processor.CpuConfig.EnableAstOptimizations)
             {
-                return (AstNodeStm) (new AstOptimizerPsp(processor?.Memory)).Optimize(
+                return (AstNodeStm) new AstOptimizerPsp(processor?.Memory).Optimize(
                     ast.Statements(astNodeStm, ast.Return()));
             }
             return astNodeStm;
@@ -96,9 +96,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
                         {
                             var lwlLwrState = lwlLwrStates[instruction.Rt];
                             if (
-                                (lwlLwrState.LwlRsRegister == instruction.Rs) &&
-                                (lwlLwrState.LwlRtRegister == instruction.Rt) &&
-                                (lwlLwrState.LwlImm == instruction.Imm + 3)
+                                lwlLwrState.LwlRsRegister == instruction.Rs &&
+                                lwlLwrState.LwlRtRegister == instruction.Rt &&
+                                lwlLwrState.LwlImm == instruction.Imm + 3
                             )
                             {
                                 containerNodes[lwlLwrState.LwlListIndex] = null;

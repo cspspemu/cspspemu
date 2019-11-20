@@ -112,7 +112,7 @@ namespace CSPspEmu.Hle.Managers
             //Console.WriteLine("GetModuleByName('{0}')", ModuleNameToFind);
             if (!HleModuleTypes.ContainsKey(ModuleNameToFind))
             {
-                throw (new KeyNotFoundException("Can't find module '" + ModuleNameToFind + "'"));
+                throw new KeyNotFoundException("Can't find module '" + ModuleNameToFind + "'");
                 //return new HleModuleHost();
             }
             return GetModuleByType(HleModuleTypes[ModuleNameToFind]);
@@ -129,9 +129,9 @@ namespace CSPspEmu.Hle.Managers
             var EntriesByName = Module.EntriesByName;
             if (!EntriesByName.ContainsKey(FunctionName))
             {
-                throw (new KeyNotFoundException(
+                throw new KeyNotFoundException(
                     $"Can't find method '{FunctionName}' on module '{Module.GetType().Name}'"
-                ));
+                );
             }
             return EntriesByName[FunctionName].Delegate;
         }
@@ -144,8 +144,8 @@ namespace CSPspEmu.Hle.Managers
             {
                 Action = (CpuThreadState) =>
                 {
-                    throw (new NotImplementedException("Not Implemented Syscall '" + ModuleImportName + ":" +
-                                                       FunctionEntry + "'"));
+                    throw new NotImplementedException("Not Implemented Syscall '" + ModuleImportName + ":" +
+                                                      FunctionEntry + "'");
                 };
             }
             CpuProcessor.RegisteredNativeSyscallMethods[DelegateId] = new NativeSyscallInfo()

@@ -66,7 +66,7 @@ namespace CSharpUtils.Extensions
         {
             if (!stream.CanSeek)
             {
-                throw(new NotImplementedException("Stream can't seek"));
+                throw new NotImplementedException("Stream can't seek");
             }
 
             lock (stream)
@@ -122,7 +122,7 @@ namespace CSharpUtils.Extensions
             while (!found)
             {
                 var b = stream.ReadByte();
-                if (b == -1) throw (new Exception("End Of Stream"));
+                if (b == -1) throw new Exception("End Of Stream");
 
                 if (b == expectedByte)
                 {
@@ -249,7 +249,7 @@ namespace CSharpUtils.Extensions
             {
                 var readedNow = stream.Read(buffer, readed, toRead - readed);
                 if (readedNow <= 0)
-                    throw (new Exception("Unable to read " + toRead + " bytes, readed " + readed + "."));
+                    throw new Exception("Unable to read " + toRead + " bytes, readed " + readed + ".");
                 readed += readedNow;
             }
             return buffer;
@@ -396,9 +396,9 @@ namespace CSharpUtils.Extensions
                     if (readed < 0)
                     {
                         if (allowEndOfStream) break;
-                        throw (new EndOfStreamException(
+                        throw new EndOfStreamException(
                             "ReadStringz reached the end of the stream without finding a \\0 character at Position=" +
-                            stream.Position + "."));
+                            stream.Position + ".");
                     }
                     if (readed == 0) break;
                     temp.WriteByte((byte) readed);
@@ -460,7 +460,7 @@ namespace CSharpUtils.Extensions
             else
             {
                 var bytes = encoding.GetBytes(value);
-                if (bytes.Length > toWrite) throw(new Exception("String too long"));
+                if (bytes.Length > toWrite) throw new Exception("String too long");
                 stream.WriteBytes(bytes);
                 stream.WriteZeroBytes(toWrite - bytes.Length);
             }
@@ -633,7 +633,7 @@ namespace CSharpUtils.Extensions
             if (count == 0) return new TType[0];
 
             var itemSize = Marshal.SizeOf(typeof(TType));
-            var skipSize = (entrySize == -1) ? (0) : (entrySize - itemSize);
+            var skipSize = entrySize == -1 ? 0 : entrySize - itemSize;
 
             var maxCount = (uint) (stream.Length / (itemSize + skipSize));
             if (allowReadLess)
@@ -642,7 +642,7 @@ namespace CSharpUtils.Extensions
             }
 
             if (skipSize < 0)
-                throw (new Exception("Invalid Size"));
+                throw new Exception("Invalid Size");
             if (skipSize == 0)
                 return StructUtils.BytesToStructArray<TType>(stream.ReadBytes((int) (itemSize * count)));
             var vector = new TType[count];
@@ -724,7 +724,7 @@ namespace CSharpUtils.Extensions
             {
                 if (!stream.CanSeek)
                 {
-                    if (count < 0) throw(new NotImplementedException("Can't go back"));
+                    if (count < 0) throw new NotImplementedException("Can't go back");
                     stream.ReadBytes((int) count);
                 }
                 else
@@ -965,7 +965,7 @@ namespace CSharpUtils.Extensions
             do
             {
                 c = stream.ReadByte();
-                if (c == -1) throw (new Exception("Incomplete VariableUintBit8Extends"));
+                if (c == -1) throw new Exception("Incomplete VariableUintBit8Extends");
                 v |= ((uint) c & 0x7F) << shift;
                 shift += 7;
             } while ((c & 0x80) != 0);
@@ -985,7 +985,7 @@ namespace CSharpUtils.Extensions
             do
             {
                 c = stream.ReadByte();
-                if (c == -1) throw (new Exception("Incomplete VariableUintBit8Extends"));
+                if (c == -1) throw new Exception("Incomplete VariableUintBit8Extends");
                 v |= ((ulong) c & 0x7F) << shift;
                 shift += 7;
             } while ((c & 0x80) != 0);

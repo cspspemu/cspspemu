@@ -40,7 +40,7 @@ namespace CSPspEmuLLETest
                     TransferUtils.Transfer(direction, ref _kirkDestination, ref value);
                     break;
                 case DmaEnum.KIRK_START:
-                    if (_kirkCommand != 1) throw(new NotImplementedException());
+                    if (_kirkCommand != 1) throw new NotImplementedException();
 
                     var sourcePtr = (byte*) Memory.PspAddressToPointerSafe(_kirkSource);
                     var destinationPtr = (byte*) Memory.PspAddressToPointerSafe(_kirkDestination);

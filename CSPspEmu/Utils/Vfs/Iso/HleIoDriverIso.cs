@@ -82,8 +82,8 @@ namespace CSPspEmu.Hle.Vfs.Iso
                     }
                     else
                     {
-                        throw(new NotImplementedException("Can't handle special filename '" + FileName + "' part '" +
-                                                          Part + "'"));
+                        throw new NotImplementedException("Can't handle special filename '" + FileName + "' part '" +
+                                                         Part + "'");
                     }
                     //Console.WriteLine(Part);
                 }
@@ -114,7 +114,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
         public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
         {
-            var IsoFileArgument = ((IsoFileArgument) HleIoDrvFileArg.FileArgument);
+            var IsoFileArgument = (IsoFileArgument) HleIoDrvFileArg.FileArgument;
             IsoFileArgument.Stream.Close();
             return 0;
             //throw new NotImplementedException();
@@ -122,7 +122,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
         public unsafe int IoRead(HleIoDrvFileArg HleIoDrvFileArg, byte* OutputPointer, int OutputLength)
         {
-            var IsoFileArgument = ((IsoFileArgument) HleIoDrvFileArg.FileArgument);
+            var IsoFileArgument = (IsoFileArgument) HleIoDrvFileArg.FileArgument;
             var OutputData = new byte[OutputLength];
             int Readed = IsoFileArgument.Stream.Read(OutputData, 0, OutputLength);
             PointerUtils.Memcpy(OutputPointer, OutputData, OutputLength);
@@ -137,7 +137,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
         public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
         {
-            var IsoFileArgument = ((IsoFileArgument) HleIoDrvFileArg.FileArgument);
+            var IsoFileArgument = (IsoFileArgument) HleIoDrvFileArg.FileArgument;
             //Stream.Seek(
             return IsoFileArgument.Stream.Seek(Offset, (SeekOrigin) Whence);
         }
@@ -211,7 +211,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
         
         public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, Span<byte> Input, Span<byte> Output)
         {
-            var IsoFileArgument = ((IsoFileArgument) HleIoDrvFileArg.FileArgument);
+            var IsoFileArgument = (IsoFileArgument) HleIoDrvFileArg.FileArgument;
             
             switch ((UmdCommandEnum) Command)
             {

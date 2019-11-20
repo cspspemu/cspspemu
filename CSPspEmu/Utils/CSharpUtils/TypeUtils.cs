@@ -16,7 +16,7 @@ namespace CSharpUtils
         /// <exception cref="NotImplementedException"></exception>
         public static IEnumerable<Type> GetTypesExtending(Type baseType)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
             /*
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(Assembly => Assembly.GetTypes())

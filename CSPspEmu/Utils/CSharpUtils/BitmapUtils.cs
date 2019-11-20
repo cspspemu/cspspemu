@@ -73,11 +73,9 @@ namespace CSharpUtils.Drawing
                 {
                     var colorReference = referenceBitmap.GetPixel(x, y);
                     var colorOutput = outputBitmap.GetPixel(x, y);
-                    var difference3 = (
-                        Math.Abs(colorOutput.R - colorReference.R) +
-                        Math.Abs(colorOutput.G - colorReference.G) +
-                        Math.Abs(colorOutput.B - colorReference.B)
-                    );
+                    var difference3 = Math.Abs(colorOutput.R - colorReference.R) +
+                                      Math.Abs(colorOutput.G - colorReference.G) +
+                                      Math.Abs(colorOutput.B - colorReference.B);
                     compareResult.PixelTotalDifference += difference3;
                     if (difference3 > 6)
                     {
@@ -89,7 +87,7 @@ namespace CSharpUtils.Drawing
 
             var pixelTotalDifferencePercentage = (double) compareResult.DifferentPixelCount * 100 /
                                                  compareResult.TotalPixelCount;
-            compareResult.Equal = (pixelTotalDifferencePercentage < threshold);
+            compareResult.Equal = pixelTotalDifferencePercentage < threshold;
 
             return compareResult;
         }
@@ -193,9 +191,9 @@ namespace CSharpUtils.Drawing
         {
             var fullRectangle = bitmap.GetFullRectangle();
             if (!fullRectangle.Contains(rectangle.Location))
-                throw (new InvalidOperationException("TransferChannelsDataLinear"));
+                throw new InvalidOperationException("TransferChannelsDataLinear");
             if (!fullRectangle.Contains(rectangle.Location + rectangle.Size - new Size(1, 1)))
-                throw (new InvalidOperationException("TransferChannelsDataLinear"));
+                throw new InvalidOperationException("TransferChannelsDataLinear");
 
             var numberOfChannels = 1;
             foreach (var channel in channels)
@@ -207,7 +205,7 @@ namespace CSharpUtils.Drawing
                 }
             }
 
-            bitmap.LockBitsUnlock((numberOfChannels == 1) ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb,
+            bitmap.LockBitsUnlock(numberOfChannels == 1 ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb,
                 bitmapData =>
                 {
                     var bitmapDataScan0 = (byte*) bitmapData.Scan0.ToPointer();
@@ -277,12 +275,12 @@ namespace CSharpUtils.Drawing
             }
 
             bitmap.LockBitsUnlock(rectangle,
-                (numberOfChannels == 1) ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb, bitmapData =>
+                numberOfChannels == 1 ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb, bitmapData =>
                 {
                     for (var y = 0; y < bitmapData.Height; y++)
                     {
-                        var bitmapPtr = ((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y;
-                        var dataPtr = newDataPtr + (numberOfChannels * bitmapData.Width) * y;
+                        var bitmapPtr = (byte*) bitmapData.Scan0.ToPointer() + bitmapData.Stride * y;
+                        var dataPtr = newDataPtr + numberOfChannels * bitmapData.Width * y;
                         var z = 0;
                         for (var x = 0; x < bitmapData.Width; x++)
                         {

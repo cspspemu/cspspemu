@@ -22,7 +22,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         public HleEventFlag sceKernelCreateEventFlag(string Name, HleEventFlag.AttributesSet Attributes,
             uint BitPattern, SceKernelEventFlagOptParam* OptionsPtr)
         {
-            if (OptionsPtr != null) throw (new NotImplementedException("(OptionsPtr != null)"));
+            if (OptionsPtr != null) throw new NotImplementedException("(OptionsPtr != null)");
 
             return new HleEventFlag()
             {
@@ -79,9 +79,9 @@ namespace CSPspEmu.Hle.Modules.threadman
         public int _sceKernelWaitEventFlagCB(HleEventFlag EventFlag, uint Bits, EventFlagWaitTypeSet Wait,
             uint* OutBits, uint* Timeout, bool HandleCallbacks)
         {
-            if ((Wait & ~(EventFlagWaitTypeSet.MaskValidBits)) != 0)
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE));
-            if (Bits == 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN));
+            if ((Wait & ~EventFlagWaitTypeSet.MaskValidBits) != 0)
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE);
+            if (Bits == 0) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN);
             bool TimedOut = false;
 
             var PreviousPattern = EventFlag.Info.CurrentPattern;
@@ -119,7 +119,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
             if (TimedOut)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT);
             }
 
             //throw(new NotImplementedException());
@@ -190,32 +190,32 @@ namespace CSPspEmu.Hle.Modules.threadman
         {
             if ((WaitType & ~EventFlagWaitTypeSet.MaskValidBits) != 0)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE);
             }
 
             // Poll seems to also fail when CLEAR and CLEARALL are used together, but not wait.
             if ((WaitType & (EventFlagWaitTypeSet.Clear | EventFlagWaitTypeSet.ClearAll)) ==
                 (EventFlagWaitTypeSet.Clear | EventFlagWaitTypeSet.ClearAll))
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE);
             }
 
             // Can't wait on 0, it never matches.
             if (Bits == 0)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN);
             }
 
             if (EventFlag == null)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_EVENT_FLAG));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_EVENT_FLAG);
             }
 
             bool Matched = EventFlag.Poll(Bits, WaitType, OutBits);
 
             if (!Matched)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_POLL_FAILED));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_POLL_FAILED);
             }
 
             return 0;

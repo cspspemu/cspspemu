@@ -88,13 +88,13 @@ namespace CSPspEmu.Hle.Formats.Archive
                     case CompressionMethods.Deflate:
                         //return new System.IO.Compression.DeflateStream(CompressedStream.SliceWithLength(0), CompressionMode.Decompress);
                         return new MemoryStream(
-                            (new DeflateStream(CompressedStream.SliceWithLength(),
-                                CompressionMode.Decompress)).ReadAll(false));
+                            new DeflateStream(CompressedStream.SliceWithLength(),
+                                CompressionMode.Decompress).ReadAll(false));
                     case CompressionMethods.Stored:
                         return CompressedStream.SliceWithLength();
                     default:
-                        throw (new NotImplementedException("Can't implement method '" +
-                                                           LocalFileHeader.CompressionMethod + "'"));
+                        throw new NotImplementedException("Can't implement method '" +
+                                                          LocalFileHeader.CompressionMethod + "'");
                 }
             }
 

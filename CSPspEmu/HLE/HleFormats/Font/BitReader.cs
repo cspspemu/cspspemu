@@ -28,7 +28,7 @@ namespace CSPspEmu.Hle.Formats.Font
             //Console.WriteLine("bit: {0}, byte: {1}", this.BitOffset, this.ByteOffset);
         }
 
-        public int BitsLeft => ((_data.Length - _byteOffset) - 1) * 8 + (8 - _bitOffset);
+        public int BitsLeft => (_data.Length - _byteOffset - 1) * 8 + (8 - _bitOffset);
 
         public uint ReadBits(int count)
         {

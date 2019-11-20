@@ -86,7 +86,7 @@ namespace CSPspEmu.Gui.texture
                         new Bitmap(textureInfo.Width, textureInfo.Height).SetChannelsDataInterleaved(
                             textureInfo.Data.CastToStructArray<OutputPixel, byte>(), BitmapChannelList.Rgba);
                     OutBitmap =
-                        (new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32))).Process(inBitmap);
+                        new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32)).Process(inBitmap);
                 }
             }
 

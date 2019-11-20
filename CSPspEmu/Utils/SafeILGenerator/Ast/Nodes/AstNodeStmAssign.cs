@@ -10,7 +10,7 @@ namespace SafeILGenerator.Ast.Nodes
         public AstNodeStmAssign(AstNodeExprLValue leftValue, AstNodeExpr value)
         {
             if (leftValue.Type != value.Type)
-                throw (new Exception($"Local.Type({leftValue.Type}) != Value.Type({value.Type})"));
+                throw new Exception($"Local.Type({leftValue.Type}) != Value.Type({value.Type})");
 
             LeftValue = leftValue;
             Value = value;

@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Formats
                 case FormatDetector.SubType.Iso:
                     break;
                 default:
-                    throw (new InvalidDataException($"Can't set an ISO for '{detectedFormat}' path '{isoFile}'"));
+                    throw new InvalidDataException($"Can't set an ISO for '{detectedFormat}' path '{isoFile}'");
             }
 
             return new IsoFile(isoFileStream, isoFile);

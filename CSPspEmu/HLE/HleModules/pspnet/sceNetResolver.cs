@@ -120,7 +120,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         public int sceNetResolverStartAtoN(int rid, in_addr* addr, byte*hostname, int hostname_len, uint timeout,
             int retry)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x808F6063, FirmwareVersion = 150)]
         public int sceNetResolverStop(int rid)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

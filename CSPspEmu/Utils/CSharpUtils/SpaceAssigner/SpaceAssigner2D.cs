@@ -61,7 +61,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
         /// <exception cref="NotImplementedException"></exception>
         public void AddAvailable(Space space)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
             //AvailableChunks.AddLast(Space);
         }
 
@@ -73,7 +73,7 @@ namespace CSharpUtils.Ext.SpaceAssigner
         /// <exception cref="NotImplementedException"></exception>
         public Space Allocate(long length)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

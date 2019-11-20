@@ -74,7 +74,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
                 if (BlockSize == 0)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMSIZE));
+                    throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMSIZE);
                 }
 
                 var Partition = MemoryManager.GetPartition(PartitionId);
@@ -97,7 +97,7 @@ namespace CSPspEmu.Hle.Modules.threadman
                 }
                 catch (MemoryPartitionNoMemoryException)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
+                    throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY);
                 }
 
                 //Console.Error.WriteLine("FixedPool.Init: 0x{0:X}", this.MemoryPartition.Low);
@@ -122,7 +122,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             {
                 if (!TryAllocate(DataPointer))
                 {
-                    if (Timeout != null) throw (new NotImplementedException());
+                    if (Timeout != null) throw new NotImplementedException();
                     var CurrentThread = ThreadManForUser.ThreadManager.Current;
                     CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", this,
                         (WakeUp) =>
@@ -162,7 +162,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             {
                 if (!UsedBlocks.Contains(DataPointer))
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK));
+                    throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK);
                 }
                 UsedBlocks.Remove(DataPointer);
                 FreeBlocks.Add(DataPointer);
@@ -232,7 +232,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         {
             if (!FixedPool.TryAllocate(DataPointer))
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY);
             }
 
             return 0;

@@ -92,7 +92,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 #if DEBUG_MSG_PIPES
 					Console.Error.WriteLine("MsgPipe.Enqueue (Failed)");
 #endif
-                    throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGE_PIPE_FULL));
+                    throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGE_PIPE_FULL);
                 }
 
                 // 0 -> 1
@@ -104,7 +104,7 @@ namespace CSPspEmu.Hle.Modules.threadman
                 if (Messages.Count <= 0)
                 {
                     //Console.Error.WriteLine("MsgPipe.Dequeue (Failed)");
-                    throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGE_PIPE_EMPTY));
+                    throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGE_PIPE_EMPTY);
                 }
                 else
                 {
@@ -163,7 +163,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         public MsgPipe sceKernelCreateMsgPipe(string Name, MemoryPartitions PartitionId, MsgPipeAttributes Attributes,
             int Size, void* Options)
         {
-            if (Options != null) throw(new NotImplementedException());
+            if (Options != null) throw new NotImplementedException();
 
             var MsgPipe = new MsgPipe()
             {
@@ -281,7 +281,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         public int sceKernelReceiveMsgPipe(MsgPipe MsgPipe, byte* Message, int Size, int WaitMode, int* ResultSizeAddr,
             uint* Timeout)
         {
-            if (Timeout != null) throw(new NotImplementedException());
+            if (Timeout != null) throw new NotImplementedException();
 
 #if DEBUG_MSG_PIPES
 			Console.Error.WriteLine("sceKernelReceiveMsgPipe");
@@ -343,7 +343,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspFunction(NID = 0x33BE4024, FirmwareVersion = 150)]
         public int sceKernelReferMsgPipeStatus(MsgPipe MsgPipe, /*SceKernelMppInfo*/void* SceKernelMppInfo)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspFunction(NID = 0x349B864D, FirmwareVersion = 150)]
         public int sceKernelCancelMsgPipe(MsgPipe MsgPipe, int* psend, int* precv)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

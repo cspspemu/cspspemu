@@ -13,7 +13,7 @@ namespace SafeILGenerator.Ast
         {
             Index = index;
             Type = type;
-            Name = name ?? ("@ARG(" + index + ")");
+            Name = name ?? "@ARG(" + index + ")";
         }
 
         public static AstArgument Create(Type type, int index, string name = null) =>

@@ -19,7 +19,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         private HleThread GetThreadById(int ThreadId)
         {
             HleThread HleThread = ThreadManager.GetThreadById(ThreadId);
-            if (HleThread == null) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_THREAD));
+            if (HleThread == null) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_THREAD);
             return HleThread;
         }
 
@@ -122,7 +122,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             //Console.WriteLine("LEN: {0:X}", ArgumentsLength);
             //Console.WriteLine("PTR: {0:X}", ArgumentsPointer);
 
-            var CopiedDataAddress = (uint) ((ThreadToStart.Stack.High - 0x100) - ((UserDataLength + 0xF) & ~0xF));
+            var CopiedDataAddress = (uint) (ThreadToStart.Stack.High - 0x100 - ((UserDataLength + 0xF) & ~0xF));
 
             if (UserDataPointer == 0)
             {
@@ -459,7 +459,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspFunction(NID = 0x809CE29B, FirmwareVersion = 150)]
         public int sceKernelExitDeleteThread(int ExitStatus)
         {
-            if (ThreadManager.Current == null) throw (new Exception("ThreadManager.Current == null"));
+            if (ThreadManager.Current == null) throw new Exception("ThreadManager.Current == null");
             var CurrentThreadId = ThreadManager.Current.Id;
             int ResultExit = sceKernelExitThread(ExitStatus);
             int ResultDelete = sceKernelDeleteThread(CurrentThreadId);
@@ -576,7 +576,7 @@ namespace CSPspEmu.Hle.Modules.threadman
                     foreach (var Thread in ThreadManager.Threads) List[n++] = Thread.Id;
                     break;
                 default:
-                    throw (new NotImplementedException("sceKernelGetThreadmanIdList: " + Type));
+                    throw new NotImplementedException("sceKernelGetThreadmanIdList: " + Type);
             }
             if (OutListCount != null) *OutListCount = n;
             return 0;
@@ -659,7 +659,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         public uint sceKernelTerminateThread(int ThreadId)
         {
             if (ThreadId == 0 || ThreadId == ThreadManager.Current.Id)
-                throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD);
             //SCE_KERNEL_ERROR_THREAD_TERMINATED
             var Thread = GetThreadById(ThreadId);
             Thread.Info.ExitStatus = unchecked((int) 0x800201ac);
@@ -679,9 +679,9 @@ namespace CSPspEmu.Hle.Modules.threadman
         {
             var Thread = GetThreadById(ThreadId);
             var CurrentThread = ThreadManager.Current;
-            if (Thread == CurrentThread) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
+            if (Thread == CurrentThread) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD);
             if (!Thread.HasAnyStatus(HleThread.Status.Waiting))
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT);
             Thread.ReleaseWaitThread();
             return 0;
         }

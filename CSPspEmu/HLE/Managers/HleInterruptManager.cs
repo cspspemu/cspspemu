@@ -161,7 +161,7 @@ namespace CSPspEmu.Hle.Managers
         public void SceKernelCpuResumeIntr(uint flags)
         {
             //if (set != true) throw new NotImplementedException();
-            Enabled = (flags != 0);
+            Enabled = flags != 0;
         }
     }
 

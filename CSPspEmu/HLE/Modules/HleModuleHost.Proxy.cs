@@ -88,14 +88,14 @@ namespace CSPspEmu.Hle
                 if (Type == typeof(int) || Type == typeof(uint))
                 {
                     return CpuThreadState.Memory.ReadSafe<uint>(
-                        (uint) (this.CpuThreadState.Gpr[29] + ((MaxGprIndex - Index) * 4)));
+                        (uint) (this.CpuThreadState.Gpr[29] + (MaxGprIndex - Index) * 4));
                 }
                 if (Type == typeof(long) || Type == typeof(ulong))
                 {
                     return CpuThreadState.Memory.ReadSafe<ulong>(
-                        (uint) (this.CpuThreadState.Gpr[29] + ((MaxGprIndex - Index) * 4)));
+                        (uint) (this.CpuThreadState.Gpr[29] + (MaxGprIndex - Index) * 4));
                 }
-                throw(new NotImplementedException("Invalid operation"));
+                throw new NotImplementedException("Invalid operation");
             }
         }
 
@@ -123,7 +123,7 @@ namespace CSPspEmu.Hle
 
             protected override AstNodeExpr ReadFromStack(Type Type, int Index)
             {
-                return ast.MemoryGetValue(Type, PspMemory, ast.GPR_u(29) + ((MaxGprIndex - Index) * 4));
+                return ast.MemoryGetValue(Type, PspMemory, ast.GPR_u(29) + (MaxGprIndex - Index) * 4);
             }
         }
 
@@ -150,9 +150,9 @@ namespace CSPspEmu.Hle
 
             public TReturn Read(Type Type, ParameterInfo ParameterInfo)
             {
-                var IsFloat = (Type == typeof(float));
-                var IsInt32 = (Type == typeof(uint) || Type == typeof(int));
-                var IsInt64 = (Type == typeof(ulong) || Type == typeof(long));
+                var IsFloat = Type == typeof(float);
+                var IsInt32 = Type == typeof(uint) || Type == typeof(int);
+                var IsInt64 = Type == typeof(ulong) || Type == typeof(long);
                 int SizeInWords = Marshal.SizeOf(Type) / 4;
                 if (IsFloat)
                 {
@@ -203,7 +203,7 @@ namespace CSPspEmu.Hle
                 }
                 else
                 {
-                    throw(new NotImplementedException("Can't handle type " + Type));
+                    throw new NotImplementedException("Can't handle type " + Type);
                 }
             }
         }
@@ -298,8 +298,8 @@ namespace CSPspEmu.Hle
                     {
                         if (!ParameterType.Implements(typeof(IHleUidPoolClass)))
                         {
-                            throw (new InvalidCastException(
-                                $"Can't use a class '{ParameterType}' not implementing IHleUidPoolClass as parameter"));
+                            throw new InvalidCastException(
+                                $"Can't use a class '{ParameterType}' not implementing IHleUidPoolClass as parameter");
                         }
 
                         AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
@@ -307,14 +307,14 @@ namespace CSPspEmu.Hle
                             ast.CpuThreadStateExpr,
                             ast.Immediate(ParameterType),
                             RegisterReader.Read<int>(ParameterInfo),
-                            (InvalidAddressAsEnum == InvalidAddressAsEnum.Null)
+                            InvalidAddressAsEnum == InvalidAddressAsEnum.Null
                         )));
                     }
                     // An integer register
                     else
                     {
                         AstParameters.Add(ast.Cast(ParameterType,
-                            RegisterReader.Read((ParameterType == typeof(uint)) ? typeof(uint) : typeof(int),
+                            RegisterReader.Read(ParameterType == typeof(uint) ? typeof(uint) : typeof(int),
                                 ParameterInfo)));
                     }
                 }
@@ -335,8 +335,8 @@ namespace CSPspEmu.Hle
             {
                 if (!AstMethodCall.Type.Implements(typeof(IHleUidPoolClass)))
                 {
-                    throw (new InvalidCastException(
-                        $"Can't use a class '{AstMethodCall.Type}' not implementing IHleUidPoolClass as return value"));
+                    throw new InvalidCastException(
+                        $"Can't use a class '{AstMethodCall.Type}' not implementing IHleUidPoolClass as return value");
                 }
                 AstNodes.AddStatement(ast.Assign(
                     ast.Gpr(2),
@@ -358,13 +358,13 @@ namespace CSPspEmu.Hle
         {
             if (!MethodInfo.DeclaringType.IsAssignableFrom(this.GetType()))
             {
-                throw (new Exception($"Invalid {MethodInfo.DeclaringType} != {this.GetType()}"));
+                throw new Exception($"Invalid {MethodInfo.DeclaringType} != {this.GetType()}");
             }
 
             bool SkipLog = HlePspFunctionAttribute.SkipLog;
             var NotImplementedAttribute = (HlePspNotImplementedAttribute) MethodInfo
                 .GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
-            bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
+            bool NotImplementedFunc = NotImplementedAttribute != null && NotImplementedAttribute.Notice;
 
             List<ParamInfo> ParamInfoList;
             var AstNodes = AstOptimizerPsp.GlobalOptimize(
@@ -385,10 +385,10 @@ namespace CSPspEmu.Hle
 
             return (CpuThreadState) =>
             {
-                bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.CpuConfig.DebugSyscalls);
+                bool Trace = !SkipLog && CpuThreadState.CpuProcessor.CpuConfig.DebugSyscalls;
                 bool NotImplemented = NotImplementedFunc && HleConfig.DebugNotImplemented;
 
-                if (Trace && (MethodInfo.DeclaringType.Name == "Kernel_Library")) Trace = false;
+                if (Trace && MethodInfo.DeclaringType.Name == "Kernel_Library") Trace = false;
 
                 //Console.WriteLine("aaaaaaaaaaaaa");
 
@@ -445,7 +445,7 @@ namespace CSPspEmu.Hle
                                         Object));
                                 break;
                             default:
-                                throw (new NotImplementedException());
+                                throw new NotImplementedException();
                         }
                         Count++;
                     }
@@ -461,7 +461,7 @@ namespace CSPspEmu.Hle
                 catch (InvalidProgramException)
                 {
                     Console.WriteLine("CALLING: {0}", MethodInfo);
-                    Console.WriteLine("{0}", (new GeneratorCSharp()).GenerateRoot(AstNodes).ToString());
+                    Console.WriteLine("{0}", new GeneratorCSharp().GenerateRoot(AstNodes).ToString());
 
                     foreach (var Line in AstNodeExtensions.GeneratorIlPsp.GenerateToStringList(MethodInfo, AstNodes))
                     {
@@ -485,10 +485,10 @@ namespace CSPspEmu.Hle
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
                 catch (Exception Exception)
                 {
-                    throw (new Exception(
+                    throw new Exception(
                         $"ERROR calling {MethodInfo.DeclaringType.Name}.{MethodInfo.Name}!",
                         Exception
-                    ));
+                    );
                 }
 #endif
                 finally
@@ -497,9 +497,9 @@ namespace CSPspEmu.Hle
                     {
                         Out.WriteLine(" : {0}",
                             ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState,
-                                ((MethodInfo.ReturnType == typeof(float))
+                                MethodInfo.ReturnType == typeof(float)
                                     ? (object) CpuThreadState.Fpr[0]
-                                    : (object) CpuThreadState.Gpr[2])));
+                                    : (object) CpuThreadState.Gpr[2]));
                         Out.WriteLine("");
                     }
                 }

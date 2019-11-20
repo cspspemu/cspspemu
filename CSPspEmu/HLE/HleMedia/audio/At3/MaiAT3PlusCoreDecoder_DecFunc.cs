@@ -138,8 +138,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
                             MaiAt3PlusCoreDecoderChnAccData acc_data1;
                             MaiAt3PlusCoreDecoderChnAccData acc_data2;
-                            if ((chn_infos[0].JointChnInfo.Chns != 2) ||
-                                (0 == chn_infos[0].JointChnInfo.Table48.Data[a0]))
+                            if (chn_infos[0].JointChnInfo.Chns != 2 ||
+                                0 == chn_infos[0].JointChnInfo.Table48.Data[a0])
                             {
                                 mtmp0 = chn_infos[a00].Table4;
 
@@ -185,28 +185,28 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
                                     for (int a1 = 0; a1 < acc_data1.Table[a0].NumAcc; a1++)
                                     {
-                                        if (al_0 < (dl_0 - MAPCDDF_initMDataTable_table_tmp4[
-                                                        acc_data1.Table[a0].Data1[a1]]))
+                                        if (al_0 < dl_0 - MAPCDDF_initMDataTable_table_tmp4[
+                                                acc_data1.Table[a0].Data1[a1]])
                                         {
-                                            al_0 = (dl_0 - MAPCDDF_initMDataTable_table_tmp4[
-                                                        acc_data1.Table[a0].Data1[a1]]);
+                                            al_0 = dl_0 - MAPCDDF_initMDataTable_table_tmp4[
+                                                       acc_data1.Table[a0].Data1[a1]];
                                         }
                                     }
 
                                     for (int a1 = 0; a1 < acc_data2.Table[a0].NumAcc; a1++)
                                     {
                                         if (al_0 <
-                                            (0 - MAPCDDF_initMDataTable_table_tmp4[acc_data2.Table[a0].Data1[a1]]))
+                                            0 - MAPCDDF_initMDataTable_table_tmp4[acc_data2.Table[a0].Data1[a1]])
                                         {
                                             al_0 =
-                                                (0 - MAPCDDF_initMDataTable_table_tmp4[acc_data2.Table[a0].Data1[a1]]);
+                                                0 - MAPCDDF_initMDataTable_table_tmp4[acc_data2.Table[a0].Data1[a1]];
                                         }
                                     }
 
                                     rt0 = al_0;
                                 }
 
-                                int dtmp1 = (rt0 < 0) ? 0 : (1 << rt0);
+                                int dtmp1 = rt0 < 0 ? 0 : 1 << rt0;
                                 float l128 = table_tmp3[mtmp0[table_tmp2[a0]]] / dtmp1;
 
                                 for (uint a1 = MAPCDDF_initMDataTable_table_tmp5[a0];
@@ -254,7 +254,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                             {
                                 for (int a2 = (int) table_search0[a1]; a2 < table_search0[a1 + 1]; a2++)
                                 {
-                                    pptablef0[1][a2] *= (-1.0f);
+                                    pptablef0[1][a2] *= -1.0f;
                                 }
                             }
                         }
@@ -357,7 +357,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                     }
                 }
 
-                if ((chn != 0) && (acc_360 != 0))
+                if (chn != 0 && acc_360 != 0)
                 {
                     for (int a1 = 0; a1 < num1; a1++)
                     {
@@ -408,7 +408,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             makeSL128(acc5, lo128, 0x80, 0x80, acc5_4, acc5_360, chn);
             makeSL128(acc6, lo256, 0, 0x80, acc6_4, acc6_360, chn);
 
-            if ((acc5.NumUk > 0) && (acc6.NumUk > 0) && (acc5.Unk[3] - 0x80 >= acc6.Unk[2]))
+            if (acc5.NumUk > 0 && acc6.NumUk > 0 && acc5.Unk[3] - 0x80 >= acc6.Unk[2])
             {
                 for (int a0 = 0; a0 < 0x80; a0++)
                 {
@@ -614,11 +614,11 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
                                     for (uint a2 = 0; a2 < 6; a2++)
                                     {
-                                        for (uint a3 = 0; a3 < (1 << (int) a2); a3++)
+                                        for (uint a3 = 0; a3 < 1 << (int) a2; a3++)
                                         {
-                                            uint base0 = (uint) ((0x40 >> (int) a2));
+                                            uint base0 = (uint) (0x40 >> (int) a2);
                                             uint base1 = (uint) ((0x80 >> (int) a2) * a3);
-                                            for (uint a1 = 0; a1 < (0x20 >> (int) a2); a1++)
+                                            for (uint a1 = 0; a1 < 0x20 >> (int) a2; a1++)
                                             {
                                                 float ftmp0 =
                                                     stmp40[base1 + a1 * 2 + 1] + stmp40[base1 + a1 * 2 + 1 + base0];
@@ -648,18 +648,18 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                                     {
                                         l512[a1] = stmp40[search_table_tmp0[a1]] * table_shita[a1];
                                         l512[0xC0 + a1] =
-                                            (-1.0f) * stmp40[search_table_tmp1[a1]] * table_shita[0xc0 + a1];
+                                            -1.0f * stmp40[search_table_tmp1[a1]] * table_shita[0xc0 + a1];
                                     }
 
                                     for (uint a1 = 0; a1 < 0x80; a1++)
                                     {
                                         l512[0x40 + a1] =
-                                            (-1.0f) * stmp40[search_table_tmp2[0x80 - a1 - 1]] * table_shita[0x40 + a1];
+                                            -1.0f * stmp40[search_table_tmp2[0x80 - a1 - 1]] * table_shita[0x40 + a1];
                                     }
                                 }
 
-                                if ((_chnInfo[a00].AccDataOld.Table[a0].NumAcc != 0) ||
-                                    (_chnInfo[a00].AccDataNow.Table[a0].NumAcc != 0))
+                                if (_chnInfo[a00].AccDataOld.Table[a0].NumAcc != 0 ||
+                                    _chnInfo[a00].AccDataNow.Table[a0].NumAcc != 0)
                                 {
                                     int rt_3 = 0;
 
@@ -837,15 +837,15 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                         }
 
                         {
-                            if ((_chnInfo[a00].AccTableOld.Inner.Unk0 != 0) ||
-                                (_chnInfo[a00].AccTableNow.Inner.Unk0 != 0))
+                            if (_chnInfo[a00].AccTableOld.Inner.Unk0 != 0 ||
+                                _chnInfo[a00].AccTableNow.Inner.Unk0 != 0)
                             {
                                 for (int a0 = 0; a0 < 0x10; a0++)
                                 {
                                     {
-                                        if ((_chnInfo[a00].AccTableNow.Table[a0].Unk[4] != 0) &&
-                                            ((_chnInfo[a00].AccTableNow.Table[a0].Unk[6])
-                                             < (_chnInfo[a00].AccTableNow.Table[a0].Unk[7]))
+                                        if (_chnInfo[a00].AccTableNow.Table[a0].Unk[4] != 0 &&
+                                            _chnInfo[a00].AccTableNow.Table[a0].Unk[6]
+                                            < _chnInfo[a00].AccTableNow.Table[a0].Unk[7]
                                         )
                                         {
                                             _chnInfo[a00].AccTableNow.Table[a0].Unk[2] =
@@ -857,7 +857,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                                         }
                                         else
                                         {
-                                            if ((_chnInfo[a00].AccTableOld.Table[a0].Unk[4]) == 0)
+                                            if (_chnInfo[a00].AccTableOld.Table[a0].Unk[4] == 0)
                                             {
                                                 _chnInfo[a00].AccTableNow.Table[a0].Unk[2] = 0;
                                                 _chnInfo[a00].AccTableNow.Table[a0].Unk[0] = 0;
@@ -871,13 +871,11 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                                             }
                                         }
 
-                                        if ((_chnInfo[a00].AccTableOld.Table[a0].Unk[5] != 0) && (
-                                                (_chnInfo[a00].AccTableNow.Table[a0].Unk[2]) <=
-                                                (4 * (_chnInfo[a00].AccTableOld.Table[a0].Unk[7]))
-                                            ))
+                                        if (_chnInfo[a00].AccTableOld.Table[a0].Unk[5] != 0 && _chnInfo[a00].AccTableNow.Table[a0].Unk[2] <=
+                                            4 * _chnInfo[a00].AccTableOld.Table[a0].Unk[7])
                                         {
                                             _chnInfo[a00].AccTableNow.Table[a0].Unk[3] =
-                                                4 * (_chnInfo[a00].AccTableOld.Table[a0].Unk[7]);
+                                                4 * _chnInfo[a00].AccTableOld.Table[a0].Unk[7];
 
                                             _chnInfo[a00].AccTableNow.Table[a0].Unk[1] = 1;
                                         }
@@ -901,7 +899,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                                         }
 
                                         _chnInfo[a00].AccTableNow.Table[a0].Unk[3] += 4;
-                                        if ((_chnInfo[a00].AccTableNow.Table[a0].Unk[3])
+                                        if (_chnInfo[a00].AccTableNow.Table[a0].Unk[3]
                                             > 0x100)
                                         {
                                             _chnInfo[a00].AccTableNow.Table[a0].Unk[3] =
@@ -909,8 +907,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                                         }
                                     }
 
-                                    if ((_chnInfo[a00].AccTableNow.Table[a0].NumUk != 0) ||
-                                        (_chnInfo[a00].AccTableOld.Table[a0].NumUk != 0))
+                                    if (_chnInfo[a00].AccTableNow.Table[a0].NumUk != 0 ||
+                                        _chnInfo[a00].AccTableOld.Table[a0].NumUk != 0)
                                     {
                                         float* l128 = stackalloc float[0x80];
 
@@ -1241,7 +1239,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                     {
                         int data_now = (int) dst_buf_chn_ptr[a0];
                         if (data_now > 0x7FFF) bufs_ptr[a0] = 0x7FFF;
-                        else if (data_now < (-0x8000)) bufs_ptr[a0] = -0x8000;
+                        else if (data_now < -0x8000) bufs_ptr[a0] = -0x8000;
                         else bufs_ptr[a0] = (short) data_now;
                     }
                 }

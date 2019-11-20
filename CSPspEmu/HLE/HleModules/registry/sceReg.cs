@@ -138,7 +138,7 @@ namespace CSPspEmu.Hle.Modules.registry
         [HlePspFunction(NID = 0x17768E14, FirmwareVersion = 150)]
         public int sceRegSetKeyValue(RegCategoryHandle RegCategoryHandle, string Name, void* Buffer, uint Size)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

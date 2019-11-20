@@ -161,7 +161,7 @@ namespace CSPspEmu
             }
             catch (Exception Exception)
             {
-                throw (new Exception($"At Address: 0x{Address:X}", Exception));
+                throw new Exception($"At Address: 0x{Address:X}", Exception);
             }
         }
     }

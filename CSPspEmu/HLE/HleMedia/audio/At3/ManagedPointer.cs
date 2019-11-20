@@ -31,7 +31,7 @@ public unsafe class ManagedPointer<T>
 
     private void CheckBounds(int Index)
     {
-        if (Index < 0 || Index >= Length) throw (new IndexOutOfRangeException());
+        if (Index < 0 || Index >= Length) throw new IndexOutOfRangeException();
     }
 
     public T this[int Index]

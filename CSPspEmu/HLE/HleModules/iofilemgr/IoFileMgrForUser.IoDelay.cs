@@ -48,7 +48,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
                 this.UnitSize = unitSize;
             }
 
-            public TimeSpan GetTimePerSize(long Size) => this.BaseDelay + (((DelayPerUnit.TotalMilliseconds * Size) / UnitSize)).Milliseconds();
+            public TimeSpan GetTimePerSize(long Size) => this.BaseDelay + (DelayPerUnit.TotalMilliseconds * Size / UnitSize).Milliseconds();
             public override string ToString() => $"IoDelayType(Name={Name}, BaseDelay={BaseDelay}, DelayPerUnit={DelayPerUnit}, UnitSize={UnitSize})";
         }
 

@@ -57,7 +57,7 @@ namespace CSPspEmu.Core
             Stream.Flush();
         }
 
-        public override long Length => (Stream.Length / BytesPerRawPage) * BytesPerPage;
+        public override long Length => Stream.Length / BytesPerRawPage * BytesPerPage;
 
         public override long Position { get; set; }
 
@@ -72,7 +72,7 @@ namespace CSPspEmu.Core
             }
 
             var PageOffset = (int) (Position % BytesPerPage);
-            var ToRead = (BytesPerPage - PageOffset);
+            var ToRead = BytesPerPage - PageOffset;
 
             if (count > ToRead)
             {

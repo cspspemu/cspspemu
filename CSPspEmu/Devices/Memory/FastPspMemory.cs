@@ -56,7 +56,7 @@ namespace CSPspEmu.Core.Memory
 
         public override void* PspAddressToPointerUnsafe(uint _Address)
         {
-            var Address = (_Address & FastPspMemory.FastMemoryMask);
+            var Address = _Address & FastPspMemory.FastMemoryMask;
             //Console.WriteLine("Base: 0x{0:X} ; Address: 0x{1:X}", (ulong)Base, Address);
             if (Address == 0) return null;
 #if false

@@ -243,8 +243,8 @@ class Program
                     displayComponent.Step(DrawStart: () => { display.TriggerDrawStart(); },
                         VBlankStart: () => { display.TriggerVBlankStart(); }, VBlankEnd: () =>
                         {
-                            lx = (pressingAnalogLeft != 0) ? -pressingAnalogLeft : pressingAnalogRight;
-                            ly = (pressingAnalogUp != 0) ? -pressingAnalogUp : pressingAnalogDown;
+                            lx = pressingAnalogLeft != 0 ? -pressingAnalogLeft : pressingAnalogRight;
+                            ly = pressingAnalogUp != 0 ? -pressingAnalogUp : pressingAnalogDown;
 
                             ctrlData.X = lx / 3f;
                             ctrlData.Y = ly / 3f;

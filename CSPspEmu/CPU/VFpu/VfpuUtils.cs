@@ -84,8 +84,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
                 case VfpuRegisterType.Vector: return GetIndicesVector(registerInfo);
                 case VfpuRegisterType.Matrix: return GetIndicesMatrix(registerInfo).Compact();
                 default:
-                    throw (new NotImplementedException(
-                        $"Invalid vfpu registry name {registerInfo.RegisterIndex}('{registerInfo.Name}')"));
+                    throw new NotImplementedException(
+                        $"Invalid vfpu registry name {registerInfo.RegisterIndex}('{registerInfo.Name}')");
             }
         }
 
@@ -95,7 +95,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
             if (nameWithSufix.EndsWith(".p")) return 2;
             if (nameWithSufix.EndsWith(".t")) return 3;
             if (nameWithSufix.EndsWith(".q")) return 4;
-            throw (new Exception("Register doesn't have sufix"));
+            throw new Exception("Register doesn't have sufix");
         }
 
         public static int[] GetIndices(string nameWithSufix) =>

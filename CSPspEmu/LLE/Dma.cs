@@ -29,7 +29,7 @@ namespace CSPspEmuLLETest
             var reg = "";
             var dmaAddress = (DmaEnum) address;
 
-            if ((dmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (dmaAddress < DmaEnum.NAND__DATA_PAGE_END))
+            if (dmaAddress >= DmaEnum.NAND__DATA_PAGE_START && dmaAddress < DmaEnum.NAND__DATA_PAGE_END)
             {
                 return $"NAND__DATA_PAGE[{dmaAddress - DmaEnum.NAND__DATA_PAGE_START}]";
             }
@@ -49,7 +49,7 @@ namespace CSPspEmuLLETest
         public void LogDma(Dma.Direction direction, int size, uint address, ref uint value)
         {
             var dmaAddress = (DmaEnum) address;
-            if ((dmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (dmaAddress < DmaEnum.NAND__DATA_PAGE_END)) return;
+            if (dmaAddress >= DmaEnum.NAND__DATA_PAGE_START && dmaAddress < DmaEnum.NAND__DATA_PAGE_END) return;
             Console.WriteLine("PC({0:X8}) {1}: {2} : 0x{3:X8}", CpuThreadState.Pc, direction, GetRegisterName(address),
                 value);
         }

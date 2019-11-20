@@ -45,7 +45,7 @@ namespace CSPspEmu.Core
                 }
             }
 
-            throw (new Exception("Can't find working type for '" + AvailablePluginImplementations + "'"));
+            throw new Exception("Can't find working type for '" + AvailablePluginImplementations + "'");
             //return null;
         }
     }

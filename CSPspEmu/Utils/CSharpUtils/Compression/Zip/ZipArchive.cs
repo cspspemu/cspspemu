@@ -40,7 +40,7 @@ namespace CSharpUtils.Ext.Compression.Zip
             {
                 if (!ignoreErrors)
                 {
-                    throw (new Exception("Error loading Zip", e));
+                    throw new Exception("Error loading Zip", e);
                 }
             }
         }
@@ -264,7 +264,7 @@ namespace CSharpUtils.Ext.Compression.Zip
                         return new DeflateStream(SliceStream.CreateWithLength(CompressedStream),
                             CompressionMode.Decompress);
                     default:
-                        throw(new NotImplementedException("Not Implementeed : " + LocalFileHeader.CompressionMethod));
+                        throw new NotImplementedException("Not Implementeed : " + LocalFileHeader.CompressionMethod);
                 }
             }
         }

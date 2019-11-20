@@ -24,7 +24,7 @@ namespace CSPspEmu.Core.Components.Display
         public const int MaxVisibleArea = MaxVisibleWidth * MaxVisibleHeight;
 
 
-        public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;
+        public const double HorizontalSyncHertz = ProcessedPixelsPerSecond * CyclesPerPixel / PixelsInARow;
         public const double VerticalSyncHertz = HorizontalSyncHertz / NumberOfRows;
 
         [Inject] PspRtc _pspRtc;

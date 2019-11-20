@@ -205,8 +205,8 @@ namespace CSPspEmu.Hle.Formats
                 Louser = 0x80000000,
                 Hiuser = 0xFFFFFFFF,
 
-                PrxRelocation = (Loproc | 0xA0),
-                PrxRelocationFw5 = (Loproc | 0xA1),
+                PrxRelocation = Loproc | 0xA0,
+                PrxRelocationFw5 = Loproc | 0xA1,
             }
 
             public enum FlagsSet : uint

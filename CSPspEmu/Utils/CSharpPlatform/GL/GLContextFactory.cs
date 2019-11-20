@@ -20,7 +20,7 @@ namespace CSharpPlatform.GL
                 OS.Mac => MacGLContext.FromWindowHandle(windowHandle),
                 OS.Linux => LinuxGlContext.FromWindowHandle(windowHandle),
                 OS.Android => AndroidGLContext.FromWindowHandle(windowHandle),
-                _ => throw (new NotImplementedException($"Not implemented OS: {Platform.OS}"))
+                _ => throw new NotImplementedException($"Not implemented OS: {Platform.OS}")
             };
     }
 }

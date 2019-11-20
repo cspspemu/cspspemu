@@ -32,7 +32,7 @@ namespace CSPspEmu.Core.Memory
         {
             var Pointer = this.GetPointer(pspMemory);
             if (Pointer == null)
-                throw (new NullReferenceException($"Pointer for {typeof(TType)} can't be null"));
+                throw new NullReferenceException($"Pointer for {typeof(TType)} can't be null");
             return Pointer;
         }
 
@@ -58,7 +58,7 @@ namespace CSPspEmu.Core.Memory
         {
             var Pointer = this.GetPointer<TType>(PspMemory);
             if (Pointer == null)
-                throw(new NullReferenceException($"Pointer for {typeof(TType)} can't be null"));
+                throw new NullReferenceException($"Pointer for {typeof(TType)} can't be null");
             return Pointer;
         }
     }

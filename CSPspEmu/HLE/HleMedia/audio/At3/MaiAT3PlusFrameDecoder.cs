@@ -68,7 +68,7 @@ namespace CSPspEmu.Hle.Media.audio.At3
 
                 for (int a0 = 0; a0 < chns; a0++)
                     _cores[counterSubstream].getAudioSamplesI16((uint) a0,
-                        new ManagedPointer<short>(_sampleBufTmp, 0x800 * (counterChn++)));
+                        new ManagedPointer<short>(_sampleBufTmp, 0x800 * counterChn++));
 
                 counterSubstream++;
             }

@@ -290,7 +290,7 @@ namespace CSPspEmu.Runner.Components.Cpu
                     }
                         break;
                     default:
-                        throw (new NotImplementedException("Can't load format '" + format + "'"));
+                        throw new NotImplementedException("Can't load format '" + format + "'");
                 }
 
                 Exception loadException = null;
@@ -302,7 +302,7 @@ namespace CSPspEmu.Runner.Components.Cpu
                     {
                         loadException = null;
 
-                        if (elfLoadStream.Length < 256) throw(new InvalidProgramException("File too short"));
+                        if (elfLoadStream.Length < 256) throw new InvalidProgramException("File too short");
 
                         hleModuleGuest = Loader.LoadModule(
                             elfLoadStream,

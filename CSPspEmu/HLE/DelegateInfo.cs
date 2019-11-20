@@ -19,7 +19,7 @@ namespace CSPspEmu.Hle
             {
                 return string.Format(
                     "{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}",
-                    CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, (Thread != null) ? Thread.Name : "-");
+                    CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, Thread != null ? Thread.Name : "-");
             }
             catch (Exception Exception)
             {

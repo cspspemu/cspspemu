@@ -43,7 +43,7 @@ namespace CSharpPlatform.AL
                 DynamicLibraryFactory.CreateForLibrary(DllWindows, DllLinux, DllMac, DllAndroid));
         }
 
-        public const int AL_INVALID = (-1);
+        public const int AL_INVALID = -1;
         public const int AL_ILLEGAL_ENUM = AL_INVALID_ENUM;
         public const int AL_ILLEGAL_COMMAND = AL_INVALID_OPERATION;
         public const int AL_VERSION_1_0 = 1;

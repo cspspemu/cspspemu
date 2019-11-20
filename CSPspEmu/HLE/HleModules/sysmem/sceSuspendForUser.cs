@@ -15,7 +15,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
         //[HlePspNotImplemented]
         public int sceKernelPowerLock(int LockType)
         {
-            if (LockType != 0) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
+            if (LockType != 0) throw new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE);
             //unimplemented_notice();
             return 0;
         }
@@ -27,7 +27,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
         //[HlePspNotImplemented]
         public int sceKernelPowerUnlock(int LockType)
         {
-            if (LockType != 0) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
+            if (LockType != 0) throw new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE);
             //unimplemented_notice();
             return 0;
         }
@@ -58,12 +58,12 @@ namespace CSPspEmu.Hle.Modules.sysmem
         {
             if (Type != 0)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT);
             }
 
             if (VolatileMemLocked)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_POWER_VMEM_IN_USE));
+                throw new SceKernelException(SceKernelErrors.ERROR_POWER_VMEM_IN_USE);
             }
 
             var Partition = MemoryManager.GetPartition(MemoryPartitions.VolatilePartition);
@@ -99,12 +99,12 @@ namespace CSPspEmu.Hle.Modules.sysmem
         {
             if (Type != 0)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT);
             }
 
             if (!VolatileMemLocked)
             {
-                throw(new SceKernelException((SceKernelErrors) (-1)));
+                throw new SceKernelException((SceKernelErrors) (-1));
             }
 
             VolatileMemLocked = false;

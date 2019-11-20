@@ -205,7 +205,7 @@ namespace CSPspEmu.Core.Gpu
                             var Color2 = OutputPixel.FromRgba(0x00, 0x00, 0xFF, 0xFF);
                             for (int n = 0; n < InvalidTextureSize; n++)
                             {
-                                DataPtr[n] = ((n & 1) != 0) ? Color1 : Color2;
+                                DataPtr[n] = (n & 1) != 0 ? Color1 : Color2;
                             }
                             InvalidTexture.SetData(Data, InvalidTextureWidth, InvalidTextureHeight);
                         }
@@ -225,7 +225,7 @@ namespace CSPspEmu.Core.Gpu
                 }
                 catch (PspMemory.InvalidAddressException InvalidAddressException)
                 {
-                    throw(InvalidAddressException);
+                    throw InvalidAddressException;
                 }
 
                 TextureCacheKey TextureCacheKey = new TextureCacheKey()
@@ -234,7 +234,7 @@ namespace CSPspEmu.Core.Gpu
                     TextureFormat = TextureFormat,
                     TextureHash = FastHash(TexturePointer, TextureDataSize),
 
-                    ClutHash = FastHash(&(ClutPointer[ClutDataStart]), ClutDataSize),
+                    ClutHash = FastHash(&ClutPointer[ClutDataStart], ClutDataSize),
                     ClutAddress = ClutAddress,
                     ClutFormat = ClutFormat,
                     ClutStart = ClutStart,
@@ -248,7 +248,7 @@ namespace CSPspEmu.Core.Gpu
                     ColorTestFunction = GpuState.ColorTestState.Function,
                 };
 
-                if (Texture == null || (!Texture.TextureCacheKey.Equals(TextureCacheKey)))
+                if (Texture == null || !Texture.TextureCacheKey.Equals(TextureCacheKey))
                 {
                     string TextureName = "texture_" + TextureCacheKey.TextureHash + "_" + TextureCacheKey.ClutHash +
                                          "_" + TextureFormat + "_" + ClutFormat + "_" + BufferWidth + "x" + Height +
@@ -317,7 +317,7 @@ namespace CSPspEmu.Core.Gpu
                                         EqualValue = 0x00;
                                         NotEqualValue = 0xFF;
                                         break;
-                                    default: throw(new NotImplementedException());
+                                    default: throw new NotImplementedException();
                                 }
 
                                 ConsoleUtils.SaveRestoreConsoleState(() =>
@@ -332,7 +332,7 @@ namespace CSPspEmu.Core.Gpu
                                 for (int n = 0; n < TextureWidthHeight; n++)
                                 {
                                     if ((TexturePixelsPointer[n] & TextureCacheKey.ColorTestMask).Equals(
-                                        (TextureCacheKey.ColorTestRef & TextureCacheKey.ColorTestMask)))
+                                        TextureCacheKey.ColorTestRef & TextureCacheKey.ColorTestMask))
                                     {
                                         TexturePixelsPointer[n].A = EqualValue;
                                     }

@@ -166,7 +166,7 @@ namespace CSPspEmu.Core.Memory
                         }
                         uint Offset = Address - ScratchPadOffset;
 #if ADDITIONAL_CHECKS
-                        if (Offset >= ScratchPadSize) throw (new Exception($"Outside! 0x{Address:X}"));
+                        if (Offset >= ScratchPadSize) throw new Exception($"Outside! 0x{Address:X}");
 #endif
                         return &ScratchPadPtr[Address - ScratchPadOffset];
                     }
@@ -176,7 +176,7 @@ namespace CSPspEmu.Core.Memory
                         uint Offset = Address - FrameBufferOffset;
 #if ADDITIONAL_CHECKS
                         if (Offset >= FrameBufferSize)
-                            throw (new Exception($"Outside! 0x{Address:X}"));
+                            throw new Exception($"Outside! 0x{Address:X}");
 #endif
 
                         return &FrameBufferPtr[Offset];
@@ -189,7 +189,7 @@ namespace CSPspEmu.Core.Memory
                     {
                         uint Offset = Address - MainOffset;
 #if ADDITIONAL_CHECKS
-                        if (Offset >= MainSize) throw (new Exception($"Outside! 0x{Address:X}"));
+                        if (Offset >= MainSize) throw new Exception($"Outside! 0x{Address:X}");
 #endif
 
                         return &MainPtr[Offset];
@@ -203,7 +203,7 @@ namespace CSPspEmu.Core.Memory
                         //return HardwareVectors
                         uint Offset = Address - VectorsOffset;
 #if ADDITIONAL_CHECKS
-                        if (Offset >= VectorsSize) throw (new Exception($"Outside! 0x{Address:X}"));
+                        if (Offset >= VectorsSize) throw new Exception($"Outside! 0x{Address:X}");
 #endif
                         return &VectorsPtr[Offset];
                     }
@@ -212,9 +212,9 @@ namespace CSPspEmu.Core.Memory
                     default:
                         break;
                 }
-                Console.Error.WriteLine("0x{0:X2}", (Address >> 24));
+                Console.Error.WriteLine("0x{0:X2}", Address >> 24);
             }
-            throw (new InvalidAddressException(_Address));
+            throw new InvalidAddressException(_Address);
         }
 
         public override void Dispose()

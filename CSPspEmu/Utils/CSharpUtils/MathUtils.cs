@@ -38,7 +38,7 @@ namespace CSharpUtils
         
         public static float Lerp(float start, float end, float percent)
         {
-            return (start + percent * (end - start));
+            return start + percent * (end - start);
         }
 
         /// <summary>
@@ -174,10 +174,8 @@ namespace CSharpUtils
         
         public static uint ByteSwap(uint value)
         {
-            return (
-                ((uint) ByteSwap((ushort) (value >> 0)) << 16) |
-                ((uint) ByteSwap((ushort) (value >> 16)) << 0)
-            );
+            return ((uint) ByteSwap((ushort) (value >> 0)) << 16) |
+                   ((uint) ByteSwap((ushort) (value >> 16)) << 0);
         }
 
         /// <summary>
@@ -189,10 +187,8 @@ namespace CSharpUtils
         
         public static ulong ByteSwap(ulong value)
         {
-            return (
-                ((ulong) ByteSwap((uint) (value >> 0)) << 32) |
-                ((ulong) ByteSwap((uint) (value >> 32)) << 0)
-            );
+            return ((ulong) ByteSwap((uint) (value >> 0)) << 32) |
+                   ((ulong) ByteSwap((uint) (value >> 32)) << 0);
         }
 
         /// <summary>
@@ -221,9 +217,9 @@ namespace CSharpUtils
         
         public static long Align(long value, long alignValue)
         {
-            if ((value % alignValue) != 0)
+            if (value % alignValue != 0)
             {
-                value += alignValue - (value % alignValue);
+                value += alignValue - value % alignValue;
             }
             return value;
         }
@@ -238,9 +234,9 @@ namespace CSharpUtils
         
         public static long RequiredBlocks(long size, long blockSize)
         {
-            if ((size % blockSize) != 0)
+            if (size % blockSize != 0)
             {
-                return (size / blockSize) + 1;
+                return size / blockSize + 1;
             }
             else
             {
@@ -258,9 +254,9 @@ namespace CSharpUtils
         
         public static uint PrevAligned(uint value, int alignment)
         {
-            if ((value % alignment) != 0)
+            if (value % alignment != 0)
             {
-                value -= (uint) ((value % alignment));
+                value -= (uint) (value % alignment);
             }
             return value;
         }
@@ -301,9 +297,9 @@ namespace CSharpUtils
         
         public static long NextAligned(long value, long alignment)
         {
-            if (alignment != 0 && (value % alignment) != 0)
+            if (alignment != 0 && value % alignment != 0)
             {
-                value += alignment - (value % alignment);
+                value += alignment - value % alignment;
             }
             return value;
         }

@@ -80,7 +80,7 @@ namespace CSharpUtils
 
             if (LSB)
             {
-                _currentValue |= (value & BitUtils.CreateMask(count)) << (CurrentBits);
+                _currentValue |= (value & BitUtils.CreateMask(count)) << CurrentBits;
             }
             else
             {
@@ -104,7 +104,7 @@ namespace CSharpUtils
                     Stream.WriteStruct((uint) _currentValue);
                     break;
                 default:
-                    throw(new InvalidOperationException());
+                    throw new InvalidOperationException();
             }
             ResetValue();
 

@@ -149,7 +149,7 @@ namespace CSPspEmu.Hle
                 {
                     var HleModuleGuest =
                         ModuleManager.LoadedGuestModules.FirstOrDefault(ModuleExports =>
-                            (ModuleExports.Name == ModuleImports.Name));
+                            ModuleExports.Name == ModuleImports.Name);
                     if (HleModuleGuest != null)
                     {
                         HleModuleGuest.ExportModules(this);
@@ -158,7 +158,7 @@ namespace CSPspEmu.Hle
                 }
 
                 Console.WriteLine("'{0}' - {1}", ModuleImports.Name,
-                    (HleModuleHost != null) ? HleModuleHost.ModuleLocation : "?");
+                    HleModuleHost != null ? HleModuleHost.ModuleLocation : "?");
                 foreach (var Function in ModuleImports.Functions)
                 {
                     var NID = Function.Key;
@@ -210,8 +210,8 @@ namespace CSPspEmu.Hle
                             ModuleImportName, NIDName
                         );
                     }
-                    throw (new NotImplementedException("Not Implemented '" +
-                                                       $"{ModuleImportName}:{NIDName}" + "'"));
+                    throw new NotImplementedException("Not Implemented '" +
+                                                      $"{ModuleImportName}:{NIDName}" + "'");
                 }
                 else
                 {

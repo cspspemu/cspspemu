@@ -39,7 +39,7 @@ namespace CSPspEmu.Utils
                 string value;
                 var padChar = pPad.Length > 0 ? pPad[0] : ' ';
                 var justify = pJustify.Length > 0;
-                var minLength = (pMinLength.Length > 0) ? int.Parse(pMinLength) : 0;
+                var minLength = pMinLength.Length > 0 ? int.Parse(pMinLength) : 0;
 
                 switch (pType)
                 {
@@ -70,10 +70,10 @@ namespace CSPspEmu.Utils
                     case "x":
                     case "X":
                         value = Convert.ToString((uint) arguments.LoadInteger(), 16);
-                        value = (pType == "x") ? value.ToLowerInvariant() : value.ToUpperInvariant();
+                        value = pType == "x" ? value.ToLowerInvariant() : value.ToUpperInvariant();
                         break;
                     default:
-                        throw(new NotImplementedException());
+                        throw new NotImplementedException();
                 }
 
                 if (value.Length < minLength)

@@ -108,12 +108,12 @@ namespace CSPspEmu.Core.Types
         
         
         public static StereoIntSoundSample operator +(StereoIntSoundSample a, StereoIntSoundSample b) =>
-            new StereoIntSoundSample((a.Left + b.Left), (a.Right + b.Right));
+            new StereoIntSoundSample(a.Left + b.Left, a.Right + b.Right);
 
         
         
         public static StereoIntSoundSample operator /(StereoIntSoundSample a, int div) =>
-            new StereoIntSoundSample((a.Left / div), (a.Right / div));
+            new StereoIntSoundSample(a.Left / div, a.Right / div);
 
         
         

@@ -1287,8 +1287,8 @@ namespace cscodec.h264.decoder
                     }
                     break;
                 case PIX_FMT_BGR24:
-                    if ((this.codec_id == H264PredictionContext.CODEC_ID_MSZH)
-                        || (this.codec_id == H264PredictionContext.CODEC_ID_ZLIB))
+                    if (this.codec_id == H264PredictionContext.CODEC_ID_MSZH
+                        || this.codec_id == H264PredictionContext.CODEC_ID_ZLIB)
                     {
                         w_align = 4;
                         h_align = 4;
@@ -1300,10 +1300,10 @@ namespace cscodec.h264.decoder
                     break;
             }
 
-            widthheight[0] = (((widthheight[0]) + (w_align) - 1) & ~((w_align) - 1)); // FFALIGN(*width
+            widthheight[0] = (widthheight[0] + w_align - 1) & ~(w_align - 1); // FFALIGN(*width
             // ,
             // w_align);
-            widthheight[1] = (((widthheight[1]) + (h_align) - 1) & ~((h_align) - 1)); // FFALIGN(*height,
+            widthheight[1] = (widthheight[1] + h_align - 1) & ~(h_align - 1); // FFALIGN(*height,
             // h_align);
             if (this.codec_id == H264PredictionContext.CODEC_ID_H264
                 || this.lowres != 0)
@@ -1326,8 +1326,8 @@ namespace cscodec.h264.decoder
 
             for (i = 0; i < 4; i++)
             {
-                AVComponentDescriptor comp = (pixdesc.comp[i]);
-                if ((comp.step_minus1 + 1) > max_pixsteps[comp.plane])
+                AVComponentDescriptor comp = pixdesc.comp[i];
+                if (comp.step_minus1 + 1 > max_pixsteps[comp.plane])
                 {
                     max_pixsteps[comp.plane] = comp.step_minus1 + 1;
                     if (max_pixstep_comps != null)
@@ -1360,8 +1360,8 @@ namespace cscodec.h264.decoder
             av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
             for (i = 0; i < 4; i++)
             {
-                int s = (max_step_comp[i] == 1 || max_step_comp[i] == 2) ? desc.log2_chroma_w : 0;
-                int shifted_w = ((width + (1 << s) - 1)) >> s;
+                int s = max_step_comp[i] == 1 || max_step_comp[i] == 2 ? desc.log2_chroma_w : 0;
+                int shifted_w = (width + (1 << s) - 1) >> s;
                 if (max_step[i] > int.MaxValue / shifted_w)
                     return -1;
                 linesizes[i] = max_step[i] * shifted_w;
@@ -1409,7 +1409,7 @@ namespace cscodec.h264.decoder
             total_size = size[0];
             for (i = 1; has_plane[i] != 0 && i < 4; i++)
             {
-                int h, s = (i == 1 || i == 2) ? desc.log2_chroma_h : 0;
+                int h, s = i == 1 || i == 2 ? desc.log2_chroma_h : 0;
                 data_base[i] = data_base[i - 1];
                 data_offset[i] = data_offset[i - 1] + size[i - 1];
                 h = (height + (1 << s) - 1) >> s;
@@ -1564,7 +1564,7 @@ namespace cscodec.h264.decoder
                     unaligned = 0;
                     for (i = 0; i < 4; i++)
                     {
-                        unaligned |= (picture.linesize[i] % stride_align[i]);
+                        unaligned |= picture.linesize[i] % stride_align[i];
                     }
                 } while (unaligned != 0);
 
@@ -1608,8 +1608,8 @@ namespace cscodec.h264.decoder
                         buf.data_offset[i] = 0;
                     else
                         buf.data_offset[i] =
-                        ((((buf.linesize[i] * EDGE_WIDTH >> v_shift) + (EDGE_WIDTH >> h_shift)) +
-                          (stride_align[i]) - 1) & ~((stride_align[i]) - 1));
+                        ((buf.linesize[i] * EDGE_WIDTH >> v_shift) + (EDGE_WIDTH >> h_shift) +
+                         stride_align[i] - 1) & ~(stride_align[i] - 1);
                     //+ FFALIGN((buf.linesize[i]*EDGE_WIDTH>>v_shift) + (EDGE_WIDTH>>h_shift), stride_align[i]);
                 }
                 if (size[1] != 0 && 0 == size[2])
@@ -1745,7 +1745,7 @@ namespace cscodec.h264.decoder
                 pic.qscale_table = new int[mb_array_size];
 
                 //FF_ALLOCZ_OR_GOTO(this.avctx, pic.mb_type_base , (big_mb_num + this.mb_stride) * sizeof(uint32_t), fail)
-                pic.mb_type_base = new long[(big_mb_num + this.mb_stride)];
+                pic.mb_type_base = new long[big_mb_num + this.mb_stride];
 
                 pic.mb_type_offset = /*pic.mb_type_base + */2 * this.mb_stride + 1;
                 if (this.out_format == FMT_H264)
@@ -1788,7 +1788,7 @@ namespace cscodec.h264.decoder
             for (int k = 1; k < PREV_PICT_TYPES_BUFFER_SIZE; k++)
                 this.prev_pict_types[k] = this.prev_pict_types[k - 1];
 
-            this.prev_pict_types[0] = (this.dropable != 0) ? H264Context.FF_B_TYPE : this.pict_type;
+            this.prev_pict_types[0] = this.dropable != 0 ? H264Context.FF_B_TYPE : this.pict_type;
             if (pic.age < PREV_PICT_TYPES_BUFFER_SIZE && this.prev_pict_types[pic.age] == H264Context.FF_B_TYPE)
                 pic.age = int
                     .MaxValue; // Skipped MBs in B-frames are quite rare in MPEG-1/2 and it is a bit tricky to skip them anyway.
@@ -1921,13 +1921,13 @@ namespace cscodec.h264.decoder
                 }
                 */
                 this.current_picture_ptr.interlaced_frame =
-                    (0 == this.progressive_frame && 0 == this.progressive_sequence) ? 1 : 0;
+                    0 == this.progressive_frame && 0 == this.progressive_sequence ? 1 : 0;
             }
 
             this.current_picture_ptr.pict_type = this.pict_type;
             //        if(this.flags && CODEC_FLAG_QSCALE)
             //      this.current_picture_ptr.quality= this.new_picture_ptr.quality;
-            this.current_picture_ptr.key_frame = (this.pict_type == H264Context.FF_I_TYPE) ? 1 : 0;
+            this.current_picture_ptr.key_frame = this.pict_type == H264Context.FF_I_TYPE ? 1 : 0;
 
             ff_copy_picture(this.current_picture, this.current_picture_ptr);
 
@@ -2129,7 +2129,7 @@ namespace cscodec.h264.decoder
             }
 
             if (this.thread_count > H264Context.MAX_THREADS ||
-                (this.thread_count > this.mb_height && this.mb_height != 0))
+                this.thread_count > this.mb_height && this.mb_height != 0)
             {
                 //av_log(this.avctx, AV_LOG_ERROR, "too many threads\n");
                 return -1;
@@ -2330,7 +2330,7 @@ namespace cscodec.h264.decoder
                     this.MPV_common_end();
                     return -1;
                 } // if
-                this.thread_context[i].start_mb_y = (this.mb_height * (i) + this.thread_count / 2) / this.thread_count;
+                this.thread_context[i].start_mb_y = (this.mb_height * i + this.thread_count / 2) / this.thread_count;
                 this.thread_context[i].end_mb_y =
                     (this.mb_height * (i + 1) + this.thread_count / 2) / this.thread_count;
             }
@@ -2569,8 +2569,8 @@ namespace cscodec.h264.decoder
         {
             this.coded_width = width;
             this.coded_height = height;
-            this.width = -((-width) >> this.lowres);
-            this.height = -((-height) >> this.lowres);
+            this.width = -(-width >> this.lowres);
+            this.height = -(-height >> this.lowres);
         }
 
         public int ff_h264_decode_end()

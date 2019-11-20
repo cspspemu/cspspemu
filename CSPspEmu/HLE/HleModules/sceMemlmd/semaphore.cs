@@ -17,7 +17,7 @@ namespace CSPspEmu.Hle.Modules.kirk
         [HlePspNotImplemented()]
         public int sceUtilsBufferCopy()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace CSPspEmu.Hle.Modules.kirk
         [HlePspNotImplemented()]
         public void sceUtilsBufferCopyByPolling()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace CSPspEmu.Hle.Modules.kirk
         [HlePspNotImplemented()]
         public void sceUtilsBufferCopyByPollingWithRange()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

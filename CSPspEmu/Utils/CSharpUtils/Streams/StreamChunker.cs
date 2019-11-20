@@ -24,7 +24,7 @@ namespace CSharpUtils.Streams
         /// <summary>
         /// 
         /// </summary>
-        public bool Eof => (_buffer.ConsumeRemaining == 0) && (InputStream.Eof());
+        public bool Eof => _buffer.ConsumeRemaining == 0 && InputStream.Eof();
 
         /// <summary>
         /// 
@@ -35,8 +35,8 @@ namespace CSharpUtils.Streams
         {
             var bytesToRead = numberOfBytes - _buffer.ConsumeRemaining;
             if (bytesToRead > TempBuffer.Length)
-                throw (new Exception(
-                    "Can't Peek More Bytes Than BufferSize. " + bytesToRead + " > " + TempBuffer.Length));
+                throw new Exception(
+                    "Can't Peek More Bytes Than BufferSize. " + bytesToRead + " > " + TempBuffer.Length);
             if (bytesToRead > 0)
             {
                 _buffer.Produce(TempBuffer, 0, InputStream.Read(TempBuffer, 0, bytesToRead));

@@ -119,8 +119,8 @@ namespace cscodec.h264.decoder
                 int x;
                 for (x = 0; x < 8; x++)
                 {
-                    dest_cb_base[dest_cb_offset + x + y * (s.uvlinesize)] = (byte) (dcu / 8);
-                    dest_cr_base[dest_cr_offset + x + y * (s.uvlinesize)] = (byte) (dcv / 8);
+                    dest_cb_base[dest_cb_offset + x + y * s.uvlinesize] = (byte) (dcu / 8);
+                    dest_cr_base[dest_cr_offset + x + y * s.uvlinesize] = (byte) (dcv / 8);
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace cscodec.h264.decoder
 
                     error = s.error_status_table[mb_index];
 
-                    if ((((s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index])) &
+                    if ((s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index] &
                          (H264Context.MB_TYPE_16x16 | H264Context.MB_TYPE_16x8 | H264Context.MB_TYPE_8x16 |
                           H264Context.MB_TYPE_8x8)) != 0) continue; //inter
                     if (0 == (error & MpegEncContext.DC_ERROR)) continue; //dc-ok
@@ -206,7 +206,7 @@ namespace cscodec.h264.decoder
                         int mb_index_j = (j >> is_luma) + (b_y >> is_luma) * s.mb_stride;
                         int error_j = s.error_status_table[mb_index_j];
                         int intra_j =
-                            (7 & (int) (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j]));
+                            7 & (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j];
                         if (intra_j == 0 || 0 == (error_j & MpegEncContext.DC_ERROR))
                         {
                             color[0] = dc_base[dc_offset + j + b_y * stride];
@@ -221,7 +221,7 @@ namespace cscodec.h264.decoder
                         int mb_index_j = (j >> is_luma) + (b_y >> is_luma) * s.mb_stride;
                         int error_j = s.error_status_table[mb_index_j];
                         int intra_j =
-                            7 & (int) (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j]);
+                            7 & (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j];
                         if (intra_j == 0 || 0 == (error_j & MpegEncContext.DC_ERROR))
                         {
                             color[1] = dc_base[dc_offset + j + b_y * stride];
@@ -236,7 +236,7 @@ namespace cscodec.h264.decoder
                         int mb_index_j = (b_x >> is_luma) + (j >> is_luma) * s.mb_stride;
                         int error_j = s.error_status_table[mb_index_j];
                         int intra_j =
-                            7 & (int) (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j]);
+                            7 & (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j];
                         if (intra_j == 0 || 0 == (error_j & MpegEncContext.DC_ERROR))
                         {
                             color[2] = dc_base[dc_offset + b_x + j * stride];
@@ -251,7 +251,7 @@ namespace cscodec.h264.decoder
                         int mb_index_j = (b_x >> is_luma) + (j >> is_luma) * s.mb_stride;
                         int error_j = s.error_status_table[mb_index_j];
                         int intra_j =
-                            7 & (int) (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j]);
+                            7 & (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_index_j];
                         if (intra_j == 0 || 0 == (error_j & MpegEncContext.DC_ERROR))
                         {
                             color[3] = dc_base[dc_offset + b_x + j * stride];
@@ -304,12 +304,12 @@ namespace cscodec.h264.decoder
                     int y;
                     int left_status = s.error_status_table[(b_x >> is_luma) + (b_y >> is_luma) * s.mb_stride];
                     int right_status = s.error_status_table[((b_x + 1) >> is_luma) + (b_y >> is_luma) * s.mb_stride];
-                    int left_intra = 7 & (int) (s.current_picture.mb_type_base[
+                    int left_intra = 7 & (int) s.current_picture.mb_type_base[
                                          s.current_picture.mb_type_offset + (b_x >> is_luma) +
-                                         (b_y >> is_luma) * s.mb_stride]);
-                    int right_intra = 7 & (int) (s.current_picture.mb_type_base[
+                                         (b_y >> is_luma) * s.mb_stride];
+                    int right_intra = 7 & (int) s.current_picture.mb_type_base[
                                           s.current_picture.mb_type_offset + ((b_x + 1) >> is_luma) +
-                                          (b_y >> is_luma) * s.mb_stride]);
+                                          (b_y >> is_luma) * s.mb_stride];
                     int left_damage = left_status &
                                       (MpegEncContext.DC_ERROR | MpegEncContext.AC_ERROR | MpegEncContext.MV_ERROR);
                     int right_damage = right_status &
@@ -325,7 +325,7 @@ namespace cscodec.h264.decoder
 
                     if (!(left_damage != 0 || right_damage != 0)) continue; // both undamaged
 
-                    if ((0 == left_intra) && (0 == right_intra)
+                    if (0 == left_intra && 0 == right_intra
                         && Math.Abs(left_mv[0] - right_mv[0]) + Math.Abs(left_mv[1] + right_mv[1]) < 2) continue;
 
                     for (y = 0; y < 8; y++)
@@ -403,12 +403,12 @@ namespace cscodec.h264.decoder
                     int x;
                     int top_status = s.error_status_table[(b_x >> is_luma) + (b_y >> is_luma) * s.mb_stride];
                     int bottom_status = s.error_status_table[(b_x >> is_luma) + ((b_y + 1) >> is_luma) * s.mb_stride];
-                    int top_intra = 7 & (int) (s.current_picture.mb_type_base[
+                    int top_intra = 7 & (int) s.current_picture.mb_type_base[
                                         s.current_picture.mb_type_offset + (b_x >> is_luma) +
-                                        (b_y >> is_luma) * s.mb_stride]);
-                    int bottom_intra = 7 & (int) (s.current_picture.mb_type_base[
+                                        (b_y >> is_luma) * s.mb_stride];
+                    int bottom_intra = 7 & (int) s.current_picture.mb_type_base[
                                            s.current_picture.mb_type_offset + (b_x >> is_luma) +
-                                           ((b_y + 1) >> is_luma) * s.mb_stride]);
+                                           ((b_y + 1) >> is_luma) * s.mb_stride];
                     int top_damage = top_status &
                                      (MpegEncContext.DC_ERROR | MpegEncContext.AC_ERROR | MpegEncContext.MV_ERROR);
                     int bottom_damage = bottom_status &
@@ -424,7 +424,7 @@ namespace cscodec.h264.decoder
 
                     if (!(top_damage != 0 || bottom_damage != 0)) continue; // both undamaged
 
-                    if ((0 == top_intra) && (0 == bottom_intra)
+                    if (0 == top_intra && 0 == bottom_intra
                         && Math.Abs(top_mv[0] - bottom_mv[0]) + Math.Abs(top_mv[1] + bottom_mv[1]) < 2) continue;
 
                     for (x = 0; x < 8; x++)
@@ -496,7 +496,7 @@ namespace cscodec.h264.decoder
                 int f = 0;
                 int error = s.error_status_table[mb_xy];
 
-                if (0 != (7 & (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy])))
+                if (0 != (7 & s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy]))
                     f = MV_FROZEN; //intra //FIXME check
                 if (0 == (error & MpegEncContext.MV_ERROR)) f = MV_FROZEN; //inter with undamaged MV
 
@@ -505,7 +505,7 @@ namespace cscodec.h264.decoder
                     num_avail++;
             }
 
-            if ((0 == (error_concealment & FF_EC_GUESS_MVS)) || num_avail <= mb_width / 2)
+            if (0 == (error_concealment & FF_EC_GUESS_MVS) || num_avail <= mb_width / 2)
             {
                 for (mb_y = 0; mb_y < s.mb_height; mb_y++)
                 {
@@ -513,11 +513,11 @@ namespace cscodec.h264.decoder
                     {
                         int mb_xy = mb_x + mb_y * s.mb_stride;
 
-                        if (0 != (7 & (int) (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy])))
+                        if (0 != (7 & (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy]))
                             continue;
                         if (0 == (s.error_status_table[mb_xy] & MpegEncContext.MV_ERROR)) continue;
 
-                        s.mv_dir = (s.last_picture.data_base[0] != null)
+                        s.mv_dir = s.last_picture.data_base[0] != null
                             ? MpegEncContext.MV_DIR_FORWARD
                             : MpegEncContext.MV_DIR_BACKWARD;
                         s.mb_intra = 0;
@@ -895,7 +895,7 @@ namespace cscodec.h264.decoder
                         continue; //skip damaged
 
                     j++;
-                    if ((j % skip_amount) != 0) continue; //skip a few to speed things up
+                    if (j % skip_amount != 0) continue; //skip a few to speed things up
 
                     if (s.pict_type == H264Context.FF_I_TYPE)
                     {
@@ -913,7 +913,7 @@ namespace cscodec.h264.decoder
                     }
                     else
                     {
-                        if (0 != (7 & (int) (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy])))
+                        if (0 != (7 & (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy]))
                             is_intra_likely++;
                         else
                             is_intra_likely--;
@@ -921,7 +921,7 @@ namespace cscodec.h264.decoder
                 }
             }
             //printf("is_intra_likely: %d type:%d\n", is_intra_likely, s.pict_type);
-            return (is_intra_likely > 0) ? 1 : 0;
+            return is_intra_likely > 0 ? 1 : 0;
         }
 
         public static void ff_er_frame_start(MpegEncContext s)
@@ -1259,7 +1259,7 @@ namespace cscodec.h264.decoder
                 for (i = 0; i < s.mb_num; i++)
                 {
                     int mb_xy = s.mb_index2xy[i];
-                    if (0 == (7 & (int) (s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy])))
+                    if (0 == (7 & (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy]))
                         s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy] =
                             H264Context.MB_TYPE_INTRA4x4;
                 }
@@ -1273,14 +1273,14 @@ namespace cscodec.h264.decoder
                 {
                     int mb_xy = mb_x + mb_y * s.mb_stride;
                     int mb_type = (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy];
-                    int dir = (s.last_picture.data_base[0] == null ? 1 : 0);
+                    int dir = s.last_picture.data_base[0] == null ? 1 : 0;
                     error = s.error_status_table[mb_xy];
 
-                    if (0 != (7 & (int) (mb_type))) continue; //intra
+                    if (0 != (7 & (int) mb_type)) continue; //intra
                     if (0 != (error & MpegEncContext.MV_ERROR)) continue; //inter with damaged MV
                     if (0 == (error & MpegEncContext.AC_ERROR)) continue; //undamaged inter
 
-                    s.mv_dir = (dir != 0) ? MpegEncContext.MV_DIR_BACKWARD : MpegEncContext.MV_DIR_FORWARD;
+                    s.mv_dir = dir != 0 ? MpegEncContext.MV_DIR_BACKWARD : MpegEncContext.MV_DIR_FORWARD;
                     s.mb_intra = 0;
                     s.mb_skipped = 0;
                     if (0 != (mb_type & H264Context.MB_TYPE_8x8))
@@ -1331,7 +1331,7 @@ namespace cscodec.h264.decoder
                         int mb_type = (int) s.current_picture.mb_type_base[s.current_picture.mb_type_offset + mb_xy];
                         error = s.error_status_table[mb_xy];
 
-                        if (0 != (7 & (mb_type))) continue;
+                        if (0 != (7 & mb_type)) continue;
                         if (0 == (error & MpegEncContext.MV_ERROR)) continue; //inter with undamaged MV
                         if (0 == (error & MpegEncContext.AC_ERROR)) continue; //undamaged inter
 
@@ -1403,7 +1403,7 @@ namespace cscodec.h264.decoder
 
                     error = s.error_status_table[mb_xy];
 
-                    if (0 != (7 & (int) (mb_type)) && 0 != s.partitioned_frame) continue;
+                    if (0 != (7 & (int) mb_type) && 0 != s.partitioned_frame) continue;
                     //	            if(error&MV_ERROR) continue; //inter data damaged FIXME is this good?
 
                     dest_y_base = s.current_picture.data_base[0];
@@ -1437,8 +1437,8 @@ namespace cscodec.h264.decoder
                         int x;
                         for (x = 0; x < 8; x++)
                         {
-                            dcu += (sbyte) dest_cb_base[dest_cb_offset + x + y * (s.uvlinesize)];
-                            dcv += (sbyte) dest_cr_base[dest_cr_offset + x + y * (s.uvlinesize)];
+                            dcu += (sbyte) dest_cb_base[dest_cb_offset + x + y * s.uvlinesize];
+                            dcv += (sbyte) dest_cr_base[dest_cr_offset + x + y * s.uvlinesize];
                         }
                     }
                     dc_val_base[dc_val[1] + mb_x + mb_y * s.mb_stride] = (dcu + 4) >> 3;
@@ -1480,7 +1480,7 @@ namespace cscodec.h264.decoder
 
                     error = s.error_status_table[mb_xy];
 
-                    if (0 != ((mb_type) & (H264Context.MB_TYPE_16x16 | H264Context.MB_TYPE_16x8 |
+                    if (0 != (mb_type & (H264Context.MB_TYPE_16x16 | H264Context.MB_TYPE_16x8 |
                                            H264Context.MB_TYPE_8x16 | H264Context.MB_TYPE_8x8))) continue;
                     if (0 == (error & MpegEncContext.AC_ERROR)) continue; //undamaged
 

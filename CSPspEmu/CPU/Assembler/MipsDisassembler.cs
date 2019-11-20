@@ -103,7 +103,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                     InstructionTable.All, instructionInfo => ast.Return(ast.CallStatic(
                         (Func<uint, int, Result>) _InternalHandle,
                         ast.Argument<uint>(0),
-                        (instructionInfo != null) ? dictionary[instructionInfo] : -1
+                        instructionInfo != null ? dictionary[instructionInfo] : -1
                     )));
             }
 
@@ -122,7 +122,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
         {
             MemoryInfo = DefaultMemoryInfo.Instance,
             Instruction = data,
-            InstructionInfo = (index != -1) ? InstructionLookup[index] : null,
+            InstructionInfo = index != -1 ? InstructionLookup[index] : null,
         };
     }
 }

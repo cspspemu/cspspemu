@@ -54,7 +54,7 @@ namespace CSharpUtilsTests.Extensions
                 0x01, 0x01, 0x02, 0x01, 0x03, 0x01,
                 0x01, 0x02, 0x02, 0x02, 0x03, 0x02,
             };
-            var testShorts = (new MemoryStream(data)).ReadStructVector<TestShorts>(3);
+            var testShorts = new MemoryStream(data).ReadStructVector<TestShorts>(3);
             Assert.Equal("TestShorts(0x0001, 0x0002, 0x0003)", testShorts[0].ToString());
             Assert.Equal("TestShorts(0x0101, 0x0102, 0x0103)", testShorts[1].ToString());
             Assert.Equal("TestShorts(0x0201, 0x0202, 0x0203)", testShorts[2].ToString());
@@ -69,7 +69,7 @@ namespace CSharpUtilsTests.Extensions
                 0x01, 0x01, 0x02, 0x01, 0x03, 0x01,
                 0x01, 0x02, 0x02, 0x02, 0x03, 0x02,
             };
-            var testShorts = (new MemoryStream(data)).ReadStructVector<TestShorts>(0);
+            var testShorts = new MemoryStream(data).ReadStructVector<TestShorts>(0);
             Assert.Equal(0, testShorts.Length);
         }
 

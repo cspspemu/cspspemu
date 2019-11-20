@@ -82,7 +82,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x0074EF9B, FirmwareVersion = 150)]
         public void scePowerGetResumeCount()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x3951AF53, FirmwareVersion = 150)]
         public void scePowerWaitRequestCompletion()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x2875994B, FirmwareVersion = 150)]
         public void scePower_2875994B()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x7FA406DD, FirmwareVersion = 150)]
         public void scePowerIsRequest()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x23436A4A, FirmwareVersion = 150)]
         public void scePower_23436A4A()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x78A1A796, FirmwareVersion = 150)]
         public void scePower_78A1A796()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0xE8E4E204, FirmwareVersion = 150)]
         public void scePower_E8E4E204()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x2B51FE2F, FirmwareVersion = 150)]
         public void scePower_2B51FE2F()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x442BFBAC, FirmwareVersion = 150)]
         public void scePower_442BFBAC()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x27F3292C, FirmwareVersion = 150)]
         public void scePowerBatteryUpdateInfo()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0xB999184C, FirmwareVersion = 150)]
         public void scePowerGetLowBatteryCapacity()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x94F5A53F, FirmwareVersion = 150)]
         public void scePowerGetBatteryRemainCapacity()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0xFD18A0FF, FirmwareVersion = 150)]
         public void scePowerGetBatteryFullCapacity()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x0CD21B1F, FirmwareVersion = 150)]
         public void scePowerSetPowerSwMode()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x165CE085, FirmwareVersion = 150)]
         public void scePowerGetPowerSwMode()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0xDB62C9CF, FirmwareVersion = 150)]
         public void scePowerCancelRequest()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0xAC32C9CC, FirmwareVersion = 150)]
         public int scePowerRequestSuspend()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x862AE1A6, FirmwareVersion = 150)]
         public int scePowerGetBatteryElec()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0xEDC13FE5, FirmwareVersion = 150)]
         public int scePowerGetIdleTimer()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x7F30B3B1, FirmwareVersion = 150)]
         public int scePowerIdleTimerEnable(int unknown)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0x972CE941, FirmwareVersion = 150)]
         public int scePowerIdleTimerDisable(int unknown)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         public enum PspPowerTick : uint
@@ -370,7 +370,7 @@ namespace CSPspEmu.Hle.Modules.power
         [HlePspFunction(NID = 0xD3075926, FirmwareVersion = 150)]
         public int scePowerIsLowBattery()
         {
-            return (PspBattery.BatteryLifePercent <= PspBattery.LowPercent) ? 1 : 0;
+            return PspBattery.BatteryLifePercent <= PspBattery.LowPercent ? 1 : 0;
         }
 
         /// <summary>

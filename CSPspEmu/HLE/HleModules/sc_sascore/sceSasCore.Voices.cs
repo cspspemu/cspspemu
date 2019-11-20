@@ -86,7 +86,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
             if (LeftVolume > PSP_SAS_VOL_MAX || RightVolume > PSP_SAS_VOL_MAX || EffectLeftVol > PSP_SAS_VOL_MAX ||
                 EffectRightVol > PSP_SAS_VOL_MAX)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_VOLUME_VAL));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_VOLUME_VAL);
             }
 
             SasVoice.LeftVolume = LeftVolume;

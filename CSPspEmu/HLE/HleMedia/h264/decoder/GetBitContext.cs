@@ -210,25 +210,25 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //cache = GET_CACHE(re,s);
-            cache = (re_cache);
+            cache = re_cache;
 
             //sign=(~cache)>>31;
             // we use long
-            sign = (int) ((~cache) >> 63);
+            sign = (int) (~cache >> 63);
 
             //LAST_SKIP_BITS(re, s, n)
-            re_index += (n);
+            re_index += n;
 
             //CLOSE_READER(re, s)
             this.index = re_index;
 
             //return (NEG_USR32(sign ^ cache, n) ^ sign) - sign;
             //Console.WriteLine("get_xbit: "+ (( (((int)(sign ^ cache))>>(32-(n))) ^ sign) - sign) );
-            return ((((int) (sign ^ cache)) >> (32 - (n))) ^ sign) - sign;
+            return (((int) (sign ^ cache) >> (32 - n)) ^ sign) - sign;
         }
 
         public /*inline*/ int get_sbits(int n)
@@ -245,15 +245,15 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //tmp= SHOW_SBITS(re, s, n);
             ////tmp = ((( int32_t)(re_cache))>>(32-(n)))
-            tmp = (((int) (re_cache)) >> (32 - (n)));
+            tmp = (int) re_cache >> (32 - n);
 
             //LAST_SKIP_BITS(re, s, n)
-            re_index += (n);
+            re_index += n;
 
             //CLOSE_READER(re, s)
             this.index = re_index;
@@ -283,15 +283,15 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //tmp= SHOW_UBITS(re, s, n);
             ////tmp = NEG_USR32(re_cache, n)
-            tmp = (((re_cache)) >> (32 - (n)));
+            tmp = re_cache >> (32 - n);
 
             //LAST_SKIP_BITS(re, s, n)
-            re_index += (n);
+            re_index += n;
 
             //CLOSE_READER(re, s)
             this.index = re_index;
@@ -318,12 +318,12 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //tmp= SHOW_UBITS(re, s, n);
             ////tmp = NEG_USR32(re_cache, n)
-            tmp = (((re_cache)) >> (32 - (n)));
+            tmp = re_cache >> (32 - n);
 
             return tmp;
         }
@@ -342,11 +342,11 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //LAST_SKIP_BITS(re, s, n)
-            re_index += (n);
+            re_index += n;
 
             //CLOSE_READER(re, s)
             this.index = re_index;
@@ -364,14 +364,14 @@ namespace cscodec.h264.decoder
             //result<<= (index&0x07);
             //result>>= (8 - 1);
             // we use int!
-            result <<= ((index & 0x07) + 24);
-            result >>= (32 - 1);
+            result <<= (index & 0x07) + 24;
+            result >>= 32 - 1;
             //#endif
             index++;
             this.index = index;
 
             //Console.WriteLine("get_bits1("+message+"): "+ ((result!=0)?1:0) );        
-            return (result != 0) ? 1 : 0;
+            return result != 0 ? 1 : 0;
             //#else
             //    return get_bits(s, 1);
             //#endif
@@ -403,7 +403,7 @@ namespace cscodec.h264.decoder
                 long ret2 = get_bits(n - 16, message);
 
                 ////Console.WriteLine("get_bits_long(,"+n+","+message+"): "+ (ret | get_bits(n-16, message)) );        
-                return (ret | ret2);
+                return ret | ret2;
                 //    #endif
             }
         }
@@ -414,7 +414,7 @@ namespace cscodec.h264.decoder
         public /*inline*/ int get_sbits_long(int n, string message)
         {
             //return sign_extend(get_bits_long(n), n);
-            return (((int) get_bits_long(n, message)) << ((8 * 4) - n)) >> ((8 * 4) - n);
+            return ((int) get_bits_long(n, message) << (8 * 4 - n)) >> (8 * 4 - n);
         }
 
         /**
@@ -476,7 +476,7 @@ namespace cscodec.h264.decoder
 
         public /*inline*/ void align_get_bits()
         {
-            int n = (-get_bits_count()) & 7;
+            int n = -get_bits_count() & 7;
             if (n != 0) skip_bits(n);
         }
 
@@ -515,7 +515,7 @@ namespace cscodec.h264.decoder
                     //abort(); //cant do anything, init_vlc() is used with too little memory
                     return 0;
                 }
-                vlc.table_allocated += (1 << vlc.bits);
+                vlc.table_allocated += 1 << vlc.bits;
                 short[][ /*2*/] newTab = Arrays.Create<short>(2 * vlc.table_allocated, 2);
                 for (int i = 0; i < vlc.table_base.Length; i++)
                 {
@@ -635,7 +635,7 @@ namespace cscodec.h264.decoder
                         subtable_bits = Math.Max(subtable_bits, n);
                     }
                     subtable_bits = Math.Min(subtable_bits, table_nb_bits);
-                    j = ((flags & INIT_VLC_LE) != 0) ? (bitswap_32(code_prefix) >> (32 - table_nb_bits)) : code_prefix;
+                    j = (flags & INIT_VLC_LE) != 0 ? bitswap_32(code_prefix) >> (32 - table_nb_bits) : code_prefix;
                     table_base[(int) (table_offset + j)][1] = (short) -subtable_bits;
 
                     //Console.WriteLine("["+j+"]: n="+codes_base[codes_offset + i].bits + table_nb_bits+"(subtable)");
@@ -677,7 +677,7 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //GET_VLC(code, re, s, table, bits, max_depth)
@@ -695,7 +695,7 @@ namespace cscodec.h264.decoder
 
                 //index= SHOW_UBITS(name, gb, bits);
                 ////index = NEG_USR32(re_cache, bits)
-                index = (int) ((((re_cache)) >> (32 - (bits))));
+                index = (int) (re_cache >> (32 - bits));
 
                 code = table_base[table_offset + index][0];
                 n = table_base[table_offset + index][1];
@@ -707,7 +707,7 @@ namespace cscodec.h264.decoder
                 if (max_depth > 1 && n < 0)
                 {
                     //LAST_SKIP_BITS(name, gb, bits)
-                    re_index += (bits);
+                    re_index += bits;
 
                     //UPDATE_CACHE(name, gb)
                     pos = buffer_offset + (re_index >> 3);
@@ -716,7 +716,7 @@ namespace cscodec.h264.decoder
                     re_cache = (re_cache << 8) | buffer[pos + 1];
                     re_cache = (re_cache << 8) | buffer[pos + 2];
                     re_cache = (re_cache << 8) | buffer[pos + 3];
-                    re_cache = (re_cache << (re_index & 0x07));
+                    re_cache = re_cache << (re_index & 0x07);
                     re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
 
@@ -724,7 +724,7 @@ namespace cscodec.h264.decoder
 
                     //index= SHOW_UBITS(name, gb, nb_bits) + code;
                     ////index = NEG_USR32(re_cache, nb_bits) + code
-                    index = (int) ((((re_cache)) >> (32 - (nb_bits)))) + code;
+                    index = (int) (re_cache >> (32 - nb_bits)) + code;
 
                     code = table_base[table_offset + index][0];
                     n = table_base[table_offset + index][1];
@@ -736,7 +736,7 @@ namespace cscodec.h264.decoder
                     if (max_depth > 2 && n < 0)
                     {
                         //LAST_SKIP_BITS(name, gb, nb_bits)
-                        re_index += (nb_bits);
+                        re_index += nb_bits;
 
                         //UPDATE_CACHE(name, gb)
                         pos = buffer_offset + (re_index >> 3);
@@ -745,14 +745,14 @@ namespace cscodec.h264.decoder
                         re_cache = (re_cache << 8) | buffer[pos + 1];
                         re_cache = (re_cache << 8) | buffer[pos + 2];
                         re_cache = (re_cache << 8) | buffer[pos + 3];
-                        re_cache = (re_cache << (re_index & 0x07));
+                        re_cache = re_cache << (re_index & 0x07);
                         re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
                         nb_bits = -n;
 
                         //index= SHOW_UBITS(name, gb, nb_bits) + code;
                         ////index = NEG_USR32(re_cache, nb_bits) + code
-                        index = (int) ((((re_cache)) >> (32 - (nb_bits)))) + code;
+                        index = (int) (re_cache >> (32 - nb_bits)) + code;
 
                         code = table_base[table_offset + index][0];
                         n = table_base[table_offset + index][1];
@@ -763,8 +763,8 @@ namespace cscodec.h264.decoder
                     }
                 }
                 //SKIP_BITS(name, gb, n)
-                re_cache >>= (n);
-                re_index += (n);
+                re_cache >>= n;
+                re_index += n;
 
                 // //Console.WriteLine("get_vlc2(,"+n+","+message+"): "+ code);           
             }
@@ -796,17 +796,17 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
-            re_cache = (re_cache & 0xffffffffL); // Prevent 32-Bit over flow.
+            re_cache = re_cache << (re_index & 0x07);
+            re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //        buf=GET_CACHE(re, gb);
-            buf = (re_cache);
+            buf = re_cache;
 
-            if (buf >= (1L << 27))
+            if (buf >= 1L << 27)
             {
                 buf >>= 32 - 9;
                 //            LAST_SKIP_BITS(re, gb, ff_golomb_vlc_len[buf]);
-                re_index += (ff_golomb_vlc_len[(int) buf]);
+                re_index += ff_golomb_vlc_len[(int) buf];
 
                 //        	CLOSE_READER(re, gb);
                 this.index = re_index;
@@ -820,7 +820,7 @@ namespace cscodec.h264.decoder
                 buf >>= log;
                 buf--;
                 //            LAST_SKIP_BITS(re, gb, 32 - log);
-                re_index += (32 - log);
+                re_index += 32 - log;
 
                 //            CLOSE_READER(re, gb);
                 this.index = re_index;
@@ -850,7 +850,7 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //        buf=GET_CACHE(re, gb);
@@ -859,7 +859,7 @@ namespace cscodec.h264.decoder
 
             //buf >>= 32 - 9;
             //        LAST_SKIP_BITS(re, gb, ff_golomb_vlc_len[buf]);
-            re_index += (ff_golomb_vlc_len[(int) buf]);
+            re_index += ff_golomb_vlc_len[(int) buf];
 
             //        CLOSE_READER(re, gb);
             this.index = re_index;
@@ -888,17 +888,17 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | buffer[pos + 1];
             re_cache = (re_cache << 8) | buffer[pos + 2];
             re_cache = (re_cache << 8) | buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
             //        buf=GET_CACHE(re, gb);
-            buf = (re_cache);
+            buf = re_cache;
 
-            if (buf >= (1 << 27))
+            if (buf >= 1 << 27)
             {
                 buf >>= 32 - 9;
                 //	        LAST_SKIP_BITS(re, gb, ff_golomb_vlc_len[buf]);
-                re_index += (ff_golomb_vlc_len[(int) buf]);
+                re_index += ff_golomb_vlc_len[(int) buf];
 
                 //	    	CLOSE_READER(re, gb);
                 this.index = re_index;
@@ -912,13 +912,13 @@ namespace cscodec.h264.decoder
                 buf >>= log;
 
                 //	        LAST_SKIP_BITS(re, gb, 32 - log);
-                re_index += (32 - log);
+                re_index += 32 - log;
 
                 //        	CLOSE_READER(re, gb);
                 this.index = re_index;
 
                 if ((buf & 1) != 0) buf = -(buf >> 1);
-                else buf = (buf >> 1);
+                else buf = buf >> 1;
 
                 //Console.WriteLine("get_se_golomb(,"+(32 - log)+","+message+"): "+ ((int)buf) );               	        	        
                 return (int) buf;

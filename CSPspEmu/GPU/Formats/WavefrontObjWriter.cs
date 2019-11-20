@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 
             normalize /= 64;
 
-            var normalizeRecp = (1.0f / normalize);
+            var normalizeRecp = 1.0f / normalize;
 
             foreach (var vertex in Vertices)
             {

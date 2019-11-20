@@ -34,9 +34,9 @@ namespace CSPspEmu.Core.Types
                 case GuPixelFormats.PaletteT8: return numberOfPixels;
                 case GuPixelFormats.PaletteT16: return 2 * numberOfPixels;
                 case GuPixelFormats.PaletteT32: return 4 * numberOfPixels;
-                case GuPixelFormats.CompressedDxt1: return (int) ((0.5 * numberOfPixels) / 16);
-                case GuPixelFormats.CompressedDxt3: return (1 * numberOfPixels) / 16;
-                case GuPixelFormats.CompressedDxt5: return (1 * numberOfPixels) / 16;
+                case GuPixelFormats.CompressedDxt1: return (int) (0.5 * numberOfPixels / 16);
+                case GuPixelFormats.CompressedDxt3: return 1 * numberOfPixels / 16;
+                case GuPixelFormats.CompressedDxt5: return 1 * numberOfPixels / 16;
                 default: throw new InvalidOperationException($"ScreenBufferStateStruct.BytesPerPixel : Invalid Format : {that} : {numberOfPixels}");
             }
         }

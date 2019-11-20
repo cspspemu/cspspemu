@@ -60,7 +60,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [PspUntested]
         public int sceKernelSetVTimerTimeWide(VirtualTimer VirtualTimer, long Time)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
             //VirtualTimer.ElapsedMicroseconds = Time;
             return 0;
         }

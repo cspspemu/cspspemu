@@ -49,7 +49,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x50647530, FirmwareVersion = 150)]
         public int sceNetFreeThreadinfo(int thid)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xAD6844c6, FirmwareVersion = 150)]
         public int sceNetThreadAbort(int thid)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         public int sceNetGetLocalEtherAddr(byte* Mac)
         {
             var Bytes = SelfMacAddress.GetAddressBytes();
-            for (int n = 0; n < 8; n++) Mac[n] = (n < Bytes.Length) ? Bytes[n] : (byte) 0;
+            for (int n = 0; n < 8; n++) Mac[n] = n < Bytes.Length ? Bytes[n] : (byte) 0;
             return 0;
         }
 
@@ -125,7 +125,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xCC393E48, FirmwareVersion = 150)]
         public int sceNetGetMallocStat(SceNetMallocStat* stat)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         //[HlePspFunction(NID = 0xF5805EFE, sceNetHtonl));

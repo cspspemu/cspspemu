@@ -6,9 +6,9 @@ namespace CSharpPlatform.GL.Utils
     [Flags]
     public enum RenderTargetLayers
     {
-        Color = (1 << 0),
-        Depth = (1 << 1),
-        Stencil = (1 << 2),
+        Color = 1 << 0,
+        Depth = 1 << 1,
+        Stencil = 1 << 2,
         All = Color | Depth | Stencil
     }
 
@@ -60,7 +60,7 @@ namespace CSharpPlatform.GL.Utils
         protected GLRenderTarget(int Width, int Height, RenderTargetLayers RenderTargetLayers)
         {
             if (Width == 0 || Height == 0)
-                throw (new Exception($"Invalid GLRenderTarget size: {Width}x{Height}"));
+                throw new Exception($"Invalid GLRenderTarget size: {Width}x{Height}");
             _Width = Width;
             _Height = Height;
             this.RenderTargetLayers = RenderTargetLayers;

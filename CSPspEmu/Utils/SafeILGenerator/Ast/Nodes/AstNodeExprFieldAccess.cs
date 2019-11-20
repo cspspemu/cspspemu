@@ -16,7 +16,7 @@ namespace SafeILGenerator.Ast.Nodes
 
         public AstNodeExprFieldAccess(AstNodeExpr instance, FieldInfo field, string fieldName = null)
         {
-            if (field == null) throw (new Exception($"Field can't be null '{fieldName}'"));
+            if (field == null) throw new Exception($"Field can't be null '{fieldName}'");
             Instance = instance;
             Field = field;
         }
@@ -40,7 +40,7 @@ namespace SafeILGenerator.Ast.Nodes
 
         public AstNodeExprStaticFieldAccess(FieldInfo field, string fieldName = null)
         {
-            if (field == null) throw (new Exception($"Field can't be null '{fieldName}'"));
+            if (field == null) throw new Exception($"Field can't be null '{fieldName}'");
             Field = field;
         }
 

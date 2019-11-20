@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle.Modules.audio
         {
             if (!PspVaudioChannel.IsReserved)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_NOT_RESERVED));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_NOT_RESERVED);
             }
 
             PspVaudioChannel.Release();
@@ -50,22 +50,22 @@ namespace CSPspEmu.Hle.Modules.audio
             {
                 if (VAudioReserved)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_BUSY));
+                    throw new SceKernelException(SceKernelErrors.ERROR_BUSY);
                 }
 
                 if (PspVaudioChannel.IsReserved)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED));
+                    throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED);
                 }
 
                 if (SampleCount != 256 && SampleCount != 1024 && SampleCount != 2048)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
+                    throw new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE);
                 }
 
                 if (Channels != 2)
                 {
-                    throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_FORMAT));
+                    throw new SceKernelException(SceKernelErrors.ERROR_INVALID_FORMAT);
                 }
 
                 VAudioReserved = true;
@@ -78,7 +78,7 @@ namespace CSPspEmu.Hle.Modules.audio
             }
             catch (InvalidAudioFormatException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED);
             }
         }
 
@@ -91,7 +91,7 @@ namespace CSPspEmu.Hle.Modules.audio
         [HlePspNotImplemented]
         public void sceVaudioOutputBlocking(int Volume, byte* Buffer)
         {
-            if (Buffer == null) throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_PRIV_REQUIRED));
+            if (Buffer == null) throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_PRIV_REQUIRED);
 
 #if false
 			if (!pspVaudioChannel.isOutputBlocking()) {

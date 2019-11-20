@@ -37,7 +37,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
             pspSysEventHandler = *PspSysEventHandler;
             return 0;
             */
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
             );
             return 0;
             */
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

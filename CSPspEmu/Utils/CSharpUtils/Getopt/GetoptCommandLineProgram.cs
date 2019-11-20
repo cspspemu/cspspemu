@@ -292,7 +292,7 @@ namespace CSharpUtils.Getopt
                 }
                 else
                 {
-                    throw (new NotImplementedException("Not supported field type " + field.FieldType));
+                    throw new NotImplementedException("Not supported field type " + field.FieldType);
                 }
             });
         }
@@ -335,8 +335,8 @@ namespace CSharpUtils.Getopt
                     Aliases = commandAttribute.Aliases,
                     MemberInfo = member,
                     Examples = member.GetAttribute<ExampleAttribute>().Select(item => item.Example).ToArray(),
-                    Description = (descriptionAttribute != null) ? descriptionAttribute.Description : "",
-                    Values = (valuesAttribute != null) ? valuesAttribute.Values : new object[0],
+                    Description = descriptionAttribute != null ? descriptionAttribute.Description : "",
+                    Values = valuesAttribute != null ? valuesAttribute.Values : new object[0],
                 };
 
                 CommandEntries.Add(commandEntry);
@@ -351,7 +351,7 @@ namespace CSharpUtils.Getopt
                 }
                 else
                 {
-                    throw(new NotImplementedException("Don't know how to handle type " + member.GetType()));
+                    throw new NotImplementedException("Don't know how to handle type " + member.GetType());
                 }
             }
 

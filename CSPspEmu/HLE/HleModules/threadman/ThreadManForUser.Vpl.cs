@@ -80,14 +80,14 @@ namespace CSPspEmu.Hle.Modules.threadman
                             });
                         }, HandleCallbacks: HandleCallbacks);
 
-                    if (TimedOut) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT));
+                    if (TimedOut) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT);
                 }
             }
 
             public bool TryAllocate(CpuThreadState CpuThreadState, int Size, PspPointer* AddressPointer)
             {
                 Size = (int) MathUtils.NextAligned(Size, 4);
-                if (Size > Info.PoolSize) throw (new SceKernelException((SceKernelErrors) (-1)));
+                if (Size > Info.PoolSize) throw new SceKernelException((SceKernelErrors) (-1));
                 try
                 {
                     var AllocatedSegment = MemoryPartition.Allocate(Size, InternalMemoryAnchor);

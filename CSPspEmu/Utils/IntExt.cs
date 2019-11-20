@@ -31,9 +31,9 @@ namespace CSPspEmu.Utils
 
         public static int RangeConvert(this int value, int minSrc, int maxSrc, int minDst, int maxDst)
         {
-            var srcLen = (maxSrc - minSrc);
-            var dstLen = (maxDst - minDst);
-            return minDst + ((value - minSrc) * dstLen) / srcLen;
+            var srcLen = maxSrc - minSrc;
+            var dstLen = maxDst - minDst;
+            return minDst + (value - minSrc) * dstLen / srcLen;
         }
 
     }

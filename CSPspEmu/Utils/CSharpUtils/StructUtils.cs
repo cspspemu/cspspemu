@@ -18,8 +18,8 @@ namespace CSharpUtils
             var realSize = Marshal.SizeOf(typeof(T));
             if (realSize != expectedSize)
             {
-                throw (new Exception("Expecting struct '" + typeof(T).FullName + "' size. Expected(" + expectedSize +
-                                     ") but Obtained(" + realSize + ")."));
+                throw new Exception("Expecting struct '" + typeof(T).FullName + "' size. Expected(" + expectedSize +
+                                    ") but Obtained(" + realSize + ").");
             }
         }
 
@@ -35,8 +35,8 @@ namespace CSharpUtils
 
             var expectedLength = Marshal.SizeOf(typeof(T));
             if (rawData.Length < expectedLength)
-                throw (new Exception(
-                    $"BytesToStruct. Not enough bytes. Expected: {expectedLength} Provided: {rawData.Length}"));
+                throw new Exception(
+	                $"BytesToStruct. Not enough bytes. Expected: {expectedLength} Provided: {rawData.Length}");
 
 #if true
             fixed (byte* rawDataPointer = &rawData[0])
@@ -163,7 +163,7 @@ namespace CSharpUtils
         /// <returns></returns>
         public static ulong GetULongFrom2UInt(uint low, uint high)
         {
-            return ((ulong) low) | (((ulong) high) << 32);
+            return (ulong) low | ((ulong) high << 32);
         }
 
         /// <summary>
@@ -174,8 +174,8 @@ namespace CSharpUtils
         /// <param name="high"></param>
         public static void ConvertULongTo2UInt(ulong value, out uint low, out uint high)
         {
-            low = ((uint) (value >> 0) & uint.MaxValue);
-            high = ((uint) (value >> 32) & uint.MaxValue);
+            low = (uint) (value >> 0) & uint.MaxValue;
+            high = (uint) (value >> 32) & uint.MaxValue;
         }
     }
 }

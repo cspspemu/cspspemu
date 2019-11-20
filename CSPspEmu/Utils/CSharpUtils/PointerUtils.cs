@@ -60,7 +60,7 @@ namespace CSharpUtils
         {
             if (count <= 0) return;
             if (offset + count > array.Length)
-                throw (new InvalidOperationException("Array out of bounts"));
+                throw new InvalidOperationException("Array out of bounts");
             fixed (byte* arrayPointer = &array[offset])
             {
                 Memset(arrayPointer, value, count);
@@ -118,7 +118,7 @@ namespace CSharpUtils
 
             if (Is64)
             {
-                while ((maxLength >= 8) && (*(ulong*) haystack == *(ulong*) needle))
+                while (maxLength >= 8 && *(ulong*) haystack == *(ulong*) needle)
                 {
                     match += 8;
                     haystack += 8;
@@ -127,7 +127,7 @@ namespace CSharpUtils
                 }
             }
 
-            while ((maxLength >= 4) && (*(uint*) haystack == *(uint*) needle))
+            while (maxLength >= 4 && *(uint*) haystack == *(uint*) needle)
             {
                 match += 4;
                 haystack += 4;
@@ -135,7 +135,7 @@ namespace CSharpUtils
                 maxLength -= 4;
             }
 
-            while ((maxLength >= 1) && (*haystack == *needle))
+            while (maxLength >= 1 && *haystack == *needle)
             {
                 match += 1;
                 haystack += 1;
@@ -163,11 +163,11 @@ namespace CSharpUtils
                 var value4 = ((uint) value2 << 0) | ((uint) value2 << 16);
 
 
-                if ((maxLength >= 8) && Is64)
+                if (maxLength >= 8 && Is64)
                 {
                     var value8 = ((ulong) value4 << 0) | ((ulong) value4 << 32);
 
-                    while ((maxLength >= 8) && (*(ulong*) haystack == value8))
+                    while (maxLength >= 8 && *(ulong*) haystack == value8)
                     {
                         match += 8;
                         haystack += 8;
@@ -175,7 +175,7 @@ namespace CSharpUtils
                     }
                 }
 
-                while ((maxLength >= 4) && (*(uint*) haystack == value4))
+                while (maxLength >= 4 && *(uint*) haystack == value4)
                 {
                     match += 4;
                     haystack += 4;
@@ -183,7 +183,7 @@ namespace CSharpUtils
                 }
             }
 
-            while ((maxLength >= 1) && (*haystack == value1))
+            while (maxLength >= 1 && *haystack == value1)
             {
                 match += 1;
                 haystack += 1;
@@ -321,7 +321,7 @@ namespace CSharpUtils
             switch (data.Length)
             {
                 case 0: return 0;
-                case 1: return (data[0] << 0);
+                case 1: return data[0] << 0;
                 case 2: return (data[0] << 0) | (data[1] << 8);
                 case 3: return (data[0] << 0) | (data[1] << 8) | (data[2] << 16);
                 default:

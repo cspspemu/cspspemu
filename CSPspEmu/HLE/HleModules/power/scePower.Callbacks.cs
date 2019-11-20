@@ -88,11 +88,11 @@ namespace CSPspEmu.Hle.Modules.power
         {
             if (SlotIndex < (AllowMinusOne ? -1 : 0) || SlotIndex >= NumberOfCBPowerSlotsPrivate)
             {
-                throw (new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_INVALID_SLOT));
+                throw new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_INVALID_SLOT);
             }
             if (SlotIndex >= NumberOfCBPowerSlots)
             {
-                throw (new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_PRIVATE_SLOT));
+                throw new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_PRIVATE_SLOT);
             }
         }
 
@@ -122,7 +122,7 @@ namespace CSPspEmu.Hle.Modules.power
             // TODO: If cbId is invalid return PSP_POWER_ERROR_INVALID_CB.
             if (CallbackId == 0)
             {
-                throw (new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_INVALID_CB));
+                throw new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_INVALID_CB);
             }
 
             if (SlotIndex == -1)
@@ -133,13 +133,13 @@ namespace CSPspEmu.Hle.Modules.power
                 }
                 catch (InvalidOperationException)
                 {
-                    throw (new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_SLOTS_FULL));
+                    throw new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_SLOTS_FULL);
                 }
             }
 
             if (Callbacks[SlotIndex].CallbackId != 0)
             {
-                throw (new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_TAKEN_SLOT));
+                throw new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_TAKEN_SLOT);
             }
 
             Callbacks[SlotIndex].CallbackId = CallbackId;
@@ -147,7 +147,7 @@ namespace CSPspEmu.Hle.Modules.power
             var Callback = CallbackManager.Callbacks.Get(CallbackId);
             var RegisteredCallback = HleCallback.Create(
                 "scePowerRegisterCallback", Callback.Function,
-                SlotIndex + 1, (int) (GetPowerCallbackFlags()), Callback.Arguments[0]
+                SlotIndex + 1, (int) GetPowerCallbackFlags(), Callback.Arguments[0]
             );
 
             CallbackManager.ScheduleCallback(RegisteredCallback);
@@ -170,7 +170,7 @@ namespace CSPspEmu.Hle.Modules.power
 
             if (Callbacks[SlotIndex].CallbackId == 0)
             {
-                throw (new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_EMPTY_SLOT));
+                throw new SceKernelException(SceKernelErrors.PSP_POWER_ERROR_EMPTY_SLOT);
             }
 
             Callbacks[SlotIndex].CallbackId = 0;

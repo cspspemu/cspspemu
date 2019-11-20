@@ -9,7 +9,7 @@ namespace CSPspEmu.Hle.Managers
     {
         protected TKey LastId = default(TKey);
         protected Dictionary<TKey, TType> Items = new Dictionary<TKey, TType>();
-        protected SceKernelErrors OnKeyNotFoundError = unchecked((SceKernelErrors) (0xDEAD0017));
+        protected SceKernelErrors OnKeyNotFoundError = unchecked((SceKernelErrors) 0xDEAD0017);
 
         public HleUidPoolSpecial()
         {
@@ -82,7 +82,7 @@ namespace CSPspEmu.Hle.Managers
         {
             if (!Items.ContainsKey(Id))
             {
-                throw (new SceKernelException(OnKeyNotFoundError));
+                throw new SceKernelException(OnKeyNotFoundError);
             }
             return Items[Id];
         }
@@ -99,7 +99,7 @@ namespace CSPspEmu.Hle.Managers
         {
             if (!Items.ContainsKey(Id))
             {
-                throw (new SceKernelException(OnKeyNotFoundError));
+                throw new SceKernelException(OnKeyNotFoundError);
             }
             var Item = Items[Id];
             Items.Remove(Id);

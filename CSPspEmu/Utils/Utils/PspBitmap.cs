@@ -37,7 +37,7 @@ namespace CSPspEmu.Utils.Utils
             }
         }
 
-        public bool IsValidPosition(int x, int y) => ((x >= 0) && (y >= 0) && (x < Width) && (y < Height));
+        public bool IsValidPosition(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
         private int GetOffset(int x, int y) => y * BytesPerLine + PixelFormatDecoder.GetPixelsSize(GuPixelFormat, x);
 
         public void SetPixel(int x, int y, OutputPixel color)
@@ -54,7 +54,7 @@ namespace CSPspEmu.Utils.Utils
                 case 32:
                     *(uint*) (Address + position) = value;
                     break;
-                default: throw(new NotImplementedException());
+                default: throw new NotImplementedException();
             }
         }
 
@@ -86,7 +86,7 @@ namespace CSPspEmu.Utils.Utils
                 case 32:
                     value = *(uint*) (Address + position);
                     break;
-                default: throw (new NotImplementedException());
+                default: throw new NotImplementedException();
             }
             //var OutputPixel = default(OutputPixel);
             return ColorFormat.Decode(value);

@@ -238,7 +238,7 @@ namespace cscodec.h264.decoder
 
         private static byte av_clip_uint8(int a)
         {
-            if ((a & (~0xFF)) != 0) return (byte) ((-a) >> 31);
+            if ((a & ~0xFF) != 0) return (byte) (-a >> 31);
             else return (byte) a;
         }
 
@@ -328,7 +328,7 @@ namespace cscodec.h264.decoder
                     Math.Abs(p1 - p0) < beta &&
                     Math.Abs(q1 - q0) < beta)
                 {
-                    if (Math.Abs(p0 - q0) < ((alpha >> 2) + 2))
+                    if (Math.Abs(p0 - q0) < (alpha >> 2) + 2)
                     {
                         if (Math.Abs(p2 - p0) < beta)
                         {
@@ -743,10 +743,10 @@ namespace cscodec.h264.decoder
                 int z2 = temp[4 * 1 + i] - temp[4 * 3 + i];
                 int z3 = temp[4 * 1 + i] + temp[4 * 3 + i];
 
-                output[output_offset + 16 * 0 + offset] = (short) ((((z0 + z3) * qmul + 128) >> 8));
-                output[output_offset + 16 * 1 + offset] = (short) ((((z1 + z2) * qmul + 128) >> 8));
-                output[output_offset + 16 * 4 + offset] = (short) ((((z1 - z2) * qmul + 128) >> 8));
-                output[output_offset + 16 * 5 + offset] = (short) ((((z0 - z3) * qmul + 128) >> 8));
+                output[output_offset + 16 * 0 + offset] = (short) (((z0 + z3) * qmul + 128) >> 8);
+                output[output_offset + 16 * 1 + offset] = (short) (((z1 + z2) * qmul + 128) >> 8);
+                output[output_offset + 16 * 4 + offset] = (short) (((z1 - z2) * qmul + 128) >> 8);
+                output[output_offset + 16 * 5 + offset] = (short) (((z0 - z3) * qmul + 128) >> 8);
             }
         }
 

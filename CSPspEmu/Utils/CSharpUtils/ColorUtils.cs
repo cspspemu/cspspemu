@@ -82,10 +82,10 @@ namespace CSharpUtils.Drawing
         public static Color Add(Color color1, Color color2)
         {
             return Color.FromArgb(
-                (byte) ((color1.A + color2.A)),
-                (byte) ((color1.R + color2.R)),
-                (byte) ((color1.G + color2.G)),
-                (byte) ((color1.B + color2.B))
+                (byte) (color1.A + color2.A),
+                (byte) (color1.R + color2.R),
+                (byte) (color1.G + color2.G),
+                (byte) (color1.B + color2.B)
             );
         }
 
@@ -132,10 +132,10 @@ namespace CSharpUtils.Drawing
         public static Color Encode(ColorFormat colorFormat, uint value)
         {
             return Color.FromArgb(
-                (int) (BitUtils.ExtractScaled(value, colorFormat.Alpha.Offset, colorFormat.Alpha.Size, 255)),
-                (int) (BitUtils.ExtractScaled(value, colorFormat.Red.Offset, colorFormat.Red.Size, 255)),
-                (int) (BitUtils.ExtractScaled(value, colorFormat.Green.Offset, colorFormat.Green.Size, 255)),
-                (int) (BitUtils.ExtractScaled(value, colorFormat.Blue.Offset, colorFormat.Blue.Size, 255))
+                (int) BitUtils.ExtractScaled(value, colorFormat.Alpha.Offset, colorFormat.Alpha.Size, 255),
+                (int) BitUtils.ExtractScaled(value, colorFormat.Red.Offset, colorFormat.Red.Size, 255),
+                (int) BitUtils.ExtractScaled(value, colorFormat.Green.Offset, colorFormat.Green.Size, 255),
+                (int) BitUtils.ExtractScaled(value, colorFormat.Blue.Offset, colorFormat.Blue.Size, 255)
             );
         }
 

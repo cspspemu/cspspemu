@@ -274,7 +274,7 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
             {
                 if (!Wgl.wglMakeCurrent(_dc, _context))
                 {
-                    throw (new Exception("Can't MakeCurrent"));
+                    throw new Exception("Can't MakeCurrent");
                 }
                 GlContextFactory.Current = this;
             }
@@ -287,7 +287,7 @@ new int[] { (int)ArbCreateContext.MajorVersion, 3, (int)ArbCreateContext.MinorVe
             {
                 if (!Wgl.wglMakeCurrent(_dc, IntPtr.Zero))
                 {
-                    throw (new Exception("Can't MakeCurrent"));
+                    throw new Exception("Can't MakeCurrent");
                 }
                 GlContextFactory.Current = null;
             }

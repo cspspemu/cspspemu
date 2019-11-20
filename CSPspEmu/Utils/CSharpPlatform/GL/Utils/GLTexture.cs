@@ -179,7 +179,7 @@ namespace CSharpPlatform.GL.Utils
                             GetOpenglFormat(), GL.GL_UNSIGNED_SHORT, DataPtr);
                         break;
                     //case TextureFormat.STENCIL: GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, this.Width, this.Height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_UNSIGNED_SHORT, DataPtr); break;
-                    default: throw (new InvalidOperationException("Unsupported " + TextureFormat));
+                    default: throw new InvalidOperationException("Unsupported " + TextureFormat);
                 }
             }
         }
@@ -194,7 +194,7 @@ namespace CSharpPlatform.GL.Utils
                 case TextureFormat.RG: return GL_RG;
                 case TextureFormat.R: return GL_RED;
                 //case TextureFormat.STENCIL: GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, this.Width, this.Height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_UNSIGNED_SHORT, DataPtr); break;
-                default: throw (new InvalidOperationException("Unsupported " + TextureFormat));
+                default: throw new InvalidOperationException("Unsupported " + TextureFormat);
             }
         }
 

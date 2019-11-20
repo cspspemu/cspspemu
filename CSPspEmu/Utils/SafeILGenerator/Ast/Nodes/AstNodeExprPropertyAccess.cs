@@ -16,7 +16,7 @@ namespace SafeILGenerator.Ast.Nodes
 
         public AstNodeExprPropertyAccess(AstNodeExpr instance, PropertyInfo property, string propertyName = null)
         {
-            if (property == null) throw (new Exception($"Property can't be null '{propertyName}'"));
+            if (property == null) throw new Exception($"Property can't be null '{propertyName}'");
             Instance = instance;
             Property = property;
         }

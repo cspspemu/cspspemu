@@ -14,7 +14,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
             switch (PspInterrupt)
             {
                 case PspInterrupts.PspVblankInt: break;
-                default: throw(new NotImplementedException($"Can't handle '{PspInterrupt}'"));
+                default: throw new NotImplementedException($"Can't handle '{PspInterrupt}'");
             }
         }
 
@@ -110,7 +110,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
         [HlePspFunction(NID = 0x36B1EF81, FirmwareVersion = 150)]
         public int sceKernelQueryIntrHandlerInfo(int intno, int sub_intr_code, PspIntrHandlerOptionParam* data)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
             /*
             unimplemented();
             return -1;

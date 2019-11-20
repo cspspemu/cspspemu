@@ -45,7 +45,7 @@ namespace cscodec.util
         */
         public static int hash(int aSeed, long aLong)
         {
-            return firstTerm(aSeed) + (int) (aLong ^ (long) (((ulong) aLong) >> 32));
+            return firstTerm(aSeed) + (int) (aLong ^ (long) ((ulong) aLong >> 32));
         }
 
         /**

@@ -38,7 +38,7 @@ namespace CSharpUtils.Json
         /// <exception cref="NotImplementedException"></exception>
         public static object Parse(string format)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

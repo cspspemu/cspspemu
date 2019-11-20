@@ -14,7 +14,7 @@ namespace CSPspEmu.Hle.Modules.utility
         public int sceUtilityMsgDialogInitStart(pspUtilityMsgDialogParams* Params)
         {
             var Message = Params->Message;
-            var IsError = (Params->Mode == pspUtilityMsgDialogMode.PSP_UTILITY_MSGDIALOG_MODE_ERROR);
+            var IsError = Params->Mode == pspUtilityMsgDialogMode.PSP_UTILITY_MSGDIALOG_MODE_ERROR;
             var DialogType = IsError ? Dialog.Type.Error : Dialog.Type.Message;
 
             CurrentDialogStep = DialogStepEnum.PROCESSING;

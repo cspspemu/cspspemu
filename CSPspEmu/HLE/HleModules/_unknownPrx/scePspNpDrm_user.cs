@@ -43,7 +43,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x275987D1, FirmwareVersion = 150)]
         public int sceNpDrmRenameCheck(string Name)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x08D98894, FirmwareVersion = 150)]
         public int sceNpDrmEdataSetupKey(int edataFd)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x219EF5CC, FirmwareVersion = 150)]
         public int sceNpDrmEdataGetDataSize(int edataFd)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x2BAA4294, FirmwareVersion = 150)]
         public int sceNpDrmOpen(string Name, int flags, int permissions)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xC618D0B1, FirmwareVersion = 150)]
         public int sceKernelLoadModuleNpDrm(string path, int flags, void* option_addr)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xAA5FC85B, FirmwareVersion = 150)]
         public int sceKernelLoadExecNpDrm(string filename, void* option)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

@@ -37,7 +37,7 @@ namespace CSPspEmuLLETest
                         //Console.WriteLine("PC:{0:X8} - {1:X8}", PC, CpuThreadState.PC);
 
                         //var Func = CachedGetMethodCache.GetDelegateAt(PC);
-                        throw(new NotImplementedException());
+                        throw new NotImplementedException();
 
                         //if (Name == "ME")
                         //{

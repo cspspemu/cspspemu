@@ -117,7 +117,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Vdot)]
         public AstNodeStm Vdot() => CelVd.Set(
-            _Aggregate(0f, OneTwo, (aggregated, index) => aggregated + (VecVs[index] * VecVt[index])), _pc);
+            _Aggregate(0f, OneTwo, (aggregated, index) => aggregated + VecVs[index] * VecVt[index]), _pc);
 
         [InstructionName(InstructionNames.Vscl)]
         public AstNodeStm Vscl() => VecVd.SetVector(index => VecVs[index] * CelVt.Get(), _pc);
@@ -146,7 +146,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             {
                 if (index == cosIndex) return cosine;
                 if (index == sinIndex) return sine;
-                return (sinIndex == cosIndex) ? sine : 0f;
+                return sinIndex == cosIndex ? sine : 0f;
             }, _pc);
         }
 
@@ -237,7 +237,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         {
             var vectorSize = (uint) OneTwo;
             return CelVd.Set(_Aggregate(0f, (aggregate, index) =>
-                aggregate + VecVt[index] * ((index == vectorSize - 1) ? 1f : VecVs[index])
+                aggregate + VecVt[index] * (index == vectorSize - 1 ? 1f : VecVs[index])
             ), _pc);
         }
 
@@ -254,7 +254,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case 0: return vVs[1] * vVt[2];
                     case 1: return vVs[2] * vVt[0];
                     case 2: return vVs[0] * vVt[1];
-                    default: throw (new InvalidOperationException("vcrs_t.Assert!"));
+                    default: throw new InvalidOperationException("vcrs_t.Assert!");
                 }
             }, _pc);
         }
@@ -276,7 +276,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case 0: return s[1] * t[2] - s[2] * t[1];
                     case 1: return s[2] * t[0] - s[0] * t[2];
                     case 2: return s[0] * t[1] - s[1] * t[0];
-                    default: throw (new InvalidOperationException("vcrsp_t.Assert!"));
+                    default: throw new InvalidOperationException("vcrsp_t.Assert!");
                 }
             }, _pc);
         }
@@ -304,7 +304,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         // Vfpu (Matrix) IDenTity
         [InstructionName(InstructionNames.Vidt)]
-        public AstNodeStm Vidt() => VecVd.SetVector(index => (index == (_instruction.Imm7 % OneTwo)) ? 1f : 0f, _pc);
+        public AstNodeStm Vidt() => VecVd.SetVector(index => index == _instruction.Imm7 % OneTwo ? 1f : 0f, _pc);
 
         // Vfpu load Integer IMmediate
         [InstructionName(InstructionNames.Viim)]
@@ -353,7 +353,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case 2:
                         return _ast.CallStatic((Func<float, float, float, float>) MathFloat.Clamp, 1f - vvs[1], 0f, 1f);
                     case 3: return _ast.CallStatic((Func<float, float, float, float>) MathFloat.Clamp, vvs[1], 0f, 1f);
-                    default: throw (new NotImplementedException("vsocp: " + index));
+                    default: throw new NotImplementedException("vsocp: " + index);
                 }
             }, _pc);
         }
@@ -476,7 +476,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case 1: return VecVs[0] - VecVs[1];
                 case 2: return VecVs[2] + VecVs[3];
                 case 3: return VecVs[2] - VecVs[3];
-                default: throw (new InvalidOperationException("vbfy1.Assert!"));
+                default: throw new InvalidOperationException("vbfy1.Assert!");
             }
         }, _pc);
 
@@ -489,7 +489,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case 1: return VecVs[1] + VecVs[3];
                 case 2: return VecVs[0] - VecVs[2];
                 case 3: return VecVs[1] - VecVs[3];
-                default: throw (new InvalidOperationException("vbfy2.Assert!"));
+                default: throw new InvalidOperationException("vbfy2.Assert!");
             }
         }, _pc);
 
@@ -510,7 +510,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case 1: return _ast.CallStatic((Func<float, float, float>) MathFloat.Max, vvs[0], vvs[1]);
                     case 2: return _ast.CallStatic((Func<float, float, float>) MathFloat.Min, vvs[2], vvs[3]);
                     case 3: return _ast.CallStatic((Func<float, float, float>) MathFloat.Max, vvs[2], vvs[3]);
-                    default: throw (new InvalidOperationException("vsrt1.Assert!"));
+                    default: throw new InvalidOperationException("vsrt1.Assert!");
                 }
             }, _pc);
         }
@@ -532,7 +532,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case 1: return _ast.CallStatic((Func<float, float, float>) MathFloat.Min, vvs[1], vvs[2]);
                     case 2: return _ast.CallStatic((Func<float, float, float>) MathFloat.Max, vvs[1], vvs[2]);
                     case 3: return _ast.CallStatic((Func<float, float, float>) MathFloat.Max, vvs[0], vvs[3]);
-                    default: throw (new InvalidOperationException("vsrt2.Assert!"));
+                    default: throw new InvalidOperationException("vsrt2.Assert!");
                 }
             }, _pc);
         }
@@ -554,7 +554,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case 1: return _ast.CallStatic((Func<float, float, float>) MathFloat.Min, vvs[0], vvs[1]);
                     case 2: return _ast.CallStatic((Func<float, float, float>) MathFloat.Max, vvs[2], vvs[3]);
                     case 3: return _ast.CallStatic((Func<float, float, float>) MathFloat.Min, vvs[2], vvs[3]);
-                    default: throw (new InvalidOperationException("vsrt3.Assert!"));
+                    default: throw new InvalidOperationException("vsrt3.Assert!");
                 }
             }, _pc);
         }
@@ -576,7 +576,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case 1: return _ast.CallStatic((Func<float, float, float>) MathFloat.Max, vvs[1], vvs[2]);
                     case 2: return _ast.CallStatic((Func<float, float, float>) MathFloat.Min, vvs[1], vvs[2]);
                     case 3: return _ast.CallStatic((Func<float, float, float>) MathFloat.Min, vvs[0], vvs[3]);
-                    default: throw (new InvalidOperationException("vsrt4.Assert!"));
+                    default: throw new InvalidOperationException("vsrt4.Assert!");
                 }
             }, _pc);
         }
@@ -675,7 +675,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
             return vecVd.SetVector(index =>
                     _Aggregate(0f, vectorSize,
-                        (aggregatedValue, index2) => aggregatedValue + (matVs[index, index2] * vecVt[index2]))
+                        (aggregatedValue, index2) => aggregatedValue + matVs[index, index2] * vecVt[index2])
                 , _pc);
         }
 
@@ -688,7 +688,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             return vecVd.SetVector(index =>
                     _Aggregate(0f, vectorSize,
                         (aggregated, index2) =>
-                            aggregated + matVs[index, index2] * ((index2 == vectorSize - 1) ? 1f : vecVt[index2]))
+                            aggregated + matVs[index, index2] * (index2 == vectorSize - 1 ? 1f : vecVt[index2]))
                 , _pc);
         }
 
@@ -711,7 +711,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm Vhtfm4() => _vhtfm_x(4);
 
         [InstructionName(InstructionNames.Vmidt)]
-        public AstNodeStm Vmidt() => MatVd.SetMatrix((column, row) => (column == row) ? 1f : 0f, _pc);
+        public AstNodeStm Vmidt() => MatVd.SetMatrix((column, row) => column == row ? 1f : 0f, _pc);
 
         [InstructionName(InstructionNames.Vmzero)]
         public AstNodeStm Vmzero() => MatVd.SetMatrix((column, row) => 0f, _pc);
@@ -732,11 +732,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
             {
                 switch (index)
                 {
-                    case 0: return +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
-                    case 1: return -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
-                    case 2: return +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
-                    case 3: return -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
-                    default: throw (new InvalidOperationException("vqmul.Assert"));
+                    case 0: return +(v1[0] * v2[3]) + v1[1] * v2[2] - v1[2] * v2[1] + v1[3] * v2[0];
+                    case 1: return -(v1[0] * v2[2]) + v1[1] * v2[3] + v1[2] * v2[0] + v1[3] * v2[1];
+                    case 2: return +(v1[0] * v2[1]) - v1[1] * v2[0] + v1[2] * v2[3] + v1[3] * v2[2];
+                    case 3: return -(v1[0] * v2[0]) - v1[1] * v2[1] - v1[2] * v2[2] + v1[3] * v2[3];
+                    default: throw new InvalidOperationException("vqmul.Assert");
                 }
             }, _pc);
         }
@@ -746,11 +746,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         [InstructionName(InstructionNames.Vuc2I)]
         public AstNodeStm Vuc2I() => VecVdU.SetVector(
-            index => _ast.Binary((_ast.Binary(CelVsU.Get(), ">>", (index * 8)) & 0xFF) * 0x01010101, ">>", 1), _pc);
+            index => _ast.Binary((_ast.Binary(CelVsU.Get(), ">>", index * 8) & 0xFF) * 0x01010101, ">>", 1), _pc);
 
         [InstructionName(InstructionNames.Vc2I)]
         public AstNodeStm Vc2I() =>
-            VecVdU.SetVector(index => _ast.Binary(CelVsU.Get(), "<<", ((3 - index) * 8)) & 0xFF000000, _pc);
+            VecVdU.SetVector(index => _ast.Binary(CelVsU.Get(), "<<", (3 - index) * 8) & 0xFF000000, _pc);
 
         // Vfpu Integer to(2) Color?
         [InstructionName(InstructionNames.Vi2C)]
@@ -775,13 +775,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm Vs2I()
         {
             var vectorSize = _instruction.OneTwo;
-            if (vectorSize > 2) throw (new NotImplementedException("vs2i.VectorSize"));
+            if (vectorSize > 2) throw new NotImplementedException("vs2i.VectorSize");
             var dest = _Vector(Vd, VuInt, vectorSize * 2);
             var src = _Vector(Vs, VuInt, vectorSize);
             return dest.SetVector(index =>
             {
                 var value = src[index / 2];
-                if ((index % 2) == 0) value = _ast.Binary(value, "<<", 16);
+                if (index % 2 == 0) value = _ast.Binary(value, "<<", 16);
                 return value & 0xFFFF0000;
             }, _pc);
         }
@@ -1089,7 +1089,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                                 _ast.CallStatic((Func<float, bool>) MathFloat.IsNanOrInfinity, left));
                             break;
 
-                        default: throw (new InvalidOperationException());
+                        default: throw new InvalidOperationException();
                     }
 
                     return _ast.Statements(new List<AstNodeStm>
@@ -1187,7 +1187,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         
          private void _call_debug_vfpu()
         {
-            throw (new NotImplementedException("_call_debug_vfpu"));
+            throw new NotImplementedException("_call_debug_vfpu");
             //MipsMethodEmitter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
         }
 
@@ -1217,7 +1217,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         private void _load_memory_imm14_index(uint index)
         {
-            throw (new NotImplementedException("_load_memory_imm14_index"));
+            throw new NotImplementedException("_load_memory_imm14_index");
             //MipsMethodEmitter._getmemptr(() =>
             //{
             //	MipsMethodEmitter.LoadGPR_Unsigned(RS);
@@ -1254,7 +1254,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 Instruction = cpuEmitter._instruction;
                 VReg = vReg;
                 VType = vType;
-                VectorSize = (vectorSize == 0) ? Instruction.OneTwo : vectorSize;
+                VectorSize = vectorSize == 0 ? Instruction.OneTwo : vectorSize;
             }
 
             private Type GetVTypeType()
@@ -1264,7 +1264,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     case VType.VFloat: return typeof(float);
                     case VType.VInt: return typeof(int);
                     case VType.VuInt: return typeof(uint);
-                    default: throw (new InvalidCastException("Invalid VType " + VType));
+                    default: throw new InvalidCastException("Invalid VType " + VType);
                 }
             }
 
@@ -1294,18 +1294,18 @@ namespace CSPspEmu.Core.Cpu.Emitter
                         switch (sourceIndex)
                         {
                             case 0:
-                                value = prefix.SourceAbsolute(prefixIndex) ? (3.0f) : (0.0f);
+                                value = prefix.SourceAbsolute(prefixIndex) ? 3.0f : 0.0f;
                                 break;
                             case 1:
-                                value = prefix.SourceAbsolute(prefixIndex) ? (1.0f / 3.0f) : (1.0f);
+                                value = prefix.SourceAbsolute(prefixIndex) ? 1.0f / 3.0f : 1.0f;
                                 break;
                             case 2:
-                                value = prefix.SourceAbsolute(prefixIndex) ? (1.0f / 4.0f) : (2.0f);
+                                value = prefix.SourceAbsolute(prefixIndex) ? 1.0f / 4.0f : 2.0f;
                                 break;
                             case 3:
-                                value = prefix.SourceAbsolute(prefixIndex) ? (1.0f / 6.0f) : (0.5f);
+                                value = prefix.SourceAbsolute(prefixIndex) ? 1.0f / 6.0f : 0.5f;
                                 break;
-                            default: throw (new InvalidOperationException("Invalid SourceIndex : " + sourceIndex));
+                            default: throw new InvalidOperationException("Invalid SourceIndex : " + sourceIndex);
                         }
 
                         astNodeExpr = Ast.Cast(GetVTypeType(), value);

@@ -316,7 +316,7 @@ namespace cscodec.h264.decoder
 
             for (suffix_length = 0; suffix_length < 7; suffix_length++)
             {
-                for (i = 0; i < (1 << LEVEL_TAB_BITS); i++)
+                for (i = 0; i < 1 << LEVEL_TAB_BITS; i++)
                 {
                     int prefix = LEVEL_TAB_BITS - av_log2(2 * i);
                     int level_code = (prefix << suffix_length) + (i >> (LEVEL_TAB_BITS - prefix - 1 - suffix_length)) -
@@ -469,12 +469,12 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | gb.buffer[pos + 1];
             re_cache = (re_cache << 8) | gb.buffer[pos + 2];
             re_cache = (re_cache << 8) | gb.buffer[pos + 3];
-            re_cache = (re_cache << (re_index & 0x07));
+            re_cache = re_cache << (re_index & 0x07);
             re_cache = re_cache & 0xffffffffl; // Prevent 32-Bit over flow.
 
 
             //buf=GET_CACHE(re, gb);
-            buf = (re_cache);
+            buf = re_cache;
 
             log = 32 - av_log2(buf);
             /*
@@ -485,7 +485,7 @@ namespace cscodec.h264.decoder
         */
 
             //LAST_SKIP_BITS(re, gb, log);
-            re_index += (log);
+            re_index += log;
 
             //Console.WriteLine("get_level_prefix(,"+log+"): "+ (log-1));
             //CLOSE_READER(re, gb);
@@ -571,7 +571,7 @@ namespace cscodec.h264.decoder
             i = (int) gb.show_bits(3);
             gb.skip_bits(trailing_ones);
             level[0] = 1 - ((i & 4) >> 1);
-            level[1] = 1 - ((i & 2));
+            level[1] = 1 - (i & 2);
             level[2] = 1 - ((i & 1) << 1);
 
             // DebugTool.printDebugString("   - i = "+i+"\n");
@@ -579,7 +579,7 @@ namespace cscodec.h264.decoder
             if (trailing_ones < total_coeff)
             {
                 int mask, prefix;
-                int suffix_length = ((total_coeff > 10) ? 1 : 0) & ((trailing_ones < 3) ? 1 : 0);
+                int suffix_length = (total_coeff > 10 ? 1 : 0) & (trailing_ones < 3 ? 1 : 0);
                 int bitsi = (int) gb.show_bits(LEVEL_TAB_BITS);
                 int level_code = cavlc_level_tab[suffix_length][bitsi][0];
 
@@ -613,7 +613,7 @@ namespace cscodec.h264.decoder
                     else
                     {
                         // Nok: Prevent bug?? in ffmpeg that the decoder may overflow?
-                        level_code = 30 + (int) (gb.get_bits(prefix - 3, "level_code")); //part
+                        level_code = 30 + (int) gb.get_bits(prefix - 3, "level_code"); //part
                         if (prefix >= 16)
                         {
                             if (prefix > 25 + 3)
@@ -636,14 +636,14 @@ namespace cscodec.h264.decoder
                 }
                 else
                 {
-                    level_code += ((level_code >> 31) | 1) & -((trailing_ones < 3) ? 1 : 0);
+                    level_code += ((level_code >> 31) | 1) & -(trailing_ones < 3 ? 1 : 0);
 
                     // DebugTool.printDebugString("   - level_code(2) = "+level_code+"\n");
 
                     // Fix: for difference between JAVA and C, we need to convert signed to unsigned when we compare
                     //      signed and unsigned number because, in C, such comparing will be done in common part.
                     //      In which, common part in C in unsigned, while java is signed. -= Nok =-			    
-                    suffix_length = 1 + (((0xffffffffL & (level_code + 3)) > 6) ? 1 : 0);
+                    suffix_length = 1 + ((0xffffffffL & (level_code + 3)) > 6 ? 1 : 0);
                     level[trailing_ones] = level_code;
                 }
 
@@ -686,10 +686,10 @@ namespace cscodec.h264.decoder
                     // Fix: for difference between JAVA and C, we need to convert signed to unsigned when we compare
                     //      signed and unsigned number because, in C, such comparing will be done in common part.
                     //      In which, common part in C in unsigned, while java is signed. -= Nok =-
-                    suffix_length += (((0xffffffffL & (suffix_limit[suffix_length] + level_code)) >
-                                       (2 * suffix_limit[suffix_length]))
+                    suffix_length += (0xffffffffL & (suffix_limit[suffix_length] + level_code)) >
+                                     2 * suffix_limit[suffix_length]
                         ? 1
-                        : 0);
+                        : 0;
                 }
 
                 // DebugTool.printDebugString("   - suffix_length(2) = "+suffix_length+"\n");
@@ -739,7 +739,7 @@ namespace cscodec.h264.decoder
             //!!????????????????????????????????? Magic about array resizing??
             if (scantable_offset < 0)
             {
-                byte[] new_scantable_base = new byte[scantable_base.Length + (-scantable_offset)];
+                byte[] new_scantable_base = new byte[scantable_base.Length + -scantable_offset];
                 Array.Copy(scantable_base, 0, new_scantable_base, -scantable_offset, scantable_base.Length);
                 scantable_base = new_scantable_base;
                 scantable_offset = 0;
@@ -799,7 +799,7 @@ namespace cscodec.h264.decoder
                     } // if
                     ////Console.WriteLine("run_before = "+run_before);
                     zeros_left -= run_before;
-                    scantable_offset -= (1 + run_before);
+                    scantable_offset -= 1 + run_before;
                     block_base[block_offset + scantable_base[scantable_offset]] =
                         (short) ((level[i] * qmul_base[qmul_offset + scantable_base[scantable_offset]] + 32) >> 6);
                 }
@@ -937,12 +937,12 @@ namespace cscodec.h264.decoder
                 s.gb.align_get_bits();
 
                 // The pixels are stored in the same order as levels in h.mb array.
-                for (x = 0; x < ((h.sps.chroma_format_idc != 0) ? 384 : 256); x += 2)
+                for (x = 0; x < (h.sps.chroma_format_idc != 0 ? 384 : 256); x += 2)
                 {
                     // Combine 2 byte to get a short.
                     //((uint8_t*)h.mb)[x]= (int)s.gb.get_bits(8);
                     int val = (int) s.gb.get_bits(8, "val");
-                    val = val | (((int) s.gb.get_bits(8, "val")) << 8);
+                    val = val | ((int) s.gb.get_bits(8, "val") << 8);
                     h.mb[x / 2] = (short) val;
                 }
 
@@ -988,7 +988,7 @@ namespace cscodec.h264.decoder
                         if (0 == s.gb.get_bits1("rem_mode"))
                         {
                             int rem_mode = (int) s.gb.get_bits(3, "rem_mode");
-                            mode = rem_mode + ((rem_mode >= mode) ? 1 : 0);
+                            mode = rem_mode + (rem_mode >= mode ? 1 : 0);
                         }
 
                         if (di == 4)
@@ -1063,11 +1063,11 @@ namespace cscodec.h264.decoder
 
                 for (list = 0; list < h.list_count; list++)
                 {
-                    int ref_count = ((mb_type & H264Context.MB_TYPE_REF0) != 0) ? 1 : (int) h.ref_count[list];
+                    int ref_count = (mb_type & H264Context.MB_TYPE_REF0) != 0 ? 1 : (int) h.ref_count[list];
                     for (i = 0; i < 4; i++)
                     {
                         if (0 != (h.sub_mb_type[i] & H264Context.MB_TYPE_DIRECT2)) continue;
-                        if (0 != ((h.sub_mb_type[i]) & (H264Context.MB_TYPE_P0L0 << ((0) + 2 * (list)))))
+                        if (0 != (h.sub_mb_type[i] & (H264Context.MB_TYPE_P0L0 << (0 + 2 * list))))
                         {
                             int tmp;
                             if (ref_count == 1)
@@ -1114,12 +1114,12 @@ namespace cscodec.h264.decoder
                             h.ref_cache[list][H264Context.scan8[4 * i] + 8] =
                                 h.ref_cache[list][H264Context.scan8[4 * i] + 9] = @ref[list][i];
 
-                        if (((h.sub_mb_type[i]) & (H264Context.MB_TYPE_P0L0 << ((0) + 2 * (list)))) != 0)
+                        if ((h.sub_mb_type[i] & (H264Context.MB_TYPE_P0L0 << (0 + 2 * list))) != 0)
                         {
 //IS_DIR(h.sub_mb_type[i], 0, list)){
                             int sub_mb_type = h.sub_mb_type[i];
                             int block_width =
-                                ((sub_mb_type & (H264Context.MB_TYPE_16x16 | H264Context.MB_TYPE_16x8)) != 0 ? 2 : 1);
+                                (sub_mb_type & (H264Context.MB_TYPE_16x16 | H264Context.MB_TYPE_16x8)) != 0 ? 2 : 1;
                             for (j = 0; j < sub_partition_count[i]; j++)
                             {
                                 int mx, my;
@@ -1192,7 +1192,7 @@ namespace cscodec.h264.decoder
                     for (list = 0; list < h.list_count; list++)
                     {
                         int val;
-                        if (((mb_type) & (H264Context.MB_TYPE_P0L0 << ((0) + 2 * (list)))) != 0)
+                        if ((mb_type & (H264Context.MB_TYPE_P0L0 << (0 + 2 * list))) != 0)
                         {
                             if (h.ref_count[list] == 1)
                             {
@@ -1216,7 +1216,7 @@ namespace cscodec.h264.decoder
                     }
                     for (list = 0; list < h.list_count; list++)
                     {
-                        if (((mb_type) & (H264Context.MB_TYPE_P0L0 << ((0) + 2 * (list)))) != 0)
+                        if ((mb_type & (H264Context.MB_TYPE_P0L0 << (0 + 2 * list))) != 0)
                         {
                             int[] mxmy = new int[] {mx, my};
                             h.pred_motion(0, 4, list, h.ref_cache[list][H264Context.scan8[0]], mxmy);
@@ -1241,7 +1241,7 @@ namespace cscodec.h264.decoder
                         for (i = 0; i < 2; i++)
                         {
                             int val;
-                            if (((mb_type) & (H264Context.MB_TYPE_P0L0 << ((i) + 2 * (list)))) != 0)
+                            if ((mb_type & (H264Context.MB_TYPE_P0L0 << (i + 2 * list))) != 0)
                             {
                                 if (h.ref_count[list] == 1)
                                 {
@@ -1275,7 +1275,7 @@ namespace cscodec.h264.decoder
                         for (i = 0; i < 2; i++)
                         {
                             int val;
-                            if (((mb_type) & (H264Context.MB_TYPE_P0L0 << ((i) + 2 * (list)))) != 0)
+                            if ((mb_type & (H264Context.MB_TYPE_P0L0 << (i + 2 * list))) != 0)
                             {
                                 int[] mxmy = new int[] {mx, my};
                                 h.pred_16x8_motion(8 * i, list, h.ref_cache[list][H264Context.scan8[0] + 16 * i], mxmy);
@@ -1304,7 +1304,7 @@ namespace cscodec.h264.decoder
                         for (i = 0; i < 2; i++)
                         {
                             int val;
-                            if (((mb_type) & (H264Context.MB_TYPE_P0L0 << ((i) + 2 * (list)))) != 0)
+                            if ((mb_type & (H264Context.MB_TYPE_P0L0 << (i + 2 * list))) != 0)
                             {
                                 //FIXME optimize
                                 if (h.ref_count[list] == 1)
@@ -1340,7 +1340,7 @@ namespace cscodec.h264.decoder
                         for (i = 0; i < 2; i++)
                         {
                             int val;
-                            if (((mb_type) & (H264Context.MB_TYPE_P0L0 << ((i) + 2 * (list)))) != 0)
+                            if ((mb_type & (H264Context.MB_TYPE_P0L0 << (i + 2 * list))) != 0)
                             {
                                 int[] mxmy = new int[] {mx, my};
                                 h.pred_8x16_motion(i * 4, list, h.ref_cache[list][H264Context.scan8[0] + 2 * i], mxmy);
@@ -1400,31 +1400,31 @@ namespace cscodec.h264.decoder
             {
                 int i8x8, i4x4, chroma_idx;
                 int dquant;
-                GetBitContext gb = (((mb_type & 7) != 0) ? h.intra_gb_ptr : h.inter_gb_ptr);
+                GetBitContext gb = (mb_type & 7) != 0 ? h.intra_gb_ptr : h.inter_gb_ptr;
                 //uint8_t *scan, *scan8x8;
                 byte[] scan;
                 byte[] scan8x8;
 
                 if (0 != (mb_type & H264Context.MB_TYPE_INTERLACED))
                 {
-                    scan8x8 = (s.qscale != 0 ? h.field_scan8x8_cavlc : h.field_scan8x8_cavlc_q0);
-                    scan = (s.qscale != 0 ? h.field_scan : h.field_scan_q0);
+                    scan8x8 = s.qscale != 0 ? h.field_scan8x8_cavlc : h.field_scan8x8_cavlc_q0;
+                    scan = s.qscale != 0 ? h.field_scan : h.field_scan_q0;
                 }
                 else
                 {
-                    scan8x8 = (s.qscale != 0 ? h.zigzag_scan8x8_cavlc : h.zigzag_scan8x8_cavlc_q0);
-                    scan = (s.qscale != 0 ? h.zigzag_scan : h.zigzag_scan_q0);
+                    scan8x8 = s.qscale != 0 ? h.zigzag_scan8x8_cavlc : h.zigzag_scan8x8_cavlc_q0;
+                    scan = s.qscale != 0 ? h.zigzag_scan : h.zigzag_scan_q0;
                 }
 
                 dquant = s.gb.get_se_golomb("dquant");
 
                 s.qscale += dquant;
 
-                if (( /*(unsigned)*/s.qscale) > 51)
+                if (s.qscale > 51)
                 {
                     if (s.qscale < 0) s.qscale += 52;
                     else s.qscale -= 52;
-                    if (( /*(unsigned)*/s.qscale) > 51)
+                    if (s.qscale > 51)
                     {
                         //av_log(h.s.avctx, AV_LOG_ERROR, "dquant out of range (%d) at %d %d\n", dquant, s.mb_x, s.mb_y);
                         return -1;
@@ -1483,7 +1483,7 @@ namespace cscodec.h264.decoder
                                 {
                                     if (decode_residual(h, gb, buf_base, buf_offset, i4x4 + 4 * i8x8, scan8x8,
                                             16 * i4x4,
-                                            h.dequant8_coeff[(0 != (mb_type & 7)) ? 0 : 1][s.qscale], 0, 16) < 0)
+                                            h.dequant8_coeff[0 != (mb_type & 7) ? 0 : 1][s.qscale], 0, 16) < 0)
                                         return -1;
                                 }
                                 int[] nnz_base = h.non_zero_count_cache;
@@ -1539,7 +1539,7 @@ namespace cscodec.h264.decoder
                     for (chroma_idx = 0; chroma_idx < 2; chroma_idx++)
                     {
                         long[] qmul =
-                            h.dequant4_coeff[chroma_idx + 1 + (((mb_type & 7) != 0) ? 0 : 3)][h.chroma_qp[chroma_idx]];
+                            h.dequant4_coeff[chroma_idx + 1 + ((mb_type & 7) != 0 ? 0 : 3)][h.chroma_qp[chroma_idx]];
                         for (i4x4 = 0; i4x4 < 4; i4x4++)
                         {
                             int index = 16 + 4 * chroma_idx + i4x4;

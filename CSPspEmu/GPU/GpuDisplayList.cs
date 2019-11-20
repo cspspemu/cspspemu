@@ -21,7 +21,7 @@ namespace CSPspEmu.Core.Gpu
 
         public GpuOpCodes OpCode => (GpuOpCodes) ((Instruction >> 24) & 0xFF);
 
-        public uint Params => ((Instruction) & 0xFFFFFF);
+        public uint Params => Instruction & 0xFFFFFF;
 
         public override string ToString() => $"GpuInstruction({OpCode}, {Params})";
     }
@@ -98,7 +98,7 @@ namespace CSPspEmu.Core.Gpu
             InstructionAddressStall = value & PspMemory.MemoryMask;
             if (InstructionAddressStall != 0 && !PspMemory.IsAddressValid(InstructionAddressStall))
             {
-                throw (new InvalidOperationException($"Invalid StallAddress! 0x{InstructionAddressStall}"));
+                throw new InvalidOperationException($"Invalid StallAddress! 0x{InstructionAddressStall}");
             }
             if (Debug) Console.WriteLine("GpuDisplayList.SetInstructionAddressStall:{0:X8}", value);
             StallAddressUpdated.Set();
@@ -118,7 +118,7 @@ namespace CSPspEmu.Core.Gpu
             Done = false;
             while (!Done)
             {
-                if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall))
+                if (InstructionAddressStall != 0 && InstructionAddressCurrent >= InstructionAddressStall)
                 {
                     if (Debug)
                         Console.WriteLine(
@@ -259,7 +259,7 @@ namespace CSPspEmu.Core.Gpu
                     }
 
                     if (nextInstruction.OpCode == GpuOpCodes.PRIM &&
-                        ((GuPrimitiveType) nextInstruction.Params.Extract(16, 3) == primitiveType))
+                        (GuPrimitiveType) nextInstruction.Params.Extract(16, 3) == primitiveType)
                     {
                         //Console.WriteLine();
                         _primCount++;

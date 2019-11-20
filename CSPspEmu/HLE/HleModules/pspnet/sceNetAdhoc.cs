@@ -106,7 +106,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         public int sceNetAdhocPdpSend(PDP PDP, byte* destMacAddr, ushort port, void* data, uint len, uint timeout,
             int nonblock)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocGetPdpStat(int*size, pdpStatStruct*stat)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocGameModeCreateMaster(void*data, int size)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocGameModeCreateReplica(byte*mac, void*data, int size)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocGameModeUpdateMaster()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocGameModeUpdateReplica(int id, int unk1)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocGameModeDeleteMaster()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocGameModeDeleteReplica(int id)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         public int sceNetAdhocPtpOpen(byte* srcmac, ushort srcport, byte* destmac, ushort destport, uint bufsize,
             uint delay, int count, int unk1)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xFC6FC07B, FirmwareVersion = 150)]
         public int sceNetAdhocPtpConnect(int id, uint timeout, int nonblock)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x4DA4C788, FirmwareVersion = 150)]
         public int sceNetAdhocPtpSend(int id, void* data, int* datasize, uint timeout, int nonblock)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -348,7 +348,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x9AC2EEAC, FirmwareVersion = 150)]
         public int sceNetAdhocPtpFlush(int id, uint timeout, int nonblock)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x157E6225, FirmwareVersion = 150)]
         public int sceNetAdhocPtpClose(int id, int unk1)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -379,7 +379,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xB9685118, FirmwareVersion = 150)]
         public int sceNetAdhocGetPtpStat(int* size, ptpStatStruct* stat)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Modules.utility
                 case PSP_SYSTEMPARAM_ID.INT_DAYLIGHTSAVINGS: return (int) HleConfig.DaylightSavings;
                 case PSP_SYSTEMPARAM_ID.INT_LANGUAGE: return (int) HleConfig.Language;
                 case PSP_SYSTEMPARAM_ID.INT_BUTTON_PREFERENCE: return (int) HleConfig.ConfirmButton;
-                default: throw (new SceKernelException(SceKernelErrors.PSP_SYSTEMPARAM_RETVAL));
+                default: throw new SceKernelException(SceKernelErrors.PSP_SYSTEMPARAM_RETVAL);
             }
         }
 
@@ -29,7 +29,7 @@ namespace CSPspEmu.Hle.Modules.utility
             switch (id)
             {
                 case PSP_SYSTEMPARAM_ID.STRING_NICKNAME: return HleConfig.UserName;
-                default: throw (new SceKernelException(SceKernelErrors.PSP_SYSTEMPARAM_RETVAL));
+                default: throw new SceKernelException(SceKernelErrors.PSP_SYSTEMPARAM_RETVAL);
             }
         }
 
@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Modules.utility
         /// <returns>PSP_SYSTEMPARAM_RETVAL.OK on success, PSP_SYSTEMPARAM_RETVAL.FAIL on failure</returns>
         public int sceUtilitySetSystemParamInt(PSP_SYSTEMPARAM_ID id, int value)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.utility
         /// <returns>PSP_SYSTEMPARAM_RETVAL.OK on success, PSP_SYSTEMPARAM_RETVAL.FAIL on failure</returns>
         public int sceUtilitySetSystemParamString(PSP_SYSTEMPARAM_ID id, string str)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

@@ -410,7 +410,7 @@ namespace CSPspEmu.Core.Cpu
                 uint value = 0;
                 fixed (bool* vfrCc = &VfrCc0)
                 {
-                    for (int n = 0; n < 8; n++) value |= (uint) (vfrCc[n] ? (1 << n) : 0);
+                    for (int n = 0; n < 8; n++) value |= (uint) (vfrCc[n] ? 1 << n : 0);
                 }
                 return value;
             }
@@ -420,7 +420,7 @@ namespace CSPspEmu.Core.Cpu
                 {
                     for (int n = 0; n < 8; n++)
                     {
-                        vfrCc[n] = (((value >> n) & 1) != 0);
+                        vfrCc[n] = ((value >> n) & 1) != 0;
                     }
                 }
             }
@@ -555,9 +555,9 @@ namespace CSPspEmu.Core.Cpu
             {
                 if (invalid == InvalidAddressAsEnum.Null) return null;
                 if (invalid == InvalidAddressAsEnum.InvalidAddress) return PspMemory.InvalidPointer;
-                throw (new InvalidAddressException(
+                throw new InvalidAddressException(
                     $"GetMemoryPtrSafeWithError:{errorDescription} : {invalidAddressException.Message}",
-                    invalidAddressException));
+                    invalidAddressException);
             }
             catch (Exception exception)
             {
@@ -878,8 +878,8 @@ namespace CSPspEmu.Core.Cpu
                 set
                 {
                     _value = value;
-                    Cc = (BitUtils.Extract(value, 23, 1) != 0);
-                    Fs = (BitUtils.Extract(value, 24, 1) != 0);
+                    Cc = BitUtils.Extract(value, 23, 1) != 0;
+                    Fs = BitUtils.Extract(value, 24, 1) != 0;
                     Rm = (TypeEnum) BitUtils.Extract(value, 0, 2);
                 }
             }

@@ -101,7 +101,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 
         public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
         {
-            var FileStream = ((FileStream) HleIoDrvFileArg.FileArgument);
+            var FileStream = (FileStream) HleIoDrvFileArg.FileArgument;
             FileStream.Close();
             return 0;
         }
@@ -111,7 +111,7 @@ namespace CSPspEmu.Hle.Vfs.Local
             try
             {
                 var Buffer = new byte[OutputLength];
-                var FileStream = ((FileStream) HleIoDrvFileArg.FileArgument);
+                var FileStream = (FileStream) HleIoDrvFileArg.FileArgument;
                 //Console.WriteLine("ReadPosition: {0}", FileStream.Position);
                 int Readed = FileStream.Read(Buffer, 0, OutputLength);
                 for (int n = 0; n < Readed; n++) *OutputPointer++ = Buffer[n];
@@ -131,7 +131,7 @@ namespace CSPspEmu.Hle.Vfs.Local
                 var Buffer = new byte[InputLength];
                 for (int n = 0; n < InputLength; n++) Buffer[n] = *InputPointer++;
 
-                var FileStream = ((FileStream) HleIoDrvFileArg.FileArgument);
+                var FileStream = (FileStream) HleIoDrvFileArg.FileArgument;
                 FileStream.Write(Buffer, 0, InputLength);
                 FileStream.Flush();
                 return InputLength;
@@ -145,7 +145,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 
         public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
         {
-            var FileStream = ((FileStream) HleIoDrvFileArg.FileArgument);
+            var FileStream = (FileStream) HleIoDrvFileArg.FileArgument;
             switch (Whence)
             {
                 case SeekAnchor.Set:
@@ -219,8 +219,8 @@ namespace CSPspEmu.Hle.Vfs.Local
         public static unsafe HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
         {
             var HleIoDirent = default(HleIoDirent);
-            var FileInfo = (FileSystemInfo as FileInfo);
-            var DirectoryInfo = (FileSystemInfo as DirectoryInfo);
+            var FileInfo = FileSystemInfo as FileInfo;
+            var DirectoryInfo = FileSystemInfo as DirectoryInfo;
             {
                 if (DirectoryInfo != null)
                 {
@@ -296,7 +296,7 @@ namespace CSPspEmu.Hle.Vfs.Local
             }
             else
             {
-                throw(new FileNotFoundException("Can't find file '" + RealFileName + "'"));
+                throw new FileNotFoundException("Can't find file '" + RealFileName + "'");
             }
 
             Stat->TimeCreation = ScePspDateTime.FromDateTime(FileSystemInfo.CreationTimeUtc);

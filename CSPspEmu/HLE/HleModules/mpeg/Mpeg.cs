@@ -240,7 +240,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
                         GpuImpl.InvalidateCache(OutputBuffer.Address, TempBuffer.Length);
                     }
 
-                    if (SaveBitmapFrame) Bitmap.Save(@"c:\temp\frame" + (FrameIndex) + ".png");
+                    if (SaveBitmapFrame) Bitmap.Save(@"c:\temp\frame" + FrameIndex + ".png");
                     FrameIndex++;
                 }
                 //PixelFormat

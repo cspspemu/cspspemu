@@ -30,7 +30,7 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// <exception cref="NotImplementedException"></exception>
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
-            var methodCallExpression = (expression as MethodCallExpression);
+            var methodCallExpression = expression as MethodCallExpression;
             if (methodCallExpression != null)
             {
                 switch (methodCallExpression.Method.Name)

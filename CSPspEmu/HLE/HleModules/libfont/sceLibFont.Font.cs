@@ -119,7 +119,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 
             private int GetOffset(int X, int Y)
             {
-                return Y * BytesPerLine + (X * this.BitsPerPixel) / 8;
+                return Y * BytesPerLine + X * this.BitsPerPixel / 8;
             }
 
             public void SetPixel(int X, int Y, OutputPixel Color)
@@ -240,7 +240,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         [HlePspFunction(NID = 0x5C3E4A9E, FirmwareVersion = 150)]
         public int sceFontGetCharImageRect(Font Font, ushort CharCode, CharRect* CharRectPointer)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         [HlePspFunction(NID = 0x2F67356A, FirmwareVersion = 150)]
         public void sceFontCalcMemorySize()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         [HlePspFunction(NID = 0x48B06520, FirmwareVersion = 150)]
         public void sceFontGetShadowImageRect()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         [HlePspFunction(NID = 0x568BE516, FirmwareVersion = 150)]
         public void sceFontGetShadowGlyphImage()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         [HlePspFunction(NID = 0x5DCF6858, FirmwareVersion = 150)]
         public void sceFontGetShadowGlyphImage_Clip()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         [HlePspFunction(NID = 0xAA3DE7B5, FirmwareVersion = 150)]
         public void sceFontGetShadowInfo()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

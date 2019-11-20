@@ -68,8 +68,8 @@ namespace CSPspEmu.Core.Components.Crypto
 
                 if (header->Mode != KirkMode.Cmd1)
                 {
-                    throw(new KirkException(ResultEnum.PspKirkInvalidMode,
-                        $"Expected mode Cmd1 but found {header->Mode}"));
+                    throw new KirkException(ResultEnum.PspKirkInvalidMode,
+                        $"Expected mode Cmd1 but found {header->Mode}");
                 }
 
                 HeaderKeys* keys = (HeaderKeys*) outbuff; //0-15 AES key, 16-31 CMAC key
@@ -79,7 +79,7 @@ namespace CSPspEmu.Core.Components.Crypto
 
                 //Make sure data is 16 aligned
                 var chkSize = header->DataSize;
-                if ((chkSize % 16) != 0) chkSize += 16 - (chkSize % 16);
+                if (chkSize % 16 != 0) chkSize += 16 - chkSize % 16;
 
                 //ENCRYPT DATA
                 Crypto.AesCtx k1;
@@ -135,8 +135,8 @@ namespace CSPspEmu.Core.Components.Crypto
                     ArrayUtils.HexDump(PointerUtils.PointerToByteArray(inbuff, 0x100));
                     Console.WriteLine("Output:");
                     ArrayUtils.HexDump(PointerUtils.PointerToByteArray(outbuff, 0x100));
-                    throw (new KirkException(ResultEnum.PspKirkInvalidMode,
-                        $"Expected mode Cmd1 but found {header.Mode}"));
+                    throw new KirkException(ResultEnum.PspKirkInvalidMode,
+                        $"Expected mode Cmd1 but found {header.Mode}");
                 }
 
                 Console.WriteLine("Input:");
@@ -198,11 +198,11 @@ namespace CSPspEmu.Core.Components.Crypto
             KirkAes128CbcHeader* header = (KirkAes128CbcHeader*) inbuff;
             if (header->Mode != KirkMode.EncryptCbc)
             {
-                throw (new KirkException(ResultEnum.PspKirkInvalidMode));
+                throw new KirkException(ResultEnum.PspKirkInvalidMode);
             }
             if (header->Datasize == 0)
             {
-                throw (new KirkException(ResultEnum.PspKirkDataSizeIsZero));
+                throw new KirkException(ResultEnum.PspKirkDataSizeIsZero);
             }
 
             kirk_4_7_get_key(header->KeySeed, (key) =>
@@ -228,11 +228,11 @@ namespace CSPspEmu.Core.Components.Crypto
             var header = (KirkAes128CbcHeader*) inbuff;
             if (header->Mode != KirkMode.DecryptCbc)
             {
-                throw (new KirkException(ResultEnum.PspKirkInvalidMode));
+                throw new KirkException(ResultEnum.PspKirkInvalidMode);
             }
             if (header->Datasize == 0)
             {
-                throw (new KirkException(ResultEnum.PspKirkDataSizeIsZero));
+                throw new KirkException(ResultEnum.PspKirkDataSizeIsZero);
             }
 
 #if USE_DOTNET_CRYPTO
@@ -276,18 +276,18 @@ namespace CSPspEmu.Core.Components.Crypto
 
                 if (!(header.Mode == KirkMode.Cmd1 || header.Mode == KirkMode.Cmd2 || header.Mode == KirkMode.Cmd3))
                 {
-                    throw(new KirkException(ResultEnum.PspKirkInvalidMode));
+                    throw new KirkException(ResultEnum.PspKirkInvalidMode);
                 }
 
                 if (header.DataSize == 0)
                 {
-                    throw (new KirkException(ResultEnum.PspKirkDataSizeIsZero));
+                    throw new KirkException(ResultEnum.PspKirkDataSizeIsZero);
                 }
 
                 if (header.Mode != KirkMode.Cmd1)
                 {
                     // Checks for cmd 2 & 3 not included right now
-                    throw (new KirkException(ResultEnum.PspKirkInvalidSigCheck));
+                    throw new KirkException(ResultEnum.PspKirkInvalidSigCheck);
                 }
 
                 HeaderKeys keys; //0-15 AES key, 16-31 CMAC key
@@ -306,18 +306,18 @@ namespace CSPspEmu.Core.Components.Crypto
 
                 //Make sure data is 16 aligned
                 var chkSize = header.DataSize;
-                if ((chkSize % 16) != 0) chkSize += 16 - (chkSize % 16);
+                if (chkSize % 16 != 0) chkSize += 16 - chkSize % 16;
                 Crypto.AES_CMAC(&cmacKey, inbuff + 0x60, 0x30 + chkSize + header.DataOffset, cmacDataHash);
 
                 if (Crypto.Memcmp(cmacHeaderHash, header.CmacHeaderHash, 16) != 0)
                 {
                     Logger.Error("header hash invalid");
-                    throw (new KirkException(ResultEnum.PspSubcwrHeaderHashInvalid));
+                    throw new KirkException(ResultEnum.PspSubcwrHeaderHashInvalid);
                 }
                 if (Crypto.Memcmp(cmacDataHash, header.CmacDataHash, 16) != 0)
                 {
                     Logger.Error("data hash invalid");
-                    throw (new KirkException(ResultEnum.PspSubcwrHeaderHashInvalid));
+                    throw new KirkException(ResultEnum.PspSubcwrHeaderHashInvalid);
                 }
             }
         }
@@ -461,18 +461,18 @@ namespace CSPspEmu.Core.Components.Crypto
                 check_initialized();
                 if (!(header->Mode == KirkMode.Cmd1 || header->Mode == KirkMode.Cmd2 || header->Mode == KirkMode.Cmd3))
                 {
-                    throw (new KirkException(ResultEnum.PspKirkInvalidMode));
+                    throw new KirkException(ResultEnum.PspKirkInvalidMode);
                 }
                 if (header->DataSize == 0)
                 {
-                    throw (new KirkException(ResultEnum.PspKirkDataSizeIsZero));
+                    throw new KirkException(ResultEnum.PspKirkDataSizeIsZero);
                 }
 
                 if (header->Mode != KirkMode.Cmd1)
                 {
                     // Checks for cmd 2 & 3 not included right now
                     //throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
-                    throw(new KirkException(ResultEnum.PspKirkInvalidSigCheck));
+                    throw new KirkException(ResultEnum.PspKirkInvalidSigCheck);
                 }
 
                 HeaderKeys keys; //0-15 AES key, 16-31 CMAC key
@@ -484,12 +484,12 @@ namespace CSPspEmu.Core.Components.Crypto
                 Crypto.AES_CMAC(&cmacKey, inbuff + 0x60, 0x30, cmacHeaderHash);
                 if (Crypto.Memcmp(cmacHeaderHash, header->CmacHeaderHash, 16) != 0)
                 {
-                    throw (new KirkException(ResultEnum.PspKirkInvalidHeaderHash));
+                    throw new KirkException(ResultEnum.PspKirkInvalidHeaderHash);
                 }
 
                 //Make sure data is 16 aligned
                 var chkSize = header->DataSize;
-                if ((chkSize % 16) != 0) chkSize += 16 - (chkSize % 16);
+                if (chkSize % 16 != 0) chkSize += 16 - chkSize % 16;
                 Crypto.AES_CMAC(&cmacKey, inbuff + 0x60, 0x30 + chkSize + header->DataOffset, cmacDataHash);
 
                 if (Crypto.Memcmp(cmacDataHash, header->CmacDataHash, 16) != 0)
@@ -499,7 +499,7 @@ namespace CSPspEmu.Core.Components.Crypto
                 else
                 {
                     Logger.Error("data hash is already valid!");
-                    throw(new NotImplementedException());
+                    throw new NotImplementedException();
                     //return 100;
                 }
                 // Forge collision for data hash
@@ -519,7 +519,7 @@ namespace CSPspEmu.Core.Components.Crypto
         /// <returns></returns>
         public void kirk_CMD5(byte* Out, byte* In, int insize)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -531,7 +531,7 @@ namespace CSPspEmu.Core.Components.Crypto
         /// <returns></returns>
         public void ExecuteKirkCmd8(byte* Out, byte* In, int insize)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -601,7 +601,7 @@ namespace CSPspEmu.Core.Components.Crypto
                     case CommandEnum.PspKirkCmdEcdsaVerify:
                         ExecuteKirkCmd17(In, inSize);
                         break;
-                    default: throw(new KirkException(ResultEnum.PspKirkInvalidOperation));
+                    default: throw new KirkException(ResultEnum.PspKirkInvalidOperation);
                 }
 
                 return ResultEnum.Ok;
@@ -631,7 +631,7 @@ namespace CSPspEmu.Core.Components.Crypto
 
                 var dataSize = input.Length;
 
-                if ((dataSize % 16) != 0)
+                if (dataSize % 16 != 0)
                 {
                     var input2 = new byte[MathUtils.NextAligned(input.Length, 16)];
                     Array.Copy(input, input2, input.Length);
@@ -762,13 +762,13 @@ namespace CSPspEmu.Core.Components.Crypto
             var header = (KirkSha1Header*) inputBuffer;
             if (inputSize == 0 || header->DataSize == 0)
             {
-                throw(new KirkException(ResultEnum.PspKirkDataSizeIsZero));
+                throw new KirkException(ResultEnum.PspKirkDataSizeIsZero);
             }
 
             //Size <<= 4;
             //Size >>= 4;
             inputSize &= 0x0FFFFFFF;
-            inputSize = (inputSize < header->DataSize) ? inputSize : header->DataSize;
+            inputSize = inputSize < header->DataSize ? inputSize : header->DataSize;
 
             var sha1Hash = Sha1(
                 PointerUtils.PointerToByteArray(inputBuffer + 4, inputSize)
@@ -784,7 +784,7 @@ namespace CSPspEmu.Core.Components.Crypto
         /// <returns></returns>
         public static byte[] Sha1(byte[] input)
         {
-            return (new SHA1CryptoServiceProvider()).ComputeHash(input);
+            return new SHA1CryptoServiceProvider().ComputeHash(input);
         }
         
         // kirk1

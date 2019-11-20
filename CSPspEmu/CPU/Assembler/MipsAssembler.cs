@@ -180,8 +180,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
                 }
             }
 
-            if (cosIndex == -1) throw(new Exception("Didn't set cosine"));
-            if (sinIndex == -1) throw (new Exception("Didn't set sine"));
+            if (cosIndex == -1) throw new Exception("Didn't set cosine");
+            if (sinIndex == -1) throw new Exception("Didn't set sine");
 
             BitUtils.Insert(ref imm5, 0, 2, (uint) cosIndex);
             BitUtils.Insert(ref imm5, 2, 2, (uint) sinIndex);
@@ -313,7 +313,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
             var parts = str.Split('+');
             return new ParseVfprOffsetInfo()
             {
-                Offset = (parts.Length > 1) ? ParseIntegerConstant(parts.First()) : 0,
+                Offset = parts.Length > 1 ? ParseIntegerConstant(parts.First()) : 0,
                 Rs = ParseGprName(parts.Last()),
             };
         }
@@ -391,7 +391,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                     instruction.OneTwo = vfpuSize;
                 }
 
-                var matches = Matcher(instructionInfo.AsmEncoding, (lineTokens.Length > 1) ? lineTokens[1] : "");
+                var matches = Matcher(instructionInfo.AsmEncoding, lineTokens.Length > 1 ? lineTokens[1] : "");
                 foreach (var match in matches)
                 {
                     var key = match.Key;
@@ -417,7 +417,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         case "%tym":
                             if (key == "%tym")
                             {
-                                value = ((value[0] == 'M') ? 'E' : 'M') + value.Substring(1);
+                                value = (value[0] == 'M' ? 'E' : 'M') + value.Substring(1);
                             }
                             instruction.Vs = ParseVfprName(vfpuSize, value);
                             break;
@@ -445,7 +445,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         case "%Y":
                         {
                             var info = ParseVfprOffset(vfpuSize, value);
-                            if ((info.Offset % 4) != 0) throw(new Exception("Offset must be multiple of 4"));
+                            if (info.Offset % 4 != 0) throw new Exception("Offset must be multiple of 4");
                             instruction.Imm14 = info.Offset / 4;
                             instruction.Rs = info.Rs;
                         }
@@ -598,7 +598,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                         }
                     }
                     default:
-                        throw (new InvalidOperationException("Unknown instruction type '" + instructionName + "'"));
+                        throw new InvalidOperationException("Unknown instruction type '" + instructionName + "'");
                 }
             }
         }
@@ -659,7 +659,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
                             OutputStream.Position = ParseIntegerConstant(lineTokens[1]);
                             break;
                         default:
-                            throw (new NotImplementedException("Unsupported directive '" + lineTokens[0] + "'"));
+                            throw new NotImplementedException("Unsupported directive '" + lineTokens[0] + "'");
                     }
                 }
                 else

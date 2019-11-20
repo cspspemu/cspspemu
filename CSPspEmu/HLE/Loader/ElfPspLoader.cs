@@ -177,7 +177,7 @@ namespace CSPspEmu.Hle.Loader
                         _logger.Warning("SKIPPING Elf.ProgramHeader.TypeEnum.Reloc1!");
                         break;
                     case Elf.ProgramHeader.TypeEnum.Reloc2:
-                        throw(new NotImplementedException());
+                        throw new NotImplementedException();
                 }
             }
 
@@ -208,7 +208,7 @@ namespace CSPspEmu.Hle.Loader
                         );
                         break;
                     case Elf.SectionHeader.TypeEnum.PrxRelocationFw5:
-                        throw (new Exception("Not implemented ElfSectionHeader.Type.PrxRelocation_FW5"));
+                        throw new Exception("Not implemented ElfSectionHeader.Type.PrxRelocation_FW5");
                 }
             }
 
@@ -276,8 +276,8 @@ namespace CSPspEmu.Hle.Loader
 
                 //Console.WriteLine(Reloc.Type);
 
-                var debugReloc = (relocatedPointerAddress >= 0x08809320 &&
-                                  relocatedPointerAddress <= 0x08809320 + 0x100);
+                var debugReloc = relocatedPointerAddress >= 0x08809320 &&
+                                 relocatedPointerAddress <= 0x08809320 + 0x100;
                 //bool DebugReloc = false;
 
                 if (debugReloc)
@@ -344,7 +344,7 @@ namespace CSPspEmu.Hle.Loader
                             {
                                 result += 0x10000;
                             }
-                            data2.Immu = (result >> 16);
+                            data2.Immu = result >> 16;
                             instructionReader[dataAddr2] = data2;
                         }
                         deferredHi16.Clear();
@@ -441,7 +441,7 @@ namespace CSPspEmu.Hle.Loader
 
             foreach (var moduleExport in moduleExports)
             {
-                var moduleExportName = (moduleExport.Name > 0)
+                var moduleExportName = moduleExport.Name > 0
                     ? ElfLoader.MemoryStream.ReadStringzAt(moduleExport.Name)
                     : "";
 

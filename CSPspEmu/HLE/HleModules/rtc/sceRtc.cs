@@ -95,13 +95,13 @@ namespace CSPspEmu.Hle.Modules.rtc
             //}
             int MonthMod = (Month - 1) % 12;
             if (MonthMod < 0) MonthMod += 12;
-            Year -= (Month < 3) ? 1 : 0;
+            Year -= Month < 3 ? 1 : 0;
             return (PspDaysOfWeek) ((Year + Year / 4 - Year / 100 + Year / 400 + MonthTranslate[MonthMod] + Day) % 7);
         }
 
         private static int _sceRtcTickAddTimeSpan(long* dstPtr, long* srcPtr, TimeSpan TimeSpan)
         {
-            *dstPtr = (*srcPtr + TimeSpan.GetTotalMicroseconds());
+            *dstPtr = *srcPtr + TimeSpan.GetTotalMicroseconds();
             return 0;
         }
 
@@ -248,7 +248,7 @@ namespace CSPspEmu.Hle.Modules.rtc
             {
                 //Console.Error.WriteLine("sceRtcGetTick.Date: " + *Date);
                 //Console.Error.WriteLine(Exception);
-                throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_VALUE));
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_VALUE);
             }
         }
 
@@ -362,7 +362,7 @@ namespace CSPspEmu.Hle.Modules.rtc
                 Month = (ushort) CurrentDateTime.Month,
                 Day = (ushort) CurrentDateTime.Day,
                 Hour = (ushort) CurrentDateTime.Hour,
-                Minute = (ushort) (CurrentDateTime.Minute),
+                Minute = (ushort) CurrentDateTime.Minute,
                 Second = (ushort) CurrentDateTime.Second,
                 Microsecond = (uint) (CurrentDateTime.GetTotalMicroseconds() % 1000000L),
             };

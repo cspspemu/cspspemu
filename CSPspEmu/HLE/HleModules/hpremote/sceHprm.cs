@@ -40,7 +40,7 @@ namespace CSPspEmu.Hle.Modules.hpremote
         [HlePspFunction(NID = 0x219C58F1, FirmwareVersion = 150)]
         public int sceHprmIsMicrophoneExist()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace CSPspEmu.Hle.Modules.hpremote
         [HlePspNotImplemented]
         public int sceHprmReadLatch(uint* Latch)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

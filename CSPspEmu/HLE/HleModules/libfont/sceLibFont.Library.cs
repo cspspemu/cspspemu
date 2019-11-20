@@ -162,7 +162,7 @@ namespace CSPspEmu.Hle.Modules.libfont
         public int sceFontGetFontInfoByIndexNumber(FontLibrary FontLibrary, FontInfo* FontInfoPointer, int Unknown,
             int FontIndex)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

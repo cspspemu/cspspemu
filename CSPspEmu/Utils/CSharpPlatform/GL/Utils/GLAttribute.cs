@@ -39,7 +39,7 @@ namespace CSharpPlatform.GL.Utils
             if (!ShowWarnings) return false;
             Console.WriteLine("WARNING: Trying to set value to undefined {0}: {1}, {2}", typeof(T).Name, Name,
                 ShowWarnings);
-            throw(new Exception("INVALID!"));
+            throw new Exception("INVALID!");
         }
 
         public bool IsValid => Location != -1;
@@ -80,7 +80,7 @@ namespace CSharpPlatform.GL.Utils
             if (!CheckValid()) return;
             glTextureUnit.MakeCurrent();
             if (ValueType != GLValueType.GL_SAMPLER_2D)
-                throw(new Exception($"Trying to bind a TextureUnit to something not a Sampler2D : {ValueType}"));
+                throw new Exception($"Trying to bind a TextureUnit to something not a Sampler2D : {ValueType}");
             Set(glTextureUnit.Index);
         }
 
@@ -96,9 +96,9 @@ namespace CSharpPlatform.GL.Utils
         {
             if (!CheckValid()) return;
             if (ValueType != GLValueType.GL_FLOAT_VEC4)
-                throw (new InvalidOperationException("this.ValueType != GLValueType.GL_FLOAT_VEC4"));
+                throw new InvalidOperationException("this.ValueType != GLValueType.GL_FLOAT_VEC4");
             if (ArrayLength != vectors.Length)
-                throw (new InvalidOperationException("this.ArrayLength != Vectors.Length"));
+                throw new InvalidOperationException("this.ArrayLength != Vectors.Length");
             PrepareUsing();
             fixed (Vector4* ptr = &vectors[0])
             {
@@ -118,9 +118,9 @@ namespace CSharpPlatform.GL.Utils
         {
             if (!CheckValid()) return;
             if (ValueType != GLValueType.GL_FLOAT_MAT4)
-                throw (new InvalidOperationException("this.ValueType != GLValueType.GL_FLOAT_MAT4"));
+                throw new InvalidOperationException("this.ValueType != GLValueType.GL_FLOAT_MAT4");
             if (ArrayLength != matrices.Length)
-                throw (new InvalidOperationException("this.ArrayLength != Matrices.Length"));
+                throw new InvalidOperationException("this.ArrayLength != Matrices.Length");
             PrepareUsing();
             fixed (Matrix4x4* ptr = &matrices[0])
             {
@@ -154,7 +154,7 @@ namespace CSharpPlatform.GL.Utils
             else if (type == typeof(ushort)) glType = GL.GL_UNSIGNED_SHORT;
             else if (type == typeof(sbyte)) glType = GL.GL_BYTE;
             else if (type == typeof(byte)) glType = GL.GL_UNSIGNED_BYTE;
-            else throw(new Exception("Invalid type " + type));
+            else throw new Exception("Invalid type " + type);
 
             buffer.Bind();
             GL.glVertexAttribPointer(

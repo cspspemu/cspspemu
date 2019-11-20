@@ -575,7 +575,7 @@ namespace CSharpPlatform.GL
             try
             {
                 var Error = glGetError();
-                if (Error != GL_NO_ERROR) throw (new Exception($"glError: 0x{Error:X4}"));
+                if (Error != GL_NO_ERROR) throw new Exception($"glError: 0x{Error:X4}");
             }
             finally
             {

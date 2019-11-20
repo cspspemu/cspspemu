@@ -300,7 +300,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             {
                 var Info1 = HleIoManager.ParsePath(OldFileName);
                 var Info2 = HleIoManager.ParsePath(NewFileName);
-                if (!Info1.Equals(Info2)) throw (new NotImplementedException("Rename from different filesystems"));
+                if (!Info1.Equals(Info2)) throw new NotImplementedException("Rename from different filesystems");
                 return Info1.HleIoDriver.IoRename(Info1.HleIoDrvFileArg, OldFileName, NewFileName);
             }
             finally
@@ -475,8 +475,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             else
             {
                 //Console.Error.WriteLine("Didn't find file '{0}'", FileName);
-                throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND,
-                    $"Didn't find file '{FileName}'"));
+                throw new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND,
+                    $"Didn't find file '{FileName}'");
             }
         }
 

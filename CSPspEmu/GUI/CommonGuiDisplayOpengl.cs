@@ -72,7 +72,7 @@ namespace CSPspEmu.Gui
         private void GetTexOpengl(Action<TexturePair> Action)
         {
             //Console.WriteLine("OpenglGpuImpl.FrameBufferTexture: {0}, {1}, {2}", OpenglGpuImpl.FrameBufferTexture, GL.IsTexture(OpenglGpuImpl.FrameBufferTexture), GL.IsTexture(2));
-            var OpenglGpuImpl = (GpuProcessor.GpuImpl as OpenglGpuImpl);
+            var OpenglGpuImpl = GpuProcessor.GpuImpl as OpenglGpuImpl;
             if (OpenglGpuImpl == null)
             {
                 Action(new TexturePair() {Color = GLTexture.Wrap(0), Depth = GLTexture.Wrap(0)});
@@ -319,7 +319,7 @@ namespace CSPspEmu.Gui
             //return;
 
             if (
-                (PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo)
+                PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo
             )
             {
                 GetTex((Tex) =>

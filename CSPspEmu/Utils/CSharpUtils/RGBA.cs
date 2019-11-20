@@ -55,7 +55,7 @@ namespace CSharpUtils.Drawing
 
         public uint Value => PackInt(R, G, B, A);
 
-        public static uint PackInt(byte r, byte  g, byte  b, byte  a) => (((uint)r) << 0) | (((uint)g) << 8) | (((uint)b) << 16) | (((uint)a) << 24);
+        public static uint PackInt(byte r, byte  g, byte  b, byte  a) => ((uint)r << 0) | ((uint)g << 8) | ((uint)b << 16) | ((uint)a << 24);
         public static uint PackInt(uint r, uint g, uint b, uint a) => ((r & 0xFF) << 0) | ((g & 0xFF) << 8) | ((b & 0xFF) << 16) | ((a & 0xFF) << 24);
     }
 
@@ -264,8 +264,8 @@ namespace CSharpUtils.Drawing
             var offset1A = MathUtils.FastClamp(offset, 0, 1);
             var offset2A = 1 - offset1A;
 
-            var offset1C = offset1A * (color1.Af);
-            var offset2C = offset2A * (color2.Af);
+            var offset1C = offset1A * color1.Af;
+            var offset2C = offset2A * color2.Af;
 
             MathUtils.NormalizeSum(ref offset1C, ref offset2C);
 
@@ -289,8 +289,8 @@ namespace CSharpUtils.Drawing
             var offset1A = MathUtils.FastClamp(offset, 0, 1);
             var offset2A = 1 - offset1A;
 
-            var offset1C = offset1A * (color1.Af);
-            var offset2C = offset2A * (color2.Af);
+            var offset1C = offset1A * color1.Af;
+            var offset2C = offset2A * color2.Af;
 
             MathUtils.NormalizeSum(ref offset1C, ref offset2C);
 
@@ -313,7 +313,7 @@ namespace CSharpUtils.Drawing
             var r = Math.Abs(color1.R - color2.R);
             var g = Math.Abs(color1.G - color2.G);
             var b = Math.Abs(color1.B - color2.B);
-            return (r * r) + (g * g) + (b * b);
+            return r * r + g * g + b * b;
         }
 
         /// <summary>
@@ -324,34 +324,34 @@ namespace CSharpUtils.Drawing
         /// <exception cref="NotImplementedException"></exception>
         public static implicit operator ArgbRev(string col)
         {
-            if (!col.StartsWith("#")) throw(new NotImplementedException());
+            if (!col.StartsWith("#")) throw new NotImplementedException();
             col = col.Substring(1);
 
             byte r, g, b, a = 0xFF;
 
             if (col.Length >= 6)
             {
-                r = (byte) ((Convert.ToInt32(col.Substr(0, 2), 16) * 255) / 255);
-                g = (byte) ((Convert.ToInt32(col.Substr(2, 2), 16) * 255) / 255);
-                b = (byte) ((Convert.ToInt32(col.Substr(4, 2), 16) * 255) / 255);
+                r = (byte) (Convert.ToInt32(col.Substr(0, 2), 16) * 255 / 255);
+                g = (byte) (Convert.ToInt32(col.Substr(2, 2), 16) * 255 / 255);
+                b = (byte) (Convert.ToInt32(col.Substr(4, 2), 16) * 255 / 255);
                 if (col.Length >= 8)
                 {
-                    a = (byte) ((Convert.ToInt32(col.Substr(6, 2), 16) * 255) / 255);
+                    a = (byte) (Convert.ToInt32(col.Substr(6, 2), 16) * 255 / 255);
                 }
             }
             else if (col.Length >= 3)
             {
-                r = (byte) ((Convert.ToInt32(col.Substr(0, 1), 16) * 255) / 15);
-                g = (byte) ((Convert.ToInt32(col.Substr(1, 1), 16) * 255) / 15);
-                b = (byte) ((Convert.ToInt32(col.Substr(2, 1), 16) * 255) / 15);
+                r = (byte) (Convert.ToInt32(col.Substr(0, 1), 16) * 255 / 15);
+                g = (byte) (Convert.ToInt32(col.Substr(1, 1), 16) * 255 / 15);
+                b = (byte) (Convert.ToInt32(col.Substr(2, 1), 16) * 255 / 15);
                 if (col.Length >= 4)
                 {
-                    a = (byte) ((Convert.ToInt32(col.Substr(3, 1), 16) * 255) / 15);
+                    a = (byte) (Convert.ToInt32(col.Substr(3, 1), 16) * 255 / 15);
                 }
             }
             else
             {
-                throw(new NotImplementedException());
+                throw new NotImplementedException();
             }
 
             return new ArgbRev(a, r, g, b);

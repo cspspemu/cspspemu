@@ -56,11 +56,11 @@ namespace CSPspEmu.Hle.Media.audio.At3.SUB
                 var maxSize = _maxSize;
 
                 var yoyuu = (front - rear - 1 + maxSize) % maxSize;
-                var copyLength = (length > yoyuu) ? yoyuu : length;
+                var copyLength = length > yoyuu ? yoyuu : length;
 
                 var ato = maxSize - rear;
-                var copy1 = (copyLength > ato) ? ato : copyLength;
-                var copy2 = (copyLength > ato) ? (copyLength - ato) : 0;
+                var copy1 = copyLength > ato ? ato : copyLength;
+                var copy2 = copyLength > ato ? copyLength - ato : 0;
 
                 if (copy1 != 0)
                 {
@@ -102,11 +102,11 @@ namespace CSPspEmu.Hle.Media.audio.At3.SUB
                 var maxSize = _maxSize;
 
                 var space = (rear - front + maxSize) % maxSize;
-                var copyLength = (length > space) ? space : length;
+                var copyLength = length > space ? space : length;
 
                 var ato = maxSize - front;
-                var copy1 = (copyLength > ato) ? ato : copyLength;
-                var copy2 = (copyLength > ato) ? (copyLength - ato) : 0;
+                var copy1 = copyLength > ato ? ato : copyLength;
+                var copy2 = copyLength > ato ? copyLength - ato : 0;
 
                 if (copy1 != 0)
                 {
@@ -146,11 +146,11 @@ namespace CSPspEmu.Hle.Media.audio.At3.SUB
                 var maxSize = _maxSize;
 
                 var space = (rear - front + maxSize) % maxSize;
-                var copyLength = (length > space) ? space : length;
+                var copyLength = length > space ? space : length;
 
                 var ato = maxSize - front;
-                var copy1 = (copyLength > ato) ? ato : copyLength;
-                var copy2 = (copyLength > ato) ? (copyLength - ato) : 0;
+                var copy1 = copyLength > ato ? ato : copyLength;
+                var copy2 = copyLength > ato ? copyLength - ato : 0;
 
                 if (copy1 != 0)
                 {

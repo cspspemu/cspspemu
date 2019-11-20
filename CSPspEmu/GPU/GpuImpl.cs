@@ -23,7 +23,7 @@ namespace CSPspEmu.Core.Gpu
 
         public int ScaleViewport
         {
-            set
+            protected set
             {
                 OnScaleViewport?.Invoke(value);
                 _ScaleViewport = value;
@@ -184,10 +184,10 @@ namespace CSPspEmu.Core.Gpu
 
         //static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, float ra, float rb, float rc) => (a * ra) + (b * rb) * (c * rc);
         static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, float ra, float rb, float rc) => new Vector4(
-            ((a.X * ra) + (b.X * rb) + (c.X * rc)),
-            ((a.Y * ra) + (b.Y * rb) + (c.Y * rc)),
-            ((a.Z * ra) + (b.Z * rb) + (c.Z * rc)),
-            ((a.W * ra) + (b.W * rb) + (c.W * rc))
+            a.X * ra + b.X * rb + c.X * rc,
+            a.Y * ra + b.Y * rb + c.Y * rc,
+            a.Z * ra + b.Z * rb + c.Z * rc,
+            a.W * ra + b.W * rb + c.W * rc
         );
 
         static public Vector4 LerpRatios(Vector4 a, Vector4 b, Vector4 c, Vector3 ratios) =>
@@ -407,7 +407,7 @@ namespace CSPspEmu.Core.Gpu
 
                     break;
                 default:
-                    throw (new NotImplementedException("VertexType.Index: " + VertexType.Index));
+                    throw new NotImplementedException("VertexType.Index: " + VertexType.Index);
             }
             totalVerticesWithoutMorphing++;
          

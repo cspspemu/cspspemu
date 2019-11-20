@@ -13,11 +13,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         
         
-        public static int _max_impl(int left, int right) => (left > right) ? left : right;
+        public static int _max_impl(int left, int right) => left > right ? left : right;
 
         
         
-        public static int _min_impl(int left, int right) => (left < right) ? left : right;
+        public static int _min_impl(int left, int right) => left < right ? left : right;
 
         
         
@@ -101,12 +101,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
         
         
-        public static uint _wsbw_impl(uint v) => (
-            ((v & 0xFF000000) >> 24) |
-            ((v & 0x00FF0000) >> 8) |
-            ((v & 0x0000FF00) << 8) |
-            ((v & 0x000000FF) << 24)
-        );
+        public static uint _wsbw_impl(uint v) => ((v & 0xFF000000) >> 24) |
+                                                 ((v & 0x00FF0000) >> 8) |
+                                                 ((v & 0x0000FF00) << 8) |
+                                                 ((v & 0x000000FF) << 24);
 
         public static int _cvt_w_s_impl(CpuThreadState cpuThreadState, float fs)
         {
@@ -119,7 +117,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case CpuThreadState.Fcr31Struct.TypeEnum.Floor: return (int) MathFloat.Floor(fs);
             }
 
-            throw(new InvalidCastException("RM has an invalid value!!"));
+            throw new InvalidCastException("RM has an invalid value!!");
             //case CpuThreadState.FCR31.TypeEnum.Floor: CpuThreadState.FPR_I[FD] = (int)MathFloat.Floor(CpuThreadState.FPR[FS]); break;
         }
 
@@ -128,11 +126,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
             switch (rd)
             {
                 case 0: // readonly?
-                    throw (new NotImplementedException("_cfc1_impl.RD=0"));
+                    throw new NotImplementedException("_cfc1_impl.RD=0");
                 case 31:
                     cpuThreadState.Gpr[rt] = (int) cpuThreadState.Fcr31.Value;
                     break;
-                default: throw (new Exception($"Unsupported CFC1({rd})"));
+                default: throw new Exception($"Unsupported CFC1({rd})");
             }
         }
 
@@ -143,7 +141,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case 31:
                     cpuThreadState.Fcr31.Value = (uint) cpuThreadState.Gpr[rt];
                     break;
-                default: throw (new Exception($"Unsupported CFC1({rd})"));
+                default: throw new Exception($"Unsupported CFC1({rd})");
             }
         }
 
@@ -166,7 +164,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 var equal = fcEqual && s == t;
                 var less = fcLess && s < t;
 
-                cpuThreadState.Fcr31.Cc = (less || equal);
+                cpuThreadState.Fcr31.Cc = less || equal;
             }
         }
 
@@ -176,7 +174,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
             Console.Error.WriteLine("-------------------------------------------------------------------");
             Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
             Console.Error.WriteLine("-------------------------------------------------------------------");
-            throw (new PspBreakException("Break!"));
+            throw new PspBreakException("Break!");
         }
 
         public static void _cache_impl(CpuThreadState cpuThreadState, uint pc, uint value)
@@ -315,10 +313,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
             //Console.Error.WriteLine("--------------");
         }
 
-        public static float _vslt_impl(float a, float b) => float.IsNaN(a) || float.IsNaN(b) ? 0f : ((a < b) ? 1f : 0f);
+        public static float _vslt_impl(float a, float b) => float.IsNaN(a) || float.IsNaN(b) ? 0f : a < b ? 1f : 0f;
 
         public static float _vsge_impl(float a, float b) =>
-            float.IsNaN(a) || float.IsNaN(b) ? 0f : ((a >= b) ? 1f : 0f);
+            float.IsNaN(a) || float.IsNaN(b) ? 0f : a >= b ? 1f : 0f;
 
         public static void _vrnds(CpuThreadState cpuThreadState, int seed) => cpuThreadState.Random = new Random(seed);
 
@@ -347,10 +345,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
             cpuThreadState.PrefixTarget.Value = value;
 
         public static uint _vi2uc_impl(int x, int y, int z, int w) => 0
-                                                                      | (uint) ((x < 0) ? 0 : ((x >> 23) << 0))
-                                                                      | (uint) ((y < 0) ? 0 : ((y >> 23) << 8))
-                                                                      | (uint) ((z < 0) ? 0 : ((z >> 23) << 16))
-                                                                      | (uint) ((w < 0) ? 0 : ((w >> 23) << 24));
+                                                                      | (uint) (x < 0 ? 0 : (x >> 23) << 0)
+                                                                      | (uint) (y < 0 ? 0 : (y >> 23) << 8)
+                                                                      | (uint) (z < 0 ? 0 : (z >> 23) << 16)
+                                                                      | (uint) (w < 0 ? 0 : (w >> 23) << 24);
 
         
         public static uint _vi2c_impl(uint x, uint y, uint z, uint w) =>
@@ -360,15 +358,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public static int _vf2iz(float value, int imm5)
         {
             var scalabValue = MathFloat.Scalb(value, imm5);
-            var doubleValue = (value >= 0) ? MathFloat.Floor(scalabValue) : MathFloat.Ceil(scalabValue);
+            var doubleValue = value >= 0 ? MathFloat.Floor(scalabValue) : MathFloat.Ceil(scalabValue);
             return double.IsNaN(doubleValue) ? 0x7FFFFFFF : doubleValue;
         }
 
         
-        public static uint _vi2s_impl(uint v1, uint v2) => (
-            ((v1 >> 16) << 0) |
-            ((v2 >> 16) << 16)
-        );
+        public static uint _vi2s_impl(uint v1, uint v2) => ((v1 >> 16) << 0) |
+                                                           ((v2 >> 16) << 16);
 
         
         public static float _vh2f_0(uint a) => HalfFloat.ToFloat((int) BitUtils.Extract(a, 0, 16));
@@ -381,10 +377,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
             (uint) ((HalfFloat.FloatToHalfFloat(b) << 16) | (HalfFloat.FloatToHalfFloat(a) << 0));
 
         
-        public static int _vi2us_impl(int x, int y) => (
-            ((x < 0) ? 0 : ((x >> 15) << 0)) |
-            ((y < 0) ? 0 : ((y >> 15) << 16))
-        );
+        public static int _vi2us_impl(int x, int y) => (x < 0 ? 0 : (x >> 15) << 0) |
+                                                       (y < 0 ? 0 : (y >> 15) << 16);
 
         public static uint _mfvc_impl(CpuThreadState cpuThreadState, VfpuControlRegistersEnum vfpuControlRegister)
         {
@@ -396,7 +390,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case VfpuControlRegistersEnum.VfpuPfxd: return cpuThreadState.PrefixDestination.Value;
                 case VfpuControlRegistersEnum.VfpuCc: return cpuThreadState.VfrCcValue;
                 case VfpuControlRegistersEnum.VfpuRcx0:
-                    return (uint) MathFloat.ReinterpretFloatAsInt((float) (new Random().NextDouble()));
+                    return (uint) MathFloat.ReinterpretFloatAsInt((float) new Random().NextDouble());
                 case VfpuControlRegistersEnum.VfpuRcx1:
                 case VfpuControlRegistersEnum.VfpuRcx2:
                 case VfpuControlRegistersEnum.VfpuRcx3:
@@ -406,7 +400,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                 case VfpuControlRegistersEnum.VfpuRcx7:
                     return (uint) MathFloat.ReinterpretFloatAsInt(1.0f);
                 default:
-                    throw (new NotImplementedException("_mfvc_impl: " + vfpuControlRegister));
+                    throw new NotImplementedException("_mfvc_impl: " + vfpuControlRegister);
             }
         }
 
@@ -441,7 +435,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
                     //(uint)MathFloat.ReinterpretFloatAsInt(1.0f) = Value;
                     return;
                 default:
-                    throw (new NotImplementedException("_mtvc_impl: " + vfpuControlRegister));
+                    throw new NotImplementedException("_mtvc_impl: " + vfpuControlRegister);
             }
         }
     }

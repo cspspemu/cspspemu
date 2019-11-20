@@ -67,27 +67,27 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 
             if (workarea->uid == -1)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_NOT_FOUND));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_NOT_FOUND);
             }
 
             if (count <= 0)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT);
             }
 
             if ((workarea->attr & ThreadManForUser.MutexAttributesEnum.AllowRecursive) == 0 && count > 1)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT);
             }
 
             if (workarea->lockLevel == 0 || workarea->lockThread != HleThreadManager.Current.Id)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_UNLOCKED));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_UNLOCKED);
             }
 
             if (workarea->lockLevel < count)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_UNLOCK_UNDERFLOW));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_UNLOCK_UNDERFLOW);
             }
 
             workarea->lockLevel -= count;
@@ -147,7 +147,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
         [HlePspFunction(NID = 0x47A0B729, FirmwareVersion = 150)]
         public bool sceKernelIsCpuIntrSuspended(int Flags)
         {
-            return (Flags != 0);
+            return Flags != 0;
         }
 
         /// <summary>

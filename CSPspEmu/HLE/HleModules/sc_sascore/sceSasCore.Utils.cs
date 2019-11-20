@@ -18,9 +18,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
         public SasCore GetSasCore(uint SasCorePointer, bool CreateIfNotExists = false)
         {
-            if ((SasCorePointer == 0) || (SasCorePointer % 64 != 0))
+            if (SasCorePointer == 0 || SasCorePointer % 64 != 0)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_ADDRESS));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_ADDRESS);
             }
 
             if (CreateIfNotExists)
@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
             if (!SasCoreList.ContainsKey(SasCorePointer))
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_SAS_NOT_INIT));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_NOT_INIT);
             }
 
             return SasCoreList[SasCorePointer];
@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
         {
             if (Voice < 0 || Voice >= 32)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_VOICE));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_VOICE);
             }
         }
 
@@ -97,10 +97,10 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
     [Flags]
     public enum AdsrFlags : uint
     {
-        HasAttack = (1 << 0),
-        HasDecay = (1 << 1),
-        HasSustain = (1 << 2),
-        HasRelease = (1 << 3),
+        HasAttack = 1 << 0,
+        HasDecay = 1 << 1,
+        HasSustain = 1 << 2,
+        HasRelease = 1 << 3,
     }
 
     public enum OutputMode : uint

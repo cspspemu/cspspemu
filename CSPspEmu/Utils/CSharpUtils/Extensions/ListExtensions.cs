@@ -50,7 +50,7 @@ namespace CSharpUtils.Extensions
                 }
                 if (maxIterations-- <= 0)
                 {
-                    throw(new Exception("Internal Error!"));
+                    throw new Exception("Internal Error!");
                 }
             }
 

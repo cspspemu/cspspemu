@@ -148,7 +148,7 @@ namespace CSharpUtils
         /// <returns></returns>
         public bool Contains(DateTime preciseTime)
         {
-            return preciseTime >= TimeStart && (preciseTime < TimeEnd);
+            return preciseTime >= TimeStart && preciseTime < TimeEnd;
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace CSharpUtils
         /// <returns></returns>
         public override bool Equals(object that)
         {
-            if (that is DateTimeRange) return (this == (DateTimeRange) that);
+            if (that is DateTimeRange) return this == (DateTimeRange) that;
             if (that is DateTime) return Contains((DateTime) that);
             return false;
         }

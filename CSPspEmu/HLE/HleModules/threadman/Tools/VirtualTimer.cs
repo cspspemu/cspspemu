@@ -93,7 +93,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             {
                 if (Increment)
                 {
-                    this.ElapsedAccumulatedTime += (this.CurrentUpdatedTime - this.PreviousUpdatedTime);
+                    this.ElapsedAccumulatedTime += this.CurrentUpdatedTime - this.PreviousUpdatedTime;
                 }
             }
             this.PreviousUpdatedTime = this.CurrentUpdatedTime;

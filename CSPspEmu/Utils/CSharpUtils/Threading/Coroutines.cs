@@ -66,7 +66,7 @@ namespace CSharpUtils.Threading
         {
             CoroutineContinueEvent.WaitOne();
 
-            if (!IsAlive) throw (new InterruptException());
+            if (!IsAlive) throw new InterruptException();
         }
 
 
@@ -144,7 +144,7 @@ namespace CSharpUtils.Threading
                 try
                 {
                     //StackTraceUtils.PreserveStackTrace(RethrowException);
-                    throw (new GreenThreadException("GreenThread Exception", _rethrowException));
+                    throw new GreenThreadException("GreenThread Exception", _rethrowException);
                     //throw (RethrowException);
                 }
                 finally
@@ -183,7 +183,7 @@ namespace CSharpUtils.Threading
 
             if (Pool.CurrentCoroutine == null)
             {
-                throw (new InvalidOperationException("Can't call YieldInPool outside the ExecuteStep"));
+                throw new InvalidOperationException("Can't call YieldInPool outside the ExecuteStep");
             }
 
             if (Pool.CurrentCoroutine != this)

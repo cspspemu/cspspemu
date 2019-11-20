@@ -92,7 +92,7 @@ namespace CSPspEmu.Core.Audio
         /// <returns></returns>
         public PspAudioChannel GetFreeChannel()
         {
-            if (!Channels.Any(Channel => Channel.Available)) throw(new NoChannelsAvailableException());
+            if (!Channels.Any(Channel => Channel.Available)) throw new NoChannelsAvailableException();
             return Channels.Reverse().First(Channel => Channel.Available);
         }
 
@@ -104,7 +104,7 @@ namespace CSPspEmu.Core.Audio
         {
             if (ChannelId < 0 || ChannelId >= Channels.Length)
             {
-                throw(new InvalidChannelException());
+                throw new InvalidChannelException();
             }
         }
 

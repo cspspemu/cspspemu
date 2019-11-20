@@ -17,7 +17,7 @@ namespace HQ2x
         internal static BGRA FromArgb(int A, int R, int G, int B) => new BGRA() {A = Clamp(A), R = Clamp(R), G = Clamp(G), B = Clamp(B)};
         internal static BGRA FromColor(Color Color) => new BGRA() {A = Color.A, R = Color.R, G = Color.G, B = Color.B};
         public static bool operator !=(BGRA x, BGRA y) => !(x == y);
-        public static bool operator ==(BGRA x, BGRA y) => (x.R == y.R) && (x.G == y.G) && (x.B == y.B) && (x.A == y.A);
+        public static bool operator ==(BGRA x, BGRA y) => x.R == y.R && x.G == y.G && x.B == y.B && x.A == y.A;
         internal Color ToColor() => Color.FromArgb(A, R, G, B);
     }
 }

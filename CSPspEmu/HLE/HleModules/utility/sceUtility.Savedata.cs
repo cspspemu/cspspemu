@@ -259,12 +259,12 @@ namespace CSPspEmu.Hle.Modules.utility
                         }
                         catch (IOException)
                         {
-                            throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_NO_DATA));
+                            throw new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_NO_DATA);
                         }
                         catch (Exception Exception)
                         {
                             Console.WriteLine(Exception);
-                            throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_ACCESS_ERROR));
+                            throw new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_ACCESS_ERROR);
                         }
                     }
                         break;
@@ -288,7 +288,7 @@ namespace CSPspEmu.Hle.Modules.utility
                         catch (Exception Exception)
                         {
                             Console.Error.WriteLine(Exception);
-                            throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_SAVE_ACCESS_ERROR));
+                            throw new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_SAVE_ACCESS_ERROR);
                         }
                     }
                         break;
@@ -344,7 +344,7 @@ namespace CSPspEmu.Hle.Modules.utility
                             SizeFreeInfo->FreeSectors = FreeSize / SectorSize;
                             SizeFreeInfo->FreeKb = FreeSize / 1024;
 
-                            SizeFreeInfo->FreeKbString = (SizeFreeInfo->FreeKb) + "KB";
+                            SizeFreeInfo->FreeKbString = SizeFreeInfo->FreeKb + "KB";
                         }
 
                         // MS data size.
@@ -364,8 +364,8 @@ namespace CSPspEmu.Hle.Modules.utility
                                     SizeUsedInfo->UsedKb = UsedSize / 1024;
                                     SizeUsedInfo->UsedKb32 = UsedSize / (32 * 1024);
 
-                                    SizeUsedInfo->UsedKbString = (SizeUsedInfo->UsedKb) + "KB";
-                                    SizeUsedInfo->UsedKb32String = (SizeUsedInfo->UsedKb32) + "KB";
+                                    SizeUsedInfo->UsedKbString = SizeUsedInfo->UsedKb + "KB";
+                                    SizeUsedInfo->UsedKb32String = SizeUsedInfo->UsedKb32 + "KB";
                                 }
                                 else
                                 {
@@ -401,13 +401,13 @@ namespace CSPspEmu.Hle.Modules.utility
                                     (uint) MathUtils.RequiredBlocks(RequiredSize, 32 * 1024);
 
                                 SizeRequiredSpaceInfo->RequiredSpaceString =
-                                    (SizeRequiredSpaceInfo->RequiredSpaceKb) + "KB";
+                                    SizeRequiredSpaceInfo->RequiredSpaceKb + "KB";
                                 SizeRequiredSpaceInfo->RequiredSpace32KBString =
-                                    (SizeRequiredSpaceInfo->RequiredSpace32KB) + "KB";
+                                    SizeRequiredSpaceInfo->RequiredSpace32KB + "KB";
                             }
                         }
 
-                        if (SceKernelError != SceKernelErrors.ERROR_OK) throw (new SceKernelException(SceKernelError));
+                        if (SceKernelError != SceKernelErrors.ERROR_OK) throw new SceKernelException(SceKernelError);
                     }
                         break;
                     case PspUtilitySavedataMode.List:
@@ -434,7 +434,7 @@ namespace CSPspEmu.Hle.Modules.utility
                     default:
                         Console.Error.WriteLine("sceUtilitySavedataInitStart: Unsupported mode: " + Params.Mode);
                         Debug.Fail("sceUtilitySavedataInitStart: Unsupported mode: " + Params.Mode);
-                        throw (new SceKernelException((SceKernelErrors) (-1)));
+                        throw new SceKernelException((SceKernelErrors) (-1));
                     //break;
                 }
                 //throw(new NotImplementedException());
@@ -476,7 +476,7 @@ namespace CSPspEmu.Hle.Modules.utility
         [HlePspNotImplemented]
         public void sceUtilitySavedataUpdate(int unknown)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

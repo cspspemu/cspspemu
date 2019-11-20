@@ -86,7 +86,7 @@ namespace CSPspEmu.Hle.Formats.audio
             if (Header.Magic != 0)
             {
                 Console.Error.WriteLine("Error VAG Magic: {0:X}", Header.Magic);
-                throw (new NotImplementedException("Invalid VAG header"));
+                throw new NotImplementedException("Invalid VAG header");
             }
             //var Hash = CSPspEmu.Core.Hashing.FastHash(DataPointer, DataLength);
             //Console.WriteLine("Header.SampleRate: {0}", Header.SampleRate);
@@ -270,9 +270,9 @@ namespace CSPspEmu.Hle.Formats.audio
                     var DataByte = Block.Data[n];
 
                     DecodedBlockSamples[SampleOffset++] =
-                        HandleSampleKeepHistory(((short) ((((uint) DataByte >> 0) & 0xF) << 12)) >> ShiftFactor);
+                        HandleSampleKeepHistory((short) ((((uint) DataByte >> 0) & 0xF) << 12) >> ShiftFactor);
                     DecodedBlockSamples[SampleOffset++] =
-                        HandleSampleKeepHistory(((short) ((((uint) DataByte >> 4) & 0xF) << 12)) >> ShiftFactor);
+                        HandleSampleKeepHistory((short) ((((uint) DataByte >> 4) & 0xF) << 12) >> ShiftFactor);
                 }
             }
 

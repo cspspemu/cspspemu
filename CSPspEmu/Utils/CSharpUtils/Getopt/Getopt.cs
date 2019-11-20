@@ -153,7 +153,7 @@ namespace CSharpUtils.Getopt
             }
             catch (Exception)
             {
-                throw (new Exception($"Argument {name} requires a {typeof(TType)}"));
+                throw new Exception($"Argument {name} requires a {typeof(TType)}");
             }
         }
 
@@ -252,7 +252,7 @@ namespace CSharpUtils.Getopt
                     }
                     else
                     {
-                        throw (new Exception("Unknown parameter '" + current + "'"));
+                        throw new Exception("Unknown parameter '" + current + "'");
                     }
                 }
                 else

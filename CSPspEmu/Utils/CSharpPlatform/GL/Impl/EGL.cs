@@ -27,10 +27,10 @@ namespace CSharpPlatform.GL.Impl
         public const int EGL_VERSION_1_4 = 1;
         public const bool EGL_FALSE = false;
         public const bool EGL_TRUE = true;
-        public static EGLNativeDisplayType EGL_DEFAULT_DISPLAY = ((EGLNativeDisplayType) 0);
-        public static EGLContext EGL_NO_CONTEXT = ((EGLContext) 0);
-        public static EGLDisplay EGL_NO_DISPLAY = ((EGLDisplay) 0);
-        public static EGLSurface EGL_NO_SURFACE = ((EGLSurface) 0);
+        public static EGLNativeDisplayType EGL_DEFAULT_DISPLAY = (EGLNativeDisplayType) 0;
+        public static EGLContext EGL_NO_CONTEXT = (EGLContext) 0;
+        public static EGLDisplay EGL_NO_DISPLAY = (EGLDisplay) 0;
+        public static EGLSurface EGL_NO_SURFACE = (EGLSurface) 0;
         public const int EGL_DONT_CARE = -1;
         public const int EGL_SUCCESS = 0x3000;
         public const int EGL_NOT_INITIALIZED = 0x3001;
@@ -293,7 +293,7 @@ namespace CSharpPlatform.GL.Impl
         public static int eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, int attribute)
         {
             int @out = 0;
-            if (!eglGetConfigAttrib(dpy, config, attribute, &@out)) throw (new Exception("Can't get value"));
+            if (!eglGetConfigAttrib(dpy, config, attribute, &@out)) throw new Exception("Can't get value");
             return @out;
         }
     }

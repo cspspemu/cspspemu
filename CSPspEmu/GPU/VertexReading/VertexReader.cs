@@ -9,6 +9,25 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 {
     public unsafe class VertexReader
     {
+        // Lists
+        protected readonly Action[] ReadWeightsList;
+        protected readonly Action[] ReadTextureCoordinatesList;
+        protected readonly Action[] ReadColorList;
+        protected readonly Action[] ReadNormalList;
+        protected readonly Action[] ReadPositionList;
+
+        public VertexReader()
+        {
+            // ReSharper disable HeapView.DelegateAllocation
+            ReadWeightsList = new Action[] {Void, ReadWeightByte, ReadWeightShort, ReadWeightFloat};
+            ReadTextureCoordinatesList = new Action[]
+                {Void, ReadTextureCoordinatesByte, ReadTextureCoordinatesShort, ReadTextureCoordinatesFloat};
+            ReadColorList = new Action[]
+                {Void, Invalid, Invalid, Invalid, ReadColor5650, ReadColor5551, ReadColor4444, ReadColor8888};
+            ReadNormalList = new Action[] {Void, ReadNormalByte, ReadNormalShort, ReadNormalFloat};
+            ReadPositionList = new Action[] {Void, ReadPositionByte, ReadPositionShort, ReadPositionFloat};
+        }
+
         protected int VertexAlignSize = 1;
         public int VertexSize;
         protected int SkinningWeightCount;
@@ -18,14 +37,6 @@ namespace CSPspEmu.Core.Gpu.VertexReading
         protected byte* Pointer => BasePointer + PointerOffset;
 
         protected VertexInfo* VertexInfo;
-
-        // Lists
-        protected Action[] ReadWeightsList;
-
-        protected Action[] ReadTextureCoordinatesList;
-        protected Action[] ReadColorList;
-        protected Action[] ReadNormalList;
-        protected Action[] ReadPositionList;
 
         // Current Actions
         protected Action VertexAlignment;
@@ -39,18 +50,6 @@ namespace CSPspEmu.Core.Gpu.VertexReading
         protected bool Transform2D;
 
         protected VertexTypeStruct VertexType;
-
-        public VertexReader()
-        {
-            // ReSharper disable HeapView.DelegateAllocation
-            ReadWeightsList = new Action[] {Void, ReadWeightByte, ReadWeightShort, ReadWeightFloat};
-            ReadTextureCoordinatesList = new Action[]
-                {Void, ReadTextureCoordinatesByte, ReadTextureCoordinatesShort, ReadTextureCoordinatesFloat};
-            ReadColorList = new Action[]
-                {Void, Invalid, Invalid, Invalid, ReadColor5650, ReadColor5551, ReadColor4444, ReadColor8888};
-            ReadNormalList = new Action[] {Void, ReadNormalByte, ReadNormalShort, ReadNormalFloat};
-            ReadPositionList = new Action[] {Void, ReadPositionByte, ReadPositionShort, ReadPositionFloat};
-        }
 
         public void SetVertexTypeStruct(VertexTypeStruct vertexType, byte* basePointer)
         {
@@ -68,18 +67,12 @@ namespace CSPspEmu.Core.Gpu.VertexReading
                 ReadNormal = ReadNormalList[(int) vertexType.Normal];
                 ReadPosition = ReadPositionList[(int) vertexType.Position];
 
-                switch (vertexType.StructAlignment)
+                VertexAlignment = vertexType.StructAlignment switch
                 {
-                    case 4:
-                        VertexAlignment = Align4;
-                        break;
-                    case 2:
-                        VertexAlignment = Align2;
-                        break;
-                    default:
-                        VertexAlignment = Align1;
-                        break;
-                }
+                    4 => (Action) Align4,
+                    2 => (Action) Align2,
+                    _ => (Action) Align1
+                };
             }
             //public VertexTypeStruct VertexTypeStruct;
             BasePointer = basePointer;
@@ -117,7 +110,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
         protected void Align(int size)
         {
             // Fixme !
-            while ((PointerOffset % size) != 0)
+            while (PointerOffset % size != 0)
             {
                 PointerOffset++;
             }
@@ -143,7 +136,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
             VertexInfo->Texture.X = Pointer[0];
             VertexInfo->Texture.Y = Pointer[1];
-            VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? Pointer[2] : 0.0f;
+            VertexInfo->Texture.Z = VertexType.NormalCount > 2 ? Pointer[2] : 0.0f;
 
             if (!Transform2D)
             {
@@ -160,7 +153,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
             Align2();
             VertexInfo->Texture.X = ((ushort*) Pointer)[0];
             VertexInfo->Texture.Y = ((ushort*) Pointer)[1];
-            VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? ((ushort*) Pointer)[2] : 0.0f;
+            VertexInfo->Texture.Z = VertexType.NormalCount > 2 ? ((ushort*) Pointer)[2] : 0.0f;
 
             if (!Transform2D)
             {
@@ -177,7 +170,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
             Align4();
             VertexInfo->Texture.X = ((float*) Pointer)[0];
             VertexInfo->Texture.Y = ((float*) Pointer)[1];
-            VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? ((float*) Pointer)[2] : 0.0f;
+            VertexInfo->Texture.Z = VertexType.NormalCount > 2 ? ((float*) Pointer)[2] : 0.0f;
 
             PointerOffset += sizeof(float) * VertexType.NormalCount;
         }
@@ -185,7 +178,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
         protected void ReadColor5650()
         {
             Align2();
-            var value = *((ushort*) Pointer);
+            var value = *(ushort*) Pointer;
             _SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_5650_Pixel(value));
             PointerOffset += sizeof(ushort);
         }
@@ -193,7 +186,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
         protected void ReadColor5551()
         {
             Align2();
-            var value = *((ushort*) Pointer);
+            var value = *(ushort*) Pointer;
             var color = PixelFormatDecoder.Decode_RGBA_5551_Pixel(value);
             _SetVertexInfoColor(color);
             PointerOffset += sizeof(ushort);
@@ -202,7 +195,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
         protected void ReadColor4444()
         {
             Align2();
-            var value = *((ushort*) Pointer);
+            var value = *(ushort*) Pointer;
             _SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_4444_Pixel(value));
             PointerOffset += sizeof(ushort);
         }
@@ -210,7 +203,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
         protected void ReadColor8888()
         {
             Align4();
-            var value = *((uint*) Pointer);
+            var value = *(uint*) Pointer;
             _SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_8888_Pixel(value));
             PointerOffset += sizeof(uint);
             //Console.WriteLine("{0}, {1}, {2}, {3}", VertexInfo->R, VertexInfo->G, VertexInfo->B, VertexInfo->A);
@@ -279,7 +272,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
         public void ReadWeightByte()
         {
-            for (int n = 0; n < SkinningWeightCount; n++)
+            for (var n = 0; n < SkinningWeightCount; n++)
             {
                 VertexInfo->Weights[n] = ((sbyte*) Pointer)[n] / 128f;
             }

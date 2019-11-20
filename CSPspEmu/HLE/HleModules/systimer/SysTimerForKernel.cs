@@ -22,7 +22,7 @@ namespace CSPspEmu.Hle.Modules.systimer
             logInfo("sceSTimerAlloc() : %d", sysTimerId);
             return sysTimerId;
             */
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace CSPspEmu.Hle.Modules.systimer
             SysTimer sysTimer = uniqueIdFactory.get!SysTimer(SysTimerId);
             sysTimer.setHandler(Cycle, Handler, Unknown);
             */
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace CSPspEmu.Hle.Modules.systimer
             logInfo("sceSTimerStartCount(%d)", SysTimerId);
             uniqueIdFactory.get!SysTimer(SysTimerId).start();
             */
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

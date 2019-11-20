@@ -164,8 +164,8 @@ namespace CSPspEmu.Core.Cpu
             get => (int) (1 + 1 * One + 2 * Two);
             set
             {
-                One = ((((uint) value - 1) >> 0) & 1);
-                Two = ((((uint) value - 1) >> 1) & 1);
+                One = (((uint) value - 1) >> 0) & 1;
+                Two = (((uint) value - 1) >> 1) & 1;
             }
         }
 
@@ -193,7 +193,7 @@ namespace CSPspEmu.Core.Cpu
             set
             {
                 Vt5 = value;
-                Vt1 = ((uint) value >> 5);
+                Vt1 = (uint) value >> 5;
             }
         }
 

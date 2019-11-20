@@ -52,10 +52,10 @@ namespace CSPspEmu.Hle
                 case MemoryPartition.Anchor.High: return High;
                 case MemoryPartition.Anchor.Low: return Low;
             }
-            throw (new InvalidOperationException("Invalid Anchor Value : " + Anchor));
+            throw new InvalidOperationException("Invalid Anchor Value : " + Anchor);
         }
 
-        public MemoryPartition Root => (ParentPartition != null) ? ParentPartition.Root : this;
+        public MemoryPartition Root => ParentPartition != null ? ParentPartition.Root : this;
 
         public int MaxFreeSize
         {
@@ -86,7 +86,7 @@ namespace CSPspEmu.Hle
         public MemoryPartition(InjectContext InjectContext, uint Low, uint High, bool Allocated = true,
             string Name = "<Unknown>", MemoryPartition ParentPartition = null)
         {
-            if (Low > High) throw (new InvalidOperationException());
+            if (Low > High) throw new InvalidOperationException();
             InjectContext.InjectDependencesTo(this);
             this.ParentPartition = ParentPartition;
             this.Name = Name;
@@ -121,7 +121,7 @@ namespace CSPspEmu.Hle
                         break;
                     }
 
-                    if ((Previous != null) && (Previous.Allocated == false) && (Current.Allocated == false))
+                    if (Previous != null && Previous.Allocated == false && Current.Allocated == false)
                     {
                         _ChildPartitions.Remove(Previous);
                         _ChildPartitions.Remove(Current);
@@ -165,7 +165,7 @@ namespace CSPspEmu.Hle
                 DeallocateHigh(Address);
                 return;
             }
-            throw(new InvalidOperationException());
+            throw new InvalidOperationException();
         }
 
         public MemoryPartition AllocateLowHigh(uint Low, uint High, string Name = "<Unknown>")
@@ -210,7 +210,7 @@ namespace CSPspEmu.Hle
                 var SizeCheck = Size;
 
                 // As much we will need those space.
-                SizeCheck += (Alignment - 1);
+                SizeCheck += Alignment - 1;
 
                 var AcceptablePartitions =
                     _ChildPartitions.Where(Partition => !Partition.Allocated && Partition.Size >= SizeCheck);
@@ -228,7 +228,7 @@ namespace CSPspEmu.Hle
                         break;
                     case Anchor.Set:
                         OldFreePartition = AcceptablePartitions.Single(Partition =>
-                            (Partition.Low <= Position) && (Partition.High >= Position + Size));
+                            Partition.Low <= Position && Partition.High >= Position + Size);
                         break;
                 }
 
@@ -293,9 +293,9 @@ namespace CSPspEmu.Hle
 					Root.Dump(this);
 					Console.WriteLine("");
 #endif
-                throw (new MemoryPartitionNoMemoryException(
+                throw new MemoryPartitionNoMemoryException(
                     $"Can't allocate Size={Size} : AllocateAnchor={AllocateAnchor} : Position=0x{Position:X}"
-                ));
+                );
             }
         }
 
@@ -303,7 +303,7 @@ namespace CSPspEmu.Hle
         {
             Console.Write(new string(' ', Level * 2));
             Console.WriteLine(
-                $"MemoryPartition(Low={Low:X}, High={High:X}, Allocated={Allocated}, Size={Size}, Name='{Name}'){((this == Mark) ? " * " : "")}");
+                $"MemoryPartition(Low={Low:X}, High={High:X}, Allocated={Allocated}, Size={Size}, Name='{Name}'){(this == Mark ? " * " : "")}");
             foreach (var ChildPartition in ChildPartitions)
             {
                 ChildPartition.Dump(Level: Level + 1, Mark: Mark);
@@ -320,7 +320,7 @@ namespace CSPspEmu.Hle
 
         public override string ToString()
         {
-            if ((_ChildPartitions != null) && _ChildPartitions.Count > 0)
+            if (_ChildPartitions != null && _ChildPartitions.Count > 0)
             {
                 return
                     $"MemoryPartition(Low={Low:X}, High={High:X}, Allocated={Allocated}, Name='{Name}', Size={Size}, ChildPartitions=[{string.Join(",", _ChildPartitions)}])";

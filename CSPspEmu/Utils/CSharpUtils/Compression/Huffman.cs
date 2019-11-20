@@ -107,7 +107,7 @@ namespace CSharpUtils.Ext.Compression
                     encodingTable[n] = new Node()
                     {
                         Index = n,
-                        Unused = (usageTable[n] > 0),
+                        Unused = usageTable[n] > 0,
                         UsageCount = usageTable[n],
                         HasChilds = false,
                         Parent = null,
@@ -251,7 +251,7 @@ namespace CSharpUtils.Ext.Compression
                 var nodeEncodeBitsValue = node.EncodeBitsValue;
 
                 if (node.EncodeBitsCount == 0)
-                    throw (new Exception($"Symbol '{symbol}' not found on EncodingTable"));
+                    throw new Exception($"Symbol '{symbol}' not found on EncodingTable");
 
                 //Console.WriteLine("Encode: {0}, {1}, {2}", Symbol, NodeEncodingBitsCount, NodeEncodeBitsValue);
 
@@ -320,7 +320,7 @@ namespace CSharpUtils.Ext.Compression
                         mask = 0x80;
                     }
 
-                    currentNode = ((currentByte & mask) == 0)
+                    currentNode = (currentByte & mask) == 0
                             ? currentNode.LeftChild
                             : currentNode.RightChild
                         ;

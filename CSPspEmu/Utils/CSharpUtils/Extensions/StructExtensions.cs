@@ -101,9 +101,9 @@ namespace CSharpUtils.Extensions
                             addedItem = false;
                         }
 
-                        if (simplifyBool && (value is bool))
+                        if (simplifyBool && value is bool)
                         {
-                            if (((bool) value))
+                            if ((bool) value)
                             {
                                 ret += memberInfo.Name;
                                 //MemberCount++;

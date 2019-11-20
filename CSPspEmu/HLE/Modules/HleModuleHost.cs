@@ -93,7 +93,7 @@ namespace CSPspEmu.Hle
                     {
                         if (!MethodInfo.IsPublic)
                         {
-                            throw(new InvalidProgramException("Method " + MethodInfo + " is not public"));
+                            throw new InvalidProgramException("Method " + MethodInfo + " is not public");
                         }
                         var Delegate = CreateDelegateForMethodInfo(MethodInfo, Attributes.First());
                         foreach (var Attribute in Attributes)

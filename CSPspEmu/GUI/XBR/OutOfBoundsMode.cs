@@ -70,7 +70,7 @@ namespace Imager.Interface
 
         private static int _ConstantExtension(int index, int count, bool overflow, bool underflow)
         {
-            return (overflow ? count - 1 : 0);
+            return overflow ? count - 1 : 0;
         }
 
         private static int _WrapAround(int index, int count, bool overflow, bool underflow)
@@ -86,7 +86,7 @@ namespace Imager.Interface
                 */
 
             if (overflow)
-                return (index % count);
+                return index % count;
             /*
             // Loop-version
             if (overflow)
@@ -97,7 +97,7 @@ namespace Imager.Interface
                   return(index);
             */
 
-            return (count - ((-index) % count)) % count;
+            return (count - -index % count) % count;
 
             /*
             // Loop-Version
@@ -115,9 +115,9 @@ namespace Imager.Interface
                 if (index < 0)
                     index = -1 - index;
                 else if (index >= count)
-                    index = (2 * count - 1) - index;
+                    index = 2 * count - 1 - index;
                 else
-                    return (index);
+                    return index;
             }
         }
 
@@ -129,9 +129,9 @@ namespace Imager.Interface
                 if (index < 0)
                     index = -index;
                 else if (index >= count)
-                    index = (2 * count - 2) - index;
+                    index = 2 * count - 2 - index;
                 else
-                    return (index);
+                    return index;
             }
         }
 
@@ -146,7 +146,7 @@ namespace Imager.Interface
         {
             OutOfBoundsHandler result;
             if (_OUT_OF_BOUNDS_HANDLERS.TryGetValue(mode, out result))
-                return (result);
+                return result;
 
             throw new NotSupportedException("The OutOfBoundsMode " + mode + " is not supported");
         }
@@ -168,13 +168,13 @@ namespace Imager.Interface
             var underflow = index < 0;
             var overflow = index >= count;
             if (!(overflow || underflow))
-                return (index);
+                return index;
 
             // find handler
             var handler = GetHandlerOrCrash(mode);
 
             // execute handler
-            return (handler(index, count, overflow, underflow));
+            return handler(index, count, overflow, underflow);
         }
 
         /// <summary>
@@ -197,10 +197,10 @@ namespace Imager.Interface
             var underflow = index < 0;
             var overflow = index >= count;
             if (!(overflow || underflow))
-                return (index);
+                return index;
 
             // execute handler
-            return (handler(index, count, overflow, underflow));
+            return handler(index, count, overflow, underflow);
         }
     }
 }

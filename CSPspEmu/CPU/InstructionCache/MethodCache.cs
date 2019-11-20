@@ -162,7 +162,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             var dynarecFunction =
                 _cpuProcessor.DynarecFunctionCompiler.CreateFunction(
                     new InstructionStreamReader(new PspMemoryStream(memory)), pc);
-            if (dynarecFunction.EntryPc != pc) throw (new Exception("Unexpected error"));
+            if (dynarecFunction.EntryPc != pc) throw new Exception("Unexpected error");
 
             if (DynarecConfig.AllowCreatingUsedFunctionsInBackground)
             {

@@ -85,7 +85,7 @@ namespace CSharpUtils
         
         
         private static uint InsertWithMask(this uint initialValue, int offset, uint mask, uint valueToInsert) =>
-            ((initialValue & ~(mask << offset)) | ((valueToInsert & mask) << offset));
+            (initialValue & ~(mask << offset)) | ((valueToInsert & mask) << offset);
 
         /// <summary>
         /// 
@@ -110,7 +110,7 @@ namespace CSharpUtils
         
         
         public static uint ExtractScaled(this uint initialValue, int offset, int count, int scale) =>
-            (uint) ((Extract(initialValue, offset, count) * scale) / CreateMask(count));
+            (uint) (Extract(initialValue, offset, count) * scale / CreateMask(count));
 
         public static uint ExtractScaled(this ushort initialValue, int offset, int count, int scale) =>
             ExtractScaled((uint) initialValue, offset, count, scale);
@@ -157,7 +157,7 @@ namespace CSharpUtils
         
         public static float ExtractUnsignedScaled(this uint value, int offset, int count, float scale = 1.0f)
         {
-            return ((float) Extract(value, offset, count) / CreateMask(count)) * scale;
+            return (float) Extract(value, offset, count) / CreateMask(count) * scale;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace CSharpUtils
         {
             var length = arrays[0].Length;
             foreach (var array in arrays)
-                if (array.Length != length) throw(new InvalidOperationException("Arrays sizes must match"));
+                if (array.Length != length) throw new InvalidOperationException("Arrays sizes must match");
             var bytes = new byte[length];
             foreach (var array in arrays)
             {
@@ -190,6 +190,6 @@ namespace CSharpUtils
         /// <param name="v"></param>
         /// <returns></returns>
         
-        public static int GetFirstBit1(this uint v) => MultiplyDeBruijnBitPosition[((uint) ((v & -v) * 0x077CB531U)) >> 27];
+        public static int GetFirstBit1(this uint v) => MultiplyDeBruijnBitPosition[(uint) ((v & -v) * 0x077CB531U) >> 27];
     }
 }

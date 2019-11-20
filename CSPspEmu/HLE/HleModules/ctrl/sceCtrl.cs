@@ -128,7 +128,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
             CurrentLatch->uiBreak = ButtonsOld & ButtonsChanged;
             CurrentLatch->uiMake = ButtonsNew & ButtonsChanged;
             CurrentLatch->uiPress = ButtonsNew;
-            CurrentLatch->uiRelease = (ButtonsOld & ~ButtonsNew) & ButtonsChanged;
+            CurrentLatch->uiRelease = ButtonsOld & ~ButtonsNew & ButtonsChanged;
 
             return PspController.LatchSamplingCount;
         }

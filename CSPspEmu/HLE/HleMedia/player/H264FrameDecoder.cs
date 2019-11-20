@@ -23,7 +23,7 @@ namespace cscodec.h264.player
             Codec = new H264Decoder();
             if (Codec == null)
             {
-                throw (new Exception("codec not found"));
+                throw new Exception("codec not found");
             }
 
             Context = MpegEncContext.avcodec_alloc_context();
@@ -42,7 +42,7 @@ namespace cscodec.h264.player
             // Open it
             if (Context.avcodec_open(Codec) < 0)
             {
-                throw (new Exception("could not open codec"));
+                throw new Exception("could not open codec");
             }
         }
 

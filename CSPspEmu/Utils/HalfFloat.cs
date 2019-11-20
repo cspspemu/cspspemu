@@ -68,9 +68,9 @@ namespace CSPspEmu.Core.Cpu
         public static int FloatToHalfFloat(float Float)
         {
             var i = MathFloat.ReinterpretFloatAsInt(Float);
-            var s = ((i >> 16) & 0x00008000); // sign
+            var s = (i >> 16) & 0x00008000; // sign
             var e = ((i >> 23) & 0x000000ff) - (127 - 15); // exponent
-            var f = ((i >> 0) & 0x007fffff); // fraction
+            var f = (i >> 0) & 0x007fffff; // fraction
 
             // need to handle NaNs and Inf?
             if (e <= 0)
@@ -96,7 +96,7 @@ namespace CSPspEmu.Core.Cpu
                 }
                 // NAN
                 f >>= 13;
-                return s | 0x7c00 | f | ((f == 0) ? 1 : 0);
+                return s | 0x7c00 | f | (f == 0 ? 1 : 0);
             }
             if (e > 30)
             {

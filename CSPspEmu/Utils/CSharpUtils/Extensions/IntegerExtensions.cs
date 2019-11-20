@@ -92,7 +92,7 @@
         public static uint ExtractUnsignedScale(this ushort value, int offset, int count, int scale)
         {
             var mask = (1 << count) - 1;
-            return (uint) ((value.ExtractUnsigned(offset, count) * scale) / mask);
+            return (uint) (value.ExtractUnsigned(offset, count) * scale / mask);
         }
     }
 }

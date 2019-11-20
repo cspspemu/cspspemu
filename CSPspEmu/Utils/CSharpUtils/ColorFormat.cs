@@ -62,7 +62,7 @@
             /// </summary>
             /// <param name="value"></param>
             /// <returns></returns>
-            public byte ExtractToByte(uint value) => (byte) ((Extract(value) * 255) / Mask);
+            public byte ExtractToByte(uint value) => (byte) (Extract(value) * 255 / Mask);
 
             /// <summary>
             /// 

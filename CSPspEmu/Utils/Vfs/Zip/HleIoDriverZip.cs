@@ -34,7 +34,7 @@ namespace CSPspEmu.Hle.Vfs.Zip
             }
             catch (KeyNotFoundException)
             {
-                throw(new FileNotFoundException("Can't find file '" + FileName + "' on ZipFile"));
+                throw new FileNotFoundException("Can't find file '" + FileName + "' on ZipFile");
             }
         }
 
@@ -109,7 +109,7 @@ namespace CSPspEmu.Hle.Vfs.Zip
             }
             catch (KeyNotFoundException)
             {
-                throw (new FileNotFoundException("Can't find file '" + FileName + "' on ZipFile"));
+                throw new FileNotFoundException("Can't find file '" + FileName + "' on ZipFile");
             }
         }
 

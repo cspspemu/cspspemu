@@ -136,7 +136,7 @@ namespace CSPspEmu
                 {
                     var method = stackFrame.GetMethod();
                     Console.WriteLine("{0} : {1} : {2}.{3} : {4}", logName, level,
-                        (method.DeclaringType != null) ? method.DeclaringType.Name : null, method.Name, text);
+                        method.DeclaringType != null ? method.DeclaringType.Name : null, method.Name, text);
                 }
             };
 

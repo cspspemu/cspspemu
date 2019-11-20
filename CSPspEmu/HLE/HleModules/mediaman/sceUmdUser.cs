@@ -96,7 +96,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
         {
             if (!RegisteredCallbacks.ContainsKey(CallbackId))
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT));
+                throw new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT);
             }
             RegisteredCallbacks.Remove(CallbackId);
             return 0;

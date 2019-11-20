@@ -25,19 +25,19 @@ namespace CSPspEmu.Core.Cpu.Dynarec
         [Flags]
         public enum JumpFlags
         {
-            NormalInstruction = (1 << 0),
-            BranchOrJumpInstruction = (1 << 1),
-            SyscallInstruction = (1 << 2),
-            JumpInstruction = (1 << 3),
-            FpuInstruction = (1 << 4),
-            VFpuInstruction = (1 << 5),
+            NormalInstruction = 1 << 0,
+            BranchOrJumpInstruction = 1 << 1,
+            SyscallInstruction = 1 << 2,
+            JumpInstruction = 1 << 3,
+            FpuInstruction = 1 << 4,
+            VFpuInstruction = 1 << 5,
 
-            JumpAlways = (1 << 10),
-            Likely = (1 << 11),
-            AndLink = (1 << 12),
+            JumpAlways = 1 << 10,
+            Likely = 1 << 11,
+            AndLink = 1 << 12,
 
             FixedJump = 0,
-            DynamicJump = (1 << 20),
+            DynamicJump = 1 << 20,
         }
 
         [InstructionName(InstructionNames.Bvf)]
@@ -54,7 +54,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
         [InstructionName(InstructionNames.Beq)]
         public JumpFlags beq() => JumpFlags.BranchOrJumpInstruction |
-                                  ((Instruction.Rs == Instruction.Rt) ? JumpFlags.JumpAlways : 0);
+                                  (Instruction.Rs == Instruction.Rt ? JumpFlags.JumpAlways : 0);
 
         [InstructionName(InstructionNames.Bne)]
         public JumpFlags bne() => JumpFlags.BranchOrJumpInstruction;

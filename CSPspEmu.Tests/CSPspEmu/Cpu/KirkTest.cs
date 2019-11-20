@@ -60,9 +60,9 @@ namespace CSPspEmu.Core.Tests.Crypto
             fixed (byte* src = _src)
             fixed (byte* dst = _dst)
             {
-                *(uint*) (&src[0x60]) = 1; // Mode
-                *(uint*) (&src[0x70]) = 0x10; // DataSize
-                *(uint*) (&src[0x74]) = 0; // DataOffset
+                *(uint*) &src[0x60] = 1; // Mode
+                *(uint*) &src[0x70] = 0x10; // DataSize
+                *(uint*) &src[0x74] = 0; // DataOffset
 
                 Kirk.kirk_CMD1(dst, src, 0x100, false);
 
@@ -93,9 +93,9 @@ namespace CSPspEmu.Core.Tests.Crypto
             fixed (byte* src = _src)
             fixed (byte* dst = _dst)
             {
-                *(uint*) (&src[0x00]) = 5; // Mode
-                *(uint*) (&src[0x0C]) = 0x03; // KeySeed
-                *(uint*) (&src[0x10]) = 1; // DataSize
+                *(uint*) &src[0x00] = 5; // Mode
+                *(uint*) &src[0x0C] = 0x03; // KeySeed
+                *(uint*) &src[0x10] = 1; // DataSize
 
                 Kirk.kirk_CMD7(dst, src, 0x20);
 

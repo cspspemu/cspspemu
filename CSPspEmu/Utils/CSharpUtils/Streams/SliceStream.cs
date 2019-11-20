@@ -94,17 +94,17 @@ namespace CSharpUtils.Streams
             bool allowSliceOutsideHigh = true)
             : base(baseStream)
         {
-            if (!baseStream.CanSeek) throw(new NotImplementedException("ParentStream must be seekable"));
+            if (!baseStream.CanSeek) throw new NotImplementedException("ParentStream must be seekable");
 
             ThisPosition = 0;
             ThisStart = thisStart;
-            ThisLength = (thisLength == -1) ? (baseStream.Length - thisStart) : thisLength;
+            ThisLength = thisLength == -1 ? baseStream.Length - thisStart : thisLength;
 
-            if ((SliceHigh < SliceLow) || (SliceLow < 0) || (SliceHigh < 0) || !allowSliceOutsideHigh &&
-                ((SliceLow > baseStream.Length) || (SliceHigh > baseStream.Length)))
+            if (SliceHigh < SliceLow || SliceLow < 0 || SliceHigh < 0 || !allowSliceOutsideHigh &&
+                (SliceLow > baseStream.Length || SliceHigh > baseStream.Length))
             {
-                throw (new InvalidOperationException(
-                    $"Trying to SliceStream Parent(Length={baseStream.Length}) Slice({thisStart}-{thisLength})"));
+                throw new InvalidOperationException(
+                    $"Trying to SliceStream Parent(Length={baseStream.Length}) Slice({thisStart}-{thisLength})");
             }
         }
 
@@ -203,8 +203,8 @@ namespace CSharpUtils.Streams
                 if (Position + count > Length)
                 {
                     //count = (int)(Length - Position);
-                    throw (new IOException(
-                        $"Can't write outside the SliceStream. Trying to Write {count} bytes but only {(Length - Position)} available."));
+                    throw new IOException(
+                        $"Can't write outside the SliceStream. Trying to Write {count} bytes but only {Length - Position} available.");
                 }
                 try
                 {
@@ -224,7 +224,7 @@ namespace CSharpUtils.Streams
         /// <param name="value"></param>
         public override void SetLength(long value)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

@@ -85,13 +85,13 @@ namespace Imager
         /// Gets the width of the image.
         /// </summary>
         /// <value>The width.</value>
-        public int Width => (this._width);
+        public int Width => this._width;
 
         /// <summary>
         /// Gets the height of the image.
         /// </summary>
         /// <value>The height.</value>
-        public int Height => (this._height);
+        public int Height => this._height;
 
         /// <summary>
         /// Gets the a new instance containing a greyscale image of the red values only.
@@ -99,7 +99,7 @@ namespace Imager
         /// <value>The greyscale image from the red components.</value>
         public cImage Red
         {
-            get { return (new cImage(this, pixel => pixel.Red)); }
+            get { return new cImage(this, pixel => pixel.Red); }
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Imager
         /// <value>The greyscale image from the green components.</value>
         public cImage Green
         {
-            get { return (new cImage(this, pixel => pixel.Green)); }
+            get { return new cImage(this, pixel => pixel.Green); }
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Imager
         /// <value>The greyscale image from the blue components.</value>
         public cImage Blue
         {
-            get { return (new cImage(this, pixel => pixel.Blue)); }
+            get { return new cImage(this, pixel => pixel.Blue); }
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Imager
         /// <value>The greyscale image from the alpha components.</value>
         public cImage Alpha
         {
-            get { return (new cImage(this, pixel => pixel.Alpha)); }
+            get { return new cImage(this, pixel => pixel.Alpha); }
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Imager
         /// <value>The greyscale image from the luminance components.</value>
         public cImage Luminance
         {
-            get { return (new cImage(this, pixel => pixel.Luminance)); }
+            get { return new cImage(this, pixel => pixel.Luminance); }
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Imager
         /// <value>The greyscale image from the color(U) components.</value>
         public cImage ChrominanceU
         {
-            get { return (new cImage(this, pixel => pixel.ChrominanceU)); }
+            get { return new cImage(this, pixel => pixel.ChrominanceU); }
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Imager
         /// <value>The greyscale image from the color(V) components.</value>
         public cImage ChrominanceV
         {
-            get { return (new cImage(this, pixel => pixel.ChrominanceV)); }
+            get { return new cImage(this, pixel => pixel.ChrominanceV); }
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Imager
         /// <value>The greyscale image from the color(u) components.</value>
         public cImage u
         {
-            get { return (new cImage(this, pixel => pixel.u)); }
+            get { return new cImage(this, pixel => pixel.u); }
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Imager
         /// <value>The greyscale image from the color(v) components.</value>
         public cImage v
         {
-            get { return (new cImage(this, pixel => pixel.v)); }
+            get { return new cImage(this, pixel => pixel.v); }
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Imager
         /// <value>The greyscale image from the brightness components.</value>
         public cImage Brightness
         {
-            get { return (new cImage(this, pixel => pixel.Brightness)); }
+            get { return new cImage(this, pixel => pixel.Brightness); }
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Imager
         /// <value>The greyscale image from the minimum of all components.</value>
         public cImage Min
         {
-            get { return (new cImage(this, pixel => pixel.Minimum)); }
+            get { return new cImage(this, pixel => pixel.Minimum); }
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace Imager
         /// <value>The greyscale image from the maximum of all components.</value>
         public cImage Max
         {
-            get { return (new cImage(this, pixel => pixel.Maximum)); }
+            get { return new cImage(this, pixel => pixel.Maximum); }
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Imager
         /// </summary>
         public cImage ExtractColors
         {
-            get { return (new cImage(this, pixel => pixel.ExtractColors)); }
+            get { return new cImage(this, pixel => pixel.ExtractColors); }
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Imager
         /// </summary>
         public cImage ExtractDeltas
         {
-            get { return (new cImage(this, pixel => pixel.ExtractDeltas)); }
+            get { return new cImage(this, pixel => pixel.ExtractDeltas); }
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Imager
         /// <value>The greyscale image from the hue components.</value>
         public cImage Hue
         {
-            get { return (new cImage(this, pixel => pixel.Hue)); }
+            get { return new cImage(this, pixel => pixel.Hue); }
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace Imager
         {
             get
             {
-                return (new cImage(this, pixel =>
+                return new cImage(this, pixel =>
                 {
                     const float conversionFactor = 360f / 256f;
                     var hue = pixel.Hue * conversionFactor;
@@ -304,8 +304,8 @@ namespace Imager
                             }
                         }
                     }
-                    return (new sPixel(red, green, blue, pixel.Alpha / 255.0));
-                }));
+                    return new sPixel(red, green, blue, pixel.Alpha / 255.0);
+                });
             }
         }
 
@@ -398,7 +398,7 @@ namespace Imager
                         this[x, y] = filterFunction(sourceImage[x, y]);
                     }
                 }
-                return (threadStorage);
+                return threadStorage;
             }, _ => { });
 #else
       for (var y = this._height; y > 0; ) {
@@ -435,7 +435,7 @@ namespace Imager
                         this[x, y] = sPixel.FromGrey(colorFilter(sourceImage[x, y]));
                     }
                 }
-                return (threadStorage);
+                return threadStorage;
             }, _ => { });
 #else
       for (var y = this._height; y > 0; ) {
@@ -458,7 +458,7 @@ namespace Imager
             {
                 x = OutOfBoundsUtils.GetBoundsCheckedCoordinate(x, this._width, this._horizontalOutOfBoundsHandler);
                 y = OutOfBoundsUtils.GetBoundsCheckedCoordinate(y, this._height, this._verticalOutOfBoundsHandler);
-                return (this._imageData[y * this._width + x]);
+                return this._imageData[y * this._width + x];
             }
             set
             {
@@ -505,7 +505,7 @@ namespace Imager
         /// </returns>
         public object Clone()
         {
-            return (new cImage(this));
+            return new cImage(this);
         }
 
         #endregion
@@ -548,7 +548,7 @@ namespace Imager
                 }
             }
             result.UnlockBits(bitmapData);
-            return (result);
+            return result;
         }
 
         /// <summary>
@@ -557,7 +557,7 @@ namespace Imager
         /// <returns>The <see cref="Bitmap"/> instance</returns>
         public Bitmap ToBitmap()
         {
-            return (ToBitmap(0, 0, this._width, this._height));
+            return ToBitmap(0, 0, this._width, this._height);
         }
 
         // NOTE: Bitmap objects does not support parallel read-outs blame Microsoft
@@ -568,7 +568,7 @@ namespace Imager
         public static cImage FromBitmap(Bitmap bitmap)
         {
             if (bitmap == null)
-                return (null);
+                return null;
             var result = new cImage(bitmap.Width, bitmap.Height);
 
             var height = result._height;
@@ -596,7 +596,7 @@ namespace Imager
             }
             bitmap.UnlockBits(bitmapData);
 
-            return (result);
+            return result;
         }
     }
 }

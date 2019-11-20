@@ -82,9 +82,9 @@ namespace CSPspEmu.Hle.Modules.audio
         public int sceAudioOutput2Reserve(int SampleCount)
         {
             if (!IsValidSampleCountOutput2(SampleCount))
-                throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE);
             if (!PspAudio.SrcOutput2Channel.Available)
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED);
             PspAudio.SrcOutput2Channel.Available = false;
             PspAudio.SrcOutput2Channel.SampleCount = SampleCount;
             PspAudio.SrcOutput2Channel.Format = PspAudio.FormatEnum.Stereo;
@@ -167,11 +167,11 @@ namespace CSPspEmu.Hle.Modules.audio
             }
             catch (NoChannelsAvailableException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_NO_CHANNELS_AVAILABLE));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_NO_CHANNELS_AVAILABLE);
             }
             catch (InvalidChannelException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_CHANNEL));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_CHANNEL);
             }
         }
 
@@ -293,7 +293,7 @@ namespace CSPspEmu.Hle.Modules.audio
         [HlePspFunction(NID = 0xE9D97901, FirmwareVersion = 150)]
         public int sceAudioGetChannelRestLen(int ChannelId)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -340,13 +340,13 @@ namespace CSPspEmu.Hle.Modules.audio
         {
             if (!Enum.IsDefined(typeof(PspAudio.FormatEnum), Format))
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_FORMAT));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_FORMAT);
             }
 
             try
             {
                 var Channel = ChannelGet();
-                if (!Channel.Available) throw (new InvalidChannelException());
+                if (!Channel.Available) throw new InvalidChannelException();
                 Channel.Available = false;
                 Channel.SampleCount = SampleCount;
                 Channel.Format = Format;
@@ -355,11 +355,11 @@ namespace CSPspEmu.Hle.Modules.audio
             }
             catch (NoChannelsAvailableException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_NO_CHANNELS_AVAILABLE));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_NO_CHANNELS_AVAILABLE);
             }
             catch (InvalidChannelException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_CHANNEL));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_CHANNEL);
             }
         }
 
@@ -367,7 +367,7 @@ namespace CSPspEmu.Hle.Modules.audio
         {
             if (!IsValidSampleCount(SampleCount))
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_OUTPUT_SAMPLE_DATA_SIZE_NOT_ALIGNED));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_OUTPUT_SAMPLE_DATA_SIZE_NOT_ALIGNED);
             }
 
             return _sceAudioChReserve(
@@ -429,7 +429,7 @@ namespace CSPspEmu.Hle.Modules.audio
             }
             catch (InvalidChannelException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_CHANNEL));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_CHANNEL);
             }
         }
 
@@ -443,7 +443,7 @@ namespace CSPspEmu.Hle.Modules.audio
         [HlePspFunction(NID = 0x086E5895, FirmwareVersion = 150)]
         public int sceAudioInputBlocking(int SampleCount, int Frequency, void* Buffer)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace CSPspEmu.Hle.Modules.audio
         [HlePspFunction(NID = 0x7DE61688, FirmwareVersion = 150)]
         public int sceAudioInputInit(int Unknown1, int Gain, int Unknown2)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -474,12 +474,12 @@ namespace CSPspEmu.Hle.Modules.audio
 
             if (VolumeLeft > 0xFFFF || VolumeRight > 0xFFFF)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_VOLUME));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_VOLUME);
             }
 
             if (!Channel.IsReserved)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_NOT_RESERVED));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_NOT_RESERVED);
             }
 
             if (VolumeLeft >= 0) Channel.VolumeLeft = VolumeLeft;
@@ -498,18 +498,18 @@ namespace CSPspEmu.Hle.Modules.audio
         [HlePspFunction(NID = 0x38553111, FirmwareVersion = 150)]
         public int sceAudioSRCChReserve(int SampleCount, int Frequency, int Channels)
         {
-            if (Frequency != 44100) throw (new Exception($"sceAudioSRCChReserve: {Frequency}"));
+            if (Frequency != 44100) throw new Exception($"sceAudioSRCChReserve: {Frequency}");
             var ValidFrequencies = new int[] {0, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 48000};
             if (!ValidFrequencies.Contains(Frequency))
-                throw(new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_FREQUENCY));
-            if (Channels == 4) throw (new SceKernelException(SceKernelErrors.PSP_AUDIO_ERROR_SRC_FORMAT_4));
-            if (Channels != 2) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_FREQUENCY);
+            if (Channels == 4) throw new SceKernelException(SceKernelErrors.PSP_AUDIO_ERROR_SRC_FORMAT_4);
+            if (Channels != 2) throw new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE);
             if (!PspAudio.SrcOutput2Channel.Available)
-                throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED));
+                throw new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED);
             if (!IsValidSampleCountOutput2(SampleCount))
-                throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE);
             _sceAudioChReserve(() => PspAudio.SrcOutput2Channel, SampleCount,
-                (Channels == 2) ? Core.Audio.PspAudio.FormatEnum.Stereo : Core.Audio.PspAudio.FormatEnum.Mono);
+                Channels == 2 ? Core.Audio.PspAudio.FormatEnum.Stereo : Core.Audio.PspAudio.FormatEnum.Mono);
             PspAudio.SrcOutput2Channel.Frequency = Frequency;
             return 0;
         }
@@ -535,7 +535,7 @@ namespace CSPspEmu.Hle.Modules.audio
         [HlePspFunction(NID = 0xE0727056, FirmwareVersion = 150)]
         public int sceAudioSRCOutputBlocking(int Volume, void* Buffer)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

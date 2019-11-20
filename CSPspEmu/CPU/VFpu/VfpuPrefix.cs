@@ -107,7 +107,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
                             case 3:
                                 part = SourceAbsolute(index) ? "1/6" : "1/2";
                                 break;
-                            default: throw (new InvalidOperationException());
+                            default: throw new InvalidOperationException();
                         }
                     }
                     else
@@ -129,7 +129,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
         public override string ToString() =>
             $"VfpuPrefix(Enabled={Enabled}, UsedPC=0x{UsedPc:X}, DeclaredPC=0x{DeclaredPc:X})({Format})";
 
-        public bool IsValidIndex(int index) => (index >= 0) && (index < 4);
+        public bool IsValidIndex(int index) => index >= 0 && index < 4;
     }
 
     public class VfpuDestinationPrefix : IVfpuPrefixCommon
@@ -203,7 +203,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
                             case 3:
                                 part = "-1:1";
                                 break;
-                            default: throw (new InvalidOperationException());
+                            default: throw new InvalidOperationException();
                         }
                     }
                     else
@@ -220,6 +220,6 @@ namespace CSPspEmu.Core.Cpu.VFpu
         public override string ToString() =>
             $"VfpuDestinationPrefix(Enabled={Enabled}, UsedPC=0x{UsedPc:X}, DeclaredPC=0x{DeclaredPc:X})({Format})";
 
-        public bool IsValidIndex(int index) => (index >= 0) && (index < 4);
+        public bool IsValidIndex(int index) => index >= 0 && index < 4;
     }
 }

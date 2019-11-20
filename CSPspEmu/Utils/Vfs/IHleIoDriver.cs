@@ -267,7 +267,7 @@ namespace CSPspEmu.Hle.Vfs
 
         public long ToUnixTimestamp()
         {
-            return (long) ((ToDateTime() - new DateTime(1970, 1, 1)).TotalSeconds);
+            return (long) (ToDateTime() - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
         public override string ToString()

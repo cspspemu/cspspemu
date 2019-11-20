@@ -16,7 +16,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x2EE39A64, FirmwareVersion = 150)]
         public void sceZlibAdler32()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x44054E03, FirmwareVersion = 150)]
         public void sceDeflateDecompress()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x6DBCF897, FirmwareVersion = 150)]
         public void sceGzipDecompress()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xB767F9A0, FirmwareVersion = 150)]
         public void sceGzipGetComment()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x0BA3B9CC, FirmwareVersion = 150)]
         public void sceGzipGetCompressedData()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x8AA82C92, FirmwareVersion = 150)]
         public void sceGzipGetInfo()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x106A3552, FirmwareVersion = 150)]
         public void sceGzipGetName()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -79,12 +79,12 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x1B5B82BC, FirmwareVersion = 150)]
         public void sceGzipIsValid()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         private static void _Decompress(Stream InStream, Stream OutStream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
             //var ZStream = new ZStream();
             //
             ////if (ZStream.inflateInit(-15) != zlibConst.Z_OK)
@@ -233,7 +233,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x6A548477, FirmwareVersion = 150)]
         public void sceZlibGetCompressedData()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xAFE01FD3, FirmwareVersion = 150)]
         public void sceZlibGetInfo()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xE46EB986, FirmwareVersion = 150)]
         public void sceZlibIsValid()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

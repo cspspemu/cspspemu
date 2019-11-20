@@ -74,7 +74,7 @@ namespace CSPspEmu.Core
 
         static Platform()
         {
-            IsMono = (Type.GetType("Mono.Runtime") != null);
+            IsMono = Type.GetType("Mono.Runtime") != null;
 
             switch (Environment.OSVersion.Platform)
             {
@@ -98,7 +98,7 @@ namespace CSPspEmu.Core
                     }
                     break;
                 default:
-                    throw (new PlatformNotSupportedException());
+                    throw new PlatformNotSupportedException();
             }
 
             UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -289,7 +289,7 @@ namespace CSPspEmu.Core
 
         public static void* AllocRangeGuard(byte* Low, byte* High)
         {
-            if (High < Low) throw(new Exception("Invalid High"));
+            if (High < Low) throw new Exception("Invalid High");
             return _AllocRange(Low, (uint) (High - Low), Guard: true);
         }
 
@@ -313,8 +313,8 @@ namespace CSPspEmu.Core
                     {
                         if ((void*) Pointer != (void*) Address)
                         {
-                            throw (new Exception(
-                                $"Not allocated the desired address! Expected {new IntPtr(Address):X}, Allocated: {new IntPtr(Pointer):X}"));
+                            throw new Exception(
+                                $"Not allocated the desired address! Expected {new IntPtr(Address):X}, Allocated: {new IntPtr(Pointer):X}");
                         }
                         PointerUtils.Memset(Pointer, 0, (int) Size);
                     }
@@ -358,7 +358,7 @@ namespace CSPspEmu.Core
                     return AllocatedAddress;
                 }
             }
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         public static DateTime UnixStart;

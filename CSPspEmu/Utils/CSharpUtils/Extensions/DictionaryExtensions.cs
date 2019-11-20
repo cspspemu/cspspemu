@@ -20,7 +20,7 @@ namespace CSharpUtils.Extensions
         public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key,
             Func<TValue> allocator)
         {
-            return !This.TryGetValue(key, out TValue item) ? (This[key] = allocator()) : item;
+            return !This.TryGetValue(key, out TValue item) ? This[key] = allocator() : item;
         }
 
         /// <summary>

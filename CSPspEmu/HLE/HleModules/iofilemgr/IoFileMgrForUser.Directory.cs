@@ -27,11 +27,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             }
             catch (DirectoryNotFoundException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
+                throw new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
             }
             catch (FileNotFoundException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
+                throw new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
             }
             catch (InvalidOperationException InvalidOperationException)
             {
@@ -41,7 +41,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             {
                 _DelayIo(IoDelayType.Dopen);
             }
-            throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_NOT_A_DIRECTORY));
+            throw new SceKernelException(SceKernelErrors.ERROR_ERRNO_NOT_A_DIRECTORY);
         }
 
         /// <summary>

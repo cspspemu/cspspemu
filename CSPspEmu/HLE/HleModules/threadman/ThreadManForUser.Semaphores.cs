@@ -18,7 +18,7 @@ namespace CSPspEmu.Hle.Modules.threadman
             }
             catch (KeyNotFoundException)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_SEMAPHORE));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_SEMAPHORE);
             }
         }
 
@@ -116,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
             if (TimedOut)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT);
             }
 
             return 0;
@@ -166,12 +166,12 @@ namespace CSPspEmu.Hle.Modules.threadman
         public int sceKernelPollSema(CpuThreadState CpuThreadState, SemaphoreId SemaphoreId, int Signal)
         {
             var Semaphore = GetSemaphoreById(SemaphoreId);
-            if (Signal <= 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+            if (Signal <= 0) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT);
             if (Signal > Semaphore.CurrentCount)
             {
                 //ThreadManager.Reschedule();
                 //CpuThreadState.Yield();
-                throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_SEMA_ZERO));
+                throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_SEMA_ZERO);
                 //return 0;
             }
             Semaphore.IncrementCount(-Signal);
@@ -210,7 +210,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspUnknownDefinition]
         public void sceKernelCancelSema()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

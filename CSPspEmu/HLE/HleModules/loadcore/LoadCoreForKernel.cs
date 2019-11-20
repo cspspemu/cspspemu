@@ -28,7 +28,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
         [HlePspUnknownDefinitionAttribute]
         public void sceKernelCheckPspConfig()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
         [HlePspUnknownDefinitionAttribute]
         public void sceKernelProbeExecutableObject()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
         public uint sceKernelFindModuleByUID(int ModuleId)
         {
             var Module = ModuleMgrForUser.Modules.Get(ModuleId);
-            return (Module.Loaded) ? Module.SceModuleStructPartition.Low : 0;
+            return Module.Loaded ? Module.SceModuleStructPartition.Low : 0;
         }
 
         /// <summary>

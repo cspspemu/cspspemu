@@ -29,7 +29,7 @@ namespace CSPspEmu.Hle.Vfs
                     return;
                 }
             }
-            throw(new InvalidOperationException("Can't find mount point for '" + FileName + "'"));
+            throw new InvalidOperationException("Can't find mount point for '" + FileName + "'");
         }
 
         public unsafe int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)

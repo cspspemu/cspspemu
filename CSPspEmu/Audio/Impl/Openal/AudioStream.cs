@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
         //public const int Frequency = 48000;
 
         //public const double SamplesPerMillisecond = ((double)Frequency) / 1000;
-        public const double SamplesPerMillisecond = ((double) Frequency) / 500;
+        public const double SamplesPerMillisecond = (double) Frequency / 500;
 
         public const int NumberOfBuffers = 4;
         public const int NumberOfChannels = 2;

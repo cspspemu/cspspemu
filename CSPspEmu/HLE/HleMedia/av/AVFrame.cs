@@ -409,7 +409,7 @@ namespace cscodec.av
                 pic.reference = parity;
                 pic.linesize[i] *= 2;
             }
-            pic.poc = pic.field_poc[(parity == Constants.PICT_BOTTOM_FIELD)
+            pic.poc = pic.field_poc[parity == Constants.PICT_BOTTOM_FIELD
                 ? 1
                 : 0];
         }
@@ -417,7 +417,7 @@ namespace cscodec.av
         public static int split_field_copy(AVFrame dest, AVFrame src,
             int parity, int id_add)
         {
-            int match = ((src.reference & parity) != 0 ? 1 : 0);
+            int match = (src.reference & parity) != 0 ? 1 : 0;
             if (match != 0)
             {
                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -448,12 +448,12 @@ namespace cscodec.av
                     i[1]++;
                 if (i[0] < len)
                 {
-                    in_base[in_offset + i[0]].pic_id = (is_long != 0 ? i[0] : in_base[in_offset + i[0]].frame_num);
+                    in_base[in_offset + i[0]].pic_id = is_long != 0 ? i[0] : in_base[in_offset + i[0]].frame_num;
                     split_field_copy(def_base[def_offset + index++], in_base[in_offset + i[0]++], sel, 1);
                 }
                 if (i[1] < len)
                 {
-                    in_base[in_offset + i[1]].pic_id = (is_long != 0 ? i[1] : in_base[in_offset + i[1]].frame_num);
+                    in_base[in_offset + i[1]].pic_id = is_long != 0 ? i[1] : in_base[in_offset + i[1]].frame_num;
                     split_field_copy(def_base[def_offset + index++], in_base[in_offset + i[1]++], sel ^ 3, 0);
                 }
             }
@@ -469,12 +469,12 @@ namespace cscodec.av
 
             for (;;)
             {
-                best_poc = (dir != 0 ? int.MinValue : int.MaxValue);
+                best_poc = dir != 0 ? int.MinValue : int.MaxValue;
 
                 for (i = 0; i < len; i++)
                 {
                     int poc = src_base[src_offset + i].poc;
-                    if (((poc > limit) ^ (dir != 0)) && ((poc < best_poc) ^ (dir != 0)))
+                    if ((poc > limit) ^ (dir != 0) && (poc < best_poc) ^ (dir != 0))
                     {
                         best_poc = poc;
                         sorted_base[sorted_offset + out_i] = src_base[src_offset + i];

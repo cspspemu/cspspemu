@@ -5,7 +5,7 @@ namespace cscodec.h264.decoder
     public class CABACContext
     {
         public const int CABAC_BITS = 16;
-        public const int CABAC_MASK = ((1 << CABAC_BITS) - 1);
+        public const int CABAC_MASK = (1 << CABAC_BITS) - 1;
 
         public int low;
         public int range;
@@ -835,7 +835,7 @@ namespace cscodec.h264.decoder
         {
             // DebugTool.printDebugString("renorm_cabac_decoder_once(1): low="+low+", range="+range+"\n");
 
-            int shift = (int) (((uint) (range - 0x00000100)) >> 31);
+            int shift = (int) ((uint) (range - 0x00000100) >> 31);
             range <<= shift;
             low <<= shift;
 
@@ -947,7 +947,7 @@ namespace cscodec.h264.decoder
         public int get_cabac_terminate()
         {
             range -= 2;
-            if (low < (range << (CABAC_BITS + 1)))
+            if (low < range << (CABAC_BITS + 1))
             {
                 renorm_cabac_decoder_once();
                 return 0;
@@ -967,9 +967,8 @@ namespace cscodec.h264.decoder
             int mbb_xy = (int) (h.mb_xy - 2L * h.s.mb_stride);
             int ctx = 0;
 
-            ctx += (h.mb_field_decoding_flag &
-                    ( /*!!*/h.s.mb_x)
-            ); //for FMO:(s.current_picture.mb_type[mba_xy]>>7)&(this.slice_table_base[this.slice_table_offset + mba_xy] == this.slice_num);
+            ctx += h.mb_field_decoding_flag &
+                   h.s.mb_x; //for FMO:(s.current_picture.mb_type[mba_xy]>>7)&(this.slice_table_base[this.slice_table_offset + mba_xy] == this.slice_num);
             ctx += (int) ((h.s.current_picture.mb_type_base[h.s.current_picture.mb_type_offset + mbb_xy] >> 7) &
                           (h.slice_table_base[h.slice_table_offset + mbb_xy] == h.slice_num ? 1 : 0));
 
@@ -1048,12 +1047,12 @@ namespace cscodec.h264.decoder
             }
 
             if (h.slice_table_base[h.slice_table_offset + mba_xy] == h.slice_num &&
-                ((h.s.current_picture.mb_type_base[h.s.current_picture.mb_type_offset + mba_xy] &
-                  H264Context.MB_TYPE_SKIP) == 0))
+                (h.s.current_picture.mb_type_base[h.s.current_picture.mb_type_offset + mba_xy] &
+                 H264Context.MB_TYPE_SKIP) == 0)
                 ctx++;
             if (h.slice_table_base[h.slice_table_offset + mbb_xy] == h.slice_num &&
-                ((h.s.current_picture.mb_type_base[h.s.current_picture.mb_type_offset + mbb_xy] &
-                  H264Context.MB_TYPE_SKIP) == 0))
+                (h.s.current_picture.mb_type_base[h.s.current_picture.mb_type_offset + mbb_xy] &
+                 H264Context.MB_TYPE_SKIP) == 0)
                 ctx++;
 
             if (h.slice_type_nos == H264Context.FF_B_TYPE)
@@ -1075,7 +1074,7 @@ namespace cscodec.h264.decoder
             mode += 2 * this.get_cabac(h.cabac_state, 69);
             mode += 4 * this.get_cabac(h.cabac_state, 69);
 
-            return mode + ((mode >= pred_mode) ? 1 : 0);
+            return mode + (mode >= pred_mode ? 1 : 0);
         }
 
         public int decode_cabac_mb_chroma_pre_mode(H264Context h)
@@ -1259,7 +1258,7 @@ namespace cscodec.h264.decoder
         public void ff_h264_init_cabac_states(H264Context h)
         {
             var tab =
-                    (h.slice_type_nos == H264Context.FF_I_TYPE)
+                    h.slice_type_nos == H264Context.FF_I_TYPE
                         ? cabac_context_init_I
                         : cabac_context_init_PB[h.cabac_init_idc]
                 ;

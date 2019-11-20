@@ -58,7 +58,7 @@ namespace cscodec.h264.player
                 cacheRead[0] = cacheRead[1];
                 cacheRead[1] = cacheRead[2];
                 cacheRead[2] = ReadByte();
-                if (cacheRead[2] == -1) throw(new EndOfStreamException());
+                if (cacheRead[2] == -1) throw new EndOfStreamException();
             } // while
 
             // 4 first bytes always indicate NAL header
@@ -104,7 +104,7 @@ namespace cscodec.h264.player
             }
             else
             {
-                throw (new EndOfStreamException());
+                throw new EndOfStreamException();
             }
         }
 
@@ -134,7 +134,7 @@ namespace cscodec.h264.player
                     }
                 }
             } // while
-            throw (new EndOfStreamException());
+            throw new EndOfStreamException();
         }
 
         void IDisposable.Dispose()

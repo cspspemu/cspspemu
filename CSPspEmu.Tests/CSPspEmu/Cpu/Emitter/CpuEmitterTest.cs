@@ -304,7 +304,7 @@ namespace Tests.CSPspEmu.Core.Cpu.Emitter
                         CpuThreadState.Gpr[inputOffset + m] = numbers[m];
 
                         assembly +=
-	                        $"{instructionName} r{m + resultOffset}, r{n + inputOffset}, {(numbers[m] & 0xFFFF)}\n";
+	                        $"{instructionName} r{m + resultOffset}, r{n + inputOffset}, {numbers[m] & 0xFFFF}\n";
                     }
 
                     //Console.WriteLine("{0}", Assembly);
@@ -744,7 +744,7 @@ namespace Tests.CSPspEmu.Core.Cpu.Emitter
 				mult r10, r11
 			");
 
-            var expected = ((long) CpuThreadState.Gpr[10] * CpuThreadState.Gpr[11]);
+            var expected = (long) CpuThreadState.Gpr[10] * CpuThreadState.Gpr[11];
 
             Assert.Equal((uint) ((expected >> 0) & 0xFFFFFFFF), (uint) CpuThreadState.Lo);
             Assert.Equal((uint) ((expected >> 32) & 0xFFFFFFFF), (uint) CpuThreadState.Hi);
@@ -778,7 +778,7 @@ namespace Tests.CSPspEmu.Core.Cpu.Emitter
 				multu r10, r11
 			");
 
-            var expected = ((ulong) (uint) CpuThreadState.Gpr[10] * (uint) CpuThreadState.Gpr[11]);
+            var expected = (ulong) (uint) CpuThreadState.Gpr[10] * (uint) CpuThreadState.Gpr[11];
 
             //Console.WriteLine(CpuThreadState.GPR[10]);
             //Console.WriteLine(CpuThreadState.GPR[11]);
@@ -1097,7 +1097,7 @@ namespace Tests.CSPspEmu.Core.Cpu.Emitter
             var data = new byte[4];
             fixed (byte* dataPtr = data)
             {
-                var instruction = (new MipsAssembler(new MemoryStream())).AssembleInstruction(text);
+                var instruction = new MipsAssembler(new MemoryStream()).AssembleInstruction(text);
                 *(uint*) dataPtr = instruction;
             }
             return $"{data[0]:X2}{data[1]:X2}{data[2]:X2}{data[3]:X2}";

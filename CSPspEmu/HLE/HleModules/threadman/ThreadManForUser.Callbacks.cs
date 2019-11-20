@@ -73,7 +73,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         //[HlePspNotImplemented]
         public int sceKernelCheckCallback(CpuThreadState CpuThreadState)
         {
-            return (CallbackManager.ExecuteQueued(CpuThreadState, false) > 0) ? 1 : 0;
+            return CallbackManager.ExecuteQueued(CpuThreadState, false) > 0 ? 1 : 0;
         }
 
         /// <summary>

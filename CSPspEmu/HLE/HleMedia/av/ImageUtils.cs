@@ -751,7 +751,7 @@ namespace cscodec.av
 
                     if (i == 1 || i == 2)
                     {
-                        h = -((-height) >> desc.log2_chroma_h);
+                        h = -(-height >> desc.log2_chroma_h);
                     }
 
                     av_image_copy_plane(
@@ -795,8 +795,8 @@ namespace cscodec.av
             if ((desc.flags & PIX_FMT_BITSTREAM) != 0) return (width * (desc.comp[0].step_minus1 + 1) + 7) >> 3;
 
             av_image_fill_max_pixsteps(max_step, max_step_comp, desc);
-            s = (max_step_comp[plane] == 1 || max_step_comp[plane] == 2) ? desc.log2_chroma_w : 0;
-            return max_step[plane] * (((width + (1 << s) - 1)) >> s);
+            s = max_step_comp[plane] == 1 || max_step_comp[plane] == 2 ? desc.log2_chroma_w : 0;
+            return max_step[plane] * ((width + (1 << s) - 1) >> s);
         }
 
         public static void av_image_fill_max_pixsteps(int[] max_pixsteps, int[] max_pixstep_comps,
@@ -814,8 +814,8 @@ namespace cscodec.av
 
             for (i = 0; i < 4; i++)
             {
-                AVComponentDescriptor comp = (pixdesc.comp[i]);
-                if ((comp.step_minus1 + 1) > max_pixsteps[comp.plane])
+                AVComponentDescriptor comp = pixdesc.comp[i];
+                if (comp.step_minus1 + 1 > max_pixsteps[comp.plane])
                 {
                     max_pixsteps[comp.plane] = comp.step_minus1 + 1;
                     if (max_pixstep_comps != null) max_pixstep_comps[comp.plane] = i;

@@ -109,10 +109,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
         /// <param name="fc3"></param>
         private AstNodeStm _comp(int fc02, int fc3)
         {
-            var fcUnordererd = ((fc02 & 1) != 0);
-            var fcEqual = ((fc02 & 2) != 0);
-            var fcLess = ((fc02 & 4) != 0);
-            var fcInvQnan = (fc3 != 0); // TODO -- Only used for detecting invalid operations?
+            var fcUnordererd = (fc02 & 1) != 0;
+            var fcEqual = (fc02 & 2) != 0;
+            var fcLess = (fc02 & 4) != 0;
+            var fcInvQnan = fc3 != 0; // TODO -- Only used for detecting invalid operations?
 
             //if (float.IsNaN(s) || float.IsNaN(t))
             //{

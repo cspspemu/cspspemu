@@ -272,7 +272,7 @@ namespace CSPspEmu.Hle
                     .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                     .Single(FieldInfo => FieldInfo.Name == "_target");
                 var Address = (ulong) ((IntPtr) Field.GetValue(AccessViolationException)).ToInt64();
-                throw (new PspMemory.InvalidAddressException(Address));
+                throw new PspMemory.InvalidAddressException(Address);
                 //AccessViolationException.
             }
         }

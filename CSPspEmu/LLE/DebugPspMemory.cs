@@ -64,7 +64,7 @@ namespace CSPspEmuLLETest
 
         private static void TrackWrite(uint address, uint value)
         {
-            if (((address & PspMemory.MemoryMask) >= 0x1FC00000) && ((address & PspMemory.MemoryMask) <= 0x20000000))
+            if ((address & PspMemory.MemoryMask) >= 0x1FC00000 && (address & PspMemory.MemoryMask) <= 0x20000000)
             {
                 //Console.WriteLine("{0:X8}: Write: {1:X8} : {2:X8}", CpuThreadState.PC, Address, Value);
             }

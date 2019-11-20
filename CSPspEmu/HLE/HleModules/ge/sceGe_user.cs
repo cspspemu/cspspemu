@@ -97,7 +97,7 @@ namespace CSPspEmu.Hle.Modules.ge
         [HlePspNotImplemented]
         public int sceGeGetCmd(int cmd)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace CSPspEmu.Hle.Modules.ge
         [HlePspNotImplemented]
         public int sceGeGetMtx(PspGeMatrixTypes MatrixType, uint* MatrixAddress)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace CSPspEmu.Hle.Modules.ge
         [HlePspNotImplemented]
         public int sceGeBreak(int Mode, void* BreakAddress)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace CSPspEmu.Hle.Modules.ge
         {
             if (DisplayListId < 0 || DisplayListId >= GpuProcessor.DisplayListsCount)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ID));
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_ID);
             }
 
             return GpuProcessor.GetDisplayList(DisplayListId);
@@ -384,7 +384,7 @@ namespace CSPspEmu.Hle.Modules.ge
 
             if (DisplayList.Status.Value == DisplayListStatusEnum.Completed)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_ALREADY));
+                throw new SceKernelException(SceKernelErrors.ERROR_ALREADY);
             }
 
             DisplayList.SetInstructionAddressStall(InstructionAddressStall);
@@ -418,7 +418,7 @@ namespace CSPspEmu.Hle.Modules.ge
                 case SyncTypeEnum.Peek:
                     return DisplayList.PeekStatus();
                 default:
-                    throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
+                    throw new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE);
             }
         }
 
@@ -441,7 +441,7 @@ namespace CSPspEmu.Hle.Modules.ge
                 case SyncTypeEnum.Peek:
                     return GpuProcessor.PeekStatus();
                 default:
-                    throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
+                    throw new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE);
             }
         }
     }

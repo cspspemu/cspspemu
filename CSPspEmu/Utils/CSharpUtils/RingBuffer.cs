@@ -54,7 +54,7 @@ namespace CSharpUtils
         /// <exception cref="OverflowException"></exception>
         public void Write(byte item)
         {
-            if (WriteAvailable <= 0) throw (new OverflowException("RingBuffer is full"));
+            if (WriteAvailable <= 0) throw new OverflowException("RingBuffer is full");
             _dataPointer[_writePosition++ % Capacity] = item;
         }
 
@@ -65,7 +65,7 @@ namespace CSharpUtils
         /// <exception cref="OverflowException"></exception>
         public byte Read()
         {
-            if (ReadAvailable <= 0) throw (new OverflowException("RingBuffer is empty"));
+            if (ReadAvailable <= 0) throw new OverflowException("RingBuffer is empty");
             return _dataPointer[_readPosition++ % Capacity];
         }
 
@@ -151,7 +151,7 @@ namespace CSharpUtils
         /// <exception cref="OverflowException"></exception>
         public void Write(T item)
         {
-            if (WriteAvailable <= 0) throw (new OverflowException("RingBuffer is full"));
+            if (WriteAvailable <= 0) throw new OverflowException("RingBuffer is full");
             Data[_writePosition++ % Capacity] = item;
         }
 
@@ -162,7 +162,7 @@ namespace CSharpUtils
         /// <exception cref="OverflowException"></exception>
         public T Read()
         {
-            if (ReadAvailable <= 0) throw (new OverflowException("RingBuffer is empty"));
+            if (ReadAvailable <= 0) throw new OverflowException("RingBuffer is empty");
             return Data[_readPosition++ % Capacity];
         }
 

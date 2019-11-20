@@ -31,7 +31,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
                     ilGenerator = mb.GetILGenerator();
                     break;
                 default:
-                    throw(new InvalidOperationException("Not a DynamicMethod/MethodBuilder"));
+                    throw new InvalidOperationException("Not a DynamicMethod/MethodBuilder");
             }
             GenerateIl(astNodeStm, dynamicMethod, ilGenerator);
         }

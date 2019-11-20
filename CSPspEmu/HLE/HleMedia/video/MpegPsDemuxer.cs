@@ -71,13 +71,13 @@ namespace CSPspEmu.Hle.Formats.video
                         return (ulong) (
                             (ulong) ((buf[0] & 0x0E) << 29) |
                             (ulong) ((PointerUtils.PtrToShort_BE(buf + 1) >> 1) << 15) |
-                            (ulong) ((PointerUtils.PtrToShort_BE(buf + 3) >> 1))
+                            (ulong) (PointerUtils.PtrToShort_BE(buf + 3) >> 1)
                         );
                     }
                 }
             }
 
-            public TimeSpan PresentationTimeSpan => TimeSpan.FromSeconds(((double) Value) / (double) MpegTimestampPerSecond);
+            public TimeSpan PresentationTimeSpan => TimeSpan.FromSeconds((double) Value / (double) MpegTimestampPerSecond);
 
             public override string ToString()
             {
@@ -163,9 +163,9 @@ namespace CSPspEmu.Hle.Formats.video
 
                 if (
                     // Audio Stream
-                    (StartCode >= 0x1C0 && StartCode <= 0x1CF) ||
+                    StartCode >= 0x1C0 && StartCode <= 0x1CF ||
                     // Video Stream
-                    (StartCode >= 0x1E0 && StartCode <= 0x1EF) ||
+                    StartCode >= 0x1E0 && StartCode <= 0x1EF ||
                     // Private Stream (Atrac3+)
                     ChunkCodeType == ChunkType.ST_Private1 ||
                     // ???
@@ -176,7 +176,7 @@ namespace CSPspEmu.Hle.Formats.video
                     //Console.WriteLine("Position: 0x{0:X}", Stream.Position);
                     ushort PacketSize = Read16();
                     var PacketStream = Stream.ReadStreamCopy(PacketSize);
-                    if (PacketStream.Length != PacketSize) throw(new Exception("Didn't read the entire packet"));
+                    if (PacketStream.Length != PacketSize) throw new Exception("Didn't read the entire packet");
                     return new Packet()
                     {
                         Type = (ChunkType) StartCode,
@@ -187,7 +187,7 @@ namespace CSPspEmu.Hle.Formats.video
                 //throw(new NotImplementedException(String.Format("Invalid stream 0x{0:X}", StartCode)));
                 Console.Error.WriteLine("Invalid stream 0x{0:X}", StartCode);
             }
-            throw(new EndOfStreamException());
+            throw new EndOfStreamException();
         }
 
         public struct PacketizedStream
@@ -214,7 +214,7 @@ namespace CSPspEmu.Hle.Formats.video
                 var flags = (byte) PacketStream.ReadByte();
                 var header_len = (byte) PacketStream.ReadByte();
                 var HeaderStream = PacketStream.ReadStreamCopy(header_len);
-                if (HeaderStream.Length != header_len) throw (new Exception("Didn't read the entire packet"));
+                if (HeaderStream.Length != header_len) throw new Exception("Didn't read the entire packet");
 
                 //PacketStream.Skip(header_len);
 

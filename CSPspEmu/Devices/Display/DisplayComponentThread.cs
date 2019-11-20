@@ -16,10 +16,10 @@ namespace CSPspEmu.Runner.Components.Display
         protected override string ThreadName => "DisplayThread";
 
         TimeSpan vSyncTimeIncrement =
-            TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) (PspDisplay.VsyncRow)));
+            TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) PspDisplay.VsyncRow));
         //var VSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow / 2))); // HACK to give more time to render!
         TimeSpan endTimeIncrement =
-            TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) (PspDisplay.NumberOfRows)));
+            TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) PspDisplay.NumberOfRows));
         HleInterruptHandler vBlankInterruptHandler;
         public bool triggerStuff = true;
 

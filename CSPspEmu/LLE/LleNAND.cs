@@ -14,8 +14,8 @@ namespace CSPspEmuLLETest
         [Flags]
         public enum EnumControlRegister : uint
         {
-            CalculateEccWhenWritting = (1 << 17),
-            CalculateEccWhenReading = (1 << 16),
+            CalculateEccWhenWritting = 1 << 17,
+            CalculateEccWhenReading = 1 << 16,
         }
 
         public enum EnumCommands : uint
@@ -26,8 +26,8 @@ namespace CSPspEmuLLETest
         [Flags]
         public enum EnumStatus : uint
         {
-            WriteProtected = (1 << 7),
-            Ready = (1 << 0), // 1 - READY | 0 - BUSY
+            WriteProtected = 1 << 7,
+            Ready = 1 << 0, // 1 - READY | 0 - BUSY
         }
 
         EnumControlRegister _controlRegister;
@@ -65,7 +65,7 @@ namespace CSPspEmuLLETest
         public void Transfer(Dma.Direction direction, int size, DmaEnum address, ref uint value)
         {
             // Reading sector
-            if ((address >= DmaEnum.NAND__DATA_PAGE_START) && (address < DmaEnum.NAND__DATA_PAGE_END))
+            if (address >= DmaEnum.NAND__DATA_PAGE_START && address < DmaEnum.NAND__DATA_PAGE_END)
             {
                 var offset = (int) (address - DmaEnum.NAND__DATA_PAGE_START);
                 //Console.WriteLine("{0:X8}", (uint)Address);
@@ -74,7 +74,7 @@ namespace CSPspEmuLLETest
                 return;
             }
 
-            if ((address >= DmaEnum.NAND__DATA_SPARE_BUF0_REG) && (address < DmaEnum.NAND__DATA_EXTRA_END))
+            if (address >= DmaEnum.NAND__DATA_SPARE_BUF0_REG && address < DmaEnum.NAND__DATA_EXTRA_END)
             {
                 var offset = (int) (address - DmaEnum.NAND__DATA_SPARE_BUF0_REG);
                 TransferUtils.TransferToArray(direction, NandBlock, 512 + offset + 4, size, ref value);
@@ -122,7 +122,7 @@ namespace CSPspEmuLLETest
                         if (value == 0x301)
                         {
                             //0x20000/2/512*(512+16)
-                            NandStream.Position = ((_dmaAddress / 2 / 512) * (512 + 16));
+                            NandStream.Position = _dmaAddress / 2 / 512 * (512 + 16);
                             NandBlock = NandStream.ReadBytes(512 + 16);
                             Console.WriteLine("Read from NAND: 0x{0:X8}", _dmaAddress);
                             ArrayUtils.HexDump(NandBlock);

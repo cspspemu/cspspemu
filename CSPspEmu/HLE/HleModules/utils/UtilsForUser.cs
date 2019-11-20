@@ -57,7 +57,7 @@ namespace CSPspEmu.Hle.Modules.utils
             if (TimeVal != null)
             {
                 PspRtc.Update();
-                ulong MicroSeconds = (ulong) (PspRtc.Elapsed.GetTotalMicroseconds());
+                ulong MicroSeconds = (ulong) PspRtc.Elapsed.GetTotalMicroseconds();
                 const ulong MicroSecondsInASecond = 1000 * 1000;
                 TimeVal->Seconds = (uint) (MicroSeconds / MicroSecondsInASecond);
                 TimeVal->Microseconds = (uint) (MicroSeconds % MicroSecondsInASecond);
@@ -116,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0xB435DEC5, FirmwareVersion = 150)]
         public uint sceKernelDcacheWritebackRange(uint Pointer, int Size)
         {
-            if (Size < 0) throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
+            if (Size < 0) throw new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE);
             CpuProcessor.SceKernelDcacheWritebackRange(Pointer, Size);
             return 0;
         }
@@ -180,7 +180,7 @@ namespace CSPspEmu.Hle.Modules.utils
                 uint Current, Next;
                 uint v0;
                 bool currentPosIsLess =
-                    Context.Count < (SceKernelUtilsMt19937Context.MT_N - SceKernelUtilsMt19937Context.MT_M);
+                    Context.Count < SceKernelUtilsMt19937Context.MT_N - SceKernelUtilsMt19937Context.MT_M;
                 CurrentPointer = &State[Context.Count];
 
                 // Current Value
@@ -191,8 +191,8 @@ namespace CSPspEmu.Hle.Modules.utils
                 Next = State[Context.Count];
 
                 v0 = Current ^ (Current >> 11);
-                v0 ^= ((v0 << 7) & 0x9D2C5680);
-                v0 ^= ((v0 << 15) & 0xEFC60000);
+                v0 ^= (v0 << 7) & 0x9D2C5680;
+                v0 ^= (v0 << 15) & 0xEFC60000;
 
                 var Mix = ((Current & 0x80000000) | (Next & 0x7FFFFFFF)) >> 1;
 
@@ -238,7 +238,7 @@ namespace CSPspEmu.Hle.Modules.utils
         public uint sceKernelLibcClock()
         {
             PspRtc.Update();
-            return (uint) (PspRtc.ElapsedTime.TotalMicroseconds);
+            return (uint) PspRtc.ElapsedTime.TotalMicroseconds;
         }
 
         /**
@@ -253,7 +253,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspFunction(NID = 0xC8186A58, FirmwareVersion = 150)]
         public int sceKernelUtilsMd5Digest(byte* Data, uint Size, byte* Digest)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
             /*
             if (Data   == null) return -1;
             if (digest == null) return -1;
@@ -342,7 +342,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspNotImplemented]
         public int sceKernelGzipDecompress(byte* dest, uint destSize, byte* src, uint unknown)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace CSPspEmu.Hle.Modules.utils
         [HlePspNotImplemented]
         public int sceKernelLzrcDecode(byte*dest, uint destSize, byte*src, void*unknown)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         [HlePspFunction(NID = 0x7853182D, FirmwareVersion = 150)]

@@ -34,7 +34,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
             out PspPointer Atrac3PlusPointer)
         {
             var Mpeg = GetMpeg(SceMpegPointer);
-            if (!Mpeg.HasData) throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+            if (!Mpeg.HasData) throw new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA);
             MpegAccessUnit = Mpeg.GetAtracAu(StreamId);
             Atrac3PlusPointer.Address = 0;
             return 0;
@@ -57,8 +57,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
             int Init)
         {
             var Mpeg = GetMpeg(SceMpegPointer);
-            if (!Mpeg.HasData) throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
-            Mpeg.AtracDecode(MpegAccessUnit, OutputBuffer, (Init != 0));
+            if (!Mpeg.HasData) throw new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA);
+            Mpeg.AtracDecode(MpegAccessUnit, OutputBuffer, Init != 0);
             return 0;
         }
     }

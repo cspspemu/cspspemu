@@ -45,13 +45,13 @@ namespace Imager
         public byte GetOrAdd(uint key, Func<uint, byte> factory)
         {
             if (this._existsCache[key] != 0)
-                return (this._valueCache[key]);
+                return this._valueCache[key];
 
             var result = factory(key);
             this._valueCache[key] = result;
             this._existsCache[key] = 1;
             System.Threading.Thread.MemoryBarrier();
-            return (result);
+            return result;
         }
 #else /// <summary>
 /// Our thread-safe dictionary cache

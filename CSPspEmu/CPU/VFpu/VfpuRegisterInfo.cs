@@ -49,7 +49,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 
         private void CheckInvalid(string message, bool check)
         {
-            if (check) throw (new InvalidOperationException($"Invalid '{message}' : {Name}"));
+            if (check) throw new InvalidOperationException($"Invalid '{message}' : {Name}");
         }
 
         public VfpuRegisterInfo(int size, char type, int matrix, int column, int row)

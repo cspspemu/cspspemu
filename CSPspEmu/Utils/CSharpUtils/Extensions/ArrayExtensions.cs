@@ -49,7 +49,7 @@ public static unsafe class ArrayExtensions
     /// <returns></returns>
     public static TTo[] CastToStructArray<TFrom, TTo>(this TFrom[] input)
     {
-        var totalBytes = (Marshal.SizeOf(typeof(TFrom)) * input.Length);
+        var totalBytes = Marshal.SizeOf(typeof(TFrom)) * input.Length;
         var output = new TTo[totalBytes / Marshal.SizeOf(typeof(TTo))];
         var inputHandle = GCHandle.Alloc(input, GCHandleType.Pinned);
         var outputHandle = GCHandle.Alloc(output, GCHandleType.Pinned);

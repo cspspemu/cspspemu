@@ -52,7 +52,7 @@ public sealed class InjectContext : IDisposable
                 var RealType = TypesByType.ContainsKey(Type) ? TypesByType[Type] : Type;
 
                 if (RealType.IsAbstract)
-                    throw (new Exception($"Can't instantiate class '{RealType}', because it is abstract"));
+                    throw new Exception($"Can't instantiate class '{RealType}', because it is abstract");
 
                 try
                 {
@@ -66,7 +66,7 @@ public sealed class InjectContext : IDisposable
                 }
                 catch (MissingMethodException)
                 {
-                    throw(new Exception("No constructor for type '" + Type.Name + "'"));
+                    throw new Exception("No constructor for type '" + Type.Name + "'");
                 }
 
                 InjectDependencesTo(Instance);
@@ -112,7 +112,7 @@ public sealed class InjectContext : IDisposable
     {
         if (ObjectsByType.ContainsKey(Type))
         {
-            throw (new InvalidOperationException());
+            throw new InvalidOperationException();
         }
         ObjectsByType[Type] = Instance;
         return Instance;
@@ -189,7 +189,7 @@ public sealed class InjectContext : IDisposable
     /// <param name="Object"></param>
     public void InjectDependencesTo(object Object)
     {
-        var GetBindingFlags = (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        var GetBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         //Console.WriteLine("aaaaaaaaaaaaaaaaa");
 

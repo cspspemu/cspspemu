@@ -207,7 +207,7 @@ namespace CSPspEmu.Gui.SMAA
         public GLTexture Process(GLTexture InputColor, GLTexture InputDepth)
         {
             if (InputColor.Width == 0 || InputColor.Height == 0)
-                throw (new Exception("Smaa can't handle empty textures"));
+                throw new Exception("Smaa can't handle empty textures");
             //if (InputColor.Width != InputDepth.Width || InputColor.Height != InputDepth.Height) throw (new Exception("Color.Size != Texture.Size"));
             SetSize(InputColor.Width, InputColor.Height);
 

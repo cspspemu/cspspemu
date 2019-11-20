@@ -137,7 +137,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
             {
                 case "emulator:": break;
                 case "kemulator:": break;
-                default: throw (new InvalidOperationException());
+                default: throw new InvalidOperationException();
             }
 
             //Console.Error.WriteLine("     {0}", (EmulatorDevclEnum)Command);
@@ -155,7 +155,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
                     return 0;
                 case EmulatorDevclEnum.EmitScreenshot:
                     if (PspHleRunningConfig.FileNameBase == null || PspHleRunningConfig.FileNameBase == "")
-                        throw (new Exception("PspHleRunningConfig.FileNameBase is empty"));
+                        throw new Exception("PspHleRunningConfig.FileNameBase is empty");
                     this.PspDisplay.TakeScreenshot()
                         .Save(
                             $"{PspHleRunningConfig.FileNameBase}.lastoutput.{ScreenShotCount++}.png", ImageFormat.Png);

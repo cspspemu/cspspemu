@@ -1,37 +1,20 @@
 ﻿// ReSharper disable InconsistentNaming
 namespace CSPspEmu.Core.Gpu
 {
+    public class Test
+    {
+        static public void test()
+        {
+        }
+    }
     public enum GpuOpCodes : ushort
     {
-        /// <summary>
-        /// 0x00 - 0 - NOP
-        /// </summary>
-        NOP,
-
-        /// <summary>
-        /// 0x01 - 1 - Vertex List (BASE)
-        /// </summary>
-        VADDR,
-
-        /// <summary>
-        /// 0x02 - 2 - Index List (BASE)
-        /// </summary>
-        IADDR,
-
-        /// <summary>
-        /// 0x03 - 3 - 
-        /// </summary>
-        Unknown0x03,
-
-        /// <summary>
-        /// 0x04 - 4 - Primitive Kick
-        /// </summary>
-        PRIM,
-
-        /// <summary>
-        /// 0x05 - 5 - Bezier Patch Kick
-        /// </summary>
-        BEZIER,
+        NOP,         // 0x00 - 0 - NOP
+        VADDR,       // 0x01 - 1 - Vertex List (BASE)
+        IADDR,       // 0x02 - 2 - Index List (BASE)
+        Unknown0x03, // 0x03 - 3 -
+        PRIM,        // 0x04 - 4 - Primitive Kick
+        BEZIER,      // 0x05 - 5 - Bezier Patch Kick
 
         /// <summary>
         /// 0x06 - 6 - Spline Surface Kick

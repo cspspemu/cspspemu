@@ -19,7 +19,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut.WaveLib
     public class FifoStream : Stream
     {
         private const int BlockSize = 65536;
-        private const int MaxBlocksInCache = (3 * 1024 * 1024) / BlockSize;
+        private const int MaxBlocksInCache = 3 * 1024 * 1024 / BlockSize;
 
         private int _mSize;
         private int _mRPos;

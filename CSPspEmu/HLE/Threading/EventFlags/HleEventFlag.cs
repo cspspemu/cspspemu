@@ -107,9 +107,9 @@ namespace CSPspEmu.Hle.Threading.EventFlags
             }
 
             if (
-                (WaitType.HasFlag(EventFlagWaitTypeSet.Or))
-                    ? ((Info.CurrentPattern & BitsToMatch) != 0) // one or more bits of the mask
-                    : ((Info.CurrentPattern & BitsToMatch) == BitsToMatch)) // all the bits of the mask
+                WaitType.HasFlag(EventFlagWaitTypeSet.Or)
+                    ? (Info.CurrentPattern & BitsToMatch) != 0 // one or more bits of the mask
+                    : (Info.CurrentPattern & BitsToMatch) == BitsToMatch) // all the bits of the mask
             {
                 _DoClear(WaitType, BitsToMatch);
                 return true;

@@ -63,7 +63,7 @@ namespace CSPspEmu.Tests
                     {
                         for (var m = 0; m < TotalSize; m++) Dest[m] = 0;
                         PointerUtils.Memcpy(destPtr, sourcePtr, count);
-                        for (var m = 0; m < TotalSize; m++) Assert.Equal((m < count) ? m : 0, Dest[m]);
+                        for (var m = 0; m < TotalSize; m++) Assert.Equal(m < count ? m : 0, Dest[m]);
                     }
                 }
             }
@@ -89,7 +89,7 @@ namespace CSPspEmu.Tests
 
                         for (int m = 0; m < TotalSize; m++)
                         {
-                            Assert.Equal((m < count) ? 1 : 0, Dest[m]);
+                            Assert.Equal(m < count ? 1 : 0, Dest[m]);
                         }
                     }
                 }

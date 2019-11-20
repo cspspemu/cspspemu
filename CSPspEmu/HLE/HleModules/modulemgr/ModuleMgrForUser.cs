@@ -133,7 +133,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
         [HlePspFunction(NID = 0xD675EBB8, FirmwareVersion = 150)]
         public int sceKernelSelfStopUnloadModule(int unknown, int argsize, uint argp)
         {
-            throw (new SceKernelSelfStopUnloadModuleException());
+            throw new SceKernelSelfStopUnloadModuleException();
         }
 
         //public int lastModuleId = 1;
@@ -156,7 +156,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
                 if (Path.StartsWith(@"disc0:/PSP_GAME/USRDIR/kmodule"))
                 {
-                    throw (new Exception("Ignore kmodule!"));
+                    throw new Exception("Ignore kmodule!");
                 }
 
                 if (
@@ -169,7 +169,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
                     false)
                 {
                     Logger.Warning("Ignore {0}!", Path);
-                    throw (new Exception("Ignore " + Path + "!"));
+                    throw new Exception("Ignore " + Path + "!");
 
                     //var ModuleId = Modules.Create(new HleModule());
                     //Module.ID = ModuleId;
@@ -459,7 +459,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
         public int sceKernelStopUnloadSelfModule(int ArgumentSize, void* ArgumentPointer, int* StatusPointer,
             void* OptionsAddress)
         {
-            throw (new NotImplementedException("sceKernelStopUnloadSelfModule"));
+            throw new NotImplementedException("sceKernelStopUnloadSelfModule");
             //return 0;
         }
     }

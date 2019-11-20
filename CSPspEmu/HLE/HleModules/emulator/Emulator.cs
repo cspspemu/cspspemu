@@ -20,10 +20,10 @@ namespace CSPspEmu.Hle.Modules.emulator
         public void emitString(string value) => Console.WriteLine("emitString: '{0}'", value);
 
         [HlePspFunction(NID = 0x00000003, FirmwareVersion = 150)]
-        public void emitMemoryBlock(byte* value, uint size) => throw (new NotImplementedException());
+        public void emitMemoryBlock(byte* value, uint size) => throw new NotImplementedException();
 
         [HlePspFunction(NID = 0x00000004, FirmwareVersion = 150)]
-        public void emitHex(byte* value, uint size) => throw (new NotImplementedException());
+        public void emitHex(byte* value, uint size) => throw new NotImplementedException();
 
         [HlePspFunction(NID = 0x00000005, FirmwareVersion = 150)]
         public void emitUInt(uint value) => Console.WriteLine("emitUInt: {0}", "0x%08X".Sprintf(value));

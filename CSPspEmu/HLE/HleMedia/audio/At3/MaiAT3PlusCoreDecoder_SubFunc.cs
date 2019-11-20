@@ -382,7 +382,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
                 if (uk1c6f8 != 0)
                 {
-                    for (uint a0 = 0; a0 < (chn_info.Table0DataNum0 >> 1); a0++)
+                    for (uint a0 = 0; a0 < chn_info.Table0DataNum0 >> 1; a0++)
                     {
                         uint loc0 = (uint) mbr0.GetWithI32Buffer(1);
 
@@ -392,7 +392,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                             chn_info.Table0[a0 * 2 + 1] += MAPCDSF_getHuffValue(huff_table_now, mbr0);
                         }
                     }
-                    for (uint a0 = ((chn_info.Table0DataNum0 >> 1) << 1); a0 < chn_info.Table0DataNum0; a0++)
+                    for (uint a0 = (chn_info.Table0DataNum0 >> 1) << 1; a0 < chn_info.Table0DataNum0; a0++)
                     {
                         chn_info.Table0[a0] += MAPCDSF_getHuffValue(huff_table_now, mbr0);
                     }
@@ -875,7 +875,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             {
                 if (chn_info.CheckTable0[a0] == 1)
                     chn_info.Table2[a0] =
-                        (uint) mbr0.GetWithI32Buffer(((chn_info.JointChnInfo.Var90 != 0) ? 3 : 2)); //tmp4
+                        (uint) mbr0.GetWithI32Buffer(chn_info.JointChnInfo.Var90 != 0 ? 3 : 2); //tmp4
                 else if (chn_info.CheckTable0[a0] == 0) chn_info.Table2[a0] = 0;
                 else if (chn_info.CheckTable0[a0] == 2) chn_info.Table2[a0] = (uint) mbr0.GetWithI32Buffer(1);
                 else
@@ -1052,7 +1052,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             if (huff_table_now.uk3 == 1)
             {
                 uint tcounter0 = 0;
-                for (uint b0 = 0; b0 < (num_to_read >> (huff_table_now.uk4)); b0++)
+                for (uint b0 = 0; b0 < num_to_read >> huff_table_now.uk4; b0++)
                 {
                     uint group_value = MAPCDSF_getHuffValue(huff_table_now, mbr0);
 
@@ -1065,16 +1065,16 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                         if (0 == huff_table_now.uk5)
                         {
                             if ((value_now & (1 << (huff_table_now.uk6 - 1))) != 0)
-                                buf_to_read[tcounter0++] = (short) (value_now | (~((1 << (huff_table_now.uk6)) - 1)));
+                                buf_to_read[tcounter0++] = (short) (value_now | ~((1 << huff_table_now.uk6) - 1));
                             else
-                                buf_to_read[tcounter0++] = (short) (value_now);
+                                buf_to_read[tcounter0++] = (short) value_now;
                         }
                         else
                         {
-                            if (((value_now != 0) && (mbr0.GetWithI32Buffer(1) != 0)))
-                                buf_to_read[tcounter0++] = (short) (((short) (value_now)) * (-1));
+                            if (value_now != 0 && mbr0.GetWithI32Buffer(1) != 0)
+                                buf_to_read[tcounter0++] = (short) ((short) value_now * -1);
                             else
-                                buf_to_read[tcounter0++] = (short) (value_now);
+                                buf_to_read[tcounter0++] = (short) value_now;
                         }
                     }
                 }
@@ -1082,7 +1082,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             else if (huff_table_now.uk3 > 1)
             {
                 uint tcounter0 = 0;
-                for (uint b0 = 0; b0 < (num_to_read >> (huff_table_now.uk4)); b0 += huff_table_now.uk3)
+                for (uint b0 = 0; b0 < num_to_read >> huff_table_now.uk4; b0 += huff_table_now.uk3)
                 {
                     uint l320 = (uint) mbr0.GetWithI32Buffer(1);
                     if (0 == l320)
@@ -1107,16 +1107,16 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                                 {
                                     if ((value_now & (1 << (huff_table_now.uk6 - 1))) != 0)
                                         buf_to_read[tcounter0++] =
-                                            (short) (value_now | (~((1 << (huff_table_now.uk6)) - 1)));
+                                            (short) (value_now | ~((1 << huff_table_now.uk6) - 1));
                                     else
-                                        buf_to_read[tcounter0++] = (short) (value_now);
+                                        buf_to_read[tcounter0++] = (short) value_now;
                                 }
                                 else
                                 {
-                                    if (((value_now != 0) && (mbr0.GetWithI32Buffer(1) != 0)))
-                                        buf_to_read[tcounter0++] = (short) (((short) (value_now)) * (-1));
+                                    if (value_now != 0 && mbr0.GetWithI32Buffer(1) != 0)
+                                        buf_to_read[tcounter0++] = (short) ((short) value_now * -1);
                                     else
-                                        buf_to_read[tcounter0++] = (short) (value_now);
+                                        buf_to_read[tcounter0++] = (short) value_now;
                                 }
                             }
                         }
@@ -1555,39 +1555,39 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             }
             else
             {
-                if (((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1]) < 0xF)
+                if ((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1] < 0xF)
                 {
                     chn_info.AccDataNow.Table[a0].Data0[a1] = mbr0.GetWithI32Buffer(5);
                 }
-                else if (((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1]) < 0x17)
+                else if ((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1] < 0x17)
                 {
                     chn_info.AccDataNow.Table[a0].Data0[a1] =
-                        (chn_info.AccDataNow.Table[a0].Data0[a1 - 1])
+                        chn_info.AccDataNow.Table[a0].Data0[a1 - 1]
                         + mbr0.GetWithI32Buffer(4)
                         + 1;
                 }
-                else if (((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1]) < 0x1B)
+                else if ((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1] < 0x1B)
                 {
                     chn_info.AccDataNow.Table[a0].Data0[a1] =
-                        (chn_info.AccDataNow.Table[a0].Data0[a1 - 1])
+                        chn_info.AccDataNow.Table[a0].Data0[a1 - 1]
                         + mbr0.GetWithI32Buffer(3)
                         + 1;
                 }
-                else if (((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1]) < 0x1D)
+                else if ((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1] < 0x1D)
                 {
                     chn_info.AccDataNow.Table[a0].Data0[a1] =
-                        (chn_info.AccDataNow.Table[a0].Data0[a1 - 1])
+                        chn_info.AccDataNow.Table[a0].Data0[a1 - 1]
                         + mbr0.GetWithI32Buffer(2)
                         + 1;
                 }
-                else if (((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1]) == 0x1D)
+                else if ((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1] == 0x1D)
                 {
                     chn_info.AccDataNow.Table[a0].Data0[a1] =
-                        (chn_info.AccDataNow.Table[a0].Data0[a1 - 1])
+                        chn_info.AccDataNow.Table[a0].Data0[a1 - 1]
                         + mbr0.GetWithI32Buffer(1)
                         + 1;
                 }
-                else if (((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1]) == 0x1E)
+                else if ((uint) chn_info.AccDataNow.Table[a0].Data0[a1 - 1] == 0x1E)
                 {
                     chn_info.AccDataNow.Table[a0].Data0[a1] = 0x1F;
                 }
@@ -1626,8 +1626,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                 {
                     MaiAT3PlusCoreDecoderSearchTableDes huff_table_now = null;
 
-                    if (((int) chn_info.AccDataNow.Table[a0].Data1[a1])
-                        - ((int) chn_info.AccDataNow.Table[a0].Data1[a1 - 1])
+                    if ((int) chn_info.AccDataNow.Table[a0].Data1[a1]
+                        - (int) chn_info.AccDataNow.Table[a0].Data1[a1 - 1]
                         <= 0)
                     {
                         huff_table_now = MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_huff_table_global_6[0];
@@ -1688,11 +1688,11 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                     MaiAT3PlusCoreDecoderSearchTableDes huff_table_now = null;
 
                     uint check_value0 = 0;
-                    if (a1 >= ((uint) chn_info.AccDataNow.Table[a0 - 1].NumAcc))
+                    if (a1 >= (uint) chn_info.AccDataNow.Table[a0 - 1].NumAcc)
                         check_value0 = 1;
 
-                    if (((int) chn_info.AccDataNow.Table[a0].Data1[a1])
-                        - ((int) chn_info.AccDataNow.Table[a0].Data1[a1 - 1])
+                    if ((int) chn_info.AccDataNow.Table[a0].Data1[a1]
+                        - (int) chn_info.AccDataNow.Table[a0].Data1[a1 - 1]
                         <= 0)
                     {
                         if (check_value0 != 0)
@@ -1795,9 +1795,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                 }
                 else
                 {
-                    chn_info.AccDataNow.Table[a0].Data0[0] = (int) (
-                        MAPCDSF_getHuffValue(MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_huff_table_global_10[0], mbr0)
-                    );
+                    chn_info.AccDataNow.Table[a0].Data0[0] = (int) MAPCDSF_getHuffValue(MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_huff_table_global_10[0], mbr0);
                 }
 
                 for (uint a1 = 1; a1 < (uint) chn_info.AccDataNow.Table[a0].NumAcc; a1++)
@@ -1806,8 +1804,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
                     if (a1 >= (uint) chn_info.ChnRef.AccDataNow.Table[a0].NumAcc)
                         check_value0 = 1;
 
-                    if (((int) chn_info.AccDataNow.Table[a0].Data1[a1])
-                        - ((int) chn_info.AccDataNow.Table[a0].Data1[a1 - 1])
+                    if ((int) chn_info.AccDataNow.Table[a0].Data1[a1]
+                        - (int) chn_info.AccDataNow.Table[a0].Data1[a1 - 1]
                         <= 0)
                     {
                         MaiAT3PlusCoreDecoderSearchTableDes huff_table_now = null;
@@ -1889,9 +1887,9 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             {
                 if (chn_info.AccDataNow.Table[a0].NumAcc != 0)
                 {
-                    if ((((uint) chn_info.AccDataNow.Table[a0].NumAcc)
-                         <= ((uint) chn_info.ChnRef.AccDataNow.Table[a0].NumAcc))
-                        && (0 == mbr0.GetWithI32Buffer(1))
+                    if ((uint) chn_info.AccDataNow.Table[a0].NumAcc
+                        <= (uint) chn_info.ChnRef.AccDataNow.Table[a0].NumAcc
+                        && 0 == mbr0.GetWithI32Buffer(1)
                     )
                     {
                         for (uint a1 = 0; a1 < (uint) chn_info.AccDataNow.Table[a0].NumAcc; a1++)
@@ -1958,8 +1956,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             {
                 for (int a1 = 0; a1 < 0x7; a1++)
                 {
-                    if ((chn_info.AccDataNow.Table[a0].Data0[a1] < 0) ||
-                        (chn_info.AccDataNow.Table[a0].Data0[a1] >= 0x20))
+                    if (chn_info.AccDataNow.Table[a0].Data0[a1] < 0 ||
+                        chn_info.AccDataNow.Table[a0].Data0[a1] >= 0x20)
                     {
                         rs = -1;
                         break;
@@ -1991,7 +1989,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             int rs = 0;
 
             MaiAt3PlusCoreDecoderChnAccTable acc_table_to_use =
-                (arg2 != 0) ? chn_info.AccTableNow : chn_info.AccTableOld;
+                arg2 != 0 ? chn_info.AccTableNow : chn_info.AccTableOld;
 
             if (chn_info.ChnFlag == 0)
             {
@@ -2233,7 +2231,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             while (btmp0 >= 0)
             {
                 // @TODO: Refactor gettings bits.
-                if (btmp0 == (table.NumUk - 1))
+                if (btmp0 == table.NumUk - 1)
                 {
                     table.Ptr0[btmp0].Unk3 = mbr0.GetWithI32Buffer(0xA);
                 }
@@ -2294,7 +2292,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             {
                 if (chn_info.InnerPackTable0CheckTable[a0] != 0)
                 {
-                    if (((uint) chn_info.AccTableNow.Table[a0].NumUk) <= 1)
+                    if ((uint) chn_info.AccTableNow.Table[a0].NumUk <= 1)
                     {
                         uk1c730 = 0;
                         MAPCDSF_calcACCTableTableUnk3ByLastValue(chn_info.AccTableNow.Table[a0], mbr0);
@@ -2836,7 +2834,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
             int atmp0 = 0;
             for (uint a0 = 0; a0 < (uint) chn_info.AccTableNow.Inner.Unk2; a0++)
             {
-                chn_info.AccTableNow.Table[a0].Ptr0 = (atmp0) + chn_info.AccTableNow.Inner.PtrToUseNow;
+                chn_info.AccTableNow.Table[a0].Ptr0 = atmp0 + chn_info.AccTableNow.Inner.PtrToUseNow;
                 atmp0 += chn_info.AccTableNow.Table[a0].NumUk;
             }
 

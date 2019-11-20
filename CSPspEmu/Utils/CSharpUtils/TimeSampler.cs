@@ -28,7 +28,7 @@ namespace CSharpUtils
 
         public double GetInterpolatedSampleAt(DateTime time)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         public DateTime GetNearestDateTimeAt(DateTime time)

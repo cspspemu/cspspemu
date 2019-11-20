@@ -295,12 +295,12 @@ namespace CSPspEmu.Hle.Managers
             //Debug.WriteLine(Threads.Count);
             if (Id == 0)
             {
-                if (!AllowSelf) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
+                if (!AllowSelf) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD);
                 return Current;
             }
             HleThread HleThread = null;
             ThreadsById.TryGetValue(Id, out HleThread);
-            if (HleThread == null) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_THREAD));
+            if (HleThread == null) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_THREAD);
             return HleThread;
         }
 

@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
         //public const int Frequency = 48000;
 
         //public const double SamplesPerMillisecond = ((double)Frequency) / 1000;
-        public const double SamplesPerMillisecond = ((double) Frequency) / 500;
+        public const double SamplesPerMillisecond = (double) Frequency / 500;
 
         //public const double SamplesPerMillisecond = ((double)Frequency) / 100;
         //public const int BufferSize = 16384;

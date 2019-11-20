@@ -18,7 +18,7 @@ namespace CSPspEmu.Hle.Vfs
 
         public override int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* stat, int bits)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         public override int IoMkdir(HleIoDrvFileArg HleIoDrvFileArg, string Name, SceMode Mode)
@@ -30,17 +30,17 @@ namespace CSPspEmu.Hle.Vfs
 
         public override int IoRmdir(HleIoDrvFileArg HleIoDrvFileArg, string Name)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         public override int IoRename(HleIoDrvFileArg HleIoDrvFileArg, string OldFileName, string NewFileName)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         public override int IoRemove(HleIoDrvFileArg HleIoDrvFileArg, string Name)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

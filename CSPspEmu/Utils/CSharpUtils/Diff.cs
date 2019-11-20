@@ -177,7 +177,7 @@ namespace CSharpUtils
             /// <returns></returns>
             public override string ToString()
             {
-                return $"{(LineNumber + 1),4:0}: {(char) Action}{(char) Action} {Line}";
+                return $"{LineNumber + 1,4:0}: {(char) Action}{(char) Action} {Line}";
             }
         }
 
@@ -214,7 +214,7 @@ namespace CSharpUtils
         /// <returns>Returns a array of Items that describe the differences.</returns>
         public Item[] DiffText(string[] textA, string[] textB)
         {
-            return (DiffText(textA, textB, false, false, false));
+            return DiffText(textA, textB, false, false, false);
         } // DiffText
 
         /// <summary>
@@ -332,13 +332,13 @@ namespace CSharpUtils
             var startPos = 0;
             while (startPos < data.Length)
             {
-                while ((startPos < data.Length) && !data.Modified[startPos])
+                while (startPos < data.Length && !data.Modified[startPos])
                     startPos++;
                 var endPos = startPos;
-                while ((endPos < data.Length) && data.Modified[endPos])
+                while (endPos < data.Length && data.Modified[endPos])
                     endPos++;
 
-                if ((endPos < data.Length) && (data.Data[startPos] == data.Data[endPos]))
+                if (endPos < data.Length && data.Data[startPos] == data.Data[endPos])
                 {
                     data.Modified[startPos] = false;
                     data.Modified[endPos] = true;
@@ -426,7 +426,7 @@ namespace CSharpUtils
                     codes[i] = (int) aCode;
                 } // if
             } // for
-            return (codes);
+            return codes;
         } // DiffCodes
 
 
@@ -452,7 +452,7 @@ namespace CSharpUtils
             var downK = lowerA - lowerB; // the k-line to start the forward search
             var upK = upperA - upperB; // the k-line to start the reverse search
 
-            var delta = (upperA - lowerA) - (upperB - lowerB);
+            var delta = upperA - lowerA - (upperB - lowerB);
             var oddDelta = (delta & 1) != 0;
 
             // The vectors in the publication accepts negative indexes. the vectors implemented here are 0-based
@@ -460,7 +460,7 @@ namespace CSharpUtils
             var downOffset = max - downK;
             var upOffset = max - upK;
 
-            var maxD = ((upperA - lowerA + upperB - lowerB) / 2) + 1;
+            var maxD = (upperA - lowerA + upperB - lowerB) / 2 + 1;
 
             // Debug.Write(2, "SMS", String.Format("Search the box: A[{0}-{1}] to B[{2}-{3}]", LowerA, UpperA, LowerB, UpperB));
 
@@ -485,13 +485,13 @@ namespace CSharpUtils
                     else
                     {
                         x = downVector[downOffset + k - 1] + 1; // a step to the right
-                        if ((k < downK + d) && (downVector[downOffset + k + 1] >= x))
+                        if (k < downK + d && downVector[downOffset + k + 1] >= x)
                             x = downVector[downOffset + k + 1]; // down
                     }
                     var y = x - k;
 
                     // find the end of the furthest reaching forward D-path in diagonal k.
-                    while ((x < upperA) && (y < upperB) && (dataA.Data[x] == dataB.Data[y]))
+                    while (x < upperA && y < upperB && dataA.Data[x] == dataB.Data[y])
                     {
                         x++;
                         y++;
@@ -499,7 +499,7 @@ namespace CSharpUtils
                     downVector[downOffset + k] = x;
 
                     // overlap ?
-                    if (oddDelta && (upK - d < k) && (k < upK + d))
+                    if (oddDelta && upK - d < k && k < upK + d)
                     {
                         if (upVector[upOffset + k] <= downVector[downOffset + k])
                         {
@@ -507,7 +507,7 @@ namespace CSharpUtils
                             ret.Y = downVector[downOffset + k] - k;
                             // ret.u = UpVector[UpOffset + k];      // 2002.09.20: no need for 2 points 
                             // ret.v = UpVector[UpOffset + k] - k;
-                            return (ret);
+                            return ret;
                         } // if
                     } // if
                 } // for k
@@ -526,12 +526,12 @@ namespace CSharpUtils
                     else
                     {
                         x = upVector[upOffset + k + 1] - 1; // left
-                        if ((k > upK - d) && (upVector[upOffset + k - 1] < x))
+                        if (k > upK - d && upVector[upOffset + k - 1] < x)
                             x = upVector[upOffset + k - 1]; // up
                     } // if
                     var y = x - k;
 
-                    while ((x > lowerA) && (y > lowerB) && (dataA.Data[x - 1] == dataB.Data[y - 1]))
+                    while (x > lowerA && y > lowerB && dataA.Data[x - 1] == dataB.Data[y - 1])
                     {
                         x--;
                         y--; // diagonal
@@ -539,7 +539,7 @@ namespace CSharpUtils
                     upVector[upOffset + k] = x;
 
                     // overlap ?
-                    if (!oddDelta && (downK - d <= k) && (k <= downK + d))
+                    if (!oddDelta && downK - d <= k && k <= downK + d)
                     {
                         if (upVector[upOffset + k] <= downVector[downOffset + k])
                         {
@@ -547,7 +547,7 @@ namespace CSharpUtils
                             ret.Y = downVector[downOffset + k] - k;
                             // ret.u = UpVector[UpOffset + k];     // 2002.09.20: no need for 2 points 
                             // ret.v = UpVector[UpOffset + k] - k;
-                            return (ret);
+                            return ret;
                         } // if
                     } // if
                 } // for k
@@ -628,8 +628,8 @@ namespace CSharpUtils
             var lineB = 0;
             while (lineA < dataA.Length || lineB < dataB.Length)
             {
-                if ((lineA < dataA.Length) && (!dataA.Modified[lineA])
-                    && (lineB < dataB.Length) && (!dataB.Modified[lineB]))
+                if (lineA < dataA.Length && !dataA.Modified[lineA]
+                    && lineB < dataB.Length && !dataB.Modified[lineB])
                 {
                     // equal lines
                     lineA++;
@@ -649,7 +649,7 @@ namespace CSharpUtils
                         // while (LineB < DataB.Length && DataB.modified[LineB])
                         lineB++;
 
-                    if ((startA < lineA) || (startB < lineB))
+                    if (startA < lineA || startB < lineB)
                     {
                         // store a new difference-item
                         var aItem = new Item
@@ -667,7 +667,7 @@ namespace CSharpUtils
             var result = new Item[a.Count];
             a.CopyTo(result);
 
-            return (result);
+            return result;
         }
     } // class Diff
 

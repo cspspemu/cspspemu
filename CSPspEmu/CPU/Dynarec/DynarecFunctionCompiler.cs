@@ -46,7 +46,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                         Delegate = cpuThreadState =>
                         {
                             if (cpuThreadState == null) return;
-                            throw (new SpecialCpu.ReturnFromFunctionException());
+                            throw new SpecialCpu.ReturnFromFunctionException();
                         }
                     };
                 default:
@@ -130,7 +130,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                 if (checkValidAddress && !PspMemory.IsAddressValid(entryPc))
                 {
-                    throw (new InvalidOperationException($"Trying to get invalid function 0x{entryPc:X8}"));
+                    throw new InvalidOperationException($"Trying to get invalid function 0x{entryPc:X8}");
                 }
             }
 
@@ -256,8 +256,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                         if (_analyzedPc.Count > MaxNumberOfInstructions)
                         {
-                            throw (new InvalidDataException(
-                                $"Code sequence too long: >= {MaxNumberOfInstructions} at 0x{_entryPc:X8}"));
+                            throw new InvalidDataException(
+                                $"Code sequence too long: >= {MaxNumberOfInstructions} at 0x{_entryPc:X8}");
                         }
 
                         UpdateMinMax(_pc);
@@ -404,7 +404,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                     return _ast.Statement();
                 }
 
-                throw (new NotImplementedException("EmitInstructionCountIncrement"));
+                throw new NotImplementedException("EmitInstructionCountIncrement");
 
                 ////Console.WriteLine("EmiteInstructionCountIncrement: {0},{1}", InstructionsEmitedSinceLastWaypoint, CheckForYield);
                 //if (InstructionsEmitedSinceLastWaypoint > 0)
@@ -555,8 +555,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
                             // An internal jump.
                             if (
-                                (jumpDisasm.InstructionInfo.Name == "j")
-                                && (_labelsJump.ContainsKey(jumpJumpPc))
+                                jumpDisasm.InstructionInfo.Name == "j"
+                                && _labelsJump.ContainsKey(jumpJumpPc)
                             )
                             {
                                 jumpInstruction = new AstNodeStmPspInstruction(jumpDisasm,
@@ -612,12 +612,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
                                 // Code not reached.
                                 else
                                 {
-                                    throw (new InvalidOperationException("!Labels.ContainsKey(BranchAddress)"));
+                                    throw new InvalidOperationException("!Labels.ContainsKey(BranchAddress)");
                                 }
                             }
                             else
                             {
-                                throw (new InvalidOperationException("Invalid branch!"));
+                                throw new InvalidOperationException("Invalid branch!");
                             }
                         }
                     }

@@ -383,7 +383,7 @@ namespace CSharpUtils.Containers.RedBlackTree
         /// <returns>Returns if an element was removed or not</returns>
         public bool Remove(TElement item)
         {
-            return (RemoveNode(NonConcurrentFindNodeFromElement(item)) != null);
+            return RemoveNode(NonConcurrentFindNodeFromElement(item)) != null;
         }
 
         #endregion
@@ -516,7 +516,7 @@ namespace CSharpUtils.Containers.RedBlackTree
 
         internal Node LocateNodeAtPosition(int positionToFind)
         {
-            if (positionToFind < 0) throw(new Exception("Negative locateNodeAt"));
+            if (positionToFind < 0) throw new Exception("Negative locateNodeAt");
             Node current = BaseRootNode;
             int currentPosition = BaseRootNode.ChildCountLeft;
 
@@ -1165,7 +1165,7 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
 
             // Tail recursion.
-            public Node LeftMostNode => (LeftNode == null) ? this : LeftNode.LeftMostNode;
+            public Node LeftMostNode => LeftNode == null ? this : LeftNode.LeftMostNode;
 
             public Node RightMostNode => RightNode == null ? this : RightNode.RightMostNode;
 
@@ -1348,7 +1348,7 @@ namespace CSharpUtils.Containers.RedBlackTree
                 );
             }
 
-            bool IsEmpty => (RangeStartNode == RangeEndNode);
+            bool IsEmpty => RangeStartNode == RangeEndNode;
 
             /// <summary>
             /// 

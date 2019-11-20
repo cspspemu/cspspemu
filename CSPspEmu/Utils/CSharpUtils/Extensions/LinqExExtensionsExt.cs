@@ -42,7 +42,7 @@ namespace CSharpUtils.Ext.Extensions
                 {
                     dynamic curValue = compareValue(item);
 
-                    if (first || (curValue < minValue))
+                    if (first || curValue < minValue)
                     {
                         minValue = curValue;
                         minIndex = index;
@@ -71,7 +71,7 @@ namespace CSharpUtils.Ext.Extensions
             foreach (var item in items)
             {
                 var curValue = compareValue(item);
-                if (!first && (curValue >= minValue)) continue;
+                if (!first && curValue >= minValue) continue;
                 minItem = item;
                 minValue = curValue;
                 first = false;

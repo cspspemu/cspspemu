@@ -40,7 +40,7 @@ namespace SafeILGenerator.Utils
 
         public AstNodeExprStaticFieldAccess GetAstFieldAccess()
         {
-            if (FieldInfo == null) throw (new Exception("FieldInfo == null"));
+            if (FieldInfo == null) throw new Exception("FieldInfo == null");
             return new AstNodeExprStaticFieldAccess(FieldInfo);
         }
 

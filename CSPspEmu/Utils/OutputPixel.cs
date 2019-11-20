@@ -50,12 +50,10 @@ namespace CSPspEmu.Core.Types
             A = (byte) (c1.A & c2.A),
         };
 
-        public static bool operator ==(OutputPixel c1, OutputPixel c2) => (
-            (c1.R == c2.R) &&
-            (c1.G == c2.G) &&
-            (c1.B == c2.B) &&
-            (c1.A == c2.A)
-        );
+        public static bool operator ==(OutputPixel c1, OutputPixel c2) => c1.R == c2.R &&
+                                                                          c1.G == c2.G &&
+                                                                          c1.B == c2.B &&
+                                                                          c1.A == c2.A;
 
         public static bool operator !=(OutputPixel c1, OutputPixel c2) => !(c1 == c2);
 

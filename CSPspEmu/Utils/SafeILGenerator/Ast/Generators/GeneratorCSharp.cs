@@ -199,8 +199,8 @@ namespace SafeILGenerator.Ast.Generators
         {
             var astExpr = PlaceholderStack.Pop();
             if (astExpr.Type != placeholder.Type)
-                throw (new Exception("Invalid Expression for placeholder " + astExpr.Type + " != " + placeholder.Type +
-                                     "."));
+                throw new Exception("Invalid Expression for placeholder " + astExpr.Type + " != " + placeholder.Type +
+                                    ".");
             Generate(astExpr);
         }
 

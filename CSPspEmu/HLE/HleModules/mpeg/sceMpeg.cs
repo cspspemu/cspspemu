@@ -127,7 +127,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
             if (mpegSize < sceMpegQueryMemSize(0))
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_MEMORY));
+                throw new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_MEMORY);
             }
 
             // Update the ring buffer struct.
@@ -144,7 +144,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
             sceMpegRingbuffer->SceMpeg = Memory.PointerToPspPointer(sceMpegPointer);
 
-            SceMpeg* sceMpegData = (SceMpeg*) (((byte*) mpegData) + 0x30);
+            SceMpeg* sceMpegData = (SceMpeg*) ((byte*) mpegData + 0x30);
 
             sceMpegPointer->SceMpeg = Memory.PointerToPspPointer(sceMpegData);
 
@@ -258,7 +258,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
             if (ringbuffer->DataEnd > ringbuffer->Data + size)
             {
-                throw (new InvalidOperationException());
+                throw new InvalidOperationException();
             }
 
             return 0;

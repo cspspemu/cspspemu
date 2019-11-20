@@ -113,7 +113,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x2A368661, FirmwareVersion = 150)]
         public int sceMp3ResetPlayPosition(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x3C2FA058, FirmwareVersion = 150)]
         public int sceMp3TermResource()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x3CEF484F, FirmwareVersion = 150)]
         public int sceMp3SetLoopNum(Mp3Stream Mp3Stream, int NumberOfLoops)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x44E07129, FirmwareVersion = 150)]
         public int sceMp3Init(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x7F696782, FirmwareVersion = 150)]
         public int sceMp3GetMp3ChannelNum(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         public int sceMp3GetInfoToAddStreamData(Mp3Stream Mp3Stream, uint Mp3BufferPointer, uint mp3BufToWritePtr,
             uint mp3PosPtr)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xD021C0FB, FirmwareVersion = 150)]
         public int sceMp3Decode(Mp3Stream Mp3Stream, uint OutputPcmPointer)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xD0A56296, FirmwareVersion = 150)]
         public bool sceMp3CheckStreamDataNeeded(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x354D27EA, FirmwareVersion = 150)]
         public int sceMp3GetSumDecodedSample(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x87677E40, FirmwareVersion = 150)]
         public int sceMp3GetBitRate(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0x87C263D1, FirmwareVersion = 150)]
         public int sceMp3GetMaxOutputSample(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
         [HlePspFunction(NID = 0xD8F54A51, FirmwareVersion = 150)]
         public int sceMp3GetLoopNum(Mp3Stream Mp3Stream)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

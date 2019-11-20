@@ -138,14 +138,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
         // DIVide (Unsigned).
         /////////////////////////////////////////////////////////////////////////////////////////////////
         [InstructionName(InstructionNames.Div)]
-        public AstNodeStm Div() => (_ast.Statement(_ast.CallStatic(
+        public AstNodeStm Div() => _ast.Statement(_ast.CallStatic(
             (Action<CpuThreadState, int, int>) CpuEmitterUtils._div_impl,
-            _ast.CpuThreadStateExpr, _ast.GPR_s(Rs), _ast.GPR_s(Rt))));
+            _ast.CpuThreadStateExpr, _ast.GPR_s(Rs), _ast.GPR_s(Rt)));
 
         [InstructionName(InstructionNames.Divu)]
-        public AstNodeStm Divu() => (_ast.Statement(_ast.CallStatic(
+        public AstNodeStm Divu() => _ast.Statement(_ast.CallStatic(
             (Action<CpuThreadState, uint, uint>) CpuEmitterUtils._divu_impl,
-            _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), _ast.GPR_u(Rt))));
+            _ast.CpuThreadStateExpr, _ast.GPR_u(Rs), _ast.GPR_u(Rt)));
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         // MULTiply (ADD/SUBstract) (Unsigned).
@@ -468,7 +468,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
         public AstNodeStm Bgezall() => Bgezal();
 
         public bool PopulateCallStack =>
-            !(_cpuProcessor.Memory.HasFixedGlobalAddress) && _cpuProcessor.CpuConfig.TrackCallStack;
+            !_cpuProcessor.Memory.HasFixedGlobalAddress && _cpuProcessor.CpuConfig.TrackCallStack;
 
         /*
         private AstNodeStm _popstack()

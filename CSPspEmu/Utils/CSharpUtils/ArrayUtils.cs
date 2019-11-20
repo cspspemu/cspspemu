@@ -108,7 +108,7 @@ namespace CSharpUtils
                 }
                 for (var n = 0; n < rowCount; n++)
                 {
-                    var c = ((char) data[offset + n]);
+                    var c = (char) data[offset + n];
                     Console.Write("{0}", char.IsControl(c) ? '?' : c);
                 }
 

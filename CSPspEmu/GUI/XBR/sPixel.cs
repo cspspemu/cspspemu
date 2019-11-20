@@ -69,7 +69,7 @@ namespace Imager
         /// <returns></returns>
         private static float _Byte2Single(byte value)
         {
-            return (value / 255f);
+            return value / 255f;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Imager
         /// <returns></returns>
         private static double _Byte2Double(byte value)
         {
-            return (value / 255d);
+            return value / 255d;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Imager
         /// <returns>The clipped value</returns>
         private static byte _Float2Byte(float value)
         {
-            return ((value < byte.MinValue) ? byte.MinValue : (value > byte.MaxValue) ? byte.MaxValue : (byte) value);
+            return value < byte.MinValue ? byte.MinValue : value > byte.MaxValue ? byte.MaxValue : (byte) value;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Imager
         /// <returns>The alpha component</returns>
         private static byte _GetAlpha(uint rgbBytes)
         {
-            return ((byte) (rgbBytes >> 24));
+            return (byte) (rgbBytes >> 24);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Imager
         /// <returns>The red component</returns>
         private static byte _GetRed(uint rgbBytes)
         {
-            return ((byte) (rgbBytes >> 16));
+            return (byte) (rgbBytes >> 16);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Imager
         /// <returns>The green component</returns>
         private static byte _GetGreen(uint rgbBytes)
         {
-            return ((byte) (rgbBytes >> 8));
+            return (byte) (rgbBytes >> 8);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Imager
         /// <returns>The blue component</returns>
         private static byte _GetBlue(uint rgbBytes)
         {
-            return ((byte) (rgbBytes));
+            return (byte) rgbBytes;
         }
 
         #endregion
@@ -160,21 +160,21 @@ namespace Imager
         /// Gets the minimum value of Red, Green and Blue.
         /// </summary>
         /// <value>The minimum.</value>
-        public byte Minimum => ((this.Red < this.Green) && (this.Red < this.Blue)
+        public byte Minimum => this.Red < this.Green && this.Red < this.Blue
             ? this.Red
             : this.Green < this.Blue
                 ? this.Green
-                : this.Blue);
+                : this.Blue;
 
         /// <summary>
         /// Gets the maximum value of Red, Green and Blue.
         /// </summary>
         /// <value>The maximum.</value>
-        public byte Maximum => ((this.Red > this.Green) && (this.Red > this.Blue)
+        public byte Maximum => this.Red > this.Green && this.Red > this.Blue
             ? this.Red
             : this.Green > this.Blue
                 ? this.Green
-                : this.Blue);
+                : this.Blue;
 
         /// <summary>
         /// Factor that is used to avoid noise in color extraction.
@@ -207,10 +207,10 @@ namespace Imager
                 var factorG = byte.MaxValue / baseG;
                 var factorB = byte.MaxValue / baseB;
                 var useFactor = Math.Min(factorR, Math.Min(factorG, factorB));
-                baseR = (float) (Math.Floor((baseR * useFactor) / ColorExtractionFactor) * ColorExtractionFactor);
-                baseG = (float) (Math.Floor((baseG * useFactor) / ColorExtractionFactor) * ColorExtractionFactor);
-                baseB = (float) (Math.Floor((baseB * useFactor) / ColorExtractionFactor) * ColorExtractionFactor);
-                return (new sPixel((byte) baseR, (byte) baseG, (byte) baseB, this.Alpha));
+                baseR = (float) (Math.Floor(baseR * useFactor / ColorExtractionFactor) * ColorExtractionFactor);
+                baseG = (float) (Math.Floor(baseG * useFactor / ColorExtractionFactor) * ColorExtractionFactor);
+                baseB = (float) (Math.Floor(baseB * useFactor / ColorExtractionFactor) * ColorExtractionFactor);
+                return new sPixel((byte) baseR, (byte) baseG, (byte) baseB, this.Alpha);
             }
         }
 
@@ -222,8 +222,8 @@ namespace Imager
                 var green = this.Green;
                 var blue = this.Blue;
                 var color = this.ExtractColors;
-                return (new sPixel((byte) (color.Red - red), (byte) (color.Green - green), (byte) (color.Blue - blue),
-                    this.Alpha));
+                return new sPixel((byte) (color.Red - red), (byte) (color.Green - green), (byte) (color.Blue - blue),
+                    this.Alpha);
             }
         }
 
@@ -235,9 +235,9 @@ namespace Imager
         {
             get
             {
-                return (_CACHE_Y.GetOrAdd(this._rgbBytes & _RGB_MASK,
+                return _CACHE_Y.GetOrAdd(this._rgbBytes & _RGB_MASK,
                     rgbBytes => _Float2Byte(_GetRed(rgbBytes) * 0.299f + _GetGreen(rgbBytes) * 0.587f +
-                                            _GetBlue(rgbBytes) * 0.114f)));
+                                            _GetBlue(rgbBytes) * 0.114f));
             }
         }
 
@@ -249,9 +249,9 @@ namespace Imager
         {
             get
             {
-                return (_CACHE_U.GetOrAdd(this._rgbBytes & _RGB_MASK,
+                return _CACHE_U.GetOrAdd(this._rgbBytes & _RGB_MASK,
                     rgbBytes => _Float2Byte(127.5f + _GetRed(rgbBytes) * 0.5f - _GetGreen(rgbBytes) * 0.418688f -
-                                            _GetBlue(rgbBytes) * 0.081312f)));
+                                            _GetBlue(rgbBytes) * 0.081312f));
             }
         }
 
@@ -263,9 +263,9 @@ namespace Imager
         {
             get
             {
-                return (_CACHE_V.GetOrAdd(this._rgbBytes & _RGB_MASK,
+                return _CACHE_V.GetOrAdd(this._rgbBytes & _RGB_MASK,
                     rgbBytes => _Float2Byte(127.5f - _GetRed(rgbBytes) * 0.168736f - _GetGreen(rgbBytes) * 0.331264f +
-                                            _GetBlue(rgbBytes) * 0.5f)));
+                                            _GetBlue(rgbBytes) * 0.5f));
             }
         }
 
@@ -277,9 +277,9 @@ namespace Imager
         {
             get
             {
-                return (_CACHE_ALTERNATE_U.GetOrAdd(this._rgbBytes & _RGB_MASK,
+                return _CACHE_ALTERNATE_U.GetOrAdd(this._rgbBytes & _RGB_MASK,
                     rgbBytes => _Float2Byte(_GetRed(rgbBytes) * 0.5f + _GetGreen(rgbBytes) * 0.418688f +
-                                            _GetBlue(rgbBytes) * 0.081312f)));
+                                            _GetBlue(rgbBytes) * 0.081312f));
             }
         }
 
@@ -291,9 +291,9 @@ namespace Imager
         {
             get
             {
-                return (_CACHE_ALTERNATE_V.GetOrAdd(this._rgbBytes & _RGB_MASK,
+                return _CACHE_ALTERNATE_V.GetOrAdd(this._rgbBytes & _RGB_MASK,
                     rgbBytes => _Float2Byte(_GetRed(rgbBytes) * 0.168736f + _GetGreen(rgbBytes) * 0.331264f +
-                                            _GetBlue(rgbBytes) * 0.5f)));
+                                            _GetBlue(rgbBytes) * 0.5f));
             }
         }
 
@@ -305,8 +305,8 @@ namespace Imager
         {
             get
             {
-                return (_CACHE_BRIGHTNESS.GetOrAdd(this._rgbBytes & _RGB_MASK,
-                    dwordC => (byte) ((_GetRed(dwordC) * 3 + _GetGreen(dwordC) * 3 + _GetBlue(dwordC) * 2) >> 3)));
+                return _CACHE_BRIGHTNESS.GetOrAdd(this._rgbBytes & _RGB_MASK,
+                    dwordC => (byte) ((_GetRed(dwordC) * 3 + _GetGreen(dwordC) * 3 + _GetBlue(dwordC) * 2) >> 3));
                 //byteRet = (byte)((this.Red << 1 + this.Green << 1 + this.Blue << 1 + this.Red + this.Green) >> 3);
             }
         }
@@ -319,7 +319,7 @@ namespace Imager
         {
             get
             {
-                return (_CACHE_HUE.GetOrAdd(this._rgbBytes & _RGB_MASK, rgbBytes =>
+                return _CACHE_HUE.GetOrAdd(this._rgbBytes & _RGB_MASK, rgbBytes =>
                 {
                     float hue;
                     var red = _GetRed(rgbBytes);
@@ -343,8 +343,8 @@ namespace Imager
                     while (hue >= 360)
                         hue -= 360;
                     const float conversionFactor = 256f / 360f;
-                    return ((byte) (hue * conversionFactor));
-                }));
+                    return (byte) (hue * conversionFactor);
+                });
             }
         }
 
@@ -352,7 +352,7 @@ namespace Imager
         /// Gets an instance of type Color or sets the actual pixel to that color.
         /// </summary>
         /// <value>The color.</value>
-        public Color Color => (Color.FromArgb(this.Alpha, this.Red, this.Green, this.Blue));
+        public Color Color => Color.FromArgb(this.Alpha, this.Red, this.Green, this.Blue);
 
         #region byte values
 
@@ -360,45 +360,45 @@ namespace Imager
         /// Gets or sets the alpha component.
         /// </summary>
         /// <value>The alpha-value.</value>
-        public byte Alpha => (_GetAlpha(this._rgbBytes));
+        public byte Alpha => _GetAlpha(this._rgbBytes);
 
         /// <summary>
         /// Gets or sets the red component.
         /// </summary>
         /// <value>The red-value.</value>
-        public byte Red => (_GetRed(this._rgbBytes));
+        public byte Red => _GetRed(this._rgbBytes);
 
         /// <summary>
         /// Gets or sets the green component.
         /// </summary>
         /// <value>The green-value.</value>
-        public byte Green => (_GetGreen(this._rgbBytes));
+        public byte Green => _GetGreen(this._rgbBytes);
 
         /// <summary>
         /// Gets or sets the blue component.
         /// </summary>
         /// <value>The blue-value.</value>
-        public byte Blue => (_GetBlue(this._rgbBytes));
+        public byte Blue => _GetBlue(this._rgbBytes);
 
         #endregion
 
         #region float values
 
-        public double DoubleRed => (_Byte2Double(this.Red));
+        public double DoubleRed => _Byte2Double(this.Red);
 
-        public float SingleRed => (_Byte2Single(this.Red));
+        public float SingleRed => _Byte2Single(this.Red);
 
-        public double DoubleGreen => (_Byte2Double(this.Green));
+        public double DoubleGreen => _Byte2Double(this.Green);
 
-        public float SingleGreen => (_Byte2Single(this.Green));
+        public float SingleGreen => _Byte2Single(this.Green);
 
-        public double DoubleBlue => (_Byte2Double(this.Blue));
+        public double DoubleBlue => _Byte2Double(this.Blue);
 
-        public float SingleBlue => (_Byte2Single(this.Blue));
+        public float SingleBlue => _Byte2Single(this.Blue);
 
-        public double DoubleAlpha => (_Byte2Double(this.Alpha));
+        public double DoubleAlpha => _Byte2Double(this.Alpha);
 
-        public float SingleAlpha => (_Byte2Single(this.Alpha));
+        public float SingleAlpha => _Byte2Single(this.Alpha);
 
         #endregion
 
@@ -408,12 +408,12 @@ namespace Imager
 
         public static sPixel FromFloat(float red, float green, float blue, float alpha = 1f)
         {
-            return (new sPixel(
+            return new sPixel(
                 _Float2Byte(red * 255 + .5f),
                 _Float2Byte(green * 255 + .5f),
                 _Float2Byte(blue * 255 + .5f),
                 _Float2Byte(alpha * 255 + .5f)
-            ));
+            );
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Imager
         /// <returns></returns>
         public static sPixel FromRGBA(byte red, byte green, byte blue, byte alpha = 255)
         {
-            return (new sPixel(red, green, blue, alpha));
+            return new sPixel(red, green, blue, alpha);
         }
 
         /// <summary>
@@ -439,7 +439,7 @@ namespace Imager
         /// <returns></returns>
         public static sPixel FromRGBA(int red, int green, int blue, int alpha = 255)
         {
-            return (new sPixel(_Float2Byte(red), _Float2Byte(green), _Float2Byte(blue), _Float2Byte(alpha)));
+            return new sPixel(_Float2Byte(red), _Float2Byte(green), _Float2Byte(blue), _Float2Byte(alpha));
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace Imager
         /// <returns></returns>
         public static sPixel FromGrey(byte grey, byte alpha = 255)
         {
-            return (new sPixel(grey, alpha));
+            return new sPixel(grey, alpha);
         }
 
         /// <summary>
@@ -530,9 +530,7 @@ namespace Imager
         /// </returns>
         public override string ToString()
         {
-            return (
-                $"({this._rgbBytes:X8}) Red:{this.Red}, Green:{this.Green}, Blue:{this.Blue}, Alpha:{this.Alpha}"
-            );
+            return $"({this._rgbBytes:X8}) Red:{this.Red}, Green:{this.Green}, Blue:{this.Blue}, Alpha:{this.Alpha}";
         }
 
         /// <summary>
@@ -543,7 +541,7 @@ namespace Imager
         /// </returns>
         public override int GetHashCode()
         {
-            return ((int) this._rgbBytes);
+            return (int) this._rgbBytes;
         }
 
         #region operators
@@ -566,7 +564,7 @@ namespace Imager
             if (byte.MaxValue < (alpha = pixel.Alpha + pixel2.Alpha))
                 alpha = byte.MaxValue;
 
-            return (new sPixel((byte) red, (byte) green, (byte) blue, (byte) alpha));
+            return new sPixel((byte) red, (byte) green, (byte) blue, (byte) alpha);
         }
 
         /// <summary>
@@ -587,7 +585,7 @@ namespace Imager
             if (byte.MinValue > (alpha = pixel1.Alpha - pixel2.Alpha))
                 alpha = byte.MinValue;
 
-            return (new sPixel((byte) red, (byte) green, (byte) blue, (byte) alpha));
+            return new sPixel((byte) red, (byte) green, (byte) blue, (byte) alpha);
         }
 
         /// <summary>
@@ -597,7 +595,7 @@ namespace Imager
         /// <returns>A new instance with the negative color.</returns>
         public static sPixel operator !(sPixel pixel)
         {
-            return (255 - pixel);
+            return 255 - pixel;
         }
 
         /// <summary>
@@ -616,7 +614,7 @@ namespace Imager
             if (byte.MaxValue < (blue = pixel.Blue + grey))
                 blue = byte.MaxValue;
 
-            return (new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha));
+            return new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha);
         }
 
         /// <summary>
@@ -633,7 +631,7 @@ namespace Imager
             red = red > byte.MaxValue ? byte.MaxValue : red < byte.MinValue ? byte.MinValue : red;
             green = green > byte.MaxValue ? byte.MaxValue : green < byte.MinValue ? byte.MinValue : green;
             blue = blue > byte.MaxValue ? byte.MaxValue : blue < byte.MinValue ? byte.MinValue : blue;
-            return (new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha));
+            return new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha);
         }
 
         /// <summary>
@@ -652,7 +650,7 @@ namespace Imager
             if (byte.MinValue > (blue = grey - pixel.Blue))
                 blue = byte.MinValue;
 
-            return (new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha));
+            return new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha);
         }
 
         /// <summary>
@@ -671,7 +669,7 @@ namespace Imager
             if (byte.MinValue > (blue = pixel.Blue - grey))
                 blue = byte.MinValue;
 
-            return (new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha));
+            return new sPixel((byte) red, (byte) green, (byte) blue, pixel.Alpha);
         }
 
         /// <summary>
@@ -682,7 +680,7 @@ namespace Imager
         /// <returns>A new instance with the clipped values.</returns>
         public static sPixel operator /(sPixel pixel, float gamma)
         {
-            return (pixel * (1f / gamma));
+            return pixel * (1f / gamma);
         }
 
         /// <summary>
@@ -693,7 +691,7 @@ namespace Imager
         /// <returns>A new instance containing the clipped values.</returns>
         public static sPixel operator +(byte grey, sPixel pixel)
         {
-            return (pixel + grey);
+            return pixel + grey;
         }
 
         /// <summary>
@@ -704,7 +702,7 @@ namespace Imager
         /// <returns>A new instance with the clipped values.</returns>
         public static sPixel operator *(float gamma, sPixel pixel)
         {
-            return (pixel * gamma);
+            return pixel * gamma;
         }
 
         /// <summary>
@@ -715,7 +713,7 @@ namespace Imager
         /// <returns><c>true</c> if both are equal; otherwise, <c>false</c>.</returns>
         public static bool operator ==(sPixel pixel1, sPixel pixel2)
         {
-            return (pixel1._rgbBytes == pixel2._rgbBytes);
+            return pixel1._rgbBytes == pixel2._rgbBytes;
         }
 
         /// <summary>
@@ -726,7 +724,7 @@ namespace Imager
         /// <returns><c>true</c> if both instances differ in at least one color component; otherwise, <c>false</c>.</returns>
         public static bool operator !=(sPixel pixel1, sPixel pixel2)
         {
-            return (pixel1._rgbBytes != pixel2._rgbBytes);
+            return pixel1._rgbBytes != pixel2._rgbBytes;
         }
 
         /// <summary>
@@ -738,7 +736,7 @@ namespace Imager
         /// </returns>
         public override bool Equals(object o)
         {
-            return ((o is sPixel) && (((sPixel) o)._rgbBytes == this._rgbBytes));
+            return o is sPixel && ((sPixel) o)._rgbBytes == this._rgbBytes;
         }
 
         /// <summary>
@@ -750,7 +748,7 @@ namespace Imager
         /// </returns>
         public bool Equals(sPixel pixel)
         {
-            return (pixel._rgbBytes == this._rgbBytes);
+            return pixel._rgbBytes == this._rgbBytes;
         }
 
         /// <summary>
@@ -763,7 +761,7 @@ namespace Imager
         public bool IsLike(sPixel pixel)
         {
             if (!AllowThresholds)
-                return (this == pixel);
+                return this == pixel;
             var delta = this.ChrominanceV - pixel.ChrominanceV;
             if (delta > _CHROMA_V_TRIGGER || delta < -_CHROMA_V_TRIGGER)
                 return false;
@@ -783,7 +781,7 @@ namespace Imager
         /// </returns>
         public bool IsNotLike(sPixel pixel)
         {
-            return (!this.IsLike(pixel));
+            return !this.IsLike(pixel);
         }
 
         /// <summary>
@@ -812,12 +810,12 @@ namespace Imager
         /// <returns>A new instance with the interpolated color values.</returns>
         public static sPixel Interpolate(sPixel pixel1, sPixel pixel2)
         {
-            return (new sPixel(
+            return new sPixel(
                 (byte) ((pixel1.Red + pixel2.Red) >> 1),
                 (byte) ((pixel1.Green + pixel2.Green) >> 1),
                 (byte) ((pixel1.Blue + pixel2.Blue) >> 1),
                 (byte) ((pixel1.Alpha + pixel2.Alpha) >> 1)
-            ));
+            );
         }
 
         /// <summary>
@@ -829,12 +827,12 @@ namespace Imager
         /// <returns>A new instance with the interpolated color values.</returns>
         public static sPixel Interpolate(sPixel pixel1, sPixel pixel2, sPixel pixel3)
         {
-            return (new sPixel(
+            return new sPixel(
                 (byte) ((pixel1.Red + pixel2.Red + pixel3.Red) / 3),
                 (byte) ((pixel1.Green + pixel2.Green + pixel3.Green) / 3),
                 (byte) ((pixel1.Blue + pixel2.Blue + pixel3.Blue) / 3),
                 (byte) ((pixel1.Alpha + pixel2.Alpha + pixel3.Alpha) / 3)
-            ));
+            );
         }
 
         /// <summary>
@@ -847,12 +845,12 @@ namespace Imager
         /// <returns>A new instance with the interpolated color values.</returns>
         public static sPixel Interpolate(sPixel pixel1, sPixel pixel2, sPixel pixel3, sPixel pixel4)
         {
-            return (new sPixel(
+            return new sPixel(
                 (byte) ((pixel1.Red + pixel2.Red + pixel3.Red + pixel4.Red) >> 2),
                 (byte) ((pixel1.Green + pixel2.Green + pixel3.Green + pixel4.Green) >> 2),
                 (byte) ((pixel1.Blue + pixel2.Blue + pixel3.Blue + pixel4.Blue) >> 2),
                 (byte) ((pixel1.Alpha + pixel2.Alpha + pixel3.Alpha + pixel4.Alpha) >> 2)
-            ));
+            );
         }
 
         #endregion
@@ -870,12 +868,12 @@ namespace Imager
         public static sPixel Interpolate(sPixel pixel1, sPixel pixel2, byte quantifier1, byte quantifier2)
         {
             var total = (ushort) (quantifier1 + quantifier2);
-            return (new sPixel(
+            return new sPixel(
                 (byte) ((pixel1.Red * quantifier1 + pixel2.Red * quantifier2) / total),
                 (byte) ((pixel1.Green * quantifier1 + pixel2.Green * quantifier2) / total),
                 (byte) ((pixel1.Blue * quantifier1 + pixel2.Blue * quantifier2) / total),
                 (byte) ((pixel1.Alpha * quantifier1 + pixel2.Alpha * quantifier2) / total)
-            ));
+            );
         }
 
         /// <summary>
@@ -892,12 +890,12 @@ namespace Imager
             byte quantifier2, byte quantifier3)
         {
             var total = (ushort) (quantifier1 + quantifier2 + quantifier3);
-            return (new sPixel(
+            return new sPixel(
                 (byte) ((pixel1.Red * quantifier1 + pixel2.Red * quantifier2 + pixel3.Red * quantifier3) / total),
                 (byte) ((pixel1.Green * quantifier1 + pixel2.Green * quantifier2 + pixel3.Green * quantifier3) / total),
                 (byte) ((pixel1.Blue * quantifier1 + pixel2.Blue * quantifier2 + pixel3.Blue * quantifier3) / total),
                 (byte) ((pixel1.Alpha * quantifier1 + pixel2.Alpha * quantifier2 + pixel3.Alpha * quantifier3) / total)
-            ));
+            );
         }
 
         /// <summary>
@@ -916,7 +914,7 @@ namespace Imager
             byte quantifier2, byte quantifier3, byte quantifier4)
         {
             var total = (ushort) (quantifier1 + quantifier2 + quantifier3 + quantifier4);
-            return (new sPixel(
+            return new sPixel(
                 (byte) ((pixel1.Red * quantifier1 + pixel2.Red * quantifier2 + pixel3.Red * quantifier3 +
                          pixel4.Red * quantifier4) / total),
                 (byte) ((pixel1.Green * quantifier1 + pixel2.Green * quantifier2 + pixel3.Green * quantifier3 +
@@ -925,7 +923,7 @@ namespace Imager
                          pixel4.Blue * quantifier4) / total),
                 (byte) ((pixel1.Alpha * quantifier1 + pixel2.Alpha * quantifier2 + pixel3.Alpha * quantifier3 +
                          pixel4.Alpha * quantifier4) / total)
-            ));
+            );
         }
 
         #endregion
@@ -940,7 +938,7 @@ namespace Imager
         /// </returns>
         public object Clone()
         {
-            return (new sPixel(this));
+            return new sPixel(this);
         }
 
         #endregion

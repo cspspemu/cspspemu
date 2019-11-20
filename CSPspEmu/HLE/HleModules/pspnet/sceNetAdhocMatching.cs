@@ -207,7 +207,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
                         (int) Event,
                         MacPartition.Low,
                         DataPartition.Size,
-                        (DataPartition.Size != 0) ? DataPartition.Low : 0
+                        DataPartition.Size != 0 ? DataPartition.Low : 0
                     );
 
                     DataPartition.DeallocateFromParent();
@@ -628,7 +628,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocMatchingGetMembers(Matching Matching, uint* sizeAddr, void* buf)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -652,7 +652,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspNotImplemented]
         public int sceNetAdhocMatchingGetPoolMaxAlloc()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 
@@ -685,7 +685,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
             var PhysicalAddress = NetworkInterface.GetAllNetworkInterfaces()
                 .First(nic => nic.OperationalStatus == OperationalStatus.Up).GetPhysicalAddress();
             var Bytes = PhysicalAddress.GetAddressBytes();
-            for (int n = 0; n < 8; n++) MacAddress.Data[n] = (n < Bytes.Length) ? Bytes[n] : (byte) 0;
+            for (int n = 0; n < 8; n++) MacAddress.Data[n] = n < Bytes.Length ? Bytes[n] : (byte) 0;
             return MacAddress;
         }
 

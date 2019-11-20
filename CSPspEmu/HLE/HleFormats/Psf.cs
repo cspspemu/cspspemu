@@ -71,7 +71,7 @@ namespace CSPspEmu.Hle.Formats
                     case DataType.Text:
                         EntryDictionary[key] = valueStream.ReadStringz(-1, Encoding.UTF8);
                         break;
-                    default: throw(new NotImplementedException());
+                    default: throw new NotImplementedException();
                 }
             }
             return this;

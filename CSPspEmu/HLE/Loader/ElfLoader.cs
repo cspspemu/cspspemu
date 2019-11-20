@@ -160,6 +160,6 @@ namespace CSPspEmu.Hle.Loader
 
         public bool IsPrx => Header.Type.HasFlag(Elf.HeaderStruct.TypeEnum.Prx);
 
-        public bool NeedsRelocation => IsPrx || (Header.EntryPoint < PspMemory.MainOffset);
+        public bool NeedsRelocation => IsPrx || Header.EntryPoint < PspMemory.MainOffset;
     }
 }

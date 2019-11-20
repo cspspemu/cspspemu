@@ -62,13 +62,13 @@ namespace CSPspEmu.Hle.Managers
                 }
             }
 
-            public bool ReuseIds => (this.Info != null) && this.Info.ReuseIds;
+            public bool ReuseIds => this.Info != null && this.Info.ReuseIds;
 
             [MethodImpl(MethodImplOptions.Synchronized)]
             public int Alloc(IHleUidPoolClass Item)
             {
                 if (Item.GetType() != this.Type)
-                    throw(new InvalidOperationException("Trying to insert invalid object type"));
+                    throw new InvalidOperationException("Trying to insert invalid object type");
                 int Index = -1;
 
                 if (ReuseIds)
@@ -121,11 +121,11 @@ namespace CSPspEmu.Hle.Managers
             {
                 if (Info != null)
                 {
-                    throw (new SceKernelException(Info.NotFoundError));
+                    throw new SceKernelException(Info.NotFoundError);
                 }
                 else
                 {
-                    throw (new SceKernelException((SceKernelErrors) (-1)));
+                    throw new SceKernelException((SceKernelErrors) (-1));
                 }
             }
 

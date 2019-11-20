@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Formats.audio
 
         private void ParseFile(Stream Stream)
         {
-            if (Stream.ReadString(4) != "RIFF") throw (new InvalidDataException("Not a RIFF File"));
+            if (Stream.ReadString(4) != "RIFF") throw new InvalidDataException("Not a RIFF File");
             var RiffSize = new BinaryReader(Stream).ReadUInt32();
             var RiffStream = Stream.ReadStream(RiffSize);
             ParseRiff(RiffStream);
@@ -28,7 +28,7 @@ namespace CSPspEmu.Hle.Formats.audio
 
         private void ParseRiff(Stream Stream)
         {
-            if (Stream.ReadString(4) != "WAVE") throw (new InvalidDataException("Not a RIFF.WAVE File"));
+            if (Stream.ReadString(4) != "WAVE") throw new InvalidDataException("Not a RIFF.WAVE File");
             while (!Stream.Eof())
             {
                 var ChunkType = Stream.ReadString(4);

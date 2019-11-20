@@ -27,7 +27,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
         {
             if (GrainSamples < 0x40 || GrainSamples > 0x800 || (GrainSamples & 0x1F) != 0)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_GRAIN));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_GRAIN);
             }
         }
 
@@ -107,20 +107,20 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
         {
             if (SampleRate != 44100)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_SAMPLE_RATE));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_SAMPLE_RATE);
             }
 
             CheckGrains(GrainSamples);
 
             if (MaxVoices < 1 || MaxVoices > PSP_SAS_VOICES_MAX)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_MAX_VOICES));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_MAX_VOICES);
             }
 
             if (OutputMode != sc_sascore.OutputMode.PSP_SAS_OUTPUTMODE_STEREO &&
                 OutputMode != sc_sascore.OutputMode.PSP_SAS_OUTPUTMODE_MULTICHANNEL)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_OUTPUT_MODE));
+                throw new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_OUTPUT_MODE);
             }
 
             var SasCore = GetSasCore(SasCorePointer, CreateIfNotExists: true);
@@ -332,7 +332,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
                     Logger.Unimplemented("SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO");
                 }
 
-                int NumberOfChannels = (SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO) ? 2 : 1;
+                int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
                 int NumberOfSamples = SasCore.GrainSamples;
                 int NumberOfVoicesPlaying = Math.Max(1, SasCore.Voices.Count(Voice => Voice.OnAndPlaying));
 
@@ -348,7 +348,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
                         int Pos = 0;
                         while (true)
                         {
-                            if ((Voice.Vag != null) && (Voice.Vag.HasMore))
+                            if (Voice.Vag != null && Voice.Vag.HasMore)
                             {
                                 int PosDiv = Pos / Voice.Pitch;
 

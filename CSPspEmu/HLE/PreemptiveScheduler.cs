@@ -121,7 +121,7 @@ namespace CSPspEmu.Hle
                 var ReadyItems = Items.Where(Item => Item.Ready);
                 if (!ReadyItems.Any())
                 {
-                    if (ThrowException) throw (new Exception("No items to schedule"));
+                    if (ThrowException) throw new Exception("No items to schedule");
                     return false;
                 }
                 else

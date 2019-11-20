@@ -27,7 +27,7 @@ namespace CSharpUtils
             }
             catch (FormatException formatException)
             {
-                throw (new FormatException("Can't parse the string '" + value + "'", formatException));
+                throw new FormatException("Can't parse the string '" + value + "'", formatException);
             }
         }
     }

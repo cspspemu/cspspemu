@@ -56,7 +56,7 @@ namespace cscodec.util
 
         public Buffer limit(int newLimit)
         {
-            if ((newLimit < 0) || (newLimit > cap))
+            if (newLimit < 0 || newLimit > cap)
                 throw new ArgumentException();
             if (newLimit <= _mark) _mark = -1;
             if (pos > newLimit) pos = newLimit - 1;
@@ -77,7 +77,7 @@ namespace cscodec.util
 
         public Buffer position(int newPosition)
         {
-            if ((newPosition < 0) || (newPosition > _limit))
+            if (newPosition < 0 || newPosition > _limit)
                 throw new ArgumentException();
             if (newPosition <= _mark) _mark = -1;
             pos = newPosition;

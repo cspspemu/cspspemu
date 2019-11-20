@@ -204,7 +204,7 @@ namespace CSPspEmu.Hle.Formats
                 for (var n = 0; n < size; n++)
                 {
                     value *= 10;
-                    value += ((char) dataPtr[offset + n]) - '0';
+                    value += (char) dataPtr[offset + n] - '0';
                 }
             }
             return value;

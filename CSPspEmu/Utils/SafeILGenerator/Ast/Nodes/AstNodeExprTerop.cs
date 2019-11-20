@@ -10,7 +10,7 @@ namespace SafeILGenerator.Ast.Nodes
 
         public AstNodeExprTerop(AstNodeExpr cond, AstNodeExpr @true, AstNodeExpr @false)
         {
-            if (@true.Type != @false.Type) throw(new Exception("Condition mismatch"));
+            if (@true.Type != @false.Type) throw new Exception("Condition mismatch");
             Cond = cond;
             True = @true;
             False = @false;

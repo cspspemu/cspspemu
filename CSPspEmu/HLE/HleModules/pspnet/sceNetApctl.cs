@@ -45,7 +45,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x2BEFDF23, FirmwareVersion = 150)]
         public int sceNetApctlGetInfo(int code, SceNetApctlInfo*pInfo)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

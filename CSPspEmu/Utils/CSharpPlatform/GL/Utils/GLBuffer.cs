@@ -33,7 +33,7 @@ namespace CSharpPlatform.GL.Utils
             {
                 return SetData(
                     Length * Marshal.SizeOf(typeof(T)),
-                    ((byte*) Handle.AddrOfPinnedObject().ToPointer()) + Offset * Marshal.SizeOf(typeof(T))
+                    (byte*) Handle.AddrOfPinnedObject().ToPointer() + Offset * Marshal.SizeOf(typeof(T))
                 );
             }
             finally

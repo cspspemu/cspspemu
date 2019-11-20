@@ -53,7 +53,7 @@ namespace CSPspEmu.Hle.Modules.threadman
                     Console.Error.WriteLine("PspMutex.Lock with Timeout not implemented!!");
                     //throw (new NotImplementedException());
                 }
-                if (UpdateCountValue <= 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+                if (UpdateCountValue <= 0) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT);
                 //Console.Error.WriteLine("Lock : {0}", ThreadManager.Current.Id);
                 if (!TryLock(CurrentCpuThreadState, UpdateCountValue))
                 {
@@ -66,9 +66,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 
             public void Unlock(CpuThreadState CurrentCpuThreadState, int UpdateCountValue)
             {
-                if (UpdateCountValue == 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCKED));
+                if (UpdateCountValue == 0) throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCKED);
                 if (this.CurrentCountValue - UpdateCountValue < 0)
-                    throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCK_UNDERFLOW));
+                    throw new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCK_UNDERFLOW);
                 //Console.Error.WriteLine("Unlock : {0}", ThreadManager.Current.Id);
                 //Console.Error.WriteLine(" {0} -> {1}", this.CurrentCountValue, this.CurrentCountValue - UpdateCountValue);
                 CurrentCountValue -= UpdateCountValue;
@@ -87,8 +87,8 @@ namespace CSPspEmu.Hle.Modules.threadman
             {
                 if (
                     CurrentCountValue == 0 ||
-                    (Attributes.HasFlag(MutexAttributesEnum.AllowRecursive) &&
-                     CurrentCpuThreadState == LockCpuThreadState)
+                    Attributes.HasFlag(MutexAttributesEnum.AllowRecursive) &&
+                    CurrentCpuThreadState == LockCpuThreadState
                 )
                 {
                     //Console.Error.WriteLine(" {0} -> {1}", this.CurrentCountValue, this.CurrentCountValue + UpdateCountValue);

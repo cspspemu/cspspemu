@@ -44,14 +44,14 @@ namespace cscodec.h264.decoder
                 if (size == 4)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                    v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                    v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                    v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                    v4 = (int) ((uint) (val & 0xff000000) >> 24);
                 }
                 else if (size == 2)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
                     v3 = v1;
                     v4 = v2;
                 }
@@ -90,16 +90,16 @@ namespace cscodec.h264.decoder
                 if (size == 2)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
                     v3 = v1;
                     v4 = v2;
                 }
                 else
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                    v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                    v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                    v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                    v4 = (int) ((uint) (val & 0xff000000) >> 24);
                 } // if
                 vp[p_offset + 0 * stride] = v1;
                 vp[p_offset + 0 * stride + 1] = v2;
@@ -139,9 +139,9 @@ namespace cscodec.h264.decoder
             else if (w == 16)
             {
                 int v1 = val & 0x0ff;
-                int v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                int v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                int v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                int v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                int v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                int v4 = (int) ((uint) (val & 0xff000000) >> 24);
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -213,14 +213,14 @@ namespace cscodec.h264.decoder
                 if (size == 4)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                    v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                    v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                    v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                    v4 = (int) ((uint) (val & 0xff000000) >> 24);
                 }
                 else if (size == 2)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
                     v3 = v1;
                     v4 = v2;
                 }
@@ -259,16 +259,16 @@ namespace cscodec.h264.decoder
                 if (size == 2)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
                     v3 = v1;
                     v4 = v2;
                 }
                 else
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                    v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                    v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                    v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                    v4 = (int) ((uint) (val & 0xff000000) >> 24);
                 } // if
                 vp[p_offset + 0 * stride] = v1;
                 vp[p_offset + 0 * stride + 1] = v2;
@@ -308,9 +308,9 @@ namespace cscodec.h264.decoder
             else if (w == 16)
             {
                 int v1 = val & 0x0ff;
-                int v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                int v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                int v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                int v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                int v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                int v4 = (int) ((uint) (val & 0xff000000) >> 24);
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -353,7 +353,7 @@ namespace cscodec.h264.decoder
                 int val16;
                 if (size == 4)
                 {
-                    val16 = (short) (val);
+                    val16 = (short) val;
                 }
                 else
                 {
@@ -372,7 +372,7 @@ namespace cscodec.h264.decoder
                 if (size == 4)
                 {
                     v1 = (short) (val & 0x0ffff);
-                    v2 = (short) (((uint) (val & 0xffff0000)) >> 16);
+                    v2 = (short) ((uint) (val & 0xffff0000) >> 16);
                 }
                 else if (size == 2)
                 {
@@ -382,7 +382,7 @@ namespace cscodec.h264.decoder
                 else
                 {
                     v1 = (short) ((val & 0x0ff << 8) | (val & 0x0ff));
-                    v2 = (short) (v1);
+                    v2 = (short) v1;
                 }
                 vp[p_offset + 0 * stride / 4][0] = v1;
                 vp[p_offset + 0 * stride / 4][1] = v2;
@@ -407,7 +407,7 @@ namespace cscodec.h264.decoder
                 else
                 {
                     v1 = (short) (val & 0x0ffff);
-                    v2 = (short) (((uint) (val & 0xffff0000)) >> 16);
+                    v2 = (short) ((uint) (val & 0xffff0000) >> 16);
                 } // if
                 vp[p_offset + 0 * stride / 4][0] = v1;
                 vp[p_offset + 0 * stride / 4][1] = v2;
@@ -431,7 +431,7 @@ namespace cscodec.h264.decoder
             else if (w == 16)
             {
                 int v1 = (short) (val & 0x0ffff);
-                int v2 = (short) (((uint) (val & 0xffff0000)) >> 16);
+                int v2 = (short) ((uint) (val & 0xffff0000) >> 16);
                 for (int i = 0; i < 4; i++)
                 {
                     vp[p_offset + i + 0 * stride / 4][0] = v1;
@@ -494,14 +494,14 @@ namespace cscodec.h264.decoder
                 if (size == 4)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                    v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                    v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                    v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                    v4 = (int) ((uint) (val & 0xff000000) >> 24);
                 }
                 else if (size == 2)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
                     v3 = v1;
                     v4 = v2;
                 }
@@ -540,16 +540,16 @@ namespace cscodec.h264.decoder
                 if (size == 2)
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
                     v3 = v1;
                     v4 = v2;
                 }
                 else
                 {
                     v1 = val & 0x0ff;
-                    v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                    v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                    v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                    v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                    v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                    v4 = (int) ((uint) (val & 0xff000000) >> 24);
                 } // if
                 vp[p_offset + 0 * stride / 2][0] = v1;
                 vp[p_offset + 0 * stride / 2][1] = v2;
@@ -589,9 +589,9 @@ namespace cscodec.h264.decoder
             else if (w == 16)
             {
                 int v1 = val & 0x0ff;
-                int v2 = (int) (((uint) (val & 0x0ff00)) >> 8);
-                int v3 = (int) (((uint) (val & 0x0ff0000)) >> 16);
-                int v4 = (int) (((uint) (val & 0xff000000)) >> 24);
+                int v2 = (int) ((uint) (val & 0x0ff00) >> 8);
+                int v3 = (int) ((uint) (val & 0x0ff0000) >> 16);
+                int v4 = (int) ((uint) (val & 0xff000000) >> 24);
 
                 for (int i = 0; i < 4; i++)
                 {

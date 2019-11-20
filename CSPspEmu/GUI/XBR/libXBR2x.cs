@@ -82,12 +82,12 @@ namespace Imager.Filters
 
         private static uint _YuvDifference(sPixel a, sPixel b)
         {
-            return (a.AbsDifference(b));
+            return a.AbsDifference(b);
         }
 
         private static bool _IsEqual(sPixel a, sPixel b)
         {
-            return (a.IsLike(b));
+            return a.IsLike(b);
         }
 
         private static void _AlphaBlend64W(ref sPixel dst, sPixel src, bool blend)
@@ -140,27 +140,27 @@ namespace Imager.Filters
             sPixel pb, sPixel f4, sPixel i4, sPixel h5, sPixel i5, ref sPixel n1, ref sPixel n2, ref sPixel n3,
             bool blend)
         {
-            var ex = (pe != ph && pe != pf);
+            var ex = pe != ph && pe != pf;
             if (!ex) return;
             var e =
-                (_YuvDifference(pe, pc) + _YuvDifference(pe, pg) + _YuvDifference(pi, h5) + _YuvDifference(pi, f4)) +
+                _YuvDifference(pe, pc) + _YuvDifference(pe, pg) + _YuvDifference(pi, h5) + _YuvDifference(pi, f4) +
                 (_YuvDifference(ph, pf) << 2);
             var i =
-                (_YuvDifference(ph, pd) + _YuvDifference(ph, i5) + _YuvDifference(pf, i4) + _YuvDifference(pf, pb)) +
+                _YuvDifference(ph, pd) + _YuvDifference(ph, i5) + _YuvDifference(pf, i4) + _YuvDifference(pf, pb) +
                 (_YuvDifference(pe, pi) << 2);
-            var px = (_YuvDifference(pe, pf) <= _YuvDifference(pe, ph)) ? pf : ph;
-            if ((e < i) && (!_IsEqual(pf, pb) && !_IsEqual(ph, pd) ||
-                            _IsEqual(pe, pi) && (!_IsEqual(pf, i4) && !_IsEqual(ph, i5)) || _IsEqual(pe, pg) ||
+            var px = _YuvDifference(pe, pf) <= _YuvDifference(pe, ph) ? pf : ph;
+            if (e < i && (!_IsEqual(pf, pb) && !_IsEqual(ph, pd) ||
+                            _IsEqual(pe, pi) && !_IsEqual(pf, i4) && !_IsEqual(ph, i5) || _IsEqual(pe, pg) ||
                             _IsEqual(pe, pc)))
             {
                 var ke = _YuvDifference(pf, pg);
                 var ki = _YuvDifference(ph, pc);
-                var ex2 = (pe != pc && pb != pc);
-                var ex3 = (pe != pg && pd != pg);
-                if (((ke << 1) <= ki) && ex3 || (ke >= (ki << 1)) && ex2)
+                var ex2 = pe != pc && pb != pc;
+                var ex3 = pe != pg && pd != pg;
+                if (ke << 1 <= ki && ex3 || ke >= ki << 1 && ex2)
                 {
-                    if (((ke << 1) <= ki) && ex3) _Left2_2X(ref n3, ref n2, px, blend);
-                    if ((ke >= (ki << 1)) && ex2) _Up2_2X(ref n3, ref n1, px, blend);
+                    if (ke << 1 <= ki && ex3) _Left2_2X(ref n3, ref n2, px, blend);
+                    if (ke >= ki << 1 && ex2) _Up2_2X(ref n3, ref n1, px, blend);
                 }
                 else
                 {

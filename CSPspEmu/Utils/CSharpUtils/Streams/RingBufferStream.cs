@@ -102,7 +102,7 @@ namespace CSharpUtils.Streams
         public override void Write(byte[] buffer, int offset, int count)
         {
             var ret = RingBuffer.Write(buffer, offset, count);
-            if (ret != count) throw (new OverflowException());
+            if (ret != count) throw new OverflowException();
         }
     }
 }

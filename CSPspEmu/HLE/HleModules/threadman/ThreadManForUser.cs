@@ -55,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         public int sceKernelGetSystemTime(SceKernelSysClock* Time)
         {
             //Console.Error.WriteLine(sceKernelGetSystemTimeWide());
-            if (Time == null) throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT));
+            if (Time == null) throw new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT);
             Time->MicroSeconds = sceKernelGetSystemTimeWide();
             return 0;
         }
@@ -117,7 +117,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspFunction(NID = 0x7E65B999, FirmwareVersion = 150)]
         public int sceKernelCancelAlarm(int alarmid)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspFunction(NID = 0x64D4540E, FirmwareVersion = 150)]
         public long sceKernelReferThreadProfiler()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
             //Valid only on actual hardware with debug mode enabled.
             return 0;
         }
@@ -164,7 +164,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspNotImplemented]
         public int sceKernelReferThreadRunStatus()
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace CSPspEmu.Hle.Modules.threadman
         [HlePspNotImplemented]
         public int sceKernelDelaySysClockThread(uint sysclocksPointer)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
     }
 }

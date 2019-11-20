@@ -250,7 +250,7 @@ namespace CSPspEmu.Hle.Formats
                 PointerUtils.Memset(outbuf + 0x18, 0, 0x58);
                 PointerUtils.Memcpy(outbuf + 0x04, outbuf, 0x04);
 
-                *((uint*) outbuf) = 0x014C;
+                *(uint*) outbuf = 0x014C;
                 PointerUtils.Memcpy(outbuf + 0x08, tmp2, 0x10);
 
                 /* sha-1 */
@@ -524,7 +524,7 @@ namespace CSPspEmu.Hle.Formats
             {
                 set
                 {
-                    if (value.Length * 4 != 144) throw(new Exception("Invalid entry"));
+                    if (value.Length * 4 != 144) throw new Exception("Invalid entry");
                     Key = new byte[144];
                     Buffer.BlockCopy(value, 0, Key, 0, value.Length * 4);
                 }
@@ -547,7 +547,7 @@ namespace CSPspEmu.Hle.Formats
             public override string ToString()
             {
                 return CStringFormater.Sprintf("TAG_INFO(tag=0x%08X, key=%s, code=%02X, codeExtra=%02X)", Tag,
-                    (Key != null) ? BitConverter.ToString(Key) : "null", Code, CodeExtra);
+                    Key != null ? BitConverter.ToString(Key) : "null", Code, CodeExtra);
             }
         }
 
@@ -571,7 +571,7 @@ namespace CSPspEmu.Hle.Formats
             public override string ToString()
             {
                 return CStringFormater.Sprintf("TAG_INFO2(tag=0x%08X, key=%s, code=%02X)", Tag,
-                    (Key != null) ? BitConverter.ToString(Key) : "null", Code);
+                    Key != null ? BitConverter.ToString(Key) : "null", Code);
             }
         }
         

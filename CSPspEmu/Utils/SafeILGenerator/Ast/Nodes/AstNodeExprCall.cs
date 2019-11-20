@@ -13,16 +13,15 @@ namespace SafeILGenerator.Ast.Nodes
 
         protected AstNodeExprCall(MethodInfo methodInfo, params AstNodeExpr[] parameters)
         {
-            if (methodInfo == null) throw (new Exception("MethodInfo can't be null"));
+            if (methodInfo == null) throw new Exception("MethodInfo can't be null");
 
             var methodParameters = methodInfo.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
             var parametersTypes = parameters.Select(parameter => parameter.Type).ToArray();
 
             if (!methodParameters.SequenceEqual(parametersTypes))
             {
-                throw (new Exception(
-                    $"Parameters mismatch Function({string.Join(",", (IEnumerable<Type>) methodParameters)}) != TryingToCall({string.Join(",", (IEnumerable<Type>) parametersTypes)}) for Method({methodInfo})")
-                );
+                throw new Exception(
+                    $"Parameters mismatch Function({string.Join(",", (IEnumerable<Type>) methodParameters)}) != TryingToCall({string.Join(",", (IEnumerable<Type>) parametersTypes)}) for Method({methodInfo})");
             }
 
             MethodInfo = methodInfo;

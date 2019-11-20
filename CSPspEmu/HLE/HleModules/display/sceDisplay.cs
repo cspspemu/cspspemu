@@ -41,7 +41,7 @@ namespace CSPspEmu.Hle.Modules.display
         {
             if (CycleCount <= 0)
             {
-                throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_VALUE));
+                throw new SceKernelException(SceKernelErrors.ERROR_INVALID_VALUE);
             }
 
             int Wait = 1;
@@ -108,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.display
         {
             Action UpdateInfo = () =>
             {
-                PspDisplay.CurrentInfo.Enabled = (Address != 0);
+                PspDisplay.CurrentInfo.Enabled = Address != 0;
                 if (PspDisplay.CurrentInfo.Enabled)
                 {
                     PspDisplay.CurrentInfo.FrameAddress = Address;
@@ -133,7 +133,7 @@ namespace CSPspEmu.Hle.Modules.display
                         }, HandleCallbacks: false);
                     break;
                 default:
-                    throw(new NotImplementedException("Not implemented " + Sync));
+                    throw new NotImplementedException("Not implemented " + Sync);
             }
             return 0;
         }

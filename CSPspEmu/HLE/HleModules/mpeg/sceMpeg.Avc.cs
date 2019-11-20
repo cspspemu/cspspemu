@@ -88,7 +88,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
             }
 
             var Mpeg = GetMpeg(SceMpegPointer);
-            if (!Mpeg.HasData) throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+            if (!Mpeg.HasData) throw new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA);
             MpegAccessUnit = Mpeg.GetAvcAu(StreamId);
             return 0;
         }
@@ -151,8 +151,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
                         SceMpegData->SceMpegAvcMode = *Mode;
                         break;
                     default:
-                        throw (new Exception("Invalid PixelFormat in sceMpegAvcDecodeMode: " + Mode->Mode + ", " +
-                                             Mode->PixelFormat));
+                        throw new Exception("Invalid PixelFormat in sceMpegAvcDecodeMode: " + Mode->Mode + ", " +
+                                            Mode->PixelFormat);
                 }
             }
 
@@ -190,7 +190,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
                 MpegAccessUnit,
                 FrameWidth,
                 SceMpegData->SceMpegAvcMode.PixelFormat,
-                (*OutputBufferPointer)
+                *OutputBufferPointer
             );
 
             SceMpegData->AvcFrameStatus = 1;
@@ -216,10 +216,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
         {
             if ((Width & 15) != 0 || (Height & 15) != 0 || Width > 480 || Height > 272)
             {
-                throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_INVALID_VALUE));
+                throw new SceKernelException(SceKernelErrors.ERROR_MPEG_INVALID_VALUE);
             }
 
-            *Result = (Width / 2) * (Height / 2) * 6 + 128;
+            *Result = Width / 2 * (Height / 2) * 6 + 128;
             return 0;
         }
 
@@ -235,7 +235,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
         [HlePspFunction(NID = 0x31BD0272, FirmwareVersion = 150)]
         public int sceMpegAvcCsc(SceMpegPointer* Mpeg, int source_addr, int range_addr, int frameWidth, int dest_addr)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

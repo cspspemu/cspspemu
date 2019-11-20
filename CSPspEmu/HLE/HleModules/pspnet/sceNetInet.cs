@@ -97,7 +97,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xDB094E1B, FirmwareVersion = 150)]
         public int sceNetInetAccept(int SocketId, sockaddr*Address, socklen_t*AddressLength)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x1A33F9AE, FirmwareVersion = 150)]
         public int sceNetInetBind(int SocketId, sockaddr*Address, socklen_t AddressLength)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x805502DD, FirmwareVersion = 150)]
         public void sceNetInetCloseWithRST()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xE247B6D6, FirmwareVersion = 150)]
         public void sceNetInetGetpeername()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x162E6FD5, FirmwareVersion = 150)]
         public void sceNetInetGetsockname()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x4A114C7C, FirmwareVersion = 150)]
         public int sceNetInetGetsockopt(int s, int level, int optname, void*optval, socklen_t*optlen)
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xFAABB1DD, FirmwareVersion = 150)]
         public void sceNetInetPoll()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xEECE61D2, FirmwareVersion = 150)]
         public void sceNetInetRecvmsg()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x5BE8D595, FirmwareVersion = 150)]
         public void sceNetInetSelect()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x774E36F4, FirmwareVersion = 150)]
         public void sceNetInetSendmsg()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         public void sceNetInetSocketAbort()
         {
             //Sockets.Get(SocketId).abo
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xB3888AD4, FirmwareVersion = 150)]
         public void sceNetInetGetTcpcbstat()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x39B0C7D3, FirmwareVersion = 150)]
         public void sceNetInetGetUdpcbstat()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xB75D5B0A, FirmwareVersion = 150)]
         public void sceNetInetInetAddr()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -407,7 +407,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0x1BDF5D13, FirmwareVersion = 150)]
         public void sceNetInetInetAton()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -416,7 +416,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xD0792666, FirmwareVersion = 150)]
         public void sceNetInetInetNtop()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -425,7 +425,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
         [HlePspFunction(NID = 0xE30B8C19, FirmwareVersion = 150)]
         public void sceNetInetInetPton()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
 

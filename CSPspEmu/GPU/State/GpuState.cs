@@ -27,10 +27,10 @@ namespace CSPspEmu.Core.Gpu.State
             set => Span[(int)op] = value;
         }
 
-        public uint Int(GpuOpCodes op) => (this[op] & 0xFFFFFF);
+        public uint Int(GpuOpCodes op) => this[op] & 0xFFFFFF;
         public uint Param8(GpuOpCodes op, int offset) => (Int(op) >> offset) & 0xFF;
         public uint Param16(GpuOpCodes op, int offset) => (Int(op) >> offset) & 0xFFFF;
-        public uint Param24(GpuOpCodes op) => (this[op] & 0xFFFFFF);
+        public uint Param24(GpuOpCodes op) => this[op] & 0xFFFFFF;
         public uint Extract(GpuOpCodes op, int offset, int bits) => (uint)(this[op] >> offset) & (uint)((1 << bits) - 1);
         public int ExtractSigned(GpuOpCodes op, int offset, int bits)
         {
@@ -104,7 +104,7 @@ namespace CSPspEmu.Core.Gpu.State
 
         public GpuStateStruct(GpuStateData data) => this.data = data;
 
-        public uint BaseAddress => ((data.Param24(GpuOpCodes.BASE) << 8) & 0xff000000);
+        public uint BaseAddress => (data.Param24(GpuOpCodes.BASE) << 8) & 0xff000000;
         public uint BaseOffset
         {
             get { return data[GpuOpCodes.OFFSET_ADDR]; }
@@ -275,8 +275,8 @@ namespace CSPspEmu.Core.Gpu.State
 
         public bool Enabled => data.Bool(GpuOpCodes.ZTE);
         public TestFunctionEnum Function => (TestFunctionEnum) data.Param8(GpuOpCodes.ZTST, 0);
-        public float RangeNear => ((float) data.Param16(GpuOpCodes.FARZ, 0)) / ushort.MaxValue; // @TODO: CHECK INVERTED!
-        public float RangeFar => ((float) data.Param16(GpuOpCodes.NEARZ, 0)) / ushort.MaxValue; // @TODO: CHECK INVERTED!
+        public float RangeNear => (float) data.Param16(GpuOpCodes.FARZ, 0) / ushort.MaxValue; // @TODO: CHECK INVERTED!
+        public float RangeFar => (float) data.Param16(GpuOpCodes.NEARZ, 0) / ushort.MaxValue; // @TODO: CHECK INVERTED!
         public ushort Mask => (ushort)data.Param16(GpuOpCodes.ZMSK, 0);
     }
 
@@ -358,7 +358,7 @@ namespace CSPspEmu.Core.Gpu.State
             data.Float1(GpuOpCodes.LXP0 + index),
             data.Float1(GpuOpCodes.LYP0 + index),
             data.Float1(GpuOpCodes.LZP0 + index),
-            (Type == LightTypeEnum.Directional) ? 0 : 1
+            Type == LightTypeEnum.Directional ? 0 : 1
         );
         public Vector4 SpotDirection=> new Vector4(
             data.Float1(GpuOpCodes.LXD0 + index),
@@ -369,7 +369,7 @@ namespace CSPspEmu.Core.Gpu.State
 
         public AttenuationStruct Attenuation => new AttenuationStruct(data, index); 
         public float SpotExponent => data.Float1(GpuOpCodes.SPOTEXP0 + index);
-        public float SpotCutoff => (Type == LightTypeEnum.PointLight) ? 180 : data.Float1(GpuOpCodes.SPOTCUT0 + index);
+        public float SpotCutoff => Type == LightTypeEnum.PointLight ? 180 : data.Float1(GpuOpCodes.SPOTCUT0 + index);
         public ColorfStruct AmbientColor => new ColorfStruct().SetRGB_A1(data.Int(GpuOpCodes.ALC0 + index));
         public ColorfStruct DiffuseColor => new ColorfStruct().SetRGB_A1(data.Int(GpuOpCodes.DLC0 + index));
         public ColorfStruct SpecularColor => new ColorfStruct().SetRGB_A1(data.Int(GpuOpCodes.SLC0 + index));
@@ -410,7 +410,7 @@ namespace CSPspEmu.Core.Gpu.State
         public PatchCullingStateStruct(GpuStateData data) => this.data = data;
 
         public bool Enabled => data.Bool(GpuOpCodes.PCE);
-        public bool FaceFlag => (data.Param24(GpuOpCodes.PFACE) != 0);
+        public bool FaceFlag => data.Param24(GpuOpCodes.PFACE) != 0;
     }
 
     public ref struct ScreenBufferStateStruct
@@ -564,12 +564,12 @@ namespace CSPspEmu.Core.Gpu.State
         /// <summary>
         /// Is texture swizzled?
         /// </summary>
-        public bool Swizzled => (data.Param8(GpuOpCodes.TMODE, 0) != 0);
+        public bool Swizzled => data.Param8(GpuOpCodes.TMODE, 0) != 0;
 
         /// <summary>
         /// Mipmaps share clut?
         /// </summary>
-        public bool MipmapShareClut => (data.Param8(GpuOpCodes.TMODE, 8) != 0);
+        public bool MipmapShareClut => data.Param8(GpuOpCodes.TMODE, 8) != 0;
 
         /// <summary>
         /// Levels of mipmaps
@@ -586,7 +586,7 @@ namespace CSPspEmu.Core.Gpu.State
         public float OffsetU => data.Float1(GpuOpCodes.UOFFSET);
         public float OffsetV => data.Float1(GpuOpCodes.VOFFSET);
 
-        public bool Fragment2X => (data.Param8(GpuOpCodes.TFUNC, 16) != 0);
+        public bool Fragment2X => data.Param8(GpuOpCodes.TFUNC, 16) != 0;
         public TextureEffect Effect => (TextureEffect) data.Param8(GpuOpCodes.TFUNC, 0);
         public TextureColorComponent ColorComponent => (TextureColorComponent) data.Param8(GpuOpCodes.TFUNC, 8);
     }
@@ -603,7 +603,7 @@ namespace CSPspEmu.Core.Gpu.State
             Bit32 = 1
         }
 
-        public int BytesPerPixel => (TexelSize == TexelSizeEnum.Bit16) ? 2 : 4;
+        public int BytesPerPixel => TexelSize == TexelSizeEnum.Bit16 ? 2 : 4;
         public int SourceLineWidthInBytes => SourceLineWidth * BytesPerPixel;
         public int DestinationLineWidthInBytes => DestinationLineWidth * BytesPerPixel;
         public int WidthInBytes => Width * BytesPerPixel;
@@ -644,7 +644,7 @@ namespace CSPspEmu.Core.Gpu.State
 
         public static bool operator ==(VertexTypeStruct a, VertexTypeStruct b)
         {
-            return (a.ReversedNormal == b.ReversedNormal) && (a.NormalCount == b.NormalCount) && (a.Value == b.Value);
+            return a.ReversedNormal == b.ReversedNormal && a.NormalCount == b.NormalCount && a.Value == b.Value;
         }
 
         public static bool operator !=(VertexTypeStruct a, VertexTypeStruct b)

@@ -151,7 +151,7 @@ namespace CSharpUtils.Ext.Compression.Lz
                 Size = 0
             };
 
-            if ((Data.Length - _offset) >= MinSize)
+            if (Data.Length - _offset >= MinSize)
             {
                 fixed (byte* dataPtr = Data)
                 {
@@ -160,7 +160,7 @@ namespace CSharpUtils.Ext.Compression.Lz
                     //var Node = Waypoints[Hash].Last;
                     foreach (var compareOffset in _waypoints[hash])
                     {
-                        var localMaxSize = Math.Min((Data.Length - _offset), MaxSize);
+                        var localMaxSize = Math.Min(Data.Length - _offset, MaxSize);
 
                         //if (!AllowOverlapping && (CompareOffset + LocalMaxSize > _Offset)) continue;
 
@@ -183,7 +183,7 @@ namespace CSharpUtils.Ext.Compression.Lz
 
                         //Console.WriteLine("{0}, {1}, {2}", CompareOffset - _Offset, MatchedLength, CompareOffset - _Offset + MatchedLength);
 
-                        if (!AllowOverlapping && (compareOffset - _offset + matchedLength) > 0)
+                        if (!AllowOverlapping && compareOffset - _offset + matchedLength > 0)
                         {
                             matchedLength = _offset - compareOffset;
                             //continue;

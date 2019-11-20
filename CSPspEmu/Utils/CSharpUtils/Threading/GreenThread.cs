@@ -337,7 +337,7 @@ namespace CSharpUtils.Threading
                 try
                 {
                     //StackTraceUtils.PreserveStackTrace(RethrowException);
-                    throw (new GreenThreadException("GreenThread Exception", _rethrowException));
+                    throw new GreenThreadException("GreenThread Exception", _rethrowException);
                     //throw (RethrowException);
                 }
                 finally
@@ -372,7 +372,7 @@ namespace CSharpUtils.Threading
                 }
                 else
                 {
-                    throw(new InvalidOperationException("GreenThread has finalized"));
+                    throw new InvalidOperationException("GreenThread has finalized");
                 }
             }
         }
@@ -383,7 +383,7 @@ namespace CSharpUtils.Threading
         /// <exception cref="NotImplementedException"></exception>
         public static void StopAll()
         {
-            throw(new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         /// <summary>

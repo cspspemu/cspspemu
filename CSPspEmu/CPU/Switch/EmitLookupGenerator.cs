@@ -23,7 +23,7 @@ namespace CSPspEmu.Core.Cpu.Switch
         {
             return GenerateSwitch<Action<uint, TType>>(name, instructionInfoList, instructionInfo =>
             {
-                var instructionInfoName = (instructionInfo != null) ? instructionInfo.Name : "Default";
+                var instructionInfoName = instructionInfo != null ? instructionInfo.Name : "Default";
                 var methodInfo = typeof(TType).GetMethod(instructionInfoName);
                 if (methodInfo == null)
                     throw new Exception(
@@ -73,7 +73,7 @@ namespace CSPspEmu.Core.Cpu.Switch
 
             return GenerateSwitch<Func<uint, TType, TRetType>>(name, instructionInfoList, instructionInfo =>
             {
-                var instructionInfoName = (instructionInfo != null) ? instructionInfo.Name : "unknown";
+                var instructionInfoName = instructionInfo != null ? instructionInfo.Name : "unknown";
                 var methodInfo = customNamesToMethodInfo.GetOrDefault(instructionInfoName, null);
 
                 //if (methodInfo == null)
@@ -174,7 +174,7 @@ namespace CSPspEmu.Core.Cpu.Switch
                     enumerable.Select(maskGroup =>
                         Ast.Case(
                             ((maskGroup.First().Value >> shiftOffset) & commonMaskShifted) - minValue,
-                            (maskGroup.Count() > 1)
+                            maskGroup.Count() > 1
                                 ? GenerateSwitchCode(maskGroup, generateCallDelegate, level + 1)
                                 : generateCallDelegate(maskGroup.First())
                         )

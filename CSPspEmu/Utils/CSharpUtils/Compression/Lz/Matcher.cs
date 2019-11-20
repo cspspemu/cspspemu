@@ -43,7 +43,7 @@ namespace CSharpUtils.Ext.Compression.Lz
             int maxLzDistance, int minRleLength, int maxRleLength, bool allowOverlapping,
             Action<int, byte> byteCallback, Action<int, int, int> lzCallback, Action<int, byte, int> rleCallback)
         {
-            var useRle = (rleCallback != null) && (maxRleLength > 0);
+            var useRle = rleCallback != null && maxRleLength > 0;
 
             var lzMatcher = new LzMatcher(input, startPosition, maxLzDistance, minLzLength, maxLzLength,
                 allowOverlapping);
@@ -63,7 +63,7 @@ namespace CSharpUtils.Ext.Compression.Lz
                     if (rleLength > maxRleLength) rleLength = maxRleLength;
                 }
 
-                if (result.Found && (!useRle || (result.Size > rleLength)))
+                if (result.Found && (!useRle || result.Size > rleLength))
                 {
                     //Console.WriteLine("RLE: {0}", RleLength);
                     lzCallback(n, result.Offset - n, result.Size);
@@ -74,7 +74,7 @@ namespace CSharpUtils.Ext.Compression.Lz
                     continue;
                 }
 
-                if (useRle && (rleLength >= minRleLength))
+                if (useRle && rleLength >= minRleLength)
                 {
                     rleCallback(n, input[n], rleLength);
                     n += rleLength;
