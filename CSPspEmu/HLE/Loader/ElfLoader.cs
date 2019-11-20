@@ -18,6 +18,8 @@ namespace CSPspEmu.Hle.Loader
         public Stream MemoryStream;
         public MemoryPartition MemoryPartition;
         protected uint BaseAddress;
+        
+        static public Logger Logger = Logger.GetLogger(nameof(ElfLoader)); 
 
         public Elf.HeaderStruct Header;
         public Elf.SectionHeader[] SectionHeaders;
@@ -61,16 +63,16 @@ namespace CSPspEmu.Hle.Loader
                 SectionHeadersByName[sectionHeaderName] = sectionHeader;
             }
 
-            Console.WriteLine("ProgramHeaders:{0}", ProgramHeaders.Length);
+            Logger.Info("ProgramHeaders:{0}", ProgramHeaders.Length);
             foreach (var programHeader in ProgramHeaders)
             {
-                Console.WriteLine("{0}", programHeader.ToStringDefault());
+                Logger.Info("{0}", programHeader.ToStringDefault());
             }
 
-            Console.WriteLine("SectionHeaders:{0}", SectionHeaders.Length);
+            Logger.Info("SectionHeaders:{0}", SectionHeaders.Length);
             foreach (var sectionHeader in SectionHeaders)
             {
-                Console.WriteLine("{0}:{1}", GetStringFromStringTable(sectionHeader.Name),
+                Logger.Info("{0}:{1}", GetStringFromStringTable(sectionHeader.Name),
                     sectionHeader.ToStringDefault());
             }
 
@@ -126,15 +128,15 @@ namespace CSPspEmu.Hle.Loader
                 var sectionHeaderMemoryStream =
                     MemoryStream.SliceWithLength(sectionHeader.Address + BaseAddress, sectionHeader.Size);
 
-                Console.WriteLine("WriteToMemory('{0:X}') : 0x{1:X} : {2} : {3}",
+                Logger.Info("WriteToMemory('{0:X}') : 0x{1:X} : {2} : {3}",
                     GetStringFromStringTable(sectionHeader.Name), sectionHeader.Address, sectionHeader.Type,
                     sectionHeader.Size);
-                Console.WriteLine("   0x{0:X} - 0x{1:X}", sectionHeader.Address + BaseAddress, sectionHeader.Size);
+                Logger.Info("   0x{0:X} - 0x{1:X}", sectionHeader.Address + BaseAddress, sectionHeader.Size);
 
                 switch (sectionHeader.Type)
                 {
                     case Elf.SectionHeader.TypeEnum.ProgramBits:
-                        //Console.WriteLine(SectionHeaderFileStream.ReadAll().ToHexString());
+                        //Logger.Trace(SectionHeaderFileStream.ReadAll().ToHexString());
                         sectionHeaderMemoryStream.WriteStream(sectionHeaderFileStream);
                         break;
                     case Elf.SectionHeader.TypeEnum.NoBits:
