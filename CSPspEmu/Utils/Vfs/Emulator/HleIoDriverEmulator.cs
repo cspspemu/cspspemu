@@ -148,7 +148,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
                     break;
                 case EmulatorDevclEnum.SendOutput:
                     var OutputString = Encoding.ASCII.GetString(ReinterpretSpan<byte>(Input));
-                    Console.WriteLine($"HleOutputHandler :: {HleOutputHandler.GetType()}");
+                    //Console.WriteLine($"HleOutputHandler :: {HleOutputHandler.GetType()}");
                     this.HleOutputHandler.Output(OutputString);
                     //Console.Error.WriteLine("{0}", OutputString);
                     break;

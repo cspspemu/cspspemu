@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using static System.String;
 
 namespace CSharpUtils
@@ -245,5 +247,36 @@ namespace CSharpUtils
                 }
             }
         }
+
+        class OutputTextWriter : TextWriter
+        {
+            private Logger Logger;
+            private Level level;
+
+            public OutputTextWriter(Logger logger, Level level)
+            {
+                this.Logger = logger;
+                this.level = level;
+            }
+
+            public override Encoding Encoding { get; }
+            
+            StringBuilder sb = new StringBuilder();
+
+            public override void Write(char value)
+            {
+                if (value == '\n')
+                {
+                    sb.Append(value);
+                }
+                else
+                {
+                    Logger.Log(level, "{0}", sb.ToString());
+                    sb.Clear();
+                }
+            }
+        }
+
+        public TextWriter Output(Level level) => new OutputTextWriter(this, level);
     }
 }

@@ -19,7 +19,8 @@ namespace CSPspEmu.Hle.Loader
 
     public class ElfPspLoader
     {
-        static Logger _logger = Logger.GetLogger("Loader");
+        static Logger _logger = Logger.GetLogger(nameof(ElfPspLoader));
+        static public Logger Logger = _logger;
 
         [Inject] protected ElfLoader ElfLoader;
 
@@ -143,7 +144,7 @@ namespace CSPspEmu.Hle.Loader
             {
                 var sectionHeader = ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"];
                 stream = ElfLoader.SectionHeaderMemoryStream(sectionHeader);
-                Console.WriteLine("LoadModuleInfo: .rodata.sceModuleInfo 0x{0:X8}[{1}]",
+                Logger.Info("LoadModuleInfo: .rodata.sceModuleInfo 0x{0:X8}[{1}]",
                     BaseAddress + sectionHeader.Address, sectionHeader.Size);
             }
             else
@@ -152,11 +153,11 @@ namespace CSPspEmu.Hle.Loader
                     (uint) (BaseAddress + (programHeader.PsysicalAddress & 0x7FFFFFFFL) - programHeader.Offset);
                 var size = Marshal.SizeOf(typeof(ElfPsp.ModuleInfo));
                 stream = ElfLoader.MemoryStream.SliceWithLength(moduleInfoAddress, size);
-                Console.WriteLine("LoadModuleInfo: 0x{0:X8}[{1}]", moduleInfoAddress, size);
+                Logger.Info("LoadModuleInfo: 0x{0:X8}[{1}]", moduleInfoAddress, size);
             }
 
             HleModuleGuest.ModuleInfo = stream.ReadStruct<ElfPsp.ModuleInfo>();
-            Console.WriteLine("{0}", HleModuleGuest.ModuleInfo.ToStringDefault());
+            Logger.Info("{0}", HleModuleGuest.ModuleInfo.ToStringDefault());
         }
 
         protected void RelocateFromHeaders()
@@ -201,7 +202,7 @@ namespace CSPspEmu.Hle.Loader
                         break;
 
                     case Elf.SectionHeader.TypeEnum.PrxRelocation:
-                        Console.WriteLine("PrxRelocation : {0}", sectionHeader);
+                        Logger.Info("PrxRelocation : {0}", sectionHeader);
                         RelocateRelocs(
                             ElfLoader.SectionHeaderFileStream(sectionHeader)
                                 .ReadStructVectorUntilTheEndOfStream<Elf.Reloc>()
@@ -282,7 +283,7 @@ namespace CSPspEmu.Hle.Loader
 
                 if (debugReloc)
                 {
-                    Console.WriteLine("{0:X8}[{1:X8}]: {2}", relocatedPointerAddress, instruction.Value, reloc);
+                    Logger.Info("{0:X8}[{1:X8}]: {2}", relocatedPointerAddress, instruction.Value, reloc);
                 }
 
                 switch (reloc.Type)
@@ -384,7 +385,7 @@ namespace CSPspEmu.Hle.Loader
 
                 if (debugReloc)
                 {
-                    Console.WriteLine("   -> {0:X8}", instruction.Value);
+                    Logger.Info("   -> {0:X8}", instruction.Value);
                 }
 
                 /*
@@ -437,7 +438,7 @@ namespace CSPspEmu.Hle.Loader
                 HleModuleGuest.ModuleInfo.ExportsEnd);
             var moduleExports = exportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleExport>();
 
-            Console.WriteLine("Exports:");
+            Logger.Info("Exports:");
 
             foreach (var moduleExport in moduleExports)
             {
@@ -445,7 +446,7 @@ namespace CSPspEmu.Hle.Loader
                     ? ElfLoader.MemoryStream.ReadStringzAt(moduleExport.Name)
                     : "";
 
-                Console.WriteLine("  * Export: '{0}'", moduleExportName);
+                Logger.Info("  * Export: '{0}'", moduleExportName);
 
                 var hleModuleExports = new HleModuleExports
                 {
@@ -474,7 +475,7 @@ namespace CSPspEmu.Hle.Loader
                     var callAddress = functionAddressReader.ReadUInt32();
                     hleModuleExports.Functions[nid] = new HleModuleImportsExports.Entry() {Address = callAddress};
 
-                    Console.WriteLine("  |  - FUNC: {0:X} : {1:X} : {2}", nid, callAddress,
+                    Logger.Info("  |  - FUNC: {0:X} : {1:X} : {2}", nid, callAddress,
                         Enum.GetName(typeof(SpecialFunctionNids), nid));
                 }
 
@@ -484,7 +485,7 @@ namespace CSPspEmu.Hle.Loader
                     var callAddress = variableAddressReader.ReadUInt32();
                     hleModuleExports.Variables[nid] = new HleModuleImportsExports.Entry() {Address = callAddress};
 
-                    Console.WriteLine("  |  - VAR: {0:X} : {1:X} : {2}", nid, callAddress,
+                    Logger.Info("  |  - VAR: {0:X} : {1:X} : {2}", nid, callAddress,
                         Enum.GetName(typeof(SpecialVariableNids), nid));
                 }
 
@@ -529,9 +530,9 @@ namespace CSPspEmu.Hle.Loader
             //Console.WriteLine("ImportsStream.Length: {0}", ImportsStream.Length);
             var moduleImports = importsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
 
-            Console.WriteLine("BASE ADDRESS: 0x{0:X}", BaseAddress);
+            Logger.Info("BASE ADDRESS: 0x{0:X}", BaseAddress);
 
-            Console.WriteLine("Imports ({0:X8}-{1:X8}):", HleModuleGuest.ModuleInfo.ImportsStart,
+            Logger.Info("Imports ({0:X8}-{1:X8}):", HleModuleGuest.ModuleInfo.ImportsStart,
                 HleModuleGuest.ModuleInfo.ImportsEnd);
 
             foreach (var moduleImport in moduleImports)
@@ -543,7 +544,7 @@ namespace CSPspEmu.Hle.Loader
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Console.Error.WriteLine(e);
                 }
 
                 var hleModuleImports = new HleModuleImports

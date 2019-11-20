@@ -369,9 +369,9 @@ namespace CSPspEmu.Runner.Components.Cpu
                         argumentsPartition.Low);
                     //Console.WriteLine("RA: 0x{0:X}", CurrentCpuThreadState.RA);
                 }
-                currentCpuThreadState.DumpRegisters();
-                MemoryManager.GetPartition(MemoryPartitions.User).Dump();
-                //ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
+                
+                currentCpuThreadState.DumpRegisters(Logger.Output(Logger.Level.Info));
+                MemoryManager.GetPartition(MemoryPartitions.User).Dump(output: Logger.Output(Logger.Level.Info));
 
                 //MainThread.CurrentStatus = HleThread.Status.Ready;
             }

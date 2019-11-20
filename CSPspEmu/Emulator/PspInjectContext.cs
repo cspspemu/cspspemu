@@ -53,7 +53,7 @@ namespace CSPspEmu.Runner
             }
             else
             {
-                injectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+                injectContext.SetInstanceType<GpuImpl, GpuImplNull>();
                 injectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
             }
 

@@ -1,16 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
+using System.Timers;
 using CSPspEmu.Core.Components.Controller;
 using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Types.Controller;
 using CSPspEmu.Emulator.Simple;
+using CSPspEmu.Utils;
 using CSPspEmu.Utils.Utils;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using Timer = System.Threading.Timer;
 
 namespace CSPspEmu.Frontend
 {
@@ -26,13 +30,13 @@ namespace CSPspEmu.Frontend
         private PspEmulator Emulator => SimplifiedPspEmulator.Emulator;
 
         public Game() : base(
-            width: 1280, // initial width
-            height: 720, // initial height
+            width: 480 * 3,
+            height: 272 * 3,
             mode: GraphicsMode.Default,
-            title: "PSP Emulator", // initial title
+            title: "C# PSP Emulator",
             options: GameWindowFlags.Default,
             device: DisplayDevice.Default,
-            major: 1, minor: 1, // OpenGL major/minor version
+            major: 1, minor: 1,
             GraphicsContextFlags.ForwardCompatible
         )
         {
@@ -102,27 +106,41 @@ namespace CSPspEmu.Frontend
             base.OnKeyUp(e);
             OnKeyChange(e, false);
         }
+
+        static public void ScheduleTask(TimeSpan TimeSpan, Action action)
+        {
+            var timer = new System.Timers.Timer(TimeSpan.TotalMilliseconds);
+            timer.Elapsed += (sender, args) =>
+            {
+                timer.Stop();
+                action();
+            };
+            timer.Start();
+        }
         
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            Console.WriteLine("LOAD");
-
-            SimplifiedPspEmulator = new SimplifiedPspEmulator();
-
-            
-            //SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/ortho.pbp");
-            SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/compilerPerf.pbp");
-
-            var rtc = SimplifiedPspEmulator.Rtc;
-            var display = SimplifiedPspEmulator.Display;
-            var controller = SimplifiedPspEmulator.Controller;
-
-            /*
-            display.VBlankEventCall += () =>
+            ScheduleTask(16.Milliseconds(), () =>
             {
-            };
-            */
+                Console.WriteLine("LOAD");
+
+                SimplifiedPspEmulator = new SimplifiedPspEmulator();
+
+
+                //SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/ortho.pbp");
+                SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/compilerPerf.pbp");
+
+                var rtc = SimplifiedPspEmulator.Rtc;
+                var display = SimplifiedPspEmulator.Display;
+                var controller = SimplifiedPspEmulator.Controller;
+
+                /*
+                display.VBlankEventCall += () =>
+                {
+                };
+                */
+            });
         }
 
         int texture = -1;
@@ -138,88 +156,96 @@ namespace CSPspEmu.Frontend
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            GL.ClearColor(0.3f, 0f, 0f, 1f);
+            GL.ClearColor(0f, 0f, 0f, 1f);
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            if (texture <= 0)
+            if (SimplifiedPspEmulator != null)
             {
-                texture = GL.GenTexture();
-            }
-
-            GL.BindTexture(TextureTarget.Texture2D, texture);
-            CheckError("BindTexture");
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-                (int) TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-                (int) TextureMagFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.Repeat);
-            CheckError("TexParameter");
-            var bitmap = SimplifiedPspEmulator.Display.TakePspScreenshot();
-            var pixelsArray = new OutputPixel[bitmap.Area];
-            fixed (OutputPixel* pixels = pixelsArray)
-            {
-                PixelFormatDecoder.Decode(bitmap.GuPixelFormat, bitmap.Address, pixels, bitmap.Width, bitmap.Height);
-                /*
-                var data = new byte[512 * 272 * 4];
-                for (int i = 0; i < 512 * 272 * 4; i++)
+                if (texture <= 0)
                 {
-                    data[i] = 0x10;
-                    //pixels[i] = OutputPixel.FromRgba(255, 128, 128, 255);
+                    texture = GL.GenTexture();
                 }
-                Console.WriteLine($"{bitmap.Width}, {bitmap.Height}, {pixels[0]}");
-                */
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bitmap.Width, bitmap.Height, 0,
-                    PixelFormat.Bgra, PixelType.UnsignedByte, new IntPtr(pixels));
-                CheckError("TexImage2D");
-                GL.BindTexture(TextureTarget.Texture2D, 0);
+
+                GL.BindTexture(TextureTarget.Texture2D, texture);
                 CheckError("BindTexture");
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+                    (int) TextureMinFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+                    (int) TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS,
+                    (int) TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT,
+                    (int) TextureWrapMode.ClampToEdge);
+                CheckError("TexParameter");
+                var bitmap = SimplifiedPspEmulator.Display.TakePspScreenshot();
+                var pixelsArray = new OutputPixel[bitmap.Area];
+                fixed (OutputPixel* pixels = pixelsArray)
+                {
+                    PixelFormatDecoder.Decode(bitmap.GuPixelFormat, bitmap.Address, pixels, bitmap.Width,
+                        bitmap.Height);
+                    /*
+                    var data = new byte[512 * 272 * 4];
+                    for (int i = 0; i < 512 * 272 * 4; i++)
+                    {
+                        data[i] = 0x10;
+                        //pixels[i] = OutputPixel.FromRgba(255, 128, 128, 255);
+                    }
+                    Console.WriteLine($"{bitmap.Width}, {bitmap.Height}, {pixels[0]}");
+                    */
+                    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bitmap.Width, bitmap.Height, 0,
+                        PixelFormat.Bgra, PixelType.UnsignedByte, new IntPtr(pixels));
+                    CheckError("TexImage2D");
+                    GL.BindTexture(TextureTarget.Texture2D, 0);
+                    CheckError("BindTexture");
+                }
+
+                GL.Viewport(0, 0, Width, Height);
+                CheckError("Viewport");
+
+                GL.Enable(EnableCap.Texture2D);
+                GL.MatrixMode(MatrixMode.Projection);
+                CheckError("MatrixMode");
+                GL.LoadIdentity();
+                GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
+
+                GL.MatrixMode(MatrixMode.Modelview);
+                GL.LoadIdentity();
+                GL.BindTexture(TextureTarget.Texture2D, texture);
+                CheckError("BindTexture");
+
+                GL.Begin(BeginMode.Quads);
+
+                GL.TexCoord2(0.0f, 1.0f);
+                GL.Vertex2(-1f, -1f);
+                GL.TexCoord2(1.0f, 1.0f);
+                GL.Vertex2(+1f, -1f);
+                GL.TexCoord2(1.0f, 0.0f);
+                GL.Vertex2(+1f, +1f);
+                GL.TexCoord2(0.0f, 0.0f);
+                GL.Vertex2(-1f, +1f);
+
+                GL.End();
+                CheckError("End");
             }
-
-            GL.Viewport(0, 0, Width, Height);
-            CheckError("Viewport");
-
-            GL.Enable(EnableCap.Texture2D);
-            GL.MatrixMode(MatrixMode.Projection);
-            CheckError("MatrixMode");
-            GL.LoadIdentity();
-            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-            GL.BindTexture(TextureTarget.Texture2D, texture);
-            CheckError("BindTexture");
-
-            GL.Begin(BeginMode.Quads);
-
-            GL.TexCoord2(0.0f, 1.0f);
-            GL.Vertex2(-1f, -1f);
-            GL.TexCoord2(1.0f, 1.0f);
-            GL.Vertex2(+1f, -1f);
-            GL.TexCoord2(1.0f, 0.0f);
-            GL.Vertex2(+1f, +1f);
-            GL.TexCoord2(0.0f, 0.0f);
-            GL.Vertex2(-1f, +1f);
-
-            GL.End();
-            CheckError("End");
 
 
             //GL.BindTexture(TextureTarget.Texture2D, 0);
             SwapBuffers();
-            
-            lx = pressingAnalogLeft != 0 ? -pressingAnalogLeft : pressingAnalogRight;
-            ly = pressingAnalogUp != 0 ? -pressingAnalogUp : pressingAnalogDown;
 
-            ctrlData.X = lx / 3f;
-            ctrlData.Y = ly / 3f;
-            ctrlData.TimeStamp = (uint) Emulator.InjectContext.GetInstance<PspRtc>().UnixTimeStampTS.Milliseconds;
+            if (SimplifiedPspEmulator != null)
+            {
+                lx = pressingAnalogLeft != 0 ? -pressingAnalogLeft : pressingAnalogRight;
+                ly = pressingAnalogUp != 0 ? -pressingAnalogUp : pressingAnalogDown;
 
-            //Console.WriteLine("controller.InsertSceCtrlData(ctrlData)");
-            Emulator.InjectContext.GetInstance<PspController>().InsertSceCtrlData(ctrlData);
-                
-            Emulator.InjectContext.GetInstance<PspDisplay>().TriggerVBlankEnd();
+                ctrlData.X = lx / 3f;
+                ctrlData.Y = ly / 3f;
+                ctrlData.TimeStamp = (uint) Emulator.InjectContext.GetInstance<PspRtc>().UnixTimeStampTS.Milliseconds;
 
+                //Console.WriteLine("controller.InsertSceCtrlData(ctrlData)");
+                Emulator.InjectContext.GetInstance<PspController>().InsertSceCtrlData(ctrlData);
+
+                Emulator.InjectContext.GetInstance<PspDisplay>().TriggerVBlankEnd();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Loader;
@@ -36,6 +37,8 @@ namespace CSPspEmu.Hle
 
     public class HleModuleGuest : HleModule
     {
+        private static Logger Logger = Logger.GetLogger(nameof(HleModuleGuest));
+        
         public int ID;
 
         public string Name => ModuleInfo.Name;
@@ -87,7 +90,7 @@ namespace CSPspEmu.Hle
                 FunctionEntry: NativeFunction
             ));
 
-            Console.WriteLine(
+            Logger.Info(
                 "    CODE_ADDR({0:X})  :  NID(0x{1:X8}) : {2} - {3}",
                 CallAddress, NativeFunction.NID, NativeFunction.Name, NativeFunction.Description
             );
@@ -141,7 +144,8 @@ namespace CSPspEmu.Hle
                 }
                 catch (Exception Exception)
                 {
-                    Console.WriteLine(Exception);
+                    //Logger.Error(Exception);
+                    Console.Error.WriteLine(Exception);
                 }
 
                 // Can't use a host module. Try to use a Guest module.
@@ -157,7 +161,7 @@ namespace CSPspEmu.Hle
                     }
                 }
 
-                Console.WriteLine("'{0}' - {1}", ModuleImports.Name,
+                Logger.Info("'{0}' - {1}", ModuleImports.Name,
                     HleModuleHost != null ? HleModuleHost.ModuleLocation : "?");
                 foreach (var Function in ModuleImports.Functions)
                 {
@@ -203,7 +207,7 @@ namespace CSPspEmu.Hle
                 {
                     if (CpuThreadState.CpuProcessor.CpuConfig.DebugSyscalls)
                     {
-                        Console.WriteLine(
+                        Logger.Info(
                             "Thread({0}:'{1}'):{2}:{3}",
                             HleThreadManager.Current.Id,
                             HleThreadManager.Current.Name,

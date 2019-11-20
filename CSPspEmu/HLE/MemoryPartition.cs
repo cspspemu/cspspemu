@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
@@ -299,14 +300,15 @@ namespace CSPspEmu.Hle
             }
         }
 
-        public void Dump(MemoryPartition Mark = null, int Level = 0)
+        public void Dump(MemoryPartition Mark = null, int Level = 0, TextWriter output = null)
         {
-            Console.Write(new string(' ', Level * 2));
-            Console.WriteLine(
+            output ??= Console.Out;
+            output.Write(new string(' ', Level * 2));
+            output.WriteLine(
                 $"MemoryPartition(Low={Low:X}, High={High:X}, Allocated={Allocated}, Size={Size}, Name='{Name}'){(this == Mark ? " * " : "")}");
             foreach (var ChildPartition in ChildPartitions)
             {
-                ChildPartition.Dump(Level: Level + 1, Mark: Mark);
+                ChildPartition.Dump(Level: Level + 1, Mark: Mark, output: output);
             }
         }
 

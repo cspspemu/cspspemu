@@ -23,7 +23,7 @@ namespace CSPspEmu.Tests.Integration
 
         private class HleOutputHandlerMock : HleOutputHandler
         {
-            private StringBuilder sb = new StringBuilder();
+            private StringBuilder sb = new StringBuilder(64 * 1024);
             public String OutputString => sb.ToString();
 
             public override void Output(string outputString) => sb.Append(outputString);

@@ -24,8 +24,8 @@ namespace CSPspEmu.Emulator.Simple
             injector = PspInjectContext.CreateInjectContext(PspStoredConfig.Load(), test, configure);
             Emulator = injector.GetInstance<PspEmulator>();
             //Emulator.PspRunner = null;
-            Emulator.CpuConfig.DebugSyscalls = true;
-            Emulator.CpuConfig.TrackCallStack = true;
+            //Emulator.CpuConfig.DebugSyscalls = true;
+            //Emulator.CpuConfig.TrackCallStack = true;
             
             Rtc = injector.GetInstance<PspRtc>();
             Display = injector.GetInstance<PspDisplay>();
