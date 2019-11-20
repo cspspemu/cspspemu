@@ -7,6 +7,7 @@ namespace CSPspEmu.Core.Memory
     public unsafe struct PspPointer<TType>
     {
         public uint Address;
+        public PspPointer(uint Address) => this.Address = Address;
 
         public uint Low24
         {
@@ -16,11 +17,6 @@ namespace CSPspEmu.Core.Memory
         public uint High8
         {
             set => Address = (Address & 0x00FFFFFF) | (value & 0xFF000000);
-        }
-
-        public PspPointer(uint Address)
-        {
-            this.Address = Address;
         }
 
         public static implicit operator uint(PspPointer<TType> that) => that.Address;
@@ -44,10 +40,11 @@ namespace CSPspEmu.Core.Memory
     public unsafe struct PspPointer
     {
         public uint Address;
+        public PspPointer(uint Address) => this.Address = Address;
+
         public uint Low24 { set => Address = (Address & 0xFF000000) | (value & 0x00FFFFFF); }
         public uint High8 { set => Address = (Address & 0x00FFFFFF) | (value & 0xFF000000); }
 
-        public PspPointer(uint Address) => this.Address = Address;
         public static implicit operator uint(PspPointer that) => that.Address;
         public static implicit operator PspPointer(uint that) => new PspPointer(that);
         public override string ToString() => $"PspPointer(0x{Address:X})";

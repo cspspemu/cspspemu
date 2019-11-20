@@ -9,17 +9,24 @@ namespace CSPspEmu.Runner.Components.Display
 {
     public sealed class DisplayComponentThread : ComponentThread
     {
-        [Inject] private HleInterruptManager _hleInterruptManager;
+        private HleInterruptManager _hleInterruptManager;
+        private PspDisplay _pspDisplay;
 
-        [Inject] private PspDisplay _pspDisplay;
+        public DisplayComponentThread(HleInterruptManager hleInterruptManager, PspDisplay pspDisplay)
+        {
+            _hleInterruptManager = hleInterruptManager;
+            _pspDisplay = pspDisplay;
+        }
 
         protected override string ThreadName => "DisplayThread";
 
         TimeSpan vSyncTimeIncrement =
             TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) PspDisplay.VsyncRow));
+
         //var VSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow / 2))); // HACK to give more time to render!
         TimeSpan endTimeIncrement =
             TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) PspDisplay.NumberOfRows));
+
         HleInterruptHandler vBlankInterruptHandler;
         public bool triggerStuff = true;
 
@@ -54,7 +61,8 @@ namespace CSPspEmu.Runner.Components.Display
                 {
                     if (triggerStuff)
                     {
-                        Step(_pspDisplay.TriggerDrawStart, _pspDisplay.TriggerVBlankStart, _pspDisplay.TriggerVBlankEnd);
+                        Step(_pspDisplay.TriggerDrawStart, _pspDisplay.TriggerVBlankStart,
+                            _pspDisplay.TriggerVBlankEnd);
                     }
                     else
                     {

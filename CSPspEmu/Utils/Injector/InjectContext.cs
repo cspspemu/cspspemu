@@ -11,169 +11,84 @@ using CSharpUtils.Extensions;
 /// </summary>
 public sealed class InjectContext : IDisposable
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    public InjectContext() => SetInstance<InjectContext>(this);
+
     static Logger Logger = Logger.GetLogger("InjectContext");
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public InjectContext()
-    {
-        SetInstance<InjectContext>(this);
-    }
-
-    /// <summary>
-    /// Instances 
-    /// </summary>
     private readonly ConcurrentDictionary<Type, object> ObjectsByType = new ConcurrentDictionary<Type, object>();
-
-    /// <summary>
-    /// 
-    /// </summary>
     private readonly ConcurrentDictionary<Type, Type> TypesByType = new ConcurrentDictionary<Type, Type>();
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Type"></param>
-    /// <returns></returns>
     public object GetInstance(Type Type)
     {
-        if (!ObjectsByType.ContainsKey(Type))
+        if (ObjectsByType.ContainsKey(Type)) return ObjectsByType[Type];
+
+        var Instance = default(object);
+
+        Logger.Notice("GetInstance<{0}>: Miss!", Type);
+
+        var ElapsedTime = Logger.Measure(() =>
         {
-            var Instance = default(object);
+            var RealType = TypesByType.ContainsKey(Type) ? TypesByType[Type] : Type;
 
-            Logger.Notice("GetInstance<{0}>: Miss!", Type);
+            if (RealType.IsAbstract)
+                throw new Exception($"Can't instantiate class '{RealType}', because it is abstract");
 
-            var ElapsedTime = Logger.Measure(() =>
+            try
             {
-                var RealType = TypesByType.ContainsKey(Type) ? TypesByType[Type] : Type;
-
-                if (RealType.IsAbstract)
-                    throw new Exception($"Can't instantiate class '{RealType}', because it is abstract");
-
-                try
+                var constructors = RealType.GetConstructors();
+                if (constructors.Length > 0)
                 {
-                    //object Instance2 = null;
-                    //var ElapsedTime2 = Logger.Measure(() =>
-                    //{
-                    //	Instance2 = Activator.CreateInstance(RealType, true);
-                    //});
-                    //Console.Error.WriteLine("{0} : {1} : {2}", ElapsedTime2, Type, RealType);
+                    var constructor = constructors.First();
+                    var paramTypes = constructor.GetParameters().Select(it => it.ParameterType).ToArray();
+                    var paramValues = paramTypes.Select(GetInstance).ToArray();
+                    Instance = _SetInstance(Type, constructor.Invoke(paramValues));
+                }
+                else
+                {
                     Instance = _SetInstance(Type, Activator.CreateInstance(RealType, true));
                 }
-                catch (MissingMethodException)
-                {
-                    throw new Exception("No constructor for type '" + Type.Name + "'");
-                }
+            }
+            catch (MissingMethodException)
+            {
+                throw new Exception("No constructor for type '" + Type.Name + "'");
+            }
 
-                InjectDependencesTo(Instance);
-                //Instance._InitializeComponent(this);
-                //Instance.InitializeComponent();
-            });
+            InjectDependencesTo(Instance);
+            //Instance._InitializeComponent(this);
+            //Instance.InitializeComponent();
+        });
 
-            //Console.Out.WriteLineColored((ElapsedTime.TotalSeconds >= 0.05) ? ConsoleColor.Red : ConsoleColor.Gray, "GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
-            Logger.Notice("GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
+        //Console.Out.WriteLineColored((ElapsedTime.TotalSeconds >= 0.05) ? ConsoleColor.Red : ConsoleColor.Gray, "GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
+        Logger.Notice("GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
 
-            return Instance;
-        }
-
-        return ObjectsByType[Type];
+        return Instance;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TType"></typeparam>
-    /// <returns></returns>
     public TType GetInstance<TType>() => (TType) GetInstance(typeof(TType));
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TType"></typeparam>
-    /// <param name="Instance"></param>
-    /// <returns></returns>
     public TType SetInstance<TType>(object Instance) // where TType : IInjectComponent
     {
         Logger.Info("PspEmulatorContext.SetInstance<{0}>", typeof(TType));
         return _SetInstance<TType>(Instance);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Type"></param>
-    /// <param name="Instance"></param>
-    /// <returns></returns>
-    protected object _SetInstance(Type Type, object Instance)
+    private object _SetInstance(Type Type, object Instance)
     {
-        if (ObjectsByType.ContainsKey(Type))
-        {
-            throw new InvalidOperationException();
-        }
+        if (ObjectsByType.ContainsKey(Type)) throw new InvalidOperationException();
         ObjectsByType[Type] = Instance;
         return Instance;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TType"></typeparam>
-    /// <param name="Instance"></param>
-    /// <returns></returns>
-    protected TType _SetInstance<TType>(object Instance) // where TType : IInjectComponent
-    {
-        return (TType) _SetInstance(typeof(TType), Instance);
-    }
+    private TType _SetInstance<TType>(object instance) => (TType) _SetInstance(typeof(TType), instance);
+    public void SetInstanceType<TType1>(Type type2) => SetInstanceType(typeof(TType1), type2);
+    public void SetInstanceType<TType1, TType2>() where TType2 : TType1 => SetInstanceType<TType1>(typeof(TType2));
+    public void SetInstanceType(Type Type1, Type Type2) => TypesByType[Type1] = Type2;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TType1"></typeparam>
-    /// <param name="Type2"></param>
-    public void SetInstanceType<TType1>(Type Type2) // where TType1 : IInjectComponent
-    {
-        SetInstanceType(typeof(TType1), Type2);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TType1"></typeparam>
-    /// <typeparam name="TType2"></typeparam>
-    public void SetInstanceType<TType1, TType2>() where TType2 : TType1
-    {
-        SetInstanceType<TType1>(typeof(TType2));
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Type1"></param>
-    /// <param name="Type2"></param>
-    public void SetInstanceType(Type Type1, Type Type2) // where TType1 : IInjectComponent
-    {
-        TypesByType[Type1] = Type2;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TType"></typeparam>
-    /// <returns></returns>
-    public TType NewInstance<TType>() // where TType : IInjectComponent
+    public TType NewInstance<TType>()
     {
         RemoveInstance(typeof(TType));
         return GetInstance<TType>();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Type"></param>
     private void RemoveInstance(Type Type)
     {
         object Removed;
@@ -199,25 +114,27 @@ public sealed class InjectContext : IDisposable
             //Console.WriteLine("{0}", Member);
             var Field = Member as FieldInfo;
             var Property = Member as PropertyInfo;
-            Type MemberType = null;
-            if (Member.MemberType == MemberTypes.Field) MemberType = Field.FieldType;
-            if (Member.MemberType == MemberTypes.Property) MemberType = Property.PropertyType;
+            var MemberType = Member.MemberType switch
+            {
+                MemberTypes.Field => Field.FieldType,
+                MemberTypes.Property => Property.PropertyType,
+                _ => null
+            };
 
             var InjectAttributeList = Member.GetCustomAttributes(typeof(InjectAttribute), true);
+            if (InjectAttributeList.Length <= 0) continue;
 
-            if (InjectAttributeList.Length > 0)
+            switch (Member.MemberType)
             {
-                switch (Member.MemberType)
-                {
-                    case MemberTypes.Field:
-                        Field.SetValue(Object, this.GetInstance(MemberType));
-                        break;
-                    case MemberTypes.Property:
-                        Property.SetValue(Object, this.GetInstance(MemberType), null);
-                        break;
-                }
-                Logger.Notice("Inject {0} to {1}", MemberType, Object.GetType());
+                case MemberTypes.Field:
+                    Field.SetValue(Object, this.GetInstance(MemberType));
+                    break;
+                case MemberTypes.Property:
+                    Property.SetValue(Object, this.GetInstance(MemberType), null);
+                    break;
             }
+
+            Logger.Notice("Inject {0} to {1}", MemberType, Object.GetType());
         }
 
         // Call Initialization
@@ -227,9 +144,6 @@ public sealed class InjectContext : IDisposable
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     public void Dispose()
     {
         foreach (var Item in ObjectsByType.Values)
@@ -241,6 +155,7 @@ public sealed class InjectContext : IDisposable
                 ((IDisposable) Item).Dispose();
             }
         }
+
         ObjectsByType.Clear();
     }
 
