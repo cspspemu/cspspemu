@@ -47,6 +47,11 @@ namespace CSPspEmu.Frontend
         int lx = 0;
         int ly = 0;
 
+        bool pressingAnalogLeftSet = false;
+        bool pressingAnalogRightSet = false;
+        bool pressingAnalogUpSet = false;
+        bool pressingAnalogDownSet = false;
+
         int pressingAnalogLeft = 0;
         int pressingAnalogRight = 0;
         int pressingAnalogUp = 0;
@@ -71,6 +76,13 @@ namespace CSPspEmu.Frontend
                 Key.Enter => PspCtrlButtons.Start,
                 _ => (PspCtrlButtons) 0
             };
+            
+            //Console.WriteLine($"OnKeyChange {e.Key} : {down}");
+
+            if (e.Key == Key.J) pressingAnalogLeftSet = down;
+            if (e.Key == Key.I) pressingAnalogUpSet = down;
+            if (e.Key == Key.K) pressingAnalogDownSet = down;
+            if (e.Key == Key.L) pressingAnalogRightSet = down;
 
             if (e.Key == Key.F3)
             {
@@ -107,6 +119,8 @@ namespace CSPspEmu.Frontend
             base.OnKeyUp(e);
             OnKeyChange(e, false);
         }
+        
+        
 
         static public void ScheduleTask(TimeSpan TimeSpan, Action action)
         {
@@ -130,6 +144,7 @@ namespace CSPspEmu.Frontend
 
                 SimplifiedPspEmulator.injector.GetInstance<PspHleRunningConfig>().EnableDelayIo = false;
 
+                //SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/cube.pbp");
                 SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/ortho.pbp");
                 //SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/compilerPerf.pbp");
 
@@ -236,17 +251,34 @@ namespace CSPspEmu.Frontend
 
             if (SimplifiedPspEmulator != null)
             {
+                UpdateAnalogCounter(pressingAnalogLeftSet, ref pressingAnalogLeft);
+                UpdateAnalogCounter(pressingAnalogUpSet, ref pressingAnalogUp);
+                UpdateAnalogCounter(pressingAnalogDownSet, ref pressingAnalogDown);
+                UpdateAnalogCounter(pressingAnalogRightSet, ref pressingAnalogRight);
+                
                 lx = pressingAnalogLeft != 0 ? -pressingAnalogLeft : pressingAnalogRight;
                 ly = pressingAnalogUp != 0 ? -pressingAnalogUp : pressingAnalogDown;
-
+                
                 ctrlData.X = lx / 3f;
                 ctrlData.Y = ly / 3f;
                 ctrlData.TimeStamp = (uint) Emulator.InjectContext.GetInstance<PspRtc>().UnixTimeStampTS.Milliseconds;
 
-                //Console.WriteLine("controller.InsertSceCtrlData(ctrlData)");
+                //Console.WriteLine($"controller.InsertSceCtrlData({ctrlData})");
                 Emulator.InjectContext.GetInstance<PspController>().InsertSceCtrlData(ctrlData);
 
                 Emulator.InjectContext.GetInstance<PspDisplay>().TriggerVBlankEnd();
+            }
+        }
+
+        private void UpdateAnalogCounter(bool Set, ref int counter)
+        {
+            if (Set)
+            {
+                counter += 4;
+            }
+            else
+            {
+                counter /= 2;
             }
         }
     }

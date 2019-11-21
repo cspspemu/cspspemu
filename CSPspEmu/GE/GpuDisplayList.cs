@@ -28,7 +28,7 @@ namespace CSPspEmu.Core.Gpu
 
     public sealed unsafe class GpuDisplayList
     {
-        public static uint* DummyData = (uint *)Marshal.AllocHGlobal(GpuStateStruct.StructSizeInBytes);
+        public static uint[] DummyData = new uint[GpuStateStruct.StructSizeInBytes];
         
         private static readonly Logger Logger = Logger.GetLogger("Gpu");
 

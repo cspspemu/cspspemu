@@ -71,5 +71,7 @@ namespace CSPspEmu.Core.Types.Controller
                 Buttons &= ~buttons;
             }
         }
+
+        public override string ToString() => $"SceCtrlData({TimeStamp}, {Buttons}, {Lx}, {Ly}, {X}, {Y})";
     }
 }

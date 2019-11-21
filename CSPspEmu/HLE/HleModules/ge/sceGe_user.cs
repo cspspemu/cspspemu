@@ -305,7 +305,7 @@ namespace CSPspEmu.Hle.Modules.ge
             if (Args != null)
             {
                 DisplayList.GpuStateStructPointer.data.Data =
-                    CpuProcessor.Memory.PspAddressToPointerSafe<uint>(Args->GpuStateStructAddress, GpuStateStruct.StructSizeInWords);
+                    CpuProcessor.Memory.PspAddressToSpan<uint>(Args->GpuStateStructAddress, GpuStateStruct.StructSizeInWords).ToArray();
             }
 
             //if (DisplayList.GpuStateStructPointer == null) DisplayList.GpuStateStructPointer.data.Data = DefaultGpuStateData;

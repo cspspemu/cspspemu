@@ -15,11 +15,11 @@ namespace CSPspEmu.Core.Gpu.State
 
     public unsafe class GpuStateData
     {
-        public uint* Data;
+        public Memory<uint> Data;
 
-        public GpuStateData(uint* data) => Data = data;
+        public GpuStateData(Memory<uint> data) => Data = data;
 
-        public Span<uint> Span => new Span<uint>(Data, GpuStateStruct.StructSizeInWords);
+        public Span<uint> Span => Data.Span;
 
         public uint this[GpuOpCodes op]
         {
@@ -67,11 +67,12 @@ namespace CSPspEmu.Core.Gpu.State
     //[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]
     public class GpuStateStruct
     {
+        public GpuStateData data;
+        public GpuStateStruct(GpuStateData data) => this.data = data;
+
         public const int StructSizeInWords = 0x200;
         public const int StructSizeInBytes = StructSizeInWords * 4;
-        
-        public GpuStateData data;
-        
+
         public ScreenBufferStateStruct DrawBufferState => new ScreenBufferStateStruct(data, false);
         public ScreenBufferStateStruct DepthBufferState => new ScreenBufferStateStruct(data, true);
         public TextureTransferStateStruct TextureTransferState => new TextureTransferStateStruct(data);
@@ -102,13 +103,11 @@ namespace CSPspEmu.Core.Gpu.State
         public LightStateStruct Light3 => Light(3);
 
 
-        public GpuStateStruct(GpuStateData data) => this.data = data;
-
         public uint BaseAddress => (data.Param24(GpuOpCodes.BASE) << 8) & 0xff000000;
         public uint BaseOffset
         {
-            get { return data[GpuOpCodes.OFFSET_ADDR]; }
-            set { data[GpuOpCodes.OFFSET_ADDR] = value; }
+            get => data[GpuOpCodes.OFFSET_ADDR];
+            set => data[GpuOpCodes.OFFSET_ADDR] = value;
         }
 
         public uint GetAddressRelativeToBase(uint relativeAddress) => BaseAddress | relativeAddress;

@@ -54,8 +54,11 @@ namespace CSPspEmu.Core.Gpu
         protected GuPrimitiveType PrimitiveType;
 
 
-        public virtual void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct gpuState,
-            GuPrimitiveType primitiveType)
+        public virtual void PrimStart(
+            GlobalGpuState globalGpuState,
+            GpuStateStruct gpuState,
+            GuPrimitiveType primitiveType
+        )
         {
             GpuState = gpuState;
             VertexType = gpuState.VertexState.Type;
@@ -92,8 +95,8 @@ namespace CSPspEmu.Core.Gpu
             //Console.WriteLine($"Prim({vertexCount})");
             uint morpingVertexCount, totalVerticesWithoutMorphing;
             PreparePrim(GpuState, out totalVerticesWithoutMorphing, vertexCount, out morpingVertexCount);
-            var vertices = new Vector4[vertexCount];
-            var vP = new VPoint[vertexCount];
+            var vertices = stackalloc Vector4[vertexCount];
+            var vP = stackalloc VPoint[vertexCount];
             var vertexTransform = this.worldViewProjection3D;
             {
                 var transform = VertexType.Transform2D ? Matrix4x4.Identity : worldViewProjection3D;
