@@ -159,12 +159,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             _verticesColorsBuffer = GLBuffer.Create();
             _verticesWeightsBuffer = GLBuffer.Create();
             //Console.WriteLine(typeof(OpenglGpuImpl).Assembly.GetManifestResourceNames().ToStringList());
-            _shader = new GLShader(
-                typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.GPU.Impl.Opengl.shader.vert")
-                    .ReadAllContentsAsString(),
-                typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.GPU.Impl.Opengl.shader.frag")
-                    .ReadAllContentsAsString()
-            );
+            _shader = new GLShader(Shaders.ShaderVert, Shaders.ShaderFrag);
             Console.WriteLine("###################################");
             foreach (var uniform in _shader.Uniforms) Console.WriteLine(uniform);
             foreach (var attribute in _shader.Attributes) Console.WriteLine(attribute);
