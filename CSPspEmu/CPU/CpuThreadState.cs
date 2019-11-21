@@ -45,7 +45,13 @@ namespace CSPspEmu.Core.Cpu
         /// Current PC
         /// </summary>
         public uint Pc;
-        //public uint nPC;
+        public uint nPC;
+
+        public void SetPc(uint pc)
+        {
+            Pc = pc;
+            nPC = pc + 4;
+        }
 
         /// <summary>
         /// LOw, HIgh registers.
