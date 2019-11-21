@@ -1,4 +1,5 @@
 ﻿using System;
+using CSPspEmu.Core;
 using CSPspEmu.Core.Components.Rtc;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Utils;
@@ -8,6 +9,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
     public partial class IoFileMgrForUser
     {
         [Inject] PspRtc PspRtc;
+        
+        [Inject] PspHleRunningConfig PspHleRunningConfig;
 
         [Inject] HleThreadManager ThreadManager;
 
@@ -54,7 +57,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
         private void _DelayIo(IoDelayType ioDelayType, long dataSize = 1)
         {
-            //return;
+            if (!PspHleRunningConfig.EnableDelayIo) return;
 
             var timeSpan = ioDelayType.GetTimePerSize(dataSize);
 

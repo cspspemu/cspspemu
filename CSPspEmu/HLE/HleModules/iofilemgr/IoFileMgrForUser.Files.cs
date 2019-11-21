@@ -199,7 +199,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
                 throw new NotImplementedException();
             }
 
-            public int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output)
+            public int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input,
+                Span<byte> Output, ref bool DoDleay)
             {
                 throw new NotImplementedException();
             }

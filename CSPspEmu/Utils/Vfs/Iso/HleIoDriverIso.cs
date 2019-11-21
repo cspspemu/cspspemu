@@ -394,7 +394,8 @@ namespace CSPspEmu.Hle.Vfs.Iso
             throw new NotImplementedException();
         }
 
-        public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output)
+        public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input,
+            Span<byte> Output, ref bool DoDleay)
         {
             throw new NotImplementedException();
         }

@@ -49,11 +49,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
         public int sceIoDevctl(string DeviceName, uint Command, byte* InputPointer, int InputLength,
             byte* OutputPointer, int OutputLength)
         {
+            var DoDelay = false;
             try
             {
                 var Info = HleIoManager.ParseDeviceName(DeviceName);
                 return Info.HleIoDrvFileArg.HleIoDriver.IoDevctl(Info.HleIoDrvFileArg, DeviceName, Command,
-                    new Span<byte>(InputPointer, InputLength), new Span<byte>(OutputPointer, OutputLength));
+                    new Span<byte>(InputPointer, InputLength), new Span<byte>(OutputPointer, OutputLength), ref DoDelay);
             }
             catch (NotImplementedException NotImplementedException)
             {
@@ -62,7 +63,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
             }
             finally
             {
-                _DelayIo(IoDelayType.Devctl);
+                if (DoDelay)
+                {
+                    _DelayIo(IoDelayType.Devctl);
+                }
             }
         }
     }

@@ -26,7 +26,8 @@ namespace CSPspEmu.Hle.Vfs
         public virtual int IoChdir(HleIoDrvFileArg HleIoDrvFileArg, string DirectoryName) => ParentDriver.IoChdir(HleIoDrvFileArg, DirectoryName);
         public virtual int IoMount(HleIoDrvFileArg HleIoDrvFileArg) => ParentDriver.IoMount(HleIoDrvFileArg);
         public virtual int IoUmount(HleIoDrvFileArg HleIoDrvFileArg) => ParentDriver.IoUmount(HleIoDrvFileArg);
-        public virtual int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output) => ParentDriver.IoDevctl(HleIoDrvFileArg, DeviceName, Command, Input, Output);
+        public virtual int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input,
+            Span<byte> Output, ref bool DoDleay) => ParentDriver.IoDevctl(HleIoDrvFileArg, DeviceName, Command, Input, Output, ref DoDleay);
         public virtual int IoUnk21(HleIoDrvFileArg HleIoDrvFileArg) => ParentDriver.IoUnk21(HleIoDrvFileArg);
     }
 }

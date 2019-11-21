@@ -41,13 +41,16 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
         /// <param name="HleIoDrvFileArg"></param>
         /// <param name="DeviceName"></param>
         /// <param name="Command"></param>
+        /// <param name="Input"></param>
+        /// <param name="Output"></param>
+        /// <param name="DoDleay"></param>
         /// <param name="InputPointer"></param>
         /// <param name="InputLength"></param>
         /// <param name="OutputPointer"></param>
         /// <param name="OutputLength"></param>
         /// <returns></returns>
         public override int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command,
-            Span<byte> Input, Span<byte> Output)
+            Span<byte> Input, Span<byte> Output, ref bool DoDleay)
         {
             //Console.Error.WriteLine("MemoryStick.IoDevctl: ({0}, 0x{1:X})", DeviceName, Command);
 

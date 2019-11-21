@@ -360,28 +360,25 @@ namespace CSharpUtils.Threading
         /// </summary>
         public static void Yield()
         {
-            if (ThisGreenThreadList.IsValueCreated)
-            {
-                var greenThread = ThisGreenThreadList.Value;
-                if (greenThread.Running)
-                {
-                    try
-                    {
-                        greenThread.Running = false;
+	        if (!ThisGreenThreadList.IsValueCreated) return;
+	        
+	        var greenThread = ThisGreenThreadList.Value;
+	        if (!greenThread.Running)
+	        {
+		        throw new InvalidOperationException("GreenThread has finalized");
+	        }
 
-                        greenThread.ParentSemaphore.Release();
-                        greenThread.ThisSemaphoreWaitOrParentThreadStopped();
-                    }
-                    finally
-                    {
-                        greenThread.Running = true;
-                    }
-                }
-                else
-                {
-                    throw new InvalidOperationException("GreenThread has finalized");
-                }
-            }
+	        try
+	        {
+		        greenThread.Running = false;
+
+		        greenThread.ParentSemaphore.Release();
+		        greenThread.ThisSemaphoreWaitOrParentThreadStopped();
+	        }
+	        finally
+	        {
+		        greenThread.Running = true;
+	        }
         }
 
         public static void StopAll()

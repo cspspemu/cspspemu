@@ -419,7 +419,8 @@ namespace CSPspEmu.Hle.Vfs
         int IoChdir(HleIoDrvFileArg HleIoDrvFileArg, string DirectoryName); // Changes the current directory.
         int IoMount(HleIoDrvFileArg HleIoDrvFileArg);
         int IoUmount(HleIoDrvFileArg HleIoDrvFileArg);
-        int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input, Span<byte> Output);
+        int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, Span<byte> Input,
+            Span<byte> Output, ref bool DoDleay);
         int IoUnk21(HleIoDrvFileArg HleIoDrvFileArg);
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core;
 using CSPspEmu.Emulator.Simple;
 using CSPspEmu.Hle;
 using CSPspEmu.Utils;
@@ -41,6 +42,7 @@ namespace CSPspEmu.Tests.Integration
                     test: true,
                     configure: injector => { injector.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>(); }
                 );
+                emulator.injector.GetInstance<PspHleRunningConfig>().EnableDelayIo = false;
                 var houtput = (HleOutputHandlerMock) emulator.injector.GetInstance<HleOutputHandler>();
                 emulator.LoadAndStart($"../../../../pspautotests/tests/{Base}.prx");
                 if (!emulator.Emulator.PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(30.Seconds())) ;
