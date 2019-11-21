@@ -53,13 +53,13 @@
 
   <ItemGroup>
     <None Remove="Resources\flash0.zip" />
+    <EmbeddedResource Include="GPU\Impl\Opengl\shader.frag" />
+    <EmbeddedResource Include="GPU\Impl\Opengl\shader.vert" />
     <EmbeddedResource Include="Resources\flash0.zip" />
     <None Remove="Resources\Translations.xml" />
     <EmbeddedResource Include="Resources\Translations.xml" />
     <None Remove="GPU\Impl\Opengl\shader.frag" />
-    <EmbeddedResource Include="GPU\Impl\Opengl\shader.frag" />
     <None Remove="GPU\Impl\Opengl\shader.vert" />
-    <EmbeddedResource Include="GPU\Impl\Opengl\shader.vert" />
   </ItemGroup>
 
 </Project>

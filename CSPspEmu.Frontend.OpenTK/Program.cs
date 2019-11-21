@@ -128,10 +128,10 @@ namespace CSPspEmu.Frontend
 
                 SimplifiedPspEmulator = new SimplifiedPspEmulator();
 
-
-                //SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/ortho.pbp");
                 SimplifiedPspEmulator.injector.GetInstance<PspHleRunningConfig>().EnableDelayIo = false;
-                SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/compilerPerf.pbp");
+
+                SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/ortho.pbp");
+                //SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/compilerPerf.pbp");
 
                 var rtc = SimplifiedPspEmulator.Rtc;
                 var display = SimplifiedPspEmulator.Display;
