@@ -18,10 +18,10 @@ namespace CSPspEmu.Tests.Integration
         private readonly ITestOutputHelper _output;
         public UnitTest1(ITestOutputHelper output) => _output = output;
 
-        [Fact(Timeout = 30_000)]
+        [Fact(Timeout = 10_000)]
         public void TestCpuAlu() => TestPrx("cpu/cpu_alu/cpu_alu");
 
-        //[Fact(Timeout = 30_000)]
+        //[Fact(Timeout = 10_000)]
         //public void TestFpu() => TestPrx("cpu/fpu/fpu");
 
         #region Internal
@@ -45,7 +45,7 @@ namespace CSPspEmu.Tests.Integration
                 emulator.injector.GetInstance<PspHleRunningConfig>().EnableDelayIo = false;
                 var houtput = (HleOutputHandlerMock) emulator.injector.GetInstance<HleOutputHandler>();
                 emulator.LoadAndStart($"../../../../pspautotests/tests/{Base}.prx");
-                if (!emulator.Emulator.PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(30.Seconds())) ;
+                if (!emulator.Emulator.PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(10.Seconds())) ;
                 var actual = houtput.OutputString;
                 var expected = File.ReadAllText($"../../../../pspautotests/tests/{Base}.expected");
                 //File.WriteAllText("/tmp/actual.txt", actual);

@@ -470,7 +470,7 @@ namespace cscodec.h264.decoder
             re_cache = (re_cache << 8) | gb.buffer[pos + 2];
             re_cache = (re_cache << 8) | gb.buffer[pos + 3];
             re_cache = re_cache << (re_index & 0x07);
-            re_cache = re_cache & 0xffffffffl; // Prevent 32-Bit over flow.
+            re_cache = re_cache & 0xffffffffL; // Prevent 32-Bit over flow.
 
 
             //buf=GET_CACHE(re, gb);

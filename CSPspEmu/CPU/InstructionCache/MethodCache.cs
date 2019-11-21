@@ -130,7 +130,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
         private void Main()
         {
-            Console.WriteLine("MethodCache.Start()");
+            //Console.WriteLine("MethodCache.Start()");
             try
             {
                 while (true)
@@ -145,7 +145,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
             }
             finally
             {
-                Console.WriteLine("MethodCache.End()");
+                //Console.WriteLine("MethodCache.End()");
             }
         }
 

@@ -139,8 +139,8 @@ namespace CSPspEmu.Core.Components.Crypto
                         $"Expected mode Cmd1 but found {header.Mode}");
                 }
 
-                Console.WriteLine("Input:");
-                ArrayUtils.HexDump(PointerUtils.PointerToByteArray(inbuff, 0x100));
+                //Console.WriteLine("Input:");
+                //ArrayUtils.HexDump(PointerUtils.PointerToByteArray(inbuff, 0x100));
 
                 //Console.WriteLine("header.DataOffset = 0x{0:X8}", header.DataOffset);
                 //Console.WriteLine("header.DataSize = 0x{0:X8}", header.DataSize);

@@ -49,7 +49,7 @@ namespace CSharpUtils.Threading
             /// </summary>
             protected void ThreadBody()
             {
-                Console.WriteLine("CustomThreadPool.ThreadBody.Start()");
+                //Console.WriteLine("CustomThreadPool.ThreadBody.Start()");
                 try
                 {
                     LoopIterCount = 0;
@@ -65,7 +65,7 @@ namespace CSharpUtils.Threading
                 }
                 finally
                 {
-                    Console.WriteLine("CustomThreadPool.ThreadBody.End()");
+                    //Console.WriteLine("CustomThreadPool.ThreadBody.End()");
                 }
             }
         }

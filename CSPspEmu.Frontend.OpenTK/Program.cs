@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Timers;
+using CSPspEmu.Core;
 using CSPspEmu.Core.Components.Controller;
 using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Components.Rtc;
@@ -129,6 +130,7 @@ namespace CSPspEmu.Frontend
 
 
                 //SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/ortho.pbp");
+                SimplifiedPspEmulator.injector.GetInstance<PspHleRunningConfig>().EnableDelayIo = false;
                 SimplifiedPspEmulator.LoadAndStart("../../../../deploy/cspspemu/demos/compilerPerf.pbp");
 
                 var rtc = SimplifiedPspEmulator.Rtc;
