@@ -19,7 +19,7 @@ namespace CSPspEmu.Runner.Components.Gpu
 
             GpuProcessor.ProcessInit();
 
-            Console.WriteLine("GpuComponentThread.Start()");
+            //Console.WriteLine("GpuComponentThread.Start()");
             try
             {
                 while (true)
@@ -37,7 +37,7 @@ namespace CSPspEmu.Runner.Components.Gpu
             }
             finally
             {
-                Console.WriteLine("GpuComponentThread.End()");
+                //Console.WriteLine("GpuComponentThread.End()");
             }
         }
     }

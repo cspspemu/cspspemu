@@ -278,7 +278,7 @@ namespace CSharpUtils.Threading
 
             CurrentThread = new Thread(() =>
             {
-	            Console.WriteLine("GreenThread.Start()");
+	            //Console.WriteLine("GreenThread.Start()");
 	            ThisGreenThreadList.Value = This;
 	            ThisSemaphoreWaitOrParentThreadStopped();
 	            try
@@ -312,7 +312,7 @@ namespace CSharpUtils.Threading
 			            // ignored
 		            }
 
-		            Console.WriteLine("GreenThread.End()");
+		            //Console.WriteLine("GreenThread.End()");
 	            }
 
 	            //Console.WriteLine("GreenThread.Running: {0}", Running);

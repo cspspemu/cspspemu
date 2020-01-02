@@ -29,7 +29,7 @@ namespace CSPspEmu.Runner.Components
 
         public void StartSynchronized()
         {
-            Console.WriteLine("Component {0} StartSynchronized!", this);
+            //Console.WriteLine("Component {0} StartSynchronized!", this);
             var ElapsedTime = Logger.Measure(() =>
             {
                 ComponentThreadThread = new Thread(() =>
@@ -48,7 +48,7 @@ namespace CSPspEmu.Runner.Components
                         Running = false;
                         RunningUpdatedEvent.Set();
                         StopCompleteEvent.Set();
-                        Console.WriteLine("Component {0} Stopped!", this);
+                        //Console.WriteLine("Component {0} Stopped!", this);
                     }
                 })
                 {
@@ -59,7 +59,7 @@ namespace CSPspEmu.Runner.Components
                 ThreadTaskQueue.EnqueueAndWaitCompleted(() => { });
             });
             //Logger.Notice("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
-            Console.WriteLine("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
+            //Console.WriteLine("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
         }
 
         public void StopSynchronized()

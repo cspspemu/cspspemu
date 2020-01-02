@@ -623,7 +623,6 @@ namespace SafeILGenerator.Ast.Generators
         protected virtual void _Generate(AstNodeExprCallTailCall call)
         {
             Generate(call.Call);
-            Emit(OpCodes.Ret);
         }
 
         protected virtual void _Generate(AstNodeExprCallStatic call)
@@ -636,8 +635,17 @@ namespace SafeILGenerator.Ast.Generators
             {
                 case CallingConventions.Standard:
                     foreach (var parameter in call.Parameters) Generate(parameter);
-                    if (call.IsTail) Emit(OpCodes.Tailcall);
-                    Emit(OpCodes.Call, call.MethodInfo);
+                    if (call.IsTail)
+                    {
+                        Emit(OpCodes.Tailcall);
+                        Emit(OpCodes.Call, call.MethodInfo);
+                        Emit(OpCodes.Ret);
+                        //Emit(OpCodes.Jmp, call.MethodInfo);
+                    }
+                    else
+                    {
+                        Emit(OpCodes.Call, call.MethodInfo);
+                    }
                     break;
                 default:
                     throw new Exception($"Can't handle calling convention {call.MethodInfo.CallingConvention}");
@@ -660,8 +668,17 @@ namespace SafeILGenerator.Ast.Generators
                 case CallingConventions.Standard:
                     Generate(call.Instance);
                     foreach (var parameter in call.Parameters) Generate(parameter);
-                    if (call.IsTail) Emit(OpCodes.Tailcall);
-                    Emit(OpCodes.Callvirt, call.MethodInfo);
+                    if (call.IsTail)
+                    {
+                        Emit(OpCodes.Tailcall);
+                        Emit(OpCodes.Callvirt, call.MethodInfo);
+                        Emit(OpCodes.Ret);
+                        //Emit(OpCodes.Jmp, call.MethodInfo);
+                    }
+                    else
+                    {
+                        Emit(OpCodes.Callvirt, call.MethodInfo);
+                    }
                     break;
                 default:
                     throw new Exception($"Can't handle calling convention {call.MethodInfo.CallingConvention}");

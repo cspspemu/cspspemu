@@ -6,67 +6,37 @@ namespace CSPspEmu.Core.Audio
 {
     public sealed unsafe class PspAudio : IInjectInitialize, IDisposable
     {
-        /// <summary>
         /// Output formats for PSP audio.
-        /// </summary>
         public enum FormatEnum
         {
-            /// <summary>
             /// Channel is set to stereo output (2 channels).
-            /// </summary>
             Stereo = 0x00,
 
-            /// <summary>
             /// Channel is set to mono output (1 channel).
-            /// </summary>
             Mono = 0x10,
         }
 
-        /// <summary>
         /// The maximum output volume.
-        /// </summary>
         public const int MaxVolume = 0x8000;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public const int SamplesMax = 0x10000 - 64;
 
-        /// <summary>
         /// Used to request the next available hardware channel.
-        /// </summary>
-        //public const int FreeChannel = -1;
-        /// <summary>
         /// Maximum number of allowed audio channels
-        /// </summary>
         public const int MaxChannels = 8;
         //public const int MaxChannels = 32;
 
-        /// <summary>
         /// Number of audio channels
-        /// </summary>
         public PspAudioChannel[] Channels;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public PspAudioChannel SrcOutput2Channel;
 
-        /// <summary>
-        /// 
-        /// </summary>
         [Inject] public PspAudioImpl PspAudioImpl;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private PspAudio()
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         void IInjectInitialize.Initialize()
         {
             Channels = new PspAudioChannel[MaxChannels];
@@ -86,20 +56,12 @@ namespace CSPspEmu.Core.Audio
             };
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public PspAudioChannel GetFreeChannel()
         {
             if (!Channels.Any(Channel => Channel.Available)) throw new NoChannelsAvailableException();
             return Channels.Reverse().First(Channel => Channel.Available);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ChannelId"></param>
         private void CheckChannelId(int ChannelId)
         {
             if (ChannelId < 0 || ChannelId >= Channels.Length)
@@ -108,12 +70,6 @@ namespace CSPspEmu.Core.Audio
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ChannelId"></param>
-        /// <param name="CanAlloc"></param>
-        /// <returns></returns>
         public PspAudioChannel GetChannel(int ChannelId, bool CanAlloc = false)
         {
             PspAudioChannel Channel;
@@ -129,9 +85,6 @@ namespace CSPspEmu.Core.Audio
             return Channel;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void Update()
         {
             PspAudioImpl.Update((MixedSamples) =>

@@ -15,7 +15,7 @@ namespace CSPspEmu.Runner.Components.Audio
         {
             Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
             //Thread.CurrentThread.Priority = ThreadPriority.Normal;
-            Console.WriteLine("AudioComponentThread.Start()");
+            //Console.WriteLine("AudioComponentThread.Start()");
             try
             {
                 while (true)
@@ -31,7 +31,7 @@ namespace CSPspEmu.Runner.Components.Audio
             }
             finally
             {
-                Console.WriteLine("AudioComponentThread.End()");
+                //Console.WriteLine("AudioComponentThread.End()");
             }
         }
     }

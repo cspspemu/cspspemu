@@ -6,7 +6,7 @@
         <NullableContextOptions>disable</NullableContextOptions>
         <RootNamespace>CSPspEmu.SDL</RootNamespace>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

@@ -37,6 +37,11 @@ namespace System.Drawing
         {
             throw new NotImplementedException();
         }
+
+        public void Save(MemoryStream memoryStream, ImageFormat format)
+        {
+            throw new NotImplementedException();
+        }
     }
     
     public class Bitmap : IDisposable
