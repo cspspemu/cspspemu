@@ -76,7 +76,8 @@ class Program
             var injector = PspInjectContext.CreateInjectContext(PspStoredConfig.Load(), false);
 
             using var pspEmulator = injector.GetInstance<PspEmulator>();
-            pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
+            pspEmulator.StartAndLoad("./minifire.pbp", GuiRunner: (emulator) =>
+            //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/ortho.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/compilerPerf.pbp", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cubevfpu.prx", GuiRunner: (emulator) =>
                 //pspEmulator.StartAndLoad("../deploy/cspspemu/demos/cwd.elf", GuiRunner: (emulator) =>
