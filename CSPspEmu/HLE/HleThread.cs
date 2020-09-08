@@ -90,7 +90,7 @@ namespace CSPspEmu.Hle
 
         public string WaitDescription;
 
-        public object WaitObject;
+        public object? WaitObject;
 
         //public int InitPriority;
         public PspThreadAttributes Attribute;
@@ -325,7 +325,7 @@ namespace CSPspEmu.Hle
             }
         }
 
-        public void SetWaitAndPrepareWakeUp(WaitType WaitType, string WaitDescription, object WaitObject,
+        public void SetWaitAndPrepareWakeUp(WaitType WaitType, string WaitDescription, object? WaitObject,
             Action<Action> PrepareCallback, bool HandleCallbacks = false)
         {
             if (this.HasAllStatus(Status.Waiting))
@@ -333,16 +333,16 @@ namespace CSPspEmu.Hle
                 Console.Error.WriteLine("Trying to sleep an already sleeping thread!");
             }
 
-            bool CalledAlready = false;
+            var calledAlready = false;
             YieldCount++;
             SetWait0(WaitType, WaitDescription, WaitObject, HandleCallbacks);
             {
                 //PrepareCallback(WakeUp);
                 PrepareCallback(() =>
                 {
-                    if (!CalledAlready)
+                    if (!calledAlready)
                     {
-                        CalledAlready = true;
+                        calledAlready = true;
                         ReleaseWaitThread();
                     }
                 });
@@ -350,13 +350,13 @@ namespace CSPspEmu.Hle
             SetWait1();
         }
 
-        protected void SetWait0(WaitType WaitType, string WaitDescription, object WaitObject, bool HandleCallbacks)
+        protected void SetWait0(WaitType waitType, string waitDescription, object? waitObject, bool handleCallbacks)
         {
             this.SetStatus(Status.Waiting);
-            this.CurrentWaitType = WaitType;
-            this.WaitDescription = WaitDescription;
-            this.WaitObject = WaitObject;
-            this.HandleCallbacks = HandleCallbacks;
+            this.CurrentWaitType = waitType;
+            this.WaitDescription = waitDescription;
+            this.WaitObject = waitObject;
+            this.HandleCallbacks = handleCallbacks;
         }
 
         protected void SetWait1()
