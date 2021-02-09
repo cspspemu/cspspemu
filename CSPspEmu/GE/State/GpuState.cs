@@ -42,7 +42,7 @@ namespace CSPspEmu.Core.Gpu.State
 
         public Matrix4x4 GetMatrix4X4(GpuOpCodes MATRIX_BASE, int index = 0)
         {
-            var v = SpanExt.Reinterpret<float, uint>(Span.Slice((int) MATRIX_BASE + index * 16));
+            var v = Span.Slice((int) MATRIX_BASE + index * 16).Reinterpret<float, uint>();
             return new Matrix4x4(
                 v[0], v[1], v[2], v[3],
                 v[4], v[5], v[6], v[7],
@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Gpu.State
 
         public Matrix4x4 GetMatrix4X3(GpuOpCodes MATRIX_BASE, int index = 0)
         {
-            var v = SpanExt.Reinterpret<float, uint>(Span.Slice((int) MATRIX_BASE + index * 12));
+            var v = Span.Slice((int) MATRIX_BASE + index * 12).Reinterpret<float, uint>();
             return new Matrix4x4(
                 v[0], v[1], v[2], 0,
                 v[3], v[4], v[5], 0,
